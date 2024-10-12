@@ -4,12 +4,19 @@ import axios from 'axios';
 import PC from '../../components/PC';
 import { API_URL } from "../../utils/constans";
 import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
+import {
+    getMinDateTime,
+    getMainProfessions,
+    getSubProfessions,
+    getDirection,
+    isRtl
+} from '../../utils/generalUtils';
+
 
 
 function MainPage() {
 
     const [isTyping, setIsTyping] = useState(false);
-
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -21,11 +28,10 @@ function MainPage() {
     const [dateAndTime, setDateAndTime] = useState(localStorage.getItem('dateAndTime') || '');
     const [searchInput, setSearchInput] = useState('');
     const { translation, language } = useLanguage(); // Access translation and language from the context
-    const getDirection = () => {
-        if (language === 'ar' || language === 'he') return 'rtl';
-        return 'ltr';
-    };
-    var isRtl = ['ar', 'he'].includes(language);
+    const direction = getDirection(language);
+    const rtl = isRtl(language);
+    const textAlignStyle = { textAlign: direction === 'rtl' ? 'right' : 'left' };
+
 
 
     const [minDate, setMinDate] = useState('');
@@ -37,14 +43,7 @@ function MainPage() {
     };
 
     useEffect(() => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        setMinDate(`${year}-${month}-${day}T${hours}:${minutes}`);
-        console.log('direction'+ getDirection());
+        setMinDate(getMinDateTime());
     }, []);
 
     useEffect(() => {
@@ -63,35 +62,35 @@ function MainPage() {
 
     // Fetch Main Professions
     useEffect(() => {
-        const fetchMainProfessions = async () => {
+        const fetchMainProfessionsData = async () => {
             try {
-                const response = await axios.get(`${API_URL}/main-professions`);
-                const dataWithoutFirst = response.data.slice(1);
-                setMainOptions(dataWithoutFirst);
+                const mainProfessions = await getMainProfessions();
+                setMainOptions(mainProfessions);
             } catch (error) {
                 console.error('Error fetching main professions:', error);
             }
         };
-        fetchMainProfessions();
+        fetchMainProfessionsData();
     }, []);
 
     // Fetch Sub Professions based on selected Main Profession
     useEffect(() => {
         if (main) {
-            const fetchSubProfessions = async () => {
+            const fetchSubProfessionsData = async () => {
                 try {
-                    const response = await axios.get(`${API_URL}/sub-professions/${main}`);
-                    setSubOptions(response.data.slice(1));
+                    const subProfessions = await getSubProfessions(main);
+                    setSubOptions(subProfessions);
                 } catch (error) {
                     console.error('Error fetching sub professions:', error);
                 }
             };
-            fetchSubProfessions();
+            fetchSubProfessionsData();
         } else {
             setSubOptions([]);
             setSub('');
         }
     }, [main]);
+
 
     // Store selected values in localStorage before navigating away
     useEffect(() => {
@@ -124,6 +123,9 @@ function MainPage() {
             e.currentTarget.reportValidity();
         }
     };
+    const handleLocationClick = () => {
+        navigate('/location');
+    };
 
     const handleSearch = () => {
         if (searchInput.trim()) {
@@ -144,29 +146,31 @@ function MainPage() {
                         <img src="/images/phone.png" alt="Phone Case" />
                         <div className="phone-screen">
                             <div className="main-form">
-                                <h2 className="start-title" dir={getDirection()}>{translation.startTitle}</h2>
+                                <h2 className="start-title" dir={direction}>{translation.startTitle}</h2>
                                 <div className="search searchBtn">
                                     <input
                                         type="text"
-                                        className={isRtl ? 'input-rtl' : 'input-ltr'}
+                                        className={rtl ? 'input-rtl' : 'input-ltr'}
                                         value={searchInput}
                                         onChange={handleSearchInputChange}
                                         placeholder={translation.searchPlaceholder}
-                                        style={{ textAlign: getDirection() === 'rtl' ? 'right' : 'left' }}
+                                        style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                         required
                                     />
-                                    <i className={`ri-search-line search-icon ${isTyping ? 'typing' : ''}`} onClick={handleSearch}></i>
+                                    <i className={`ri-search-line search-icon ${searchInput.length > 0 ? 'typing' : ''}`} onClick={handleSearch}></i>
                                 </div>
-
+    
                                 <form className="mt-1 form-book" onSubmit={handleSubmit}>
                                     <div className="select_input_container">
                                         <div className="select_item">
-                                            <label dir={getDirection()} style={{ textAlign: getDirection() === 'rtl' ? 'right' : 'left' }} htmlFor="main">{translation.selectMain} </label>
+                                            <label dir={direction} style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }} htmlFor="main">
+                                                {translation.selectMain}
+                                            </label>
                                             <div className="custom-select-wrapper menu">
                                                 <select
                                                     className="custom-select"
                                                     name="main"
-                                                    style={{ textAlign: getDirection() === 'rtl' ? 'right' : 'left' }}
+                                                    style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                                     id="main"
                                                     value={main}
                                                     onChange={(e) => setMain(e.target.value)}
@@ -179,16 +183,18 @@ function MainPage() {
                                                         </option>
                                                     ))}
                                                 </select>
-                                                <i className={`ri-arrow-down-s-fill select-icon ${isRtl ? 'rtl' : 'ltr'}`}></i>
+                                                <i className={`ri-arrow-down-s-fill select-icon ${rtl ? 'rtl' : 'ltr'}`}></i>
                                             </div>
                                         </div>
-
+    
                                         <div className="select_item">
-                                            <label dir={getDirection()} style={{ textAlign: getDirection() === 'rtl' ? 'right' : 'left' }} htmlFor="sub">{translation.selectSub}</label>
+                                            <label dir={direction} style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }} htmlFor="sub">
+                                                {translation.selectSub}
+                                            </label>
                                             <div className="custom-select-wrapper menu">
                                                 <select
                                                     className="custom-select"
-                                                    style={{ textAlign: getDirection() === 'rtl' ? 'right' : 'left' }}
+                                                    style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                                     name="sub"
                                                     id="sub"
                                                     value={sub}
@@ -203,21 +209,21 @@ function MainPage() {
                                                         </option>
                                                     ))}
                                                 </select>
-                                                <i className={`ri-arrow-down-s-fill select-icon ${isRtl ? 'rtl' : 'ltr'}`}></i>
+                                                <i className={`ri-arrow-down-s-fill select-icon ${rtl ? 'rtl' : 'ltr'}`}></i>
                                             </div>
                                         </div>
-
+    
                                         <div className="select_item">
-                                            <label dir={getDirection()} htmlFor="location">{translation.selectLocation}</label>
+                                            <label dir={direction} htmlFor="location">{translation.selectLocation}</label>
                                             <div className="custom-select-wrapper menu">
                                                 <input
                                                     type="text"
-                                                    dir={getDirection()}
-                                                    style={{ textAlign: getDirection() === 'rtl' ? 'right' : 'left' }}
+                                                    dir={direction}
+                                                    style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                                     className="custom-select"
                                                     name="location"
                                                     id="location"
-                                                    onClick={() => window.location.href = '/location'}
+                                                    onClick={handleLocationClick}
                                                     value={locationValue}
                                                     placeholder={translation.locationPlaceholder}
                                                     readOnly
@@ -225,27 +231,26 @@ function MainPage() {
                                                 />
                                             </div>
                                         </div>
-
+    
                                         <div className="select_item">
-                                            <label dir={getDirection()} htmlFor="dateAndTime">{translation.selectDateTime}</label>
+                                            <label dir={direction} htmlFor="dateAndTime">{translation.selectDateTime}</label>
                                             <div className="custom-select-wrapper menu" onClick={handleCalendarClick}>
                                                 <textarea
                                                     type="text"
                                                     name="dateAndTime"
                                                     className="calendar-date-input"
-
                                                     style={{ display: 'none' }}
                                                     value={dateAndTime}
                                                     readOnly
                                                     required
                                                 ></textarea>
-
+    
                                                 <div className="dropdown">
                                                     <input
                                                         ref={dateInputRef}
                                                         type="datetime-local"
                                                         className="custom-select"
-                                                        style={{ textAlign: getDirection() === 'rtl' ? 'right' : 'left' }}
+                                                        style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                                         id="dateAndTime"
                                                         value={dateAndTime}
                                                         min={minDate}
@@ -253,11 +258,10 @@ function MainPage() {
                                                         required
                                                     />
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
-
+    
                                     <button type="submit" className="navigate-links btnSubmit mt-1">{translation.nextButton}</button>
                                 </form>
                             </div>

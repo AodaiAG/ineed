@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import PC from '../../components/PC';
 import axios from 'axios';
-import {API_URL} from "../../utils/constans";
+import { API_URL } from "../../utils/constans";
 import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
+import { getDirection, isRtl } from '../../utils/generalUtils';
 
 function SearchPage() {
 
@@ -18,11 +19,11 @@ function SearchPage() {
     const handleSearchInputChange = (e) => {
         setSearchInput(e.target.value);
     };
+
     const { translation, language } = useLanguage(); // Access translation and language from the context
-    const getDirection = () => {
-        if (language === 'ar' || language === 'he') return 'rtl';
-        return 'ltr';
-    };
+    const direction = getDirection(language);
+    const rtl = isRtl(language);
+
     // Send the query to the backend and get results
     const handleSearch = async () => {
         setLoading(true);
@@ -30,14 +31,14 @@ function SearchPage() {
         try {
             const response = await axios.get(`${API_URL}/search?query=${query}`);
             if (response.data.success) {
-                console.log('sub response: '+ response.data.jobType.sub);
+                console.log('sub response: ' + response.data.jobType.sub);
                 setMain(response.data.jobType.main);
                 setSub(response.data.jobType.sub);
             } else {
                 setError(response.data.message || 'No relevant profession found.');
             }
         } catch (err) {
-            setError('Error fetching search results'+err);
+            setError('Error fetching search results' + err);
             console.log(err);
         } finally {
             setLoading(false);
@@ -72,16 +73,17 @@ function SearchPage() {
                                 {loading ? (
                                     <div className="preloader-popup">
                                         <div className="preloader-content">
-                                            <img src="/images/preloader.gif"
-                                                 alt={translation.loadingAlt}
-                                                 style={{ width: '50px', height: 'auto' }}
+                                            <img
+                                                src="/images/preloader.gif"
+                                                alt={translation.loadingAlt}
+                                                style={{ width: '50px', height: 'auto' }}
                                             />
                                         </div>
                                     </div>
                                 ) : (
                                     <form onSubmit={handleSubmit}>
                                         <div className="top">
-                                            <h2 className="start-title" dir={getDirection()}>
+                                            <h2 className="start-title" dir={direction}>
                                                 {translation.searchTitle}
                                             </h2>
                                             <div className="search searchBtn">
@@ -90,6 +92,7 @@ function SearchPage() {
                                                     value={searchInput}
                                                     onChange={handleSearchInputChange}
                                                     placeholder={translation.searchPlaceholder}
+                                                    style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                                 />
                                                 <i className="ri-search-line" onClick={handleSearch}></i>
                                             </div>
@@ -100,31 +103,42 @@ function SearchPage() {
                                         {main && subP && (
                                             <div className="top">
                                                 <div className="input">
-                                                    <label dir={getDirection()} htmlFor="main">{translation.mainLabel}</label>
+                                                    <label dir={direction} htmlFor="main">{translation.mainLabel}</label>
                                                     <input
                                                         type="text"
-                                                        dir={getDirection()}
+                                                        dir={direction}
                                                         placeholder={main}
                                                         value={main}
                                                         readOnly
+                                                        style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                                     />
                                                 </div>
                                                 <div className="input">
-                                                    <label dir={getDirection()} htmlFor="sub">{translation.subLabel}</label>
+                                                    <label dir={direction} htmlFor="sub">{translation.subLabel}</label>
                                                     <input
                                                         type="text"
-                                                        dir={getDirection()}
+                                                        dir={direction}
                                                         placeholder={subP}
                                                         value={subP}
                                                         readOnly
+                                                        style={{ textAlign: direction === 'rtl' ? 'right' : 'left' }}
                                                     />
                                                 </div>
                                             </div>
                                         )}
 
                                         <div className="bottom mt-1">
-                                            <img src="/images/search-guy.png" alt={translation.searchGuyAlt} className="img search-img mt-h" />
-                                            <input type="submit" value={translation.confirmButton} className="buttonSearch" dir={getDirection()} />
+                                            <img
+                                                src="/images/search-guy.png"
+                                                alt={translation.searchGuyAlt}
+                                                className="img search-img mt-h"
+                                            />
+                                            <input
+                                                type="submit"
+                                                value={translation.confirmButton}
+                                                className="buttonSearch"
+                                                dir={direction}
+                                            />
                                         </div>
                                     </form>
                                 )}
@@ -135,7 +149,6 @@ function SearchPage() {
             </div>
         </div>
     );
-
 }
 
 export default SearchPage;

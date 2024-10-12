@@ -1,5 +1,4 @@
 const axios = require('axios');
-const JobType = require('../models/jobTypeModel');
 const OpenAI = require('openai');
 const JobType = require('../models/jobTypeModel'); // Import your Sequelize model
 const RequestModel = require('../models/requestModel'); // Import your Sequelize model

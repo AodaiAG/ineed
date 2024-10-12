@@ -2,13 +2,12 @@
     const bodyParser = require('body-parser');
     const path = require('path');  // Added path for serving static files
     const sequelize = require('./config/db'); // Import Sequelize instance
-
     const professionalRoutes = require('./routes/professionalRoutes');
-
     const cors = require('cors');
     const clientRoutes = require('./routes/clientRoutes'); // Adjust the path
-    // Create an Express app
     const app = express();
+    const PORT = 3001; // Fixed port
+
     app.use(bodyParser.json());
     app.use(cors());
     app.use('/api/professionals', professionalRoutes);
@@ -21,8 +20,7 @@
         res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
     });
 
-    // Start the server and connect to the database
-    const PORT = 3001; // Fixed port
+
 
     // Sync the database models and start the server
     sequelize.sync()
