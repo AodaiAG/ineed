@@ -2,12 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');  // Added path for serving static files
 const sequelize = require('./config/db'); // Import Sequelize instance
-const { sendVerificationCode, verifyCode } = require('./controllers/phoneController'); // Import controllers
-const { search } = require('./controllers/searchController'); // Import controllers
-const professionalRoutes = require('./routes/professionals/professionalRoutes');
+
+const professionalRoutes = require('./routes/professionalRoutes');
 
 const cors = require('cors');
-const routes = require('./routes/api'); // Adjust the path
+const routes = require('./routes/clientRoutes'); // Adjust the path
 // Create an Express app
 const app = express();
 

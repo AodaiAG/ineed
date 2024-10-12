@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getDashboardData, updateProfile } = require('../../controllers/professionalController');
+const { getDashboardData, updateProfile } = require('../controllers/professionalController');
 
 // Route to get the professional's dashboard data
 router.get('/dashboard', getDashboardData);
