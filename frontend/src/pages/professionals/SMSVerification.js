@@ -33,27 +33,22 @@ function SMSVerification() {
         }
     };
 
-    const handleVerification = async () => {
+    const handleVerification = () => {
         const code = verificationCode.join('');
+        const savedCode = sessionStorage.getItem('smsVerificationCode'); // Retrieve the saved code from sessionStorage
+    
         if (code.length === 4) {
-            try {
-                const response = await axios.post(`${API_URL}/verify-sms`, {
-                    phoneNumber,
-                    code,
-                });
-                if (response.data.success) {
-                    alert('Phone verified successfully.');
-                    // Redirect to dashboard or registration based on user's status
-                    navigate('/pro/dashboard'); // Example route after successful verification
-                } else {
-                    // Incorrect code, show error
-                    triggerErrorAnimation();
-                }
-            } catch (error) {
-                console.error('Verification failed:', error);
-                triggerErrorAnimation();
+            if (code === savedCode) {
+                // If the code matches the saved code
+                alert('Phone verified successfully.');
+                // Redirect to the dashboard or the appropriate page
+                navigate('/pro/dashboard');
+            } else {
+                // If the code is incorrect
+                triggerErrorAnimation(); // Trigger the error animation for wrong code
             }
         } else {
+            // If the code is not 4 digits long, trigger the error animation
             triggerErrorAnimation();
         }
     };
