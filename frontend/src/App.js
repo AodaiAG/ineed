@@ -13,6 +13,8 @@ import PhoneVerifyPage from './pages/client/VerifyPhonePage';
 // Professional Pages
 import ProfessionalPhoneScreen from './pages/professionals/PhoneScreen';
 import SMSVerification from "./pages/professionals/SMSVerification"; // Import SMS Verification
+import ProfessionalRegistration from './pages/professionals/ProfessionalRegistration'; // Update the path as necessary
+
 
 function App() {
     return (
@@ -33,6 +35,8 @@ function App() {
                     {/* Professional Side Routes */}
                     <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />
                     <Route path="/pro/sms-verification" element={<SMSVerification />} />
+                    <Route path="/pro/register" element={<ProfessionalRegistration />} /> {/* New Registration Route */}
+
 
                     {/* Add more professional routes as you create new pages */}
                 </Routes>

@@ -1,0 +1,148 @@
+.pro-registration-body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    direction: rtl; /* Right-to-Left for Hebrew */
+    overflow-y: auto; /* Scrollable for large forms */
+}
+
+.pro-registration-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.pro-registration-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.pro-form-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.pro-form-group {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: right; /* Align labels and inputs properly for RTL */
+}
+
+.pro-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.pro-input-text {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #444;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.pro-input-readonly {
+    background-color: #888; /* Gray background for read-only */
+}
+
+.pro-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pro-dropdown {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.pro-dropdown-toggle {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    width: 100%;
+    text-align: right;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pro-arrow {
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.pro-dropdown-content {
+    display: none;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.pro-dropdown-content-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.pro-availability-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pro-image-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.pro-image-upload img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.pro-upload-button, .pro-continue-button {
+    background-color: #f1c40f;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pro-upload-button:hover, .pro-continue-button:hover {
+    background-color: #d4a30e;
+}
+
+.pro-note {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 5px;
+}
