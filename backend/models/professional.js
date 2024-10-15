@@ -1,6 +1,6 @@
 // models/professional.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Assuming you have a sequelize instance here
+const sequelize = require('../config/db'); // Assuming you have a sequelize instance here
 
 const Professional = sequelize.define('Professional', {
     id: {

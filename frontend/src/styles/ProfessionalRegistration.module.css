@@ -1,4 +1,4 @@
-.pro-registration-body {
+.pro-body {
     font-family: 'Arial', sans-serif;
     background-color: #000;
     color: #fff;
@@ -12,7 +12,7 @@
     overflow-y: auto; /* Scrollable for large forms */
 }
 
-.pro-registration-container {
+.pro-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,7 +22,7 @@
     padding: 20px;
 }
 
-.pro-registration-content {
+.pro-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -46,7 +46,7 @@
     font-size: 1rem;
 }
 
-.pro-input-text {
+.pro-input {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
@@ -100,16 +100,22 @@
     margin-top: 5px;
 }
 
-.pro-dropdown-content-label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 1rem;
-}
-
 .pro-availability-group {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.day {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.day-label {
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .pro-image-upload {
@@ -117,12 +123,6 @@
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
-}
-
-.pro-image-upload img {
-    width: 120px;
-    height: auto;
-    margin-bottom: 10px;
 }
 
 .pro-upload-button, .pro-continue-button {

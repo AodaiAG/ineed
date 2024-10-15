@@ -1,8 +1,8 @@
 // professionalRoutes.js
 const express = require('express');
 const router = express.Router();
-const { verifyOrCreateProfessional } = require('../controllers/professionalController');
+const { checkIfRegistered } = require('../controllers/professionalController');
 
-router.post('/verify-or-create', verifyOrCreateProfessional);
+router.post('/check-if-registered', checkIfRegistered);
 
 module.exports = router;

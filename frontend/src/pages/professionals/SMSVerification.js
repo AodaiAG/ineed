@@ -41,18 +41,18 @@ function SMSVerification() {
             if (code === storedCode) {
                 try {
                     // Make a request to verify or create the professional
-                    const response = await axios.post(`${API_URL}/professionals/verify-or-create`, {
+                    const response = await axios.post(`${API_URL}/professionals/check-if-registered`, {
                         phoneNumber,
                     });
     
                     if (response.data.success) {
-                        alert('Phone verified successfully.');
+                       
                         // Redirect to dashboard or registration based on user's status
                         navigate('/pro/dashboard');
                         // Example route after successful verification
                     } else {
                         // If there's an issue with backend processing, display an error
-                        alert('Verification failed. Please try again.');
+                      
                         navigate('/pro/register');
                     }
                 } catch (error) {
