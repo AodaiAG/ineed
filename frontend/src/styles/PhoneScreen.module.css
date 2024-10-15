@@ -1,0 +1,114 @@
+.pro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    height: 100vh;  /* Added to center vertically */
+    background-color: #000; /* Black background for professional side */
+    color: #fff;
+}
+
+.pro-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.pro-main-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.pro-subtitle {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    font-weight: 400;
+}
+
+.pro-enter-title {
+    font-size: 1.5rem;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.pro-phone-input-section {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.pro-country-code {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f1c40f;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.pro-select {
+    border: none;
+    background: none;
+    color: #000;
+    font-size: 1rem;
+    width: 60px;
+    padding: 5px;
+    border-radius: 8px;
+    text-align: center;
+    appearance: none;
+    outline: none;
+}
+
+.pro-hidden-label {
+    display: none;
+}
+
+.pro-phone-number {
+    width: 150px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.pro-terms-text {
+    font-size: 0.9rem;
+    margin: 10px 0;
+    color: #fff;
+}
+
+.pro-terms-link {
+    color: #f1c40f;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.pro-illustration {
+    margin: 20px 0;
+}
+
+.pro-illustration img {
+    width: 100px;
+    height: auto;
+}
+
+.pro-enter-button {
+    background-color: #f1c40f;
+    color: #000;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pro-enter-button:hover {
+    background-color: #d4a30e;
+}

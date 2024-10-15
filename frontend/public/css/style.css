@@ -5,7 +5,7 @@
     box-sizing: border-box;
     font-family: 'Arial', sans-serif; /* Fallback font for RTL languages */
 }
-body{
+.client-body {
     background-color: #1783E0;
 }
 .container{
