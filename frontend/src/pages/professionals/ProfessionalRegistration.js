@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from '../../styles/ProfessionalRegistration.module.css'; // Import the scoped CSS module
+import { API_URL } from '../../utils/constans'; // Import API URL from constants
 
 function ProfessionalRegistration() {
     const [availability24_7, setAvailability24_7] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [mainProfessions, setMainProfessions] = useState([]);
+    const [subProfessions, setSubProfessions] = useState({}); // Object to store sub-professions for each main profession
 
     useEffect(() => {
         // Get the phone number from session storage
@@ -11,15 +15,45 @@ function ProfessionalRegistration() {
         if (storedPhoneNumber) {
             setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
         }
+
+        // Fetch main professions from the server
+        const fetchMainProfessions = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/main-professions`);
+                setMainProfessions(response.data);
+            } catch (error) {
+                console.error('Error fetching main professions:', error);
+            }
+        };
+
+        fetchMainProfessions();
     }, []);
 
-    // Toggle dropdown visibility
-    const toggleDropdown = (id) => {
+    // Fetch sub-professions when a main profession is expanded
+    const fetchSubProfessions = async (main) => {
+        if (!subProfessions[main]) {
+            try {
+                const response = await axios.get(`${API_URL}/sub-professions/${main}`);
+                setSubProfessions((prevSubProfessions) => ({
+                    ...prevSubProfessions,
+                    [main]: response.data,
+                }));
+            } catch (error) {
+                console.error('Error fetching sub professions:', error);
+            }
+        }
+    };
+
+    // Toggle dropdown visibility and fetch sub-professions if needed
+    const toggleDropdown = (id, main) => {
         const dropdown = document.getElementById(id);
         if (dropdown.style.display === 'block') {
             dropdown.style.display = 'none';
         } else {
             dropdown.style.display = 'block';
+            if (main) {
+                fetchSubProfessions(main);
+            }
         }
     };
 
@@ -66,51 +100,27 @@ function ProfessionalRegistration() {
                     {/* Job Fields with Expandable Dropdowns */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>בחר תחומי עיסוק:</label>
-                        <div className={styles['pro-dropdown']}>
-                            <div className={styles['pro-dropdown-toggle']}>
-                                <label>
-                                    <input type="checkbox" id="carpentry-checkbox" onClick={() => toggleAllChildren('carpentry')} />
-                                    <span>נגרות</span>
-                                </label>
-                                <i className={styles['pro-arrow']} onClick={() => toggleDropdown('carpentry')}>⌄</i>
+                        {mainProfessions.map((mainProfession) => (
+                            <div key={mainProfession.main} className={styles['pro-dropdown']}>
+                                <div
+                                    className={styles['pro-dropdown-toggle']}
+                                    onClick={() => toggleDropdown(mainProfession.main, mainProfession.main)}
+                                >
+                                    <label>
+                                        <input type="checkbox" id={`${mainProfession.main}-checkbox`} onClick={(e) => { e.stopPropagation(); toggleAllChildren(mainProfession.main); }} />
+                                        <span>{mainProfession.main}</span>
+                                    </label>
+                                    <i className={styles['pro-arrow']}>⌄</i>
+                                </div>
+                                <div className={styles['pro-dropdown-content']} id={mainProfession.main}>
+                                    {subProfessions[mainProfession.main]?.map((subProfession) => (
+                                        <label key={subProfession.id} className={styles['pro-sub-label']}>
+                                            <input type="checkbox" className={`${mainProfession.main}-child`} /> {subProfession.sub}
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
-                            <div className={styles['pro-dropdown-content']} id="carpentry">
-                                <label><input type="checkbox" className="carpentry-child" /> התקנת ארונות</label>
-                                <label><input type="checkbox" className="carpentry-child" /> תיקון ארונות</label>
-                                <label><input type="checkbox" className="carpentry-child" /> MDF</label>
-                            </div>
-                        </div>
-                        <div className={styles['pro-dropdown']}>
-                            <div className={styles['pro-dropdown-toggle']}>
-                                <label>
-                                    <input type="checkbox" id="plumbing-checkbox" onClick={() => toggleAllChildren('plumbing')} />
-                                    <span>אינסטלציה</span>
-                                </label>
-                                <i className={styles['pro-arrow']} onClick={() => toggleDropdown('plumbing')}>⌄</i>
-                            </div>
-                            <div className={styles['pro-dropdown-content']} id="plumbing">
-                                <label><input type="checkbox" className="plumbing-child" /> תיקון סתימות</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Work Areas with Master Checkbox and Expandable Dropdowns */}
-                    <div className={styles['pro-form-group']}>
-                        <label className={styles['pro-label']}>אזורי עבודה:</label>
-                        <div className={styles['pro-dropdown']}>
-                            <div className={styles['pro-dropdown-toggle']}>
-                                <label>
-                                    <input type="checkbox" id="north-checkbox" onClick={() => toggleAllChildren('north')} />
-                                    <span>צפון</span>
-                                </label>
-                                <i className={styles['pro-arrow']} onClick={() => toggleDropdown('north')}>⌄</i>
-                            </div>
-                            <div className={styles['pro-dropdown-content']} id="north">
-                                <label><input type="checkbox" className="north-child" /> קריות</label>
-                                <label><input type="checkbox" className="north-child" /> חיפה</label>
-                                <label><input type="checkbox" className="north-child" /> עכו</label>
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
                     {/* Availability Times */}
