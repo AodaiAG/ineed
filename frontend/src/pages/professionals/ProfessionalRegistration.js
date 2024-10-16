@@ -18,6 +18,7 @@ function ProfessionalRegistration() {
         ש: { isWorking: false, start: '', end: '' }
     });
     const [image, setImage] = useState('/images/prof/w.png');
+    const [groupedLocations, setGroupedLocations] = useState({});
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -35,7 +36,17 @@ function ProfessionalRegistration() {
             }
         };
 
+        const fetchLocations = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/professionals/locations`);
+                setGroupedLocations(response.data);
+            } catch (error) {
+                console.error('Error fetching locations:', error);
+            }
+        };
+
         fetchMainProfessions();
+        fetchLocations();
     }, []);
 
     const fetchSubProfessions = async (main) => {
@@ -212,7 +223,7 @@ function ProfessionalRegistration() {
                     {/* Work Areas with Master Checkbox and Expandable Dropdowns */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>אזורי עבודה:</label>
-                        {['צפון', 'גליל עליון'].map((region) => (
+                        {Object.keys(groupedLocations).map((region) => (
                             <div key={region} className={styles['pro-dropdown']}>
                                 <div
                                     className={styles['pro-dropdown-toggle']}
@@ -225,12 +236,11 @@ function ProfessionalRegistration() {
                                     <i className={styles['pro-arrow']}>⌄</i>
                                 </div>
                                 <div className={styles['pro-dropdown-content']} id={region}>
-                                    <label className={styles['pro-sub-label']}>
-                                        <input type="checkbox" className={`${region}-child`} /> קריות
-                                    </label>
-                                    <label className={styles['pro-sub-label']}>
-                                        <input type="checkbox" className={`${region}-child`} /> חיפה
-                                    </label>
+                                    {groupedLocations[region].map((location) => (
+                                        <label key={location} className={styles['pro-sub-label']}>
+                                            <input type="checkbox" className={`${region}-child`} /> {location}
+                                        </label>
+                                    ))}
                                 </div>
                             </div>
                         ))}
