@@ -237,11 +237,11 @@ function ProfessionalRegistration() {
     
         try {
             await axios.post(`${API_URL}/professionals/register`, professionalData);
-            alert('הרישום נשמר בהצלחה');
+           
             navigate('/pro/expert-interface'); // Redirect to Expert Interface page after successful registration
         } catch (error) {
             console.error('Error saving registration:', error);
-            alert('התרחשה שגיאה בשמירת הרישום, נסה שוב מאוחר יותר.');
+           
         }
     };
 

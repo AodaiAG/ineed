@@ -1,0 +1,153 @@
+/* BusinessCard.module.css */
+
+.proContainer {
+    text-align: center;
+    max-width: 90%;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    direction: rtl; /* Right-to-Left for Hebrew */
+}
+
+.proBusinessName {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #f1c40f;
+    margin-bottom: 5px;
+    word-break: break-word;
+}
+
+.proCompanyType {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.proImageContainer {
+    margin: 20px 0;
+}
+
+.proProfileImage {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.proIconsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.proIcon {
+    width: 45px;
+    height: 45px;
+    background-color: #f1c40f;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.proIcon img {
+    width: 25px;
+    height: 25px;
+}
+
+.proIcon:hover {
+    transform: scale(1.1);
+}
+
+.proFooter {
+    background-color: #007bff;
+    padding: 5px; /* Reduced padding for a smaller footer */
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 40px);
+    max-width: 350px;
+    margin: 10px auto;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 10px;
+}
+
+.proFooterContent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.proFooterWorkerIcon {
+    width: 25px;
+    height: auto;
+}
+
+.proFooterText p {
+    margin: 0;
+    font-size: 0.7rem; /* Reduced font size for a smaller footer */
+    color: #fff;
+}
+
+.proFooterText a {
+    color: #ffdd57;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.7rem; /* Reduced font size for a smaller footer */
+}
+
+.proFooterText a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive styles */
+@media (min-width: 600px) {
+    .proContainer {
+        max-width: 400px;
+    }
+
+    .proBusinessName {
+        font-size: 2rem;
+    }
+
+    .proCompanyType {
+        font-size: 1.2rem;
+    }
+
+    .proIcon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .proIcon img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .proFooter {
+        padding: 10px;
+    }
+
+    .proFooterText p {
+        font-size: 0.8rem;
+    }
+
+    .proFooterText a {
+        font-size: 0.8rem;
+    }
+}

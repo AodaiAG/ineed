@@ -1,7 +1,7 @@
 // professionalRoutes.js
 const express = require('express');
 const router = express.Router();
-const { checkIfRegistered,getAllLocations,registerProfessional } = require('../controllers/professionalController');
+const { checkIfRegistered,getAllLocations,registerProfessional,getProfessionalById } = require('../controllers/professionalController');
 
 router.post('/check-if-registered', checkIfRegistered); // check if the user registerd or not
 router.post('/register', registerProfessional);
