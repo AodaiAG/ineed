@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import { API_URL } from '../../utils/constans';
+import { useNavigate } from 'react-router-dom';
 
 function ProfessionalRegistration() {
+    const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [mainProfessions, setMainProfessions] = useState([]);
@@ -19,6 +21,17 @@ function ProfessionalRegistration() {
     });
     const [image, setImage] = useState('/images/prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState({});
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [website, setWebsite] = useState('');
+    const [businessName, setBusinessName] = useState('');
+    const [languages, setLanguages] = useState({
+        עברית: false,
+        רוסית: false,
+        אנגלית: false,
+        ספרדית: false,
+        ערבית: false
+    });
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -39,7 +52,14 @@ function ProfessionalRegistration() {
         const fetchLocations = async () => {
             try {
                 const response = await axios.get(`${API_URL}/professionals/locations`);
-                setGroupedLocations(response.data);
+                const locationsData = response.data;
+        
+                // Remove the first item from the fetched locations
+                const filteredLocations = Object.fromEntries(
+                    Object.entries(locationsData).slice(1)
+                );
+        
+                setGroupedLocations(filteredLocations);
             } catch (error) {
                 console.error('Error fetching locations:', error);
             }
@@ -104,17 +124,17 @@ function ProfessionalRegistration() {
                     // Create a canvas to resize the image
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-    
+
                     // Set the desired dimensions (e.g., 300x200)
                     const targetWidth = 300;
                     const targetHeight = 200;
-    
+
                     canvas.width = targetWidth;
                     canvas.height = targetHeight;
-    
+
                     // Draw the resized image onto the canvas
                     ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-    
+
                     // Convert canvas back to an image
                     const resizedImageUrl = canvas.toDataURL('image/jpeg');
                     setImage(resizedImageUrl);
@@ -130,6 +150,101 @@ function ProfessionalRegistration() {
         fileInputRef.current.click();
     };
 
+    // Validate form fields before submitting
+    const validateForm = () => {
+        if (!fullName) {
+            alert('אנא הזן שם פרטי ומשפחה');
+            return false;
+        }
+
+        if (!email) {
+            alert('אנא הזן אימייל');
+            return false;
+        }
+
+        const isAnyMainProfessionSelected = mainProfessions.some(main => document.getElementById(`${main.main}-checkbox`)?.checked);
+        if (!isAnyMainProfessionSelected) {
+            alert('אנא בחר לפחות תחום עיסוק אחד');
+            return false;
+        }
+
+        const isAnyWorkAreaSelected = Object.entries(groupedLocations).some(([region, locations]) => locations.some(location => document.querySelector(`.${region}-child`)?.checked));
+        if (!isAnyWorkAreaSelected) {
+            alert('אנא בחר לפחות אזור עבודה אחד');
+            return false;
+        }
+
+        const isAnyDayAvailable = Object.values(dayAvailability).some(day => day.isWorking);
+        if (!isAnyDayAvailable) {
+            alert('אנא בחר לפחות יום אחד שבו אתה זמין לעבודה');
+            return false;
+        }
+
+        const isAnyLanguageSelected = Object.values(languages).some(lang => lang);
+        if (!isAnyLanguageSelected) {
+            alert('אנא בחר לפחות שפה אחת');
+            return false;
+        }
+
+        return true;
+    };
+
+    // Handle form submission to save data
+    const handleSubmit = async () => {
+        if (!validateForm()) return;
+    
+        const selectedMainProfessions = mainProfessions.filter(main => {
+            const checkbox = document.getElementById(`${main.main}-checkbox`);
+            return checkbox && checkbox.checked;
+        });
+    
+        const selectedSubProfessions = Object.entries(subProfessions).reduce((acc, [main, subs]) => {
+            const sanitizedMain = main.replace(/[\(\)\s]/g, "\\$&"); // Escape any special characters
+            acc[main] = subs.filter(sub => {
+                const childCheckbox = document.querySelector(`.${sanitizedMain}-child`);
+                return childCheckbox && childCheckbox.checked;
+            });
+            return acc;
+        }, {});
+    
+        const selectedWorkAreas = Object.entries(groupedLocations).reduce((acc, [region, locations]) => {
+            const sanitizedRegion = region.replace(/[\(\)\s]/g, "\\$&"); // Escape any special characters
+            acc[region] = locations.filter(location => {
+                const childCheckbox = document.querySelector(`.${sanitizedRegion}-child`);
+                return childCheckbox && childCheckbox.checked;
+            });
+            return acc;
+        }, {});
+    
+        const selectedLanguages = Object.entries(languages)
+            .filter(([lang, isSelected]) => isSelected)
+            .map(([lang]) => lang);
+    
+        const professionalData = {
+            phoneNumber,
+            fullName,
+            email,
+            website,
+            businessName,
+            image,
+            availability24_7,
+            dayAvailability,
+            mainProfessions: selectedMainProfessions,
+            subProfessions: selectedSubProfessions,
+            workAreas: selectedWorkAreas,
+            languages: selectedLanguages,
+        };
+    
+        try {
+            await axios.post(`${API_URL}/professionals/register`, professionalData);
+            alert('הרישום נשמר בהצלחה');
+            navigate('/pro/expert-interface'); // Redirect to Expert Interface page after successful registration
+        } catch (error) {
+            console.error('Error saving registration:', error);
+            alert('התרחשה שגיאה בשמירת הרישום, נסה שוב מאוחר יותר.');
+        }
+    };
+
     return (
         <div className={styles['pro-body']}>
             <div className={styles['pro-container']}>
@@ -139,8 +254,15 @@ function ProfessionalRegistration() {
 
                     {/* Name Input */}
                     <div className={styles['pro-form-group']}>
-                        <label htmlFor="name" className={styles['pro-label']}>שם פרטי ומשפחה:</label>
-                        <input type="text" id="name" placeholder="דני שובבני" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
+                        <label htmlFor="fullName" className={styles['pro-label']}>שם פרטי ומשפחה:</label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                            placeholder="דני שובבני"
+                        />
                     </div>
 
                     {/* Phone Input */}
@@ -164,16 +286,12 @@ function ProfessionalRegistration() {
                             <img src={image} alt="Professional Image" className={styles['pro-image-preview']} />
                             <input
                                 type="file"
-                                accept="image/*" // This ensures only images are allowed
+                                accept="image/*"
                                 ref={fileInputRef}
                                 onChange={handleImageUpload}
                                 style={{ display: 'none' }}
                             />
-                            <button
-                                type="button"
-                                className={styles['pro-upload-button']}
-                                onClick={handleUploadButtonClick}
-                            >
+                            <button type="button" className={styles['pro-upload-button']} onClick={handleUploadButtonClick}>
                                 הוסף תמונה
                             </button>
                         </div>
@@ -183,16 +301,36 @@ function ProfessionalRegistration() {
                     {/* Email, Website, Business Name Inputs */}
                     <div className={styles['pro-form-group']}>
                         <label htmlFor="email" className={styles['pro-label']}>אימייל שלי:</label>
-                        <input type="email" id="email" placeholder="example@gmail.com" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                            placeholder="example@gmail.com"
+                        />
 
                         <label htmlFor="website" className={styles['pro-label']}>האתר שלי:</label>
-                        <input type="text" id="website" placeholder="www.example.com" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
+                        <input
+                            type="text"
+                            id="website"
+                            value={website}
+                            onChange={(e) => setWebsite(e.target.value)}
+                            className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                            placeholder="www.example.com"
+                        />
 
                         <label htmlFor="businessName" className={styles['pro-label']}>שם העסק שלי:</label>
-                        <input type="text" id="businessName" placeholder="שם העסק" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
+                        <input
+                            type="text"
+                            id="businessName"
+                            value={businessName}
+                            onChange={(e) => setBusinessName(e.target.value)}
+                            className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                            placeholder="שם העסק"
+                        />
                     </div>
-                    {/* Separator */}
-                     <div className={styles['pro-separator']}></div>
+
                     {/* Job Fields with Expandable Dropdowns */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>בחר תחומי עיסוק:</label>
@@ -218,8 +356,10 @@ function ProfessionalRegistration() {
                             </div>
                         ))}
                     </div>
-                        {/* Separator */}
-                        <div className={styles['pro-separator']}></div>
+
+                    {/* Separator */}
+                    <div className={styles['pro-separator']}></div>
+
                     {/* Work Areas with Master Checkbox and Expandable Dropdowns */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>אזורי עבודה:</label>
@@ -245,8 +385,10 @@ function ProfessionalRegistration() {
                             </div>
                         ))}
                     </div>
-                     {/* Separator */}
-                     <div className={styles['pro-separator']}></div>
+
+                    {/* Separator */}
+                    <div className={styles['pro-separator']}></div>
+
                     {/* Availability Times */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>שעות זמינות לעבודה:</label>
@@ -292,22 +434,28 @@ function ProfessionalRegistration() {
                             ))}
                         </div>
                     </div>
-                      {/* Separator */}
-                <div className={styles['pro-separator']}></div>
+
+                    {/* Separator */}
+                    <div className={styles['pro-separator']}></div>
+
                     {/* Language Preferences */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>השפות שלי:</label>
                         <div className={styles['pro-checkbox-group']}>
-                            <label><input type="checkbox" /> עברית</label>
-                            <label><input type="checkbox" /> רוסית</label>
-                            <label><input type="checkbox" /> אנגלית</label>
-                            <label><input type="checkbox" /> ספרדית</label>
-                            <label><input type="checkbox" /> ערבית</label>
+                            {Object.keys(languages).map((lang) => (
+                                <label key={lang}>
+                                    <input
+                                        type="checkbox"
+                                        checked={languages[lang]}
+                                        onChange={() => setLanguages((prev) => ({ ...prev, [lang]: !prev[lang] }))}
+                                    /> {lang}
+                                </label>
+                            ))}
                         </div>
                     </div>
 
                     {/* Continue Button */}
-                    <button className={styles['pro-continue-button']}>המשך</button>
+                    <button className={styles['pro-continue-button']} onClick={handleSubmit}>המשך</button>
                 </div>
             </div>
         </div>

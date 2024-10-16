@@ -13,6 +13,43 @@ const Professional = sequelize.define('Professional', {
         allowNull: false,
         unique: true,
     },
+    fname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    lname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    website: {
+        type: DataTypes.STRING,
+    },
+    businessName: {
+        type: DataTypes.STRING,
+    },
+    image: {
+        type: DataTypes.TEXT,
+    },
+    availability24_7: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
+    dayAvailability: {
+        type: DataTypes.JSON,
+    },
+    mainProfessions: {
+        type: DataTypes.JSON,
+    },
+    subProfessions: {
+        type: DataTypes.JSON,
+    },
+    workAreas: {
+        type: DataTypes.JSON,
+    },
 }, {
     timestamps: true, // This will add createdAt and updatedAt fields automatically
 });

@@ -1,0 +1,74 @@
+/* ExpertInterface.module.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    direction: rtl; /* Right-to-Left for Hebrew */
+    overflow: hidden;
+}
+
+.proContainer {
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+}
+
+.proLanguageSwitch {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.proLanguageSwitch img {
+    width: 24px;
+    height: 24px;
+}
+
+.proMainTitle {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.proSubTitle {
+    font-size: 1.5rem;
+    margin: 5px 0 20px;
+}
+
+.proImageContainer {
+    margin: 20px 0;
+}
+
+.proWorkerImage {
+    width: 150px;
+    height: auto;
+}
+
+.proMessageText {
+    font-size: 1.2rem;
+    margin: 20px 0;
+}
+
+.proSettingsButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.proSettingsButton:hover {
+    background-color: #0056b3;
+}
