@@ -170,6 +170,13 @@
     cursor: not-allowed; /* Cursor indicating it's not clickable */
     border: 1px solid #ccc; /* Light border to differentiate */
 }
+.pro-separator {
+    width: 100%;
+    height: 2px; /* Adjust thickness as needed */
+    background-color: white;
+    margin: 0px 0 10px 0; /* 10px above and 5px below */
+
+}
 
 .pro-upload-button, .pro-continue-button {
     background-color: #f1c40f;

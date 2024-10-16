@@ -180,7 +180,8 @@ function ProfessionalRegistration() {
                         <label htmlFor="businessName" className={styles['pro-label']}>שם העסק שלי:</label>
                         <input type="text" id="businessName" placeholder="שם העסק" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
                     </div>
-
+                    {/* Separator */}
+                     <div className={styles['pro-separator']}></div>
                     {/* Job Fields with Expandable Dropdowns */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>בחר תחומי עיסוק:</label>
@@ -206,7 +207,8 @@ function ProfessionalRegistration() {
                             </div>
                         ))}
                     </div>
-
+                        {/* Separator */}
+                        <div className={styles['pro-separator']}></div>
                     {/* Work Areas with Master Checkbox and Expandable Dropdowns */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>אזורי עבודה:</label>
@@ -233,7 +235,8 @@ function ProfessionalRegistration() {
                             </div>
                         ))}
                     </div>
-
+                     {/* Separator */}
+                     <div className={styles['pro-separator']}></div>
                     {/* Availability Times */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>שעות זמינות לעבודה:</label>
@@ -279,7 +282,8 @@ function ProfessionalRegistration() {
                             ))}
                         </div>
                     </div>
-
+                      {/* Separator */}
+                <div className={styles['pro-separator']}></div>
                     {/* Language Preferences */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>השפות שלי:</label>
