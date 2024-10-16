@@ -112,19 +112,40 @@
 .pro-availability-group {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
+    margin-top: 10px;
 }
 
 .day {
     display: flex;
-    gap: 10px;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 10px;
 }
 
 .day-label {
     font-size: 1rem;
     font-weight: bold;
+    color: #fff;
+    margin-right: 5px; /* To add some spacing between checkbox and label */
+}
+.day-input {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 5px;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+.day-input:disabled {
+    background-color: #ccc; /* Light gray background for disabled input */
+    color: #999; /* Light text color to show it's disabled */
+    border: 1px solid #aaa; /* Add a subtle border to distinguish */
+    cursor: not-allowed; /* Show that the input is disabled */
+}
+.day-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 .pro-image-upload {
@@ -132,6 +153,22 @@
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
+}
+.pro-input-white {
+    background-color: #fff;
+    color: #000;
+}
+
+.disabled-input {
+    background-color: #d3d3d3; /* A light gray color to indicate it's disabled */
+    cursor: not-allowed;
+	color: #666
+}
+.pro-input-disabled {
+    background-color: #f0f0f0; /* Lighter gray to indicate the input is disabled */
+    color: #999; /* Lighter text color */
+    cursor: not-allowed; /* Cursor indicating it's not clickable */
+    border: 1px solid #ccc; /* Light border to differentiate */
 }
 
 .pro-upload-button, .pro-continue-button {

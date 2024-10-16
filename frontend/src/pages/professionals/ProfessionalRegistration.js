@@ -1,22 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import styles from '../../styles/ProfessionalRegistration.module.css'; // Import the scoped CSS module
-import { API_URL } from '../../utils/constans'; // Import API URL from constants
+import styles from '../../styles/ProfessionalRegistration.module.css';
+import { API_URL } from '../../utils/constans';
 
 function ProfessionalRegistration() {
     const [availability24_7, setAvailability24_7] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [mainProfessions, setMainProfessions] = useState([]);
-    const [subProfessions, setSubProfessions] = useState({}); // Object to store sub-professions for each main profession
+    const [subProfessions, setSubProfessions] = useState({});
+    const [dayAvailability, setDayAvailability] = useState({
+        א: { isWorking: false, start: '', end: '' },
+        ב: { isWorking: false, start: '', end: '' },
+        ג: { isWorking: false, start: '', end: '' },
+        ד: { isWorking: false, start: '', end: '' },
+        ה: { isWorking: false, start: '', end: '' },
+        ו: { isWorking: false, start: '', end: '' },
+        ש: { isWorking: false, start: '', end: '' }
+    });
+    const [image, setImage] = useState('/images/prof/w.png');
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
-        // Get the phone number from session storage
         const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
         if (storedPhoneNumber) {
             setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
         }
 
-        // Fetch main professions from the server
         const fetchMainProfessions = async () => {
             try {
                 const response = await axios.get(`${API_URL}/main-professions`);
@@ -29,7 +38,6 @@ function ProfessionalRegistration() {
         fetchMainProfessions();
     }, []);
 
-    // Fetch sub-professions when a main profession is expanded
     const fetchSubProfessions = async (main) => {
         if (!subProfessions[main]) {
             try {
@@ -44,7 +52,6 @@ function ProfessionalRegistration() {
         }
     };
 
-    // Toggle dropdown visibility and fetch sub-professions if needed
     const toggleDropdown = (id, main) => {
         const dropdown = document.getElementById(id);
         if (dropdown.style.display === 'block') {
@@ -57,7 +64,6 @@ function ProfessionalRegistration() {
         }
     };
 
-    // Toggle all children checkboxes when the parent checkbox is clicked
     const toggleAllChildren = (region) => {
         const masterCheckbox = document.getElementById(`${region}-checkbox`);
         const children = document.querySelectorAll(`.${region}-child`);
@@ -66,9 +72,51 @@ function ProfessionalRegistration() {
         });
     };
 
-    // Toggle availability inputs if 24/7 checkbox is checked
-    const toggleAvailability = () => {
-        setAvailability24_7(!availability24_7);
+    const toggleAvailability = (day) => {
+        setDayAvailability((prevAvailability) => ({
+            ...prevAvailability,
+            [day]: {
+                ...prevAvailability[day],
+                isWorking: !prevAvailability[day].isWorking
+            }
+        }));
+    };
+
+    // Handle image upload
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const img = new Image();
+                img.onload = () => {
+                    // Create a canvas to resize the image
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+    
+                    // Set the desired dimensions (e.g., 300x200)
+                    const targetWidth = 300;
+                    const targetHeight = 200;
+    
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
+    
+                    // Draw the resized image onto the canvas
+                    ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+    
+                    // Convert canvas back to an image
+                    const resizedImageUrl = canvas.toDataURL('image/jpeg');
+                    setImage(resizedImageUrl);
+                };
+                img.src = reader.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // Handle the button click to open the file input
+    const handleUploadButtonClick = () => {
+        fileInputRef.current.click();
     };
 
     return (
@@ -81,7 +129,7 @@ function ProfessionalRegistration() {
                     {/* Name Input */}
                     <div className={styles['pro-form-group']}>
                         <label htmlFor="name" className={styles['pro-label']}>שם פרטי ומשפחה:</label>
-                        <input type="text" id="name" placeholder="דני שובבני" className={styles['pro-input']} />
+                        <input type="text" id="name" placeholder="דני שובבני" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
                     </div>
 
                     {/* Phone Input */}
@@ -92,9 +140,45 @@ function ProfessionalRegistration() {
                             id="phone"
                             value={phoneNumber}
                             readOnly
-                            className={`${styles['pro-input']} ${styles['pro-input-readonly']}`}
+                            disabled
+                            className={`${styles['pro-input']} ${styles['pro-input-disabled']}`}
                         />
                         <p className={styles['pro-note']}>*להחלפת מספר צור קשר עם השירות <a href="#">כאן</a></p>
+                    </div>
+
+                    {/* Add Image Section */}
+                    <div className={styles['pro-form-group']}>
+                        <label className={styles['pro-label']}>הוסף תמונה</label>
+                        <div className={styles['pro-image-upload']}>
+                            <img src={image} alt="Professional Image" className={styles['pro-image-preview']} />
+                            <input
+                                type="file"
+                                accept="image/*" // This ensures only images are allowed
+                                ref={fileInputRef}
+                                onChange={handleImageUpload}
+                                style={{ display: 'none' }}
+                            />
+                            <button
+                                type="button"
+                                className={styles['pro-upload-button']}
+                                onClick={handleUploadButtonClick}
+                            >
+                                הוסף תמונה
+                            </button>
+                        </div>
+                        <p className={styles['pro-note']}>*בעלי תמונה מקבלים יותר פניות</p>
+                    </div>
+
+                    {/* Email, Website, Business Name Inputs */}
+                    <div className={styles['pro-form-group']}>
+                        <label htmlFor="email" className={styles['pro-label']}>אימייל שלי:</label>
+                        <input type="email" id="email" placeholder="example@gmail.com" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
+
+                        <label htmlFor="website" className={styles['pro-label']}>האתר שלי:</label>
+                        <input type="text" id="website" placeholder="www.example.com" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
+
+                        <label htmlFor="businessName" className={styles['pro-label']}>שם העסק שלי:</label>
+                        <input type="text" id="businessName" placeholder="שם העסק" className={`${styles['pro-input']} ${styles['pro-input-white']}`} />
                     </div>
 
                     {/* Job Fields with Expandable Dropdowns */}
@@ -123,35 +207,77 @@ function ProfessionalRegistration() {
                         ))}
                     </div>
 
+                    {/* Work Areas with Master Checkbox and Expandable Dropdowns */}
+                    <div className={styles['pro-form-group']}>
+                        <label className={styles['pro-label']}>אזורי עבודה:</label>
+                        {['צפון', 'גליל עליון'].map((region) => (
+                            <div key={region} className={styles['pro-dropdown']}>
+                                <div
+                                    className={styles['pro-dropdown-toggle']}
+                                    onClick={() => toggleDropdown(region, null)}
+                                >
+                                    <label>
+                                        <input type="checkbox" id={`${region}-checkbox`} onClick={(e) => { e.stopPropagation(); toggleAllChildren(region); }} />
+                                        <span>{region}</span>
+                                    </label>
+                                    <i className={styles['pro-arrow']}>⌄</i>
+                                </div>
+                                <div className={styles['pro-dropdown-content']} id={region}>
+                                    <label className={styles['pro-sub-label']}>
+                                        <input type="checkbox" className={`${region}-child`} /> קריות
+                                    </label>
+                                    <label className={styles['pro-sub-label']}>
+                                        <input type="checkbox" className={`${region}-child`} /> חיפה
+                                    </label>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
                     {/* Availability Times */}
                     <div className={styles['pro-form-group']}>
                         <label className={styles['pro-label']}>שעות זמינות לעבודה:</label>
                         <div className={styles['pro-availability-group']}>
-                            <label>
-                                <input type="checkbox" id="availability-24-7" onClick={toggleAvailability} />
-                                זמינות 24/7
-                            </label>
-                            <div className={styles['day-availability']} id="days-availability">
-                                {['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ש'].map((day, index) => (
-                                    <div key={index} className={styles['day']}>
-                                        <label htmlFor={`${day}`} className={styles['day-label']}>{day}:</label>
-                                        <input type="time" id={`${day}-start`} className={styles['day-input']} disabled={availability24_7} />
-                                        עד
-                                        <input type="time" id={`${day}-end`} className={styles['day-input']} disabled={availability24_7} />
-                                    </div>
-                                ))}
-                            </div>
+                            {Object.keys(dayAvailability).map((day, index) => (
+                                <div key={index} className={styles['day']}>
+                                    <input
+                                        type="checkbox"
+                                        id={`${day}-checkbox`}
+                                        checked={dayAvailability[day].isWorking}
+                                        onChange={() => toggleAvailability(day)}
+                                        className={styles['day-checkbox']}
+                                    />
+                                    <label htmlFor={`${day}`} className={styles['day-label']}>{day}:</label>
+                                    <input
+                                        type="time"
+                                        id={`${day}-start`}
+                                        className={`${styles['day-input']} ${!dayAvailability[day].isWorking ? styles['disabled-input'] : ''}`}
+                                        value={dayAvailability[day].start}
+                                        onChange={(e) =>
+                                            setDayAvailability((prev) => ({
+                                                ...prev,
+                                                [day]: { ...prev[day], start: e.target.value }
+                                            }))
+                                        }
+                                        disabled={!dayAvailability[day].isWorking}
+                                    />
+                                    עד
+                                    <input
+                                        type="time"
+                                        id={`${day}-end`}
+                                        className={`${styles['day-input']} ${!dayAvailability[day].isWorking ? styles['disabled-input'] : ''}`}
+                                        value={dayAvailability[day].end}
+                                        onChange={(e) =>
+                                            setDayAvailability((prev) => ({
+                                                ...prev,
+                                                [day]: { ...prev[day], end: e.target.value }
+                                            }))
+                                        }
+                                        disabled={!dayAvailability[day].isWorking}
+                                    />
+                                </div>
+                            ))}
                         </div>
-                    </div>
-
-                    {/* Add Image Section */}
-                    <div className={styles['pro-form-group']}>
-                        <label className={styles['pro-label']}>הוסף תמונה</label>
-                        <div className={styles['pro-image-upload']}>
-                            <img src="/images/prof/w.png" alt="Professional Image" />
-                            <button className={styles['pro-upload-button']}>הוסף תמונה</button>
-                        </div>
-                        <p className={styles['pro-note']}>*בעלי תמונה מקבלים יותר פניות</p>
                     </div>
 
                     {/* Language Preferences */}
