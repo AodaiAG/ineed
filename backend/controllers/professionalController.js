@@ -25,15 +25,31 @@ const getAllLocations = async (req, res) => {
         const locations = await Location.findAll();
         console.log('Fetched locations:', locations);
 
-        // Group locations by Area_Name
+        // Group locations by Area_ID and Area_Name
         const groupedLocations = locations.reduce((acc, location) => {
-            const { Area_Name, City_Name } = location;
-            if (!acc[Area_Name]) {
-                acc[Area_Name] = [];
+            const { Area_ID, Area_Name, City_ID, City_Name } = location;
+
+            // Find if area already exists in the accumulator
+            let area = acc.find(a => a.areaId === Area_ID);
+
+            if (!area) {
+                // If the area doesn't exist, create a new area entry
+                area = {
+                    areaId: Area_ID,
+                    areaName: Area_Name,
+                    cities: []
+                };
+                acc.push(area);
             }
-            acc[Area_Name].push(City_Name);
+
+            // Add the city to the corresponding area
+            area.cities.push({
+                cityId: City_ID,
+                cityName: City_Name
+            });
+
             return acc;
-        }, {});
+        }, []);
 
         res.status(200).json(groupedLocations);
     } catch (error) {

@@ -8,10 +8,12 @@ import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
 import JobFieldsSelection from '../../components/professionals/JobFieldsSelection';
 import AvailabilityForm from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
+import WorkAreaSelection from '../../components/professionals/WorkAreaSelection';
 
 function EditProfessionalSettings() {
     const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
+    
     const [phoneNumber, setPhoneNumber] = useState('');
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
@@ -25,7 +27,7 @@ function EditProfessionalSettings() {
         ש: { isWorking: false, start: '', end: '' }
     });
     const [image, setImage] = useState('/images/prof/w.png');
-    const [groupedLocations, setGroupedLocations] = useState({});
+    const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
@@ -38,6 +40,8 @@ function EditProfessionalSettings() {
         ערבית: false
     });
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
+    const [workAreaSelections, setWorkAreaSelections] = useState([]);
+
 
     useEffect(() => {
         // Get the user ID from session storage
@@ -54,23 +58,37 @@ function EditProfessionalSettings() {
             try {
                 const response = await axios.get(`${API_URL}/main-professions`);
                 setMainProfessions(response.data);
-               
             } catch (error) {
                 console.error('Error fetching main professions:', error);
             }
         };
 
+        const fetchLocations = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/professionals/locations`);
+                const locationsData = response.data;
+        
+                // Assuming response.data is already in the correct format
+                setGroupedLocations(locationsData);
+                console.log("Fetched grouped locations:", locationsData);
+            } catch (error) {
+                console.error('Error fetching locations:', error);
+            }
+        };
+        
+
         fetchMainProfessions();
+        fetchLocations();
     }, [navigate]);
 
     const fetchProfessionalData = async (id) => {
         try {
             const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
             const data = response.data;
-    
+
             // Log the data to inspect the response structure
-            console.log('Fetched professional data:', data);
-    
+            
+
             // Populate form with existing data
             setFullName(data.fname + ' ' + (data.lname || '')); // Set full name from fname and lname
             setPhoneNumber(data.phoneNumber); // Set phone number correctly
@@ -79,6 +97,9 @@ function EditProfessionalSettings() {
             setBusinessName(data.businessName);
             setImage(data.image);
             setDayAvailability(data.dayAvailability || dayAvailability);
+            setWorkAreaSelections(data.workAreas || []);
+            console.log('Fetched work areas:', data.workAreas);
+
             setLanguages(data.languages || {
                 עברית: false,
                 רוסית: false,
@@ -86,15 +107,15 @@ function EditProfessionalSettings() {
                 ספרדית: false,
                 ערבית: false
             });
-    
+
             // Check if `data.professions` is an array before setting state
             if (Array.isArray(data.professions)) {
                 setSelectedProfessionIds(data.professions);
             } else {
                 console.error("Expected `data.professions` to be an array, got:", data.professions);
             }
-    
-            console.log("Selected profession IDs set:", data.professions);
+
+            
         } catch (error) {
             console.error('Error fetching professional data:', error);
         }
@@ -113,11 +134,11 @@ function EditProfessionalSettings() {
             dayAvailability,
             mainProfessions: mainProfessions.filter(main => selectedProfessionIds.includes(main.id)),
             subProfessions: selectedProfessionIds,
-            workAreas: groupedLocations, // Assuming workAreas should be updated accordingly
+            workAreas: workAreaSelections,
             languages
         };
 
-        console.log("Professional data to submit:", professionalData);
+        
 
         try {
             await axios.put(`${API_URL}/professionals/update`, professionalData);
@@ -183,7 +204,6 @@ function EditProfessionalSettings() {
                             axios.get(`${API_URL}/sub-professions/${main}`)
                                 .then(response => {
                                     setSubProfessions(prev => ({ ...prev, [main]: response.data }));
-                                    console.log("Fetched sub-professions for", main, ":", response.data);
                                 })
                                 .catch(error => console.error('Error fetching sub-professions:', error));
                         }}
@@ -192,6 +212,16 @@ function EditProfessionalSettings() {
                         setSelectedProfessionIds={setSelectedProfessionIds}
                         selectedProfessionIds={selectedProfessionIds}
                     />
+
+                    <WorkAreaSelection
+                        groupedLocations={groupedLocations}
+                        toggleDropdown={toggleDropdown}
+                        toggleAllChildren={toggleAllChildren} // <-- Pass toggleAllChildren here
+
+                        setWorkAreaSelections={setWorkAreaSelections}
+                        workAreaSelections={workAreaSelections}
+                    />
+
                     <AvailabilityForm
                         dayAvailability={dayAvailability}
                         setDayAvailability={setDayAvailability}
