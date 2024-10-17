@@ -52,8 +52,7 @@ const registerProfessional = async (req, res) => {
         image,
         availability24_7,
         dayAvailability,
-        mainProfessions,
-        subProfessions,
+        professions, // Array of profession IDs (includes both main and sub professions)
         workAreas,
         languages
     } = req.body;
@@ -88,13 +87,12 @@ const registerProfessional = async (req, res) => {
             image,
             availability24_7,
             dayAvailability,
-            mainProfessions,
-            subProfessions,
+            professions, // Save the array of selected profession IDs
             workAreas: workAreaIds,
             languages
         });
 
-        res.status(201).json({ message: 'Professional registered successfully', data: newProfessional });
+        res.status(201).json({ message: 'Professional registered successfully', data: newProfessional, id: newProfessional.id });
     } catch (error) {
         console.error('Error registering professional:', error);
         res.status(500).json({ error: 'Internal server error' });

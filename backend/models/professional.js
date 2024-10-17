@@ -41,14 +41,14 @@ const Professional = sequelize.define('Professional', {
     dayAvailability: {
         type: DataTypes.JSON,
     },
-    mainProfessions: {
-        type: DataTypes.JSON,
-    },
-    subProfessions: {
-        type: DataTypes.JSON,
+    professions: {
+        type: DataTypes.JSON, // Store an array of profession IDs
     },
     workAreas: {
         type: DataTypes.JSON,
+    },
+    languages: {
+        type: DataTypes.JSON, // Adding the languages field as JSON
     },
 }, {
     timestamps: true, // This will add createdAt and updatedAt fields automatically

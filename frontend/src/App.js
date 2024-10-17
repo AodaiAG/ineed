@@ -16,6 +16,8 @@ import SMSVerification from "./pages/professionals/SMSVerification"; // Import S
 import ProfessionalRegistration from './pages/professionals/ProfessionalRegistration'; // Update the path as necessary
 import ExpertInterface from './pages/professionals/ExpertInterface'; // Import the new Expert Interface page
 import BusinessCard from './pages/professionals/BusinessCard'; // Import the business card component
+import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; // Import the new component
+
 
 
 
@@ -42,6 +44,8 @@ function App() {
                     <Route path="/pro/register" element={<ProfessionalRegistration />} /> {/* New Registration Route */}
                     <Route path="/pro/expert-interface" element={<ExpertInterface />} /> {/* New Expert Interface Route */}
                     <Route path="/pro/bs-card" element={<BusinessCard />} /> {/* New Business Card Route */}
+                    <Route path="/pro/edit-settings" element={<EditProfessionalSettings/>} />
+
 
 
 

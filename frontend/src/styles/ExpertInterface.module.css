@@ -10,7 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    direction: rtl; /* Right-to-Left for Hebrew */
+    /*direction: rtl; /* Right-to-Left for Hebrew */
     overflow: hidden;
 }
 
