@@ -1,3 +1,4 @@
+// src/pages/professionals/ProfessionalRegistration.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -5,7 +6,8 @@ import styles from '../../styles/ProfessionalRegistration.module.css';
 import { API_URL } from '../../utils/constans';
 import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
 import ImageUpload from '../../components/professionals/ImageUpload';
-import JobFields from '../../components/professionals/JobFieldsSelection';
+import JobFieldsSelection from '../../components/professionals/JobFieldsSelection';
+
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import AvailabilityTimes from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
@@ -28,7 +30,7 @@ function ProfessionalRegistration() {
         ש: { isWorking: false, start: '', end: '' }
     });
     const [image, setImage] = useState('/images/prof/w.png');
-    const [groupedLocations, setGroupedLocations] = useState({});
+    const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
@@ -40,6 +42,8 @@ function ProfessionalRegistration() {
         ספרדית: false,
         ערבית: false
     });
+    const [workAreaSelections, setWorkAreaSelections] = useState([]);
+
     const toggleDropdown = (id) => {
         const dropdown = document.getElementById(id);
         if (dropdown) {
@@ -85,7 +89,6 @@ function ProfessionalRegistration() {
         const fetchMainProfessions = async () => {
             try {
                 const response = await axios.get(`${API_URL}/main-professions`);
-                console.log('main prof: '+ response.data)
                 setMainProfessions(response.data);
             } catch (error) {
                 console.error('Error fetching main professions:', error);
@@ -96,13 +99,7 @@ function ProfessionalRegistration() {
             try {
                 const response = await axios.get(`${API_URL}/professionals/locations`);
                 const locationsData = response.data;
-
-                // Remove the first item from the fetched locations
-                const filteredLocations = Object.fromEntries(
-                    Object.entries(locationsData).slice(1)
-                );
-
-                setGroupedLocations(filteredLocations);
+                setGroupedLocations(locationsData);
             } catch (error) {
                 console.error('Error fetching locations:', error);
             }
@@ -129,8 +126,7 @@ function ProfessionalRegistration() {
             return false;
         }
 
-        const isAnyWorkAreaSelected = Object.entries(groupedLocations).some(([region, locations]) => locations.some(location => document.querySelector(`.${region}-child`)?.checked));
-        if (!isAnyWorkAreaSelected) {
+        if (workAreaSelections.length === 0) {
             alert('אנא בחר לפחות אזור עבודה אחד');
             return false;
         }
@@ -154,54 +150,23 @@ function ProfessionalRegistration() {
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
-        const selectedProfessionIds = mainProfessions.reduce((acc, main) => {
-            const mainCheckbox = document.getElementById(`${main.main}-checkbox`);
-            if (mainCheckbox && mainCheckbox.checked) {
-                const sanitizedMain = main.main.replace(/[\(\)\s]/g, "\\$&");
-                const subList = subProfessions[main.main] || [];
-        
-                // If the main profession is selected, add its sub-professions if selected
-                subList.forEach(sub => {
-                    const subCheckbox = document.querySelector(`.${sanitizedMain}-child`);
-                    if (subCheckbox && subCheckbox.checked) {
-                        acc.push(sub.id); // Push the id of each selected sub-profession
-                    }
-                });
-        
-                // Add the main profession itself if it's selected and it doesn't have any sub-professions
-                if (subList.length === 0) {
-                    acc.push(main.id);
-                }
-            }
-            return acc;
-        }, []);
-
-        const selectedWorkAreas = Object.entries(groupedLocations).reduce((acc, [region, locations]) => {
-            const sanitizedRegion = region.replace(/[\(\)\s]/g, "\\$&"); // Escape any special characters
-            acc[region] = locations.filter(location => {
-                const childCheckbox = document.querySelector(`.${sanitizedRegion}-child`);
-                return childCheckbox && childCheckbox.checked;
-            });
-            return acc;
-        }, {});
-
         const selectedLanguages = Object.entries(languages)
             .filter(([lang, isSelected]) => isSelected)
             .map(([lang]) => lang);
 
-            const professionalData = {
-                phoneNumber,
-                fullName,
-                email,
-                website,
-                businessName,
-                image,
-                availability24_7,
-                dayAvailability,
-                professions: selectedProfessionIds, // Store only the IDs of selected professions
-                workAreas: selectedWorkAreas,
-                languages: selectedLanguages,
-            };
+        const professionalData = {
+            phoneNumber,
+            fullName,
+            email,
+            website,
+            businessName,
+            image,
+            availability24_7,
+            dayAvailability,
+            professions: selectedProfessionIds, // Store only the IDs of selected professions
+            workAreas: workAreaSelections, // Store only the IDs of selected work areas (cities)
+            languages: selectedLanguages,
+        };
 
         console.log('Professional Data:', professionalData); // Debug data
 
@@ -240,25 +205,30 @@ function ProfessionalRegistration() {
                         setImage={setImage}
                     />
 
-                   
-                    
                     {/* Job Fields Section */}
-                    <JobFields
-                            mainProfessions={mainProfessions}
-                            subProfessions={subProfessions}
-                            setSelectedProfessionIds={setSelectedProfessionIds} // Add this 
-                            fetchSubProfessions={fetchSubProfessions} // Pass the fetchSubProfessions function
-
-                            toggleDropdown={toggleDropdown}
-                            toggleAllChildren={toggleAllChildren}
-
+                    <JobFieldsSelection
+                        mainProfessions={mainProfessions}
+                        subProfessions={subProfessions}
+                        fetchSubProfessions={(main) => {
+                            // Fetch sub-professions based on the selected main profession
+                            axios.get(`${API_URL}/sub-professions/${main}`)
+                                .then(response => {
+                                    setSubProfessions(prev => ({ ...prev, [main]: response.data }));
+                                })
+                                .catch(error => console.error('Error fetching sub-professions:', error));
+                        }}
+                        toggleDropdown={toggleDropdown}
+                        toggleAllChildren={toggleAllChildren}
+                        setSelectedProfessionIds={setSelectedProfessionIds}
+                        selectedProfessionIds={selectedProfessionIds}
                     />
-
                     {/* Work Areas Section */}
                     <WorkAreas
                         groupedLocations={groupedLocations}
                         toggleDropdown={toggleDropdown}
-                        toggleAllChildren={toggleAllChildren} // Pass the function
+                        toggleAllChildren={toggleAllChildren}
+                        setWorkAreaSelections={setWorkAreaSelections}
+                        workAreaSelections={workAreaSelections}
                     />
 
                     {/* Availability Times Section */}
@@ -266,7 +236,6 @@ function ProfessionalRegistration() {
                         dayAvailability={dayAvailability}
                         setDayAvailability={setDayAvailability}
                         toggleAvailability={toggleAvailability}
-
                     />
 
                     {/* Language Preferences Section */}

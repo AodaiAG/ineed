@@ -22,6 +22,21 @@ function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren
         return area.cities.filter(city => workAreaSelections.includes(city.cityId)).length;
     };
 
+    // Function to handle the selection of all children for an area
+    const handleToggleAllChildren = (areaId, isChecked) => {
+        setWorkAreaSelections(prevSelections => {
+            const areaCities = groupedLocations.find(area => area.areaId === areaId)?.cities || [];
+            const areaCityIds = areaCities.map(city => city.cityId);
+            if (isChecked) {
+                // Add all cities in this area
+                return [...new Set([...prevSelections, ...areaCityIds])];
+            } else {
+                // Remove all cities in this area
+                return prevSelections.filter(id => !areaCityIds.includes(id));
+            }
+        });
+    };
+
     return (
         <div className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>אזורי עבודה:</label>
@@ -37,11 +52,11 @@ function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren
                                 <label>
                                     <input 
                                         type="checkbox" 
-                                        id={`${area.areaId}-checkbox`} 
-                                        onClick={(e) => { 
-                                            e.stopPropagation(); 
-                                            toggleAllChildren(area.areaId); 
-                                        }} 
+                                        id={`${area.areaId}-checkbox`}
+                                        onChange={(e) => {
+                                            e.stopPropagation();
+                                            handleToggleAllChildren(area.areaId, e.target.checked);
+                                        }}
                                     />
                                     <span>{area.areaName}</span>
                                 </label>

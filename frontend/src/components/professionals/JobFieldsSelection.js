@@ -7,7 +7,6 @@ function JobFieldsSelection({
     subProfessions, 
     fetchSubProfessions, 
     toggleDropdown, 
-    toggleAllChildren,
     setSelectedProfessionIds,
     selectedProfessionIds = []  // Ensure selectedProfessionIds is at least an empty array
 }) {
@@ -20,7 +19,7 @@ function JobFieldsSelection({
                 setFetchedProfessions(prev => new Set(prev).add(mainProfession.main));
             }
         });
-    }, [mainProfessions]);
+    }, [mainProfessions, fetchSubProfessions, fetchedProfessions]);
 
     // Function to toggle selection of a sub-profession by ID
     const handleSubProfessionToggle = (subProfessionId) => {
@@ -41,6 +40,20 @@ function JobFieldsSelection({
         return subProfessions[mainProfession]?.filter(sub => selectedProfessionIds.includes(sub.id)).length || 0;
     };
 
+    // Function to toggle all sub-professions when a main profession is checked/unchecked
+    const handleToggleAllChildren = (mainProfession, isChecked) => {
+        const subProfessionIds = subProfessions[mainProfession]?.map(sub => sub.id) || [];
+        setSelectedProfessionIds(prevIds => {
+            if (isChecked) {
+                // Add all sub-profession IDs for this main profession
+                return [...new Set([...prevIds, ...subProfessionIds])];
+            } else {
+                // Remove all sub-profession IDs for this main profession
+                return prevIds.filter(id => !subProfessionIds.includes(id));
+            }
+        });
+    };
+
     return (
         <div className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>בחר תחומי עיסוק:</label>
@@ -58,9 +71,10 @@ function JobFieldsSelection({
                                 <input
                                     type="checkbox"
                                     id={`${mainProfession.main}-checkbox`}
-                                    onClick={(e) => {
+                                    checked={countSelectedSubProfessions(mainProfession.main) === (subProfessions[mainProfession.main]?.length || 0) && subProfessions[mainProfession.main]?.length > 0}
+                                    onChange={(e) => {
                                         e.stopPropagation();
-                                        toggleAllChildren(mainProfession.main);
+                                        handleToggleAllChildren(mainProfession.main, e.target.checked);
                                     }}
                                 />
                                 <span>{mainProfession.main}</span>
@@ -77,7 +91,10 @@ function JobFieldsSelection({
                                         type="checkbox"
                                         className={`${mainProfession.main}-child`}
                                         checked={selectedProfessionIds.includes(subProfession.id)}
-                                        onChange={() => handleSubProfessionToggle(subProfession.id)}
+                                        onChange={(e) => {
+                                            e.stopPropagation();
+                                            handleSubProfessionToggle(subProfession.id);
+                                        }}
                                     />
                                     {subProfession.sub}
                                 </label>
