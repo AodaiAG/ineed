@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PC from '../../components/PC';
+import PC from '../../components/client/PC';
 import { Link } from 'react-router-dom';
 import translations from '../../utils/translations.json';
 import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook

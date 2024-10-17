@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PC from '../../components/PC';
+import PC from '../../components/client/PC';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from "../../utils/constans";

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PC from '../../components/PC';
+import PC from '../../components/client/PC';
 import translations from '../../utils/translations.json';
 import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
 

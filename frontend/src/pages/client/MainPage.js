@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import PC from '../../components/PC';
+import PC from '../../components/client/PC';
 import { API_URL } from "../../utils/constans";
 import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
 import {

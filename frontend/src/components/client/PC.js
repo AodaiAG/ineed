@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLanguage } from '../components/LanguageContext'; // Import the useLanguage hook
+import { useLanguage } from '../LanguageContext'; // Import the useLanguage hook
 
 function PC() {
 

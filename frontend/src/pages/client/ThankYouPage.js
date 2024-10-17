@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PC from '../../components/PC'; // Importing PC component
+import PC from '../../components/client/PC'; // Importing PC component
 import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
 
 function ThankYouPage() {
