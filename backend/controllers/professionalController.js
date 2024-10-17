@@ -69,7 +69,7 @@ const registerProfessional = async (req, res) => {
         availability24_7,
         dayAvailability,
         professions, // Array of profession IDs (includes both main and sub professions)
-        workAreas,
+        workAreas, // Array of city IDs directly from the frontend
         languages
     } = req.body;
 
@@ -77,20 +77,6 @@ const registerProfessional = async (req, res) => {
         // Split the full name into first name and last name (assuming space separates them)
         const [fname, ...lnameParts] = fullName.split(' ');
         const lname = lnameParts.join(' ');
-
-        // Flatten workAreas to get an array of city names
-        const cityNames = Object.values(workAreas).flat();
-
-        // Fetch the city IDs based on the provided workAreas
-        const cityIds = await Location.findAll({
-            where: {
-                City_Name: cityNames
-            },
-            attributes: ['City_ID']
-        });
-
-        // Extract the city IDs
-        const workAreaIds = cityIds.map((location) => location.City_ID);
 
         // Create a new professional record in the database
         const newProfessional = await Professional.create({
@@ -104,7 +90,7 @@ const registerProfessional = async (req, res) => {
             availability24_7,
             dayAvailability,
             professions, // Save the array of selected profession IDs
-            workAreas: workAreaIds,
+            workAreas,   // Save the array of city IDs directly
             languages
         });
 
@@ -114,7 +100,6 @@ const registerProfessional = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 const getProfessionalById = async (req, res) => {
     const { id } = req.params;
 

@@ -149,6 +149,7 @@ function ProfessionalRegistration() {
     // Handle form submission to save data
     const handleSubmit = async () => {
         if (!validateForm()) return;
+        console.log('Selected Work Areas (workAreaSelections):', workAreaSelections); // Log selected work areas to debug
 
         const selectedLanguages = Object.entries(languages)
             .filter(([lang, isSelected]) => isSelected)
