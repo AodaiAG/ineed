@@ -18,6 +18,8 @@ import ExpertInterface from './pages/professionals/ExpertInterface'; // Import t
 import BusinessCard from './pages/professionals/BusinessCard'; // Import the business card component
 import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; // Import the new component
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
+import ExplainScreen from './pages/professionals/ExplainScreen'; // Import the new page
+
 
 
 
@@ -47,6 +49,8 @@ function App() {
                     <Route path="/pro/bs-card" element={<BusinessCard />} /> {/* New Business Card Route */}
                     <Route path="/pro/edit-settings" element={<EditProfessionalSettings/>} />
                     <Route path="/pro/expert-main" element={<ExpertMainPage />} />
+                    <Route path="/pro/explain" element={<ExplainScreen />} />
+
 
 
 

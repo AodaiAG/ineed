@@ -14,7 +14,7 @@ function ExpertMainPage() {
 
     // Handle navigation for "Let's Go" button
     const handleCTAClick = () => {
-        navigate('/pro/expert-interface');
+        navigate('/pro/explain');
     };
 
     return (
@@ -25,8 +25,8 @@ function ExpertMainPage() {
             </div>
 
             <h1 className={styles.mainTitle}>I Need</h1>
-            <h2 className={styles.subTitle}>All Experts In One Place</h2>
-            <h3 className={styles.expertInterface}>Expert Interface</h3>
+            <h2 className={styles.subTitle}>כל המומחים במקום אחד</h2>
+            <h3 className={styles.expertInterface}>ממשק המומחים</h3>
 
             {/* Worker Image */}
             <div className={styles.imageContainer}>
@@ -34,7 +34,7 @@ function ExpertMainPage() {
             </div>
 
             {/* "Let's Go" Button */}
-            <button className={styles.ctaButton} onClick={handleCTAClick}>LET'S GO</button>
+            <button className={styles.ctaButton} onClick={handleCTAClick}>קדימה</button>
 
             {/* Language Selection Popup - only show when isLanguagePopupOpen is true */}
             {isLanguagePopupOpen && (
