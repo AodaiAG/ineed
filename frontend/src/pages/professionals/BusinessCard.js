@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../utils/constans';
 import styles from '../../styles/BusinessCard.module.css';
@@ -7,6 +7,7 @@ import styles from '../../styles/BusinessCard.module.css';
 function BusinessCard() {
     const [professional, setProfessional] = useState(null);
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     const id = searchParams.get('id');
 
     useEffect(() => {
@@ -14,11 +15,6 @@ function BusinessCard() {
             try {
                 const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
                 const data = response.data;
-
-                // Log fetched data to check correctness
-                console.log('First Name:', data.fname);
-                console.log('Last Name:', data.lname);
-                console.log('Image URL:', data.image);
 
                 setProfessional(data);
             } catch (error) {
@@ -34,6 +30,10 @@ function BusinessCard() {
     if (!professional) {
         return <div>Loading...</div>;
     }
+
+    const handleExplainClick = () => {
+        navigate('/pro/explain');
+    };
 
     return (
         <div className={styles.proContainer}>
@@ -80,7 +80,16 @@ function BusinessCard() {
                     <div className={styles.proFooterText}>
                         <p>I Need</p>
                         <p>כל המומחים במקום אחד</p>
-                        <a href="#">גם אתה רוצה? לחץ כאן</a>
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault(); // Prevent default link behavior
+                                handleExplainClick(); // Use navigate for redirection
+                            }}
+                            className={styles.proExplainLink}
+                        >
+                            גם אתה רוצה? לחץ כאן
+                        </a>
                     </div>
                 </div>
             </div>
