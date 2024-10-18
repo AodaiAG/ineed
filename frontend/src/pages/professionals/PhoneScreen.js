@@ -46,8 +46,8 @@ function PhoneScreen() {
         <div className={styles['pro-container']}>
             <div className={styles['pro-content']}>
                 <h1 className={styles['pro-main-title']}>I Need</h1>
-                <p className={styles['pro-subtitle']}>The Experts Place</p>
-                <h2 className={styles['pro-enter-title']}>Enter To System</h2>
+                <p className={styles['pro-subtitle']}>כל המומחים במקום אחד</p>
+                <h2 className={styles['pro-enter-title']}>כניסה למערכת</h2>
 
                 <div className={styles['pro-phone-input-section']}>
                     <label htmlFor="country-code" className={styles['pro-hidden-label']}>Country Code</label>
@@ -78,15 +78,15 @@ function PhoneScreen() {
                 </div>
 
                 <p className={styles['pro-terms-text']}>
-                    By Clicking Continue I Agree To The 
-                    <a href="#" className={styles['pro-terms-link']}>Terms</a>
+                 בלחיצה על המשך אני מסכים 
+                    <a href="#" className={styles['pro-terms-link']}  > תנאים  </a>
                 </p>
 
                 <div className={styles['pro-illustration']}>
                     <img src="/images/prof/worker.png" alt="Worker Illustration" />
                 </div>
 
-                <button className={styles['pro-enter-button']} onClick={handleEnterClick}>ENTER</button>
+                <button className={styles['pro-enter-button']} onClick={handleEnterClick}>כניסה</button>
             </div>
         </div>
     );

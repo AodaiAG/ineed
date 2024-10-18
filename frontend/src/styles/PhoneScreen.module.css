@@ -5,9 +5,10 @@
     text-align: center;
     width: 100%;
     max-width: 400px;
-    height: 100vh;  /* Added to center vertically */
+    height: 100vh; /* Center vertically */
     background-color: #000; /* Black background for professional side */
     color: #fff;
+    padding: 0 20px; /* Add side padding to make content more contained */
 }
 
 .pro-content {
@@ -20,25 +21,25 @@
 .pro-main-title {
     font-size: 2.5rem;
     font-weight: bold;
-    margin: 0;
+    margin: 0 0 5px 0; /* Remove extra margin, add small spacing below */
 }
 
 .pro-subtitle {
     font-size: 1.2rem;
-    margin: 10px 0;
+    margin: 5px 0; /* Reduce space between the subtitle and next element */
     font-weight: 400;
 }
 
 .pro-enter-title {
     font-size: 1.5rem;
-    margin: 20px 0;
+    margin: 10px 0; /* Reduced margin for a tighter layout */
     font-weight: bold;
 }
 
 .pro-phone-input-section {
     display: flex;
     gap: 10px;
-    margin: 20px 0;
+    margin: 15px 0; /* Reduce margin for a more compact look */
 }
 
 .pro-country-code {
@@ -78,7 +79,7 @@
 
 .pro-terms-text {
     font-size: 0.9rem;
-    margin: 10px 0;
+    margin: 5px 0; /* Reduce margin for tighter layout */
     color: #fff;
 }
 
@@ -89,26 +90,28 @@
 }
 
 .pro-illustration {
-    margin: 20px 0;
+    margin: 15px 0; /* Reduced margin to bring it closer to other elements */
 }
 
 .pro-illustration img {
     width: 100px;
     height: auto;
+    margin-left: 10px; /* Move the worker image slightly to the right */
 }
 
 .pro-enter-button {
     background-color: #f1c40f;
     color: #000;
     border: none;
-    padding: 15px 40px;
+    padding: 15px 50px; /* Increased padding for a wider button */
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .pro-enter-button:hover {
     background-color: #d4a30e;
+    transform: scale(1.05); /* Slight hover effect */
 }
