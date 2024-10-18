@@ -23,14 +23,14 @@ body {
 
 .proLanguageSwitch {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    cursor: pointer;
+    top: 20px; /* Place it slightly above the title */
+    right: 28%; /* Move it to be aligned slightly to the right */
+    transform: translateX(50%); /* Adjust to shift it into place */
 }
 
 .proLanguageSwitch img {
-    width: 24px;
-    height: 24px;
+    width: 35px; /* Adjust size accordingly */
+    height: 35px;
 }
 
 .proMainTitle {
