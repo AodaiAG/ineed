@@ -117,11 +117,65 @@ const getProfessionalById = async (req, res) => {
     }
 };
 
+const updateProfessional = async (req, res) => {
+    const {
+        professionalId,  // Ensure this is coming from the request body
+        phoneNumber,
+        fullName,
+        email,
+        website,
+        businessName,
+        image,
+        availability24_7,
+        dayAvailability,
+        mainProfessions,
+        subProfessions,
+        workAreas,
+        languages
+    } = req.body;
 
+    try {
+        // Check if `professionalId` exists
+        if (!professionalId) {
+            return res.status(400).json({ error: 'Professional ID is required for updating.' });
+        }
+
+        // Split the full name into first name and last name (assuming space separates them)
+        const [fname, ...lnameParts] = fullName.split(' ');
+        const lname = lnameParts.join(' ');
+
+        // Find the professional by ID and update their details
+        const professional = await Professional.findByPk(professionalId);
+        if (!professional) {
+            return res.status(404).json({ error: 'Professional not found' });
+        }
+
+        // Update the professional's details
+        await professional.update({
+            phoneNumber,
+            fname,
+            lname,
+            email,
+            website,
+            businessName,
+            image,
+            availability24_7,
+            dayAvailability,
+            professions: subProfessions,
+            workAreas,
+            languages
+        });
+
+        res.status(200).json({ message: 'Professional updated successfully', data: professional });
+    } catch (error) {
+        console.error('Error updating professional:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
 
 
 module.exports = {
     checkIfRegistered,
     getAllLocations,
-    registerProfessional,getProfessionalById,
+    registerProfessional,getProfessionalById,updateProfessional 
 };

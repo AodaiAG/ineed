@@ -20,27 +20,32 @@ function ProfessionalRegistration() {
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
-    const [dayAvailability, setDayAvailability] = useState({
-        א: { isWorking: false, start: '', end: '' },
-        ב: { isWorking: false, start: '', end: '' },
-        ג: { isWorking: false, start: '', end: '' },
-        ד: { isWorking: false, start: '', end: '' },
-        ה: { isWorking: false, start: '', end: '' },
-        ו: { isWorking: false, start: '', end: '' },
-        ש: { isWorking: false, start: '', end: '' }
-    });
+    const [selectedLanguage, setSelectedLanguage] = useState('he'); // Default is 'he' for Hebrew
+
     const [image, setImage] = useState('/images/prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
     const [businessName, setBusinessName] = useState('');
-    const [languages, setLanguages] = useState({
-        עברית: false,
-        רוסית: false,
-        אנגלית: false,
-        ספרדית: false,
-        ערבית: false
+    const languageMapping = {
+        he: 0,
+        en: 1,
+        ru: 2,
+        es: 3,
+        ar: 4
+    };
+    
+    // Updated state to store selected language IDs
+    const [languages, setLanguages] = useState([]);
+    const [dayAvailability, setDayAvailability] = useState({
+        0: { isWorking: false, start: '', end: '' },  // Sunday
+        1: { isWorking: false, start: '', end: '' },  // Monday
+        2: { isWorking: false, start: '', end: '' },  // Tuesday
+        3: { isWorking: false, start: '', end: '' },  // Wednesday
+        4: { isWorking: false, start: '', end: '' },  // Thursday
+        5: { isWorking: false, start: '', end: '' },  // Friday
+        6: { isWorking: false, start: '', end: '' }   // Saturday
     });
     const [workAreaSelections, setWorkAreaSelections] = useState([]);
 
@@ -57,19 +62,7 @@ function ProfessionalRegistration() {
             child.checked = masterCheckbox.checked;
         });
     };
-    const fetchSubProfessions = async (main) => {
-        if (!subProfessions[main]) {
-            try {
-                const response = await axios.get(`${API_URL}/sub-professions/${main}`);
-                setSubProfessions((prevSubProfessions) => ({
-                    ...prevSubProfessions,
-                    [main]: response.data,
-                }));
-            } catch (error) {
-                console.error('Error fetching sub professions:', error);
-            }
-        }
-    };
+
     const toggleAvailability = (day) => {
         setDayAvailability((prevAvailability) => ({
             ...prevAvailability,
@@ -145,11 +138,19 @@ function ProfessionalRegistration() {
 
         return true;
     };
+    const transformDayAvailabilityForBackend = (dayAvailability) => {
+        return Object.entries(dayAvailability).map(([dayInt, data]) => ({
+            day: parseInt(dayInt), // Numeric day value (0-6)
+            isWorking: data.isWorking,
+            start: data.start,
+            end: data.end
+        }));
+    };
+    
 
     // Handle form submission to save data
     const handleSubmit = async () => {
         if (!validateForm()) return;
-        console.log('Selected Work Areas (workAreaSelections):', workAreaSelections); // Log selected work areas to debug
 
         const selectedLanguages = Object.entries(languages)
             .filter(([lang, isSelected]) => isSelected)
@@ -163,10 +164,10 @@ function ProfessionalRegistration() {
             businessName,
             image,
             availability24_7,
-            dayAvailability,
+            dayAvailability: transformDayAvailabilityForBackend(dayAvailability),
             professions: selectedProfessionIds, // Store only the IDs of selected professions
             workAreas: workAreaSelections, // Store only the IDs of selected work areas (cities)
-            languages: selectedLanguages,
+            languages // Use numeric language IDs
         };
 
         console.log('Professional Data:', professionalData); // Debug data
@@ -237,6 +238,7 @@ function ProfessionalRegistration() {
                         dayAvailability={dayAvailability}
                         setDayAvailability={setDayAvailability}
                         toggleAvailability={toggleAvailability}
+                        language={selectedLanguage || 'he'} // Default to 'he' if no language selected
                     />
 
                     {/* Language Preferences Section */}

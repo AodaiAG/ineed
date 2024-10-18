@@ -57,3 +57,80 @@ export const getDirection = (language) => {
 export const isRtl = (language) => {
     return ['ar', 'he'].includes(language);
 };
+export const generateDayMappings = () => {
+    return {
+        he: ["א", "ב", "ג", "ד", "ה", "ו", "ש"],
+        en: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        ar: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"]
+    };
+};
+export const languageMapping = {
+    he: 0,
+    en: 1,
+    ru: 2,
+    es: 3,
+    ar: 4
+};
+
+// Utility to generate a reverse mapping
+export const languageLabelMapping = {
+    0: {
+        he: "עברית",
+        en: "Hebrew",
+        ru: "Иврит",
+        es: "Hebreo",
+        ar: "عبرية"
+    },
+    1: {
+        he: "אנגלית",
+        en: "English",
+        ru: "Английский",
+        es: "Inglés",
+        ar: "إنجليزي"
+    },
+    2: {
+        he: "רוסית",
+        en: "Russian",
+        ru: "Русский",
+        es: "Ruso",
+        ar: "روسي"
+    },
+    3: {
+        he: "ספרדית",
+        en: "Spanish",
+        ru: "Испанский",
+        es: "Español",
+        ar: "إسباني"
+    },
+    4: {
+        he: "ערבית",
+        en: "Arabic",
+        ru: "Арабский",
+        es: "Árabe",
+        ar: "عربي"
+    }
+};
+
+export const getLanguageLabelById = (id, language = 'he') => {
+    return languageLabelMapping[id] ? languageLabelMapping[id][language] : "Unknown Language";
+};
+// Convert day name to numeric value (regardless of language)
+export const dayNameToNumber = (dayName) => {
+    const dayMappings = generateDayMappings();
+    const languageKeys = Object.keys(dayMappings);
+    for (const language of languageKeys) {
+        const index = dayMappings[language].indexOf(dayName);
+        if (index !== -1) {
+            return index;
+        }
+    }
+    return null; // Return null if the dayName is not found
+};
+
+// Convert numeric value to day name based on selected language
+export const dayNumberToName = (dayNumber, language = "he") => {
+    const dayMappings = generateDayMappings();
+    return dayMappings[language][dayNumber] || "Unknown Day";
+};
+
+

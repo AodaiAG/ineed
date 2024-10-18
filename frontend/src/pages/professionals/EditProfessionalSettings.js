@@ -13,18 +13,19 @@ import WorkAreaSelection from '../../components/professionals/WorkAreaSelection'
 function EditProfessionalSettings() {
     const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
-    
+    const [selectedLanguage, setSelectedLanguage] = useState('he'); // Default is 'he' for Hebrew
+
     const [phoneNumber, setPhoneNumber] = useState('');
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
     const [dayAvailability, setDayAvailability] = useState({
-        א: { isWorking: false, start: '', end: '' },
-        ב: { isWorking: false, start: '', end: '' },
-        ג: { isWorking: false, start: '', end: '' },
-        ד: { isWorking: false, start: '', end: '' },
-        ה: { isWorking: false, start: '', end: '' },
-        ו: { isWorking: false, start: '', end: '' },
-        ש: { isWorking: false, start: '', end: '' }
+        0: { isWorking: false, start: '', end: '' },  // Sunday
+        1: { isWorking: false, start: '', end: '' },  // Monday
+        2: { isWorking: false, start: '', end: '' },  // Tuesday
+        3: { isWorking: false, start: '', end: '' },  // Wednesday
+        4: { isWorking: false, start: '', end: '' },  // Thursday
+        5: { isWorking: false, start: '', end: '' },  // Friday
+        6: { isWorking: false, start: '', end: '' }   // Saturday
     });
     const [image, setImage] = useState('/images/prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState([]);
@@ -32,13 +33,8 @@ function EditProfessionalSettings() {
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
     const [businessName, setBusinessName] = useState('');
-    const [languages, setLanguages] = useState({
-        עברית: false,
-        רוסית: false,
-        אנגלית: false,
-        ספרדית: false,
-        ערבית: false
-    });
+    const [languages, setLanguages] = useState([]);
+
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [workAreaSelections, setWorkAreaSelections] = useState([]);
 
@@ -100,13 +96,8 @@ function EditProfessionalSettings() {
             setWorkAreaSelections(data.workAreas || []);
             console.log('Fetched work areas:', data.workAreas);
 
-            setLanguages(data.languages || {
-                עברית: false,
-                רוסית: false,
-                אנגלית: false,
-                ספרדית: false,
-                ערבית: false
-            });
+            setLanguages(data.languages || []); // Assuming `data.languages` is an array of language IDs
+
 
             // Check if `data.professions` is an array before setting state
             if (Array.isArray(data.professions)) {
@@ -120,10 +111,26 @@ function EditProfessionalSettings() {
             console.error('Error fetching professional data:', error);
         }
     };
+    const transformDayAvailabilityForBackend = (dayAvailability) => {
+        return Object.entries(dayAvailability).map(([dayInt, data]) => ({
+            day: parseInt(dayInt), // Numeric day value (0-6)
+            isWorking: data.isWorking,
+            start: data.start,
+            end: data.end
+        }));
+    };
 
     const handleSubmit = async () => {
-        // Handle the submit functionality for saving edited professional settings
+        // Get the user ID from session storage
+        const professionalId = sessionStorage.getItem('professionalId');
+    
+        if (!professionalId) {
+            console.error("No user ID found in session storage");
+            return;
+        }
+    
         const professionalData = {
+            professionalId,  // Include the professional ID to know which user to update
             phoneNumber,
             fullName,
             email,
@@ -131,15 +138,13 @@ function EditProfessionalSettings() {
             businessName,
             image,
             availability24_7,
-            dayAvailability,
+            dayAvailability: transformDayAvailabilityForBackend(dayAvailability),
             mainProfessions: mainProfessions.filter(main => selectedProfessionIds.includes(main.id)),
             subProfessions: selectedProfessionIds,
             workAreas: workAreaSelections,
             languages
         };
-
-        
-
+    
         try {
             await axios.put(`${API_URL}/professionals/update`, professionalData);
             navigate('/pro/expert-interface'); // Redirect to the interface after successful update
@@ -226,8 +231,9 @@ function EditProfessionalSettings() {
                         dayAvailability={dayAvailability}
                         setDayAvailability={setDayAvailability}
                         toggleAvailability={toggleAvailability}
+                        language={selectedLanguage || 'he'} // Default to 'he' if no language selected
                     />
-                    <LanguagePreferences languages={languages} setLanguages={setLanguages} />
+                <LanguagePreferences languages={languages} setLanguages={setLanguages} selectedLanguage={selectedLanguage || 'he'} />
 
                     {/* Submit Button */}
                     <button className={styles['pro-continue-button']} onClick={handleSubmit}>
