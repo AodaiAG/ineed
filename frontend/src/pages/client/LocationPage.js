@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PC from '../../components/client/PC';
 import translations from '../../utils/translations.json';
-import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
+import { useLanguage } from '../../contexts/LanguageContext'; // Import the useLanguage hook
 
 function LocationPage() {
     const [address, setAddress] = useState(localStorage.getItem('location') || '');

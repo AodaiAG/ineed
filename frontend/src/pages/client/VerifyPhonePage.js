@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PC from '../../components/client/PC';
 import { API_URL } from "../../utils/constans"; // PC Component
-import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
+import { useLanguage } from '../../contexts/LanguageContext'; // Import the useLanguage hook
 
 function PhoneVerifyPage() {
     const location = useLocation();

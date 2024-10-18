@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PC from '../../components/client/PC';
 import { Link } from 'react-router-dom';
 import translations from '../../utils/translations.json';
-import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
+import { useLanguage } from '../../contexts/LanguageContext'; // Import the useLanguage hook
 function IntroPage() {
 
     const { translation, language } = useLanguage(); // Access translation and language from the context

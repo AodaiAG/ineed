@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import { LanguageProvider } from './components/LanguageContext'; // Import the provider
+import { LanguageProvider } from './contexts/LanguageContext'; // Import the provider
 import HomePage from './pages/client/HomePage';
 import IntroPage from './pages/client/IntroPage';
 import MainPage from './pages/client/MainPage';
@@ -17,6 +17,7 @@ import ProfessionalRegistration from './pages/professionals/ProfessionalRegistra
 import ExpertInterface from './pages/professionals/ExpertInterface'; // Import the new Expert Interface page
 import BusinessCard from './pages/professionals/BusinessCard'; // Import the business card component
 import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; // Import the new component
+import ExpertMainPage from './pages/professionals/ExpertMainPage';
 
 
 
@@ -45,7 +46,7 @@ function App() {
                     <Route path="/pro/expert-interface" element={<ExpertInterface />} /> {/* New Expert Interface Route */}
                     <Route path="/pro/bs-card" element={<BusinessCard />} /> {/* New Business Card Route */}
                     <Route path="/pro/edit-settings" element={<EditProfessionalSettings/>} />
-
+                    <Route path="/pro/expert-main" element={<ExpertMainPage />} />
 
 
 

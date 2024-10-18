@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from "../../utils/constans";
 import translations from '../../utils/translations.json';
-import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
+import { useLanguage } from '../../contexts/LanguageContext'; // Import the useLanguage hook
 
 function InfoPage() {
     const navigate = useNavigate();

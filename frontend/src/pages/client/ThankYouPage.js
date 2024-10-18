@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PC from '../../components/client/PC'; // Importing PC component
-import { useLanguage } from '../../components/LanguageContext'; // Import the useLanguage hook
+import { useLanguage } from '../../contexts/LanguageContext'; // Import the useLanguage hook
 
 function ThankYouPage() {
     const { translation, language } = useLanguage(); // Access translation and language from the context
