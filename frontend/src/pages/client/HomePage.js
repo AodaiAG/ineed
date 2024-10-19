@@ -10,6 +10,9 @@ function HomePage() {
         if (language === 'ar' || language === 'he') return 'rtl';
         return 'ltr';
     };
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
     return (
         <div className="container">
             <div className="row">
