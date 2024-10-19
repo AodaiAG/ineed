@@ -9,7 +9,7 @@ import InfoPage from './pages/client/InfoPage';
 import ThankYouPage from './pages/client/ThankYouPage';
 import SearchPage from './pages/client/SearchPage';
 import PhoneVerifyPage from './pages/client/VerifyPhonePage';
-
+//stam
 // Professional Pages
 import ProfessionalPhoneScreen from './pages/professionals/PhoneScreen';
 import SMSVerification from "./pages/professionals/SMSVerification"; 
