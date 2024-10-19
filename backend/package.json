@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "concurrently \"npm run frontend\" \"npm run backend\"",
-    "frontend": "npm start --prefix ../frontend",
-    "backend": "nodemon app.js"
+    "start": "node app.js"
   },
   "dependencies": {
     "axios": "^1.7.7",
