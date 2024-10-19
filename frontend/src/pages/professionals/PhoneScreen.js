@@ -29,7 +29,7 @@ function PhoneScreen() {
                 const verificationCode = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit code
                 const message = `${translation.verificationCodeMessage} ${verificationCode}`;
 
-                sendSms(fullPhoneNumber, message);
+                await sendSms(fullPhoneNumber, message);
                 // Store the verification code in sessionStorage for verification purposes
                 sessionStorage.setItem('smsVerificationCode', verificationCode);
 
