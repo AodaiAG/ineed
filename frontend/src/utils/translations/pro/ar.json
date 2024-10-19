@@ -76,6 +76,8 @@
   "workerImageAlt": "صورة العامل",
   "businessCardMessage": "بطاقة العمل الخاصة بك تنتظرك عبر رسالة SMS",
   "mySettingsButtonLabel": "إعداداتي",
-  "errorOccurredMessage": "حدث خطأ، يرجى المحاولة لاحقًا -.-"
+  "errorOccurredMessage": "حدث خطأ، يرجى المحاولة لاحقًا -.-",
+      "editTitle": "عدل معلوماتك",
+    "saveChangesButton": "احفظ التغييرات"
 
 }

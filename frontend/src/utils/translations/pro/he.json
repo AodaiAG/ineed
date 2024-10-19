@@ -78,6 +78,8 @@
   "workerImageAlt": "תמונת עובד",
   "businessCardMessage": "כרטיס הביקור שלך מחכה לך ב-SMS",
   "mySettingsButtonLabel": "ההגדרות שלי",
-  "errorOccurredMessage": "אירעה שגיאה, נסה שוב מאוחר יותר -.-"
+  "errorOccurredMessage": "אירעה שגיאה, נסה שוב מאוחר יותר -.-",
+     "editTitle": "ערוך את המידע שלך",
+    "saveChangesButton": "שמור שינויים"
 
 }

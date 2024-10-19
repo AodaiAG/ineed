@@ -70,6 +70,8 @@
   "workerImageAlt": "Изображение работника",
   "businessCardMessage": "Ваша визитная карточка ждет вас по SMS",
   "mySettingsButtonLabel": "Мои настройки",
-  "errorOccurredMessage": "Произошла ошибка, попробуйте позже -.-"
+  "errorOccurredMessage": "Произошла ошибка, попробуйте позже -.-",
+      "editTitle": "Измените свою информацию",
+    "saveChangesButton": "Сохранить изменения"
 
 }

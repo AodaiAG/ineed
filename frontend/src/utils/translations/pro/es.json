@@ -70,6 +70,8 @@
   "workerImageAlt": "Imagen del trabajador",
   "businessCardMessage": "Tu tarjeta de presentación te espera por SMS",
   "mySettingsButtonLabel": "Mis ajustes",
-  "errorOccurredMessage": "Ocurrió un error, inténtalo de nuevo más tarde -.-"
+  "errorOccurredMessage": "Ocurrió un error, inténtalo de nuevo más tarde -.-",
+      "editTitle": "Edita tu información",
+    "saveChangesButton": "Guardar cambios"
 
 }

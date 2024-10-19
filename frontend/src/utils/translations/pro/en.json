@@ -78,6 +78,8 @@
   "workerImageAlt": "Worker Image",
   "businessCardMessage": "Your business card is waiting for you via SMS",
   "mySettingsButtonLabel": "My Settings",
-  "errorOccurredMessage": "Error Occurred, try again later -.-"
+  "errorOccurredMessage": "Error Occurred, try again later -.-",
+      "editTitle": "Edit Your Information",
+    "saveChangesButton": "Save Changes"
 
 }

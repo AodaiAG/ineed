@@ -9,8 +9,12 @@ import JobFieldsSelection from '../../components/professionals/JobFieldsSelectio
 import AvailabilityForm from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
 import WorkAreaSelection from '../../components/professionals/WorkAreaSelection';
+import { useLanguage } from '../../contexts/LanguageContext';
+
 
 function EditProfessionalSettings() {
+    const { translation } = useLanguage();
+
     const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState('he'); // Default is 'he' for Hebrew
@@ -178,13 +182,16 @@ function EditProfessionalSettings() {
             },
         }));
     };
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
 
     return (
         <div className={styles['pro-body']}>
             <div className={styles['pro-container']}>
                 <div className={styles['pro-content']}>
                     {/* Form Title */}
-                    <h1 className={styles['pro-form-title']}>ערוך את המידע שלך</h1>
+                    <h1 className={styles['pro-form-title']}>{translation.editTitle}</h1>
 
                     {/* Render Reusable Components */}
                     <PersonalInfoForm
@@ -237,7 +244,7 @@ function EditProfessionalSettings() {
 
                     {/* Submit Button */}
                     <button className={styles['pro-continue-button']} onClick={handleSubmit}>
-                        שמור שינויים
+                        {translation.saveChangesButton}
                     </button>
                 </div>
             </div>
