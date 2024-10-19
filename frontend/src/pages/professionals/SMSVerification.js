@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
 import styles from '../../styles/SMSVerification.module.css'; // Import the scoped CSS module
 import axios from 'axios';
 import { API_URL } from '../../utils/constans'; // Assuming the URL is in constants
@@ -10,6 +11,7 @@ function SMSVerification() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isError, setIsError] = useState(false);
     const [shake, setShake] = useState(false);
+    const { translation } = useLanguage(); // Using the translation from the context
 
     useEffect(() => {
         // Get the phone number from session storage
@@ -44,15 +46,12 @@ function SMSVerification() {
                     const response = await axios.post(`${API_URL}/professionals/check-if-registered`, {
                         phoneNumber,
                     });
-    
+
                     if (response.data.success) {
-                       
                         // Redirect to dashboard or registration based on user's status
                         navigate('/pro/dashboard');
-                        // Example route after successful verification
                     } else {
-                        // If there's an issue with backend processing, display an error
-                      
+                        // If not registered, navigate to registration
                         navigate('/pro/register');
                     }
                 } catch (error) {
@@ -66,7 +65,6 @@ function SMSVerification() {
             triggerErrorAnimation();
         }
     };
-    
 
     const triggerErrorAnimation = () => {
         setIsError(true);
@@ -83,13 +81,19 @@ function SMSVerification() {
         navigate('/pro/enter'); // Redirect back to phone entry screen
     };
 
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
+
     return (
         <div className={styles['pro-container']}>
             <div className={styles['pro-content']}>
-                <h1 className={styles['pro-validation-title']}>Phone Validation</h1>
+                <h1 className={styles['pro-validation-title']}>{translation.phoneValidationTitle}</h1>
 
                 <div className={styles['pro-phone-field']}>
-                    <label htmlFor="phone" className={styles['pro-phone-label']}>Phone</label>
+                    <label htmlFor="phone" className={styles['pro-phone-label']}>
+                        {translation.phoneLabel}
+                    </label>
                     <input
                         type="text"
                         id="pro-phone"
@@ -100,7 +104,7 @@ function SMSVerification() {
                 </div>
 
                 <p className={styles['pro-sms-code-label']}>
-                    {isError ? 'You entered the wrong code' : 'Enter the code you received'}
+                    {isError ? translation.wrongCodeMessage : translation.enterCodeMessage}
                 </p>
                 <div className={`${styles['pro-sms-code-input']} ${shake ? styles['shake'] : ''}`}>
                     {verificationCode.map((digit, index) => (
@@ -118,11 +122,11 @@ function SMSVerification() {
 
                 <div className={styles['pro-action-buttons']}>
                     <button className={styles['pro-button']} onClick={handleVerification}>
-                        {isError ? 'Try Again' : 'OK'}
+                        {isError ? translation.tryAgainButton : translation.okButton}
                     </button>
                     {isError && (
                         <button className={styles['pro-button']} onClick={handleBack}>
-                            Back
+                            {translation.backButton}
                         </button>
                     )}
                 </div>

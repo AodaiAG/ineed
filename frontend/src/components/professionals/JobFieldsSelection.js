@@ -1,5 +1,6 @@
 // src/components/professionals/JobFieldsSelection.jsx
 import React, { useEffect, useState } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
 function JobFieldsSelection({ 
@@ -10,6 +11,7 @@ function JobFieldsSelection({
     setSelectedProfessionIds,
     selectedProfessionIds = []  // Ensure selectedProfessionIds is at least an empty array
 }) {
+    const { translation } = useLanguage();
     const [fetchedProfessions, setFetchedProfessions] = useState(new Set());
 
     useEffect(() => {
@@ -39,7 +41,9 @@ function JobFieldsSelection({
         if (!subProfessions[mainProfession]) return 0; // Return 0 if subProfessions for the main profession is undefined
         return subProfessions[mainProfession]?.filter(sub => selectedProfessionIds.includes(sub.id)).length || 0;
     };
-
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
     // Function to toggle all sub-professions when a main profession is checked/unchecked
     const handleToggleAllChildren = (mainProfession, isChecked) => {
         const subProfessionIds = subProfessions[mainProfession]?.map(sub => sub.id) || [];
@@ -56,7 +60,7 @@ function JobFieldsSelection({
 
     return (
         <div className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>בחר תחומי עיסוק:</label>
+            <label className={styles['pro-label']}>{translation.selectJobFieldsLabel}</label>
             {mainProfessions.map((mainProfession) => {
                 const selectedCount = countSelectedSubProfessions(mainProfession.main);
                 return (

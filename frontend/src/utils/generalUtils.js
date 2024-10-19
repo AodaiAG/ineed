@@ -33,6 +33,8 @@ export const getSubProfessions = async (main) => {
         throw error;
     }
 };
+
+// Send SMS function
 export const sendSms = async (phoneNumber, message) => {
     try {
         const url = `https://sms.innovio.co.il/sms.php?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
@@ -57,6 +59,7 @@ export const getDirection = (language) => {
 export const isRtl = (language) => {
     return ['ar', 'he'].includes(language);
 };
+
 export const generateDayMappings = () => {
     return {
         he: ["א", "ב", "ג", "ד", "ה", "ו", "ש"],
@@ -64,6 +67,7 @@ export const generateDayMappings = () => {
         ar: ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"]
     };
 };
+
 export const languageMapping = {
     he: 0,
     en: 1,
@@ -114,6 +118,7 @@ export const languageLabelMapping = {
 export const getLanguageLabelById = (id, language = 'he') => {
     return languageLabelMapping[id] ? languageLabelMapping[id][language] : "Unknown Language";
 };
+
 // Convert day name to numeric value (regardless of language)
 export const dayNameToNumber = (dayName) => {
     const dayMappings = generateDayMappings();
@@ -132,5 +137,3 @@ export const dayNumberToName = (dayNumber, language = "he") => {
     const dayMappings = generateDayMappings();
     return dayMappings[language][dayNumber] || "Unknown Day";
 };
-
-

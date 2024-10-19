@@ -1,14 +1,20 @@
 import React from 'react';
 import styles from '../../styles/ProfessionalRegistration.module.css';
-import { dayNumberToName } from '../../utils/generalUtils';
+import { useLanguage } from '../../contexts/LanguageContext';
 
-function AvailabilityForm({ dayAvailability, setDayAvailability, toggleAvailability, language = 'he' }) {
+function AvailabilityForm({ dayAvailability, setDayAvailability, toggleAvailability }) {
+    const { translation } = useLanguage();
+
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
+
     return (
         <div className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>שעות זמינות לעבודה:</label>
+            <label className={styles['pro-label']}>{translation.availabilityLabel}</label>
             <div className={styles['pro-availability-group']}>
                 {Object.keys(dayAvailability).map((dayInt) => {
-                    const dayName = dayNumberToName(parseInt(dayInt), language);
+                    const dayName = translation.days[dayInt]; // Get the translated day name
                     return (
                         <div key={dayInt} className={styles['day']}>
                             <input

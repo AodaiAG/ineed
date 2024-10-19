@@ -12,23 +12,18 @@ import PhoneVerifyPage from './pages/client/VerifyPhonePage';
 
 // Professional Pages
 import ProfessionalPhoneScreen from './pages/professionals/PhoneScreen';
-import SMSVerification from "./pages/professionals/SMSVerification"; // Import SMS Verification
-import ProfessionalRegistration from './pages/professionals/ProfessionalRegistration'; // Update the path as necessary
-import ExpertInterface from './pages/professionals/ExpertInterface'; // Import the new Expert Interface page
-import BusinessCard from './pages/professionals/BusinessCard'; // Import the business card component
-import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; // Import the new component
+import SMSVerification from "./pages/professionals/SMSVerification"; 
+import ProfessionalRegistration from './pages/professionals/ProfessionalRegistration'; 
+import ExpertInterface from './pages/professionals/ExpertInterface'; 
+import BusinessCard from './pages/professionals/BusinessCard'; 
+import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; 
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
-import ExplainScreen from './pages/professionals/ExplainScreen'; // Import the new page
-
-
-
-
-
+import ExplainScreen from './pages/professionals/ExplainScreen'; 
 
 function App() {
     return (
-        <LanguageProvider>
-            <Router>
+        <Router>
+            <LanguageProvider>
                 <BodyClassHandler />
                 <Routes>
                     {/* Client Side Routes */}
@@ -44,21 +39,15 @@ function App() {
                     {/* Professional Side Routes */}
                     <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />
                     <Route path="/pro/sms-verification" element={<SMSVerification />} />
-                    <Route path="/pro/register" element={<ProfessionalRegistration />} /> {/* New Registration Route */}
-                    <Route path="/pro/expert-interface" element={<ExpertInterface />} /> {/* New Expert Interface Route */}
-                    <Route path="/pro/bs-card" element={<BusinessCard />} /> {/* New Business Card Route */}
-                    <Route path="/pro/edit-settings" element={<EditProfessionalSettings/>} />
+                    <Route path="/pro/register" element={<ProfessionalRegistration />} />
+                    <Route path="/pro/expert-interface" element={<ExpertInterface />} />
+                    <Route path="/pro/bs-card" element={<BusinessCard />} />
+                    <Route path="/pro/edit-settings" element={<EditProfessionalSettings />} />
                     <Route path="/pro/expert-main" element={<ExpertMainPage />} />
                     <Route path="/pro/explain" element={<ExplainScreen />} />
-
-
-
-
-
-                    {/* Add more professional routes as you create new pages */}
                 </Routes>
-            </Router>
-        </LanguageProvider>
+            </LanguageProvider>
+        </Router>
     );
 }
 

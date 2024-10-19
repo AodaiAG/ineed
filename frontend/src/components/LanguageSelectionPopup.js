@@ -7,8 +7,10 @@ function LanguageSelectionPopup({ onClose }) {
 
     // Handle language change
     const handleLanguageChange = (event) => {
-        setLanguage(event.target.value);
-        console.log(event.target.value);
+        const selectedLanguage = event.target.value;
+        setLanguage(selectedLanguage); // Update context with selected language
+        localStorage.setItem('userLanguage', selectedLanguage); // Save to localStorage for persistence
+        console.log(`Language changed to: ${selectedLanguage}`);
         onClose(); // Close the popup after language selection
     };
 

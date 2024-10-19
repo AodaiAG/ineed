@@ -1,5 +1,5 @@
-// src/components/professionals/PersonalInfoForm.jsx
 import React, { useRef } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
 function PersonalInfoForm({ 
@@ -10,6 +10,7 @@ function PersonalInfoForm({
     businessName, setBusinessName,
     image, setImage 
 }) {
+    const { translation } = useLanguage(); // Get translation from context
     const fileInputRef = useRef(null);
 
     const handleImageUpload = (event) => {
@@ -39,21 +40,25 @@ function PersonalInfoForm({
         fileInputRef.current.click();
     };
 
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
+
     return (
         <div className={styles['pro-form-group']}>
             {/* Full Name Input */}
-            <label htmlFor="fullName" className={styles['pro-label']}>שם פרטי ומשפחה:</label>
+            <label htmlFor="fullName" className={styles['pro-label']}>{translation.fullNameLabel}</label>
             <input
                 type="text"
                 id="fullName"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className={`${styles['pro-input']} ${styles['pro-input-white']}`}
-                placeholder="דני שובבני"
+                placeholder={translation.fullNamePlaceholder}
             />
 
             {/* Phone Number (Read-Only) */}
-            <label htmlFor="phone" className={styles['pro-label']}>טלפון:</label>
+            <label htmlFor="phone" className={styles['pro-label']}>{translation.phoneLabel}</label>
             <input
                 type="text"
                 id="phone"
@@ -62,12 +67,12 @@ function PersonalInfoForm({
                 disabled
                 className={`${styles['pro-input']} ${styles['pro-input-disabled']}`}
             />
-            <p className={styles['pro-note']}>*להחלפת מספר צור קשר עם השירות <a href="#">כאן</a></p>
+            <p className={styles['pro-note']}>{translation.phoneNote} <a href="#">{translation.contactLink}</a></p>
 
             {/* Image Upload Section */}
-            <label className={styles['pro-label']}>הוסף תמונה</label>
+            <label className={styles['pro-label']}>{translation.addImageLabel}</label>
             <div className={styles['pro-image-upload']}>
-                <img src={image} alt="Professional Image" className={styles['pro-image-preview']} />
+                <img src={image} alt={translation.imageAlt} className={styles['pro-image-preview']} />
                 <input
                     type="file"
                     accept="image/*"
@@ -76,42 +81,42 @@ function PersonalInfoForm({
                     style={{ display: 'none' }}
                 />
                 <button type="button" className={styles['pro-upload-button']} onClick={handleUploadButtonClick}>
-                    הוסף תמונה
+                    {translation.addImageButton}
                 </button>
             </div>
-            <p className={styles['pro-note']}>*בעלי תמונה מקבלים יותר פניות</p>
+            <p className={styles['pro-note']}>{translation.addImageNote}</p>
 
             {/* Email Input */}
-            <label htmlFor="email" className={styles['pro-label']}>אימייל שלי:</label>
+            <label htmlFor="email" className={styles['pro-label']}>{translation.emailLabel}</label>
             <input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={`${styles['pro-input']} ${styles['pro-input-white']}`}
-                placeholder="example@gmail.com"
+                placeholder={translation.emailPlaceholder}
             />
 
             {/* Website Input */}
-            <label htmlFor="website" className={styles['pro-label']}>האתר שלי:</label>
+            <label htmlFor="website" className={styles['pro-label']}>{translation.websiteLabel}</label>
             <input
                 type="text"
                 id="website"
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
                 className={`${styles['pro-input']} ${styles['pro-input-white']}`}
-                placeholder="www.example.com"
+                placeholder={translation.websitePlaceholder}
             />
 
             {/* Business Name Input */}
-            <label htmlFor="businessName" className={styles['pro-label']}>שם העסק שלי:</label>
+            <label htmlFor="businessName" className={styles['pro-label']}>{translation.businessNameLabel}</label>
             <input
                 type="text"
                 id="businessName"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 className={`${styles['pro-input']} ${styles['pro-input-white']}`}
-                placeholder="שם העסק"
+                placeholder={translation.businessNamePlaceholder}
             />
         </div>
     );

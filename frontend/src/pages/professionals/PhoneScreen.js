@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
 import styles from '../../styles/PhoneScreen.module.css'; // Use module CSS for styles
 import 'remixicon/fonts/remixicon.css'; // Include Remixicon for the arrow icon
 import { sendSms } from '../../utils/generalUtils'; // Import sendSms from utils
@@ -8,6 +9,7 @@ function PhoneScreen() {
     const navigate = useNavigate();
     const [phoneNumber, setPhoneNumber] = useState('');
     const [countryCode, setCountryCode] = useState('052');
+    const { translation } = useLanguage(); // Using the translation from the context
 
     const handlePhoneNumberChange = (e) => {
         setPhoneNumber(e.target.value);
@@ -25,34 +27,44 @@ function PhoneScreen() {
             // Send SMS using generalUtils function
             try {
                 const verificationCode = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit code
-                const message = `Your verification code is ${verificationCode}`;
+                const message = `${translation.verificationCodeMessage} ${verificationCode}`;
 
-                
-                 sendSms(fullPhoneNumber, message);
+                sendSms(fullPhoneNumber, message);
                 // Store the verification code in sessionStorage for verification purposes
                 sessionStorage.setItem('smsVerificationCode', verificationCode);
 
                 navigate('/pro/sms-verification'); // Redirect to the SMS verification page
             } catch (error) {
                 console.error('Failed to send SMS:', error);
-                alert('Failed to send SMS. Please try again.');
+                alert(translation.failedToSendSmsMessage);
             }
         } else {
-            alert('Please enter your phone number.');
+            alert(translation.enterPhoneNumberMessage);
         }
     };
+
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
 
     return (
         <div className={styles['pro-container']}>
             <div className={styles['pro-content']}>
-                <h1 className={styles['pro-main-title']}>I Need</h1>
-                <p className={styles['pro-subtitle']}>כל המומחים במקום אחד</p>
-                <h2 className={styles['pro-enter-title']}>כניסה למערכת</h2>
+                <h1 className={styles['pro-main-title']}>{translation.mainTitle}</h1>
+                <p className={styles['pro-subtitle']}>{translation.subtitle}</p>
+                <h2 className={styles['pro-enter-title']}>{translation.enterTitle}</h2>
 
                 <div className={styles['pro-phone-input-section']}>
-                    <label htmlFor="country-code" className={styles['pro-hidden-label']}>Country Code</label>
+                    <label htmlFor="country-code" className={styles['pro-hidden-label']}>
+                        {translation.countryCodeLabel}
+                    </label>
                     <div className={styles['pro-country-code']}>
-                        <select id="country-code" value={countryCode} onChange={handleCountryCodeChange} className={styles['pro-select']}>
+                        <select
+                            id="country-code"
+                            value={countryCode}
+                            onChange={handleCountryCodeChange}
+                            className={styles['pro-select']}
+                        >
                             <option value="052">052</option>
                             <option value="054">054</option>
                             <option value="055">055</option>
@@ -66,27 +78,33 @@ function PhoneScreen() {
                         </div>
                     </div>
 
-                    <label htmlFor="phone-number" className={styles['pro-hidden-label']}>Phone Number</label>
+                    <label htmlFor="phone-number" className={styles['pro-hidden-label']}>
+                        {translation.phoneNumberLabel}
+                    </label>
                     <input
                         type="text"
                         id="pro-phone-number"
                         className={styles['pro-phone-number']}
-                        placeholder="123 4567"
+                        placeholder={translation.phoneNumberPlaceholder}
                         value={phoneNumber}
                         onChange={handlePhoneNumberChange}
                     />
                 </div>
 
                 <p className={styles['pro-terms-text']}>
-                 בלחיצה על המשך אני מסכים 
-                    <a href="#" className={styles['pro-terms-link']}  > תנאים  </a>
+                    {translation.termsText}{' '}
+                    <a href="#" className={styles['pro-terms-link']}>
+                        {translation.termsLink}
+                    </a>
                 </p>
 
                 <div className={styles['pro-illustration']}>
-                    <img src="/images/prof/worker.png" alt="Worker Illustration" />
+                    <img src="/images/prof/worker.png" alt={translation.workerImageAlt} />
                 </div>
 
-                <button className={styles['pro-enter-button']} onClick={handleEnterClick}>כניסה</button>
+                <button className={styles['pro-enter-button']} onClick={handleEnterClick}>
+                    {translation.enterButton}
+                </button>
             </div>
         </div>
     );

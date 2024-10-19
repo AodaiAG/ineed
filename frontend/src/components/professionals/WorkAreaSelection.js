@@ -1,8 +1,10 @@
 // src/components/professionals/WorkAreaSelection.jsx
 import React from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
 function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren, workAreaSelections, setWorkAreaSelections }) {
+    const { translation } = useLanguage();
 
     // Function to toggle work area selection
     const handleLocationToggle = (cityId) => {
@@ -16,7 +18,9 @@ function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren
             }
         });
     };
-
+   if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
     // Function to count selected cities for a given area
     const countSelectedCities = (area) => {
         return area.cities.filter(city => workAreaSelections.includes(city.cityId)).length;
@@ -39,7 +43,7 @@ function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren
 
     return (
         <div className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>אזורי עבודה:</label>
+            <label className={styles['pro-label']}>{translation.workAreasLabel}</label>
             {Array.isArray(groupedLocations) && groupedLocations.length > 0 ? (
                 groupedLocations.map((area) => {
                     const selectedCount = countSelectedCities(area);
@@ -82,7 +86,7 @@ function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren
                     );
                 })
             ) : (
-                <p>לא נמצאו אזורי עבודה</p> // Display message if groupedLocations is empty or not defined
+                <p>{translation.noWorkAreasFound}</p> // Display message if groupedLocations is empty or not defined
             )}
         </div>
     );
