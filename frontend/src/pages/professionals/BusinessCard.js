@@ -44,7 +44,7 @@ function BusinessCard() {
             {/* Image Section */}
             <div className={styles.proImageContainer}>
                 <img
-                    src={professional.image || '/images/prof/worker2.png'}
+                    src={professional.image || '/images/Prof/worker2.png'}
                     alt="Professional"
                     className={styles.proProfileImage}
                 />
@@ -53,19 +53,19 @@ function BusinessCard() {
             {/* Contact Icons Section */}
             <div className={styles.proIconsContainer}>
                 <div className={styles.proIcon}>
-                    <img src="/images/prof/phone-icon.png" alt="Phone Icon" />
+                    <img src="/images/Prof/phone-icon.png" alt="Phone Icon" />
                 </div>
                 <div className={styles.proIcon}>
-                    <img src="/images/prof/whatsapp-icon.png" alt="WhatsApp Icon" />
+                    <img src="/images/Prof/whatsapp-icon.png" alt="WhatsApp Icon" />
                 </div>
                 <div className={styles.proIcon}>
-                    <img src="/images/prof/email-icon.png" alt="Email Icon" />
+                    <img src="/images/Prof/email-icon.png" alt="Email Icon" />
                 </div>
                 <div className={styles.proIcon}>
-                    <img src="/images/prof/person-icon.png" alt="Person Icon" />
+                    <img src="/images/Prof/person-icon.png" alt="Person Icon" />
                 </div>
                 <div className={styles.proIcon}>
-                    <img src="/images/prof/website-icon.png" alt="Website Icon" />
+                    <img src="/images/Prof/website-icon.png" alt="Website Icon" />
                 </div>
             </div>
 
@@ -73,7 +73,7 @@ function BusinessCard() {
             <div className={styles.proFooter}>
                 <div className={styles.proFooterContent}>
                     <img
-                        src="/images/prof/footer-worker.png"
+                        src="/images/Prof/footer-worker.png"
                         alt="Worker Icon"
                         className={styles.proFooterWorkerIcon}
                     />

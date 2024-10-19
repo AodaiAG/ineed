@@ -31,7 +31,7 @@ function EditProfessionalSettings() {
         5: { isWorking: false, start: '', end: '' },  // Friday
         6: { isWorking: false, start: '', end: '' }   // Saturday
     });
-    const [image, setImage] = useState('/images/prof/w.png');
+    const [image, setImage] = useState('/images/Prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');

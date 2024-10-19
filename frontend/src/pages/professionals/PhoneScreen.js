@@ -99,7 +99,7 @@ function PhoneScreen() {
                 </p>
 
                 <div className={styles['pro-illustration']}>
-                    <img src="/images/prof/worker.png" alt={translation.workerImageAlt} />
+                    <img src="/images/Prof/worker.png" alt={translation.workerImageAlt} />
                 </div>
 
                 <button className={styles['pro-enter-button']} onClick={handleEnterClick}>

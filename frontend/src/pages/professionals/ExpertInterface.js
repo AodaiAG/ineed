@@ -32,7 +32,7 @@ function ExpertInterface() {
         <div className={styles.proContainer}>
             {/* Language Switch Component */}
             <div className={styles.proLanguageSwitch} onClick={handleLanguageIconClick}>
-                <img src="/images/prof/language-icon.png" alt={translation.languageIconAlt} />
+                <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
             </div>
             
             {/* Language Selection Popup */}
@@ -44,7 +44,7 @@ function ExpertInterface() {
 
             {/* Image Section */}
             <div className={styles.proImageContainer}>
-                <img src="/images/prof/worker2.png" alt={translation.workerImageAlt} className={styles.proWorkerImage} />
+                <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.proWorkerImage} />
             </div>
 
             {/* Message Section */}

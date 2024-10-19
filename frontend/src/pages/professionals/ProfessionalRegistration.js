@@ -25,7 +25,7 @@ function ProfessionalRegistration() {
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState('he'); // Default is 'he' for Hebrew
 
-    const [image, setImage] = useState('/images/prof/w.png');
+    const [image, setImage] = useState('/images/Prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
