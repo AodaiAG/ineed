@@ -60,6 +60,22 @@
         "4": "الخميس",
         "5": "الجمعة",
         "6": "السبت"
-    }
+    },
+	  "languagePreferencesLabel": "لغاتي",
+  "languages": {
+    "he": "العبرية",
+    "en": "الإنجليزية",
+    "ru": "الروسية",
+    "es": "الإسبانية",
+    "ar": "العربية"
+  },
+    "aboutYouLabel": "قليلاً عنك",
+  "continueLabel": "استمر",
+    "languageIconAlt": "تغيير اللغة",
+  "expertInterfaceTitle": "واجهة الخبراء",
+  "workerImageAlt": "صورة العامل",
+  "businessCardMessage": "بطاقة العمل الخاصة بك تنتظرك عبر رسالة SMS",
+  "mySettingsButtonLabel": "إعداداتي",
+  "errorOccurredMessage": "حدث خطأ، يرجى المحاولة لاحقًا -.-"
 
 }

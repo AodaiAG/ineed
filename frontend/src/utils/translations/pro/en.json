@@ -62,6 +62,22 @@
         "4": "Thursday",
         "5": "Friday",
         "6": "Saturday"
-    }
+    },
+	  "languagePreferencesLabel": "My Languages",
+  "languages": {
+    "he": "Hebrew",
+    "en": "English",
+    "ru": "Russian",
+    "es": "Spanish",
+    "ar": "Arabic"
+  },
+    "aboutYouLabel": "A bit about you",
+  "continueLabel": "Continue",
+    "languageIconAlt": "Switch Language",
+  "expertInterfaceTitle": "Expert Interface",
+  "workerImageAlt": "Worker Image",
+  "businessCardMessage": "Your business card is waiting for you via SMS",
+  "mySettingsButtonLabel": "My Settings",
+  "errorOccurredMessage": "Error Occurred, try again later -.-"
 
 }

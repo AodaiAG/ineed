@@ -1,8 +1,14 @@
 import React from 'react';
 import styles from '../../styles/ProfessionalRegistration.module.css';
-import { languageMapping, getLanguageLabelById } from '../../utils/generalUtils';
+import { useLanguage } from '../../contexts/LanguageContext';
 
-function LanguagePreferences({ languages, setLanguages, selectedLanguage = 'he' }) {
+function LanguagePreferences({ languages, setLanguages }) {
+    const { translation } = useLanguage();
+
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
+
     const toggleLanguage = (languageId) => {
         setLanguages((prevLanguages) => {
             if (prevLanguages.includes(languageId)) {
@@ -15,16 +21,16 @@ function LanguagePreferences({ languages, setLanguages, selectedLanguage = 'he' 
 
     return (
         <div className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>השפות שלי:</label>
+            <label className={styles['pro-label']}>{translation.languagePreferencesLabel}</label>
             <div className={styles['language-options']}>
-                {Object.entries(languageMapping).map(([key, id]) => (
-                    <label key={id} className={styles['language-label']}>
+                {Object.keys(translation.languages).map((languageKey) => (
+                    <label key={languageKey} className={styles['language-label']}>
                         <input
                             type="checkbox"
-                            checked={languages.includes(id)}
-                            onChange={() => toggleLanguage(id)}
+                            checked={languages.includes(languageKey)}
+                            onChange={() => toggleLanguage(languageKey)}
                         />
-                        <span>{getLanguageLabelById(id, selectedLanguage)}</span>
+                        <span>{translation.languages[languageKey]}</span>
                     </label>
                 ))}
             </div>

@@ -62,6 +62,14 @@
         "4": "Jueves",
         "5": "Viernes",
         "6": "Sábado"
-    }
+    },
+	  "aboutYouLabel": "Un poco sobre ti",
+  "continueLabel": "Continuar",
+    "languageIconAlt": "Cambiar idioma",
+  "expertInterfaceTitle": "Interfaz de expertos",
+  "workerImageAlt": "Imagen del trabajador",
+  "businessCardMessage": "Tu tarjeta de presentación te espera por SMS",
+  "mySettingsButtonLabel": "Mis ajustes",
+  "errorOccurredMessage": "Ocurrió un error, inténtalo de nuevo más tarde -.-"
 
 }

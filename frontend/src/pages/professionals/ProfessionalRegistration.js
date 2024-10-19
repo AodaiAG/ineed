@@ -11,11 +11,14 @@ import JobFieldsSelection from '../../components/professionals/JobFieldsSelectio
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import AvailabilityTimes from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 function ProfessionalRegistration() {
     
     const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
+    const { translation } = useLanguage(); // Use translation from context
+
     const [phoneNumber, setPhoneNumber] = useState('');
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
@@ -189,7 +192,7 @@ function ProfessionalRegistration() {
             <div className={styles['pro-container']}>
                 <div className={styles['pro-content']}>
                     {/* Form Title */}
-                    <h1 className={styles['pro-form-title']}>קצת עליך</h1>
+                    <h1 className={styles['pro-form-title']}>{translation?.aboutYouLabel}</h1>
 
                     {/* Personal Information */}
                     <PersonalInfoForm
@@ -245,7 +248,7 @@ function ProfessionalRegistration() {
                     <LanguagePreferences languages={languages} setLanguages={setLanguages} />
 
                     {/* Continue Button */}
-                    <button className={styles['pro-continue-button']} onClick={handleSubmit}>המשך</button>
+                    <button className={styles['pro-continue-button']} onClick={handleSubmit}>{translation?.continueLabel || 'המשך'}</button>
                 </div>
             </div>
         </div>
