@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
-const WorkAreaSelection = forwardRef(({
+const WorkAreas = forwardRef(({
     groupedLocations,
     toggleDropdown,
     toggleAllChildren,
@@ -98,4 +98,4 @@ const WorkAreaSelection = forwardRef(({
     );
 });
 
-export default WorkAreaSelection;
+export default WorkAreas;

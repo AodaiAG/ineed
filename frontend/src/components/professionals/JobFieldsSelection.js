@@ -1,16 +1,16 @@
-// src/components/professionals/JobFieldsSelection.jsx
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
-function JobFieldsSelection({ 
-    mainProfessions, 
-    subProfessions, 
-    fetchSubProfessions, 
-    toggleDropdown, 
+const JobFieldsSelection = forwardRef(({
+    mainProfessions,
+    subProfessions,
+    fetchSubProfessions,
+    toggleDropdown,
     setSelectedProfessionIds,
-    selectedProfessionIds = []  // Ensure selectedProfessionIds is at least an empty array
-}) {
+    selectedProfessionIds = [],
+    error // New error prop for displaying job fields selection error
+}, ref) => {
     const { translation } = useLanguage();
     const [fetchedProfessions, setFetchedProfessions] = useState(new Set());
 
@@ -27,10 +27,8 @@ function JobFieldsSelection({
     const handleSubProfessionToggle = (subProfessionId) => {
         setSelectedProfessionIds(prevIds => {
             if (prevIds.includes(subProfessionId)) {
-                // Remove from selected if already exists
                 return prevIds.filter(id => id !== subProfessionId);
             } else {
-                // Add to selected if not exists
                 return [...prevIds, subProfessionId];
             }
         });
@@ -38,29 +36,30 @@ function JobFieldsSelection({
 
     // Function to count selected sub-professions for a given main profession
     const countSelectedSubProfessions = (mainProfession) => {
-        if (!subProfessions[mainProfession]) return 0; // Return 0 if subProfessions for the main profession is undefined
+        if (!subProfessions[mainProfession]) return 0;
         return subProfessions[mainProfession]?.filter(sub => selectedProfessionIds.includes(sub.id)).length || 0;
     };
+
     if (!translation) {
         return <div>Loading...</div>; // Wait for translations to load
     }
+
     // Function to toggle all sub-professions when a main profession is checked/unchecked
     const handleToggleAllChildren = (mainProfession, isChecked) => {
         const subProfessionIds = subProfessions[mainProfession]?.map(sub => sub.id) || [];
         setSelectedProfessionIds(prevIds => {
             if (isChecked) {
-                // Add all sub-profession IDs for this main profession
                 return [...new Set([...prevIds, ...subProfessionIds])];
             } else {
-                // Remove all sub-profession IDs for this main profession
                 return prevIds.filter(id => !subProfessionIds.includes(id));
             }
         });
     };
 
     return (
-        <div className={styles['pro-form-group']}>
+        <div ref={ref} className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>{translation.selectJobFieldsLabel}</label>
+            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above job fields selection */}
             {mainProfessions.map((mainProfession) => {
                 const selectedCount = countSelectedSubProfessions(mainProfession.main);
                 return (
@@ -109,6 +108,6 @@ function JobFieldsSelection({
             })}
         </div>
     );
-}
+});
 
 export default JobFieldsSelection;
