@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
 import styles from '../../styles/SMSVerification.module.css'; // Import the scoped CSS module
 import axios from 'axios';
+import Cookies from 'js-cookie'; // Import js-cookie library
+
 import { API_URL } from '../../utils/constans'; // Assuming the URL is in constants
 
 function SMSVerification() {
@@ -55,6 +57,9 @@ function SMSVerification() {
                         {
                         // Redirect to dashboard or registration based on user's status/
                         sessionStorage.setItem('professionalId', response.data.id);
+
+                        Cookies.set('userSession', response.data.id, { expires: 7 });
+
                         navigate('/pro/expert-interface');
                     } else {
                         // If not registered, navigate to registration

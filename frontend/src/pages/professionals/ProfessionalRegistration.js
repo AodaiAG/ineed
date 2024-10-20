@@ -12,6 +12,8 @@ import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import AvailabilityTimes from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
 import { useLanguage } from '../../contexts/LanguageContext';
+import Cookies from 'js-cookie'; // Import js-cookie
+
 
 function ProfessionalRegistration() {
     
@@ -215,19 +217,22 @@ function ProfessionalRegistration() {
             languages // Use numeric language IDs
         };
 
-        console.log('Professional Data:', professionalData); // Debug data
+       
 
         try {
             const response = await axios.post(`${API_URL}/professionals/register`, professionalData);
             const registeredId = response.data.id; // Assume the API returns the newly registered user's ID.
             // Store the ID in session storage
             sessionStorage.setItem('professionalId', registeredId);
+            Cookies.set('userSession', registeredId, { expires: 7 });
+
             // Redirect to Expert Interface page after successful registration
             const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${registeredId}`;
             const shortenedLink = await shortenUrl(businessCardLink);
              console.log('shortenedLink' +shortenedLink)
             let message = translation.businessCardSMS.replace("{link}", shortenedLink);
             sendSms(formattedPhoneNumber, message);
+
             navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error saving registration:', error);
