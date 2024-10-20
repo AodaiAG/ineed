@@ -4,7 +4,6 @@ import styles from '../../styles/ProfessionalRegistration.module.css';
 
 function ImageUpload({ image, setImage }) {
     const fileInputRef = useRef(null);
-
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -14,12 +13,13 @@ function ImageUpload({ image, setImage }) {
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    const targetWidth = 300;
-                    const targetHeight = 200;
+                    const targetWidth = 1000; // Increased width for much better resolution
+                    const targetHeight = 800;  // Increased height for much better resolution
                     canvas.width = targetWidth;
                     canvas.height = targetHeight;
                     ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-                    const resizedImageUrl = canvas.toDataURL('image/jpeg');
+                    // Set the quality to 1.0 for the best output quality
+                    const resizedImageUrl = canvas.toDataURL('image/jpeg', 1.0);
                     setImage(resizedImageUrl);
                 };
                 img.src = reader.result;
