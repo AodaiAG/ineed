@@ -13,12 +13,16 @@ function ImageUpload({ image, setImage }) {
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    const targetWidth = 1000; // Increased width for much better resolution
-                    const targetHeight = 800;  // Increased height for much better resolution
+    
+                    // Set the canvas size to match the original image size
+                    const targetWidth = img.width;
+                    const targetHeight = img.height;
+    
                     canvas.width = targetWidth;
                     canvas.height = targetHeight;
                     ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-                    // Set the quality to 1.0 for the best output quality
+    
+                    // Set high-quality JPEG output
                     const resizedImageUrl = canvas.toDataURL('image/jpeg', 1.0);
                     setImage(resizedImageUrl);
                 };
