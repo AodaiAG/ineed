@@ -24,7 +24,7 @@ function PhoneScreen() {
             const fullPhoneNumber = `${countryCode}${phoneNumber}`;
             sessionStorage.setItem('professionalPhoneNumber', fullPhoneNumber);
 
-            // Send SMS using generalUtils function
+            // Send SMS using generalUtils function/
             try {
                 const verificationCode = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit code
                 const message = `${translation.verificationCodeMessage} ${verificationCode}`;
