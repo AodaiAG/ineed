@@ -50,7 +50,7 @@ function SMSVerification() {
                      console.log(response.data.registered +' is registerd')
                     if (response.data.registered) 
                         {
-                        // Redirect to dashboard or registration based on user's status
+                        // Redirect to dashboard or registration based on user's status/
                         navigate('/pro/expert-interface');
                     } else {
                         // If not registered, navigate to registration
