@@ -15,7 +15,6 @@ function BusinessCard() {
             try {
                 const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
                 const data = response.data;
-               console.log(response.data)
                 setProfessional(data);
             } catch (error) {
                 console.error('Error fetching professional data:', error);
