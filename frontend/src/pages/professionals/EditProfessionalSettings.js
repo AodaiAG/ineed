@@ -1,5 +1,5 @@
 // src/pages/professionals/EditProfessionalSettings.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useRef} from 'react';
 import axios from 'axios';
 import { API_URL } from '../../utils/constans';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
 import JobFieldsSelection from '../../components/professionals/JobFieldsSelection';
 import AvailabilityForm from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
-import WorkAreaSelection from '../../components/professionals/WorkAreaSelection';
+import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 
@@ -41,6 +41,24 @@ function EditProfessionalSettings() {
 
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [workAreaSelections, setWorkAreaSelections] = useState([]);
+    const [errors, setErrors] = useState({
+        fullName: '',
+        email: '',
+        website: '',
+        jobFields: '',
+        workArea: '',
+        dayAvailability: '',
+        language: ''
+    });
+
+    // Refs for each field to scroll to them when needed
+    const fullNameRef = useRef(null);
+    const emailRef = useRef(null);
+    const websiteRef = useRef(null);
+    const jobFieldsRef = useRef(null);
+    const workAreaRef = useRef(null);
+    const dayAvailabilityRef = useRef(null);
+    const languageRef = useRef(null);
 
 
     useEffect(() => {
@@ -123,9 +141,76 @@ function EditProfessionalSettings() {
             end: data.end
         }));
     };
+    const validateForm = () => {
+        const newErrors = {};
+        let isValid = true;
+
+        if (!fullName) {
+            newErrors.fullName = translation.fullNameError || 'Please enter your full name.';
+            isValid = false;
+            fullNameRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            newErrors.email = translation.emailError || 'Please enter a valid email address.';
+            if (isValid) {
+                emailRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
+
+        const websiteRegex = /^$|^[^\s]+\.[^\s]+$/;
+        if (website && !websiteRegex.test(website)) {
+            newErrors.website = translation.websiteError || 'Please enter a valid website (e.g., example.com) or leave it empty.';
+            if (isValid) {
+                websiteRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
+
+        if (selectedProfessionIds.length === 0) {
+            newErrors.jobFields = translation.jobFieldsError || 'Please select at least one job field.';
+            if (isValid && jobFieldsRef && jobFieldsRef.current) {
+                jobFieldsRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
+
+        if (workAreaSelections.length === 0) {
+            newErrors.workArea = translation.workAreaError || 'Please select at least one work area.';
+            if (isValid && workAreaRef && workAreaRef.current) {
+                workAreaRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
+
+        const isAnyDayAvailable = Object.values(dayAvailability).some(day => day.isWorking);
+        if (!isAnyDayAvailable) {
+            newErrors.dayAvailability = translation.dayAvailabilityError || 'Please select at least one day you are available.';
+            if (isValid) {
+                dayAvailabilityRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
+
+        const isAnyLanguageSelected = Object.values(languages).some(lang => lang);
+        if (!isAnyLanguageSelected) {
+            newErrors.language = translation.languageError || 'Please select at least one language.';
+            if (isValid) {
+                languageRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
+
+        setErrors(newErrors);
+
+        return isValid;
+    };
 
     const handleSubmit = async () => {
         // Get the user ID from session storage
+        if (!validateForm()) return;
         const professionalId = sessionStorage.getItem('professionalId');
     
         if (!professionalId) {
@@ -206,6 +291,8 @@ function EditProfessionalSettings() {
                         setBusinessName={setBusinessName}
                         image={image}
                         setImage={setImage}
+                        errors={errors} // Pass error messages to PersonalInfoForm
+                        refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
                     />
 
                     <JobFieldsSelection
@@ -223,15 +310,19 @@ function EditProfessionalSettings() {
                         toggleAllChildren={toggleAllChildren}
                         setSelectedProfessionIds={setSelectedProfessionIds}
                         selectedProfessionIds={selectedProfessionIds}
+                        error={errors.jobFields}
+                        ref={jobFieldsRef||'error'} // Attach the ref here
                     />
 
-                    <WorkAreaSelection
+                    <WorkAreas
                         groupedLocations={groupedLocations}
                         toggleDropdown={toggleDropdown}
                         toggleAllChildren={toggleAllChildren} // <-- Pass toggleAllChildren here
 
                         setWorkAreaSelections={setWorkAreaSelections}
                         workAreaSelections={workAreaSelections}
+                        error={errors.workArea} // Pass the work area error message
+                        ref={workAreaRef} // Attach the ref to this component
                     />
 
                     <AvailabilityForm
@@ -239,8 +330,17 @@ function EditProfessionalSettings() {
                         setDayAvailability={setDayAvailability}
                         toggleAvailability={toggleAvailability}
                         language={selectedLanguage || 'he'} // Default to 'he' if no language selected
+                        error={errors.dayAvailability}
+                        ref={dayAvailabilityRef}
                     />
-                <LanguagePreferences languages={languages} setLanguages={setLanguages} selectedLanguage={selectedLanguage || 'he'} />
+                <LanguagePreferences
+                 languages={languages} 
+                 setLanguages={setLanguages}
+                selectedLanguage={selectedLanguage || 'he'} 
+                error={errors.language}
+                ref={languageRef} // Attach the ref here
+
+                  />
 
                     {/* Submit Button */}
                     <button className={styles['pro-continue-button']} onClick={handleSubmit}>
