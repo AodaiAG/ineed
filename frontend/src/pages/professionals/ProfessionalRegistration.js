@@ -155,12 +155,11 @@ function ProfessionalRegistration() {
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
-        const selectedLanguages = Object.entries(languages)
-            .filter(([lang, isSelected]) => isSelected)
-            .map(([lang]) => lang);
+
+        const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
 
         const professionalData = {
-            phoneNumber,
+        phoneNumber: formattedPhoneNumber, // Use formatted phone number without dashes
             fullName,
             email,
             website,

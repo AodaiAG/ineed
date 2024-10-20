@@ -43,14 +43,15 @@ function SMSVerification() {
             if (code === storedCode) {
                 try {
                     // Make a request to verify or create the professional
+                    console.log('phone number : '+phoneNumber )
                     const response = await axios.post(`${API_URL}/professionals/check-if-registered`, {
                         phoneNumber,
                     });
-
+                     console.log(response.data.registered +' is registerd')
                     if (response.data.registered) 
                         {
                         // Redirect to dashboard or registration based on user's status
-                        navigate('/pro/dashboard');
+                        navigate('/pro/expert-interface');
                     } else {
                         // If not registered, navigate to registration
                         navigate('/pro/register');
