@@ -12,7 +12,11 @@ function PhoneScreen() {
     const { translation } = useLanguage(); // Using the translation from the context
 
     const handlePhoneNumberChange = (e) => {
-        setPhoneNumber(e.target.value);
+        const value = e.target.value;
+        // Only set value if it contains digits (remove any non-numeric characters)
+        if (/^\d*$/.test(value)) {
+            setPhoneNumber(value);
+        }
     };
 
     const handleCountryCodeChange = (e) => {
@@ -82,11 +86,13 @@ function PhoneScreen() {
                         {translation.phoneNumberLabel}
                     </label>
                     <input
-                        type="text"
+                        type="tel"
                         id="pro-phone-number"
                         className={styles['pro-phone-number']}
                         placeholder={translation.phoneNumberPlaceholder}
                         value={phoneNumber}
+                        maxLength="7"
+                        pattern="[0-9]*" // Only allow numeric input
                         onChange={handlePhoneNumberChange}
                     />
                 </div>
