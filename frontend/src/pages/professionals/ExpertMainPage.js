@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/ExpertMainPage.module.css';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
