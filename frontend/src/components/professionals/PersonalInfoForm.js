@@ -49,8 +49,8 @@ function PersonalInfoForm({
 
     const handleFullNameChange = (e) => {
         const value = e.target.value;
-        // Allow only alphabetic characters and spaces
-        if (/^[a-zA-Z\s]*$/.test(value)) {
+        // Allow only alphabetic characters from any language and spaces
+        if (/^[\p{L}\s]*$/u.test(value)) {
             setFullName(value);
         }
     };
