@@ -22,7 +22,7 @@ function ExpertInterface() {
         const id = sessionStorage.getItem('professionalId');
         if (id) {
             // Navigate to the settings page with the user's ID as a query parameter
-            sessionStorage.setItem('professionalId', response.data.id);
+            
             navigate('/pro/edit-settings');
         } else {
             alert(translation.errorOccurredMessage);

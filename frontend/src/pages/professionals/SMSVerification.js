@@ -54,10 +54,11 @@ function SMSVerification() {
                     if (response.data.registered) 
                         {
                         // Redirect to dashboard or registration based on user's status/
+                        sessionStorage.setItem('professionalId', response.data.id);
                         navigate('/pro/expert-interface');
                     } else {
                         // If not registered, navigate to registration
-                        
+
                         navigate('/pro/register');
                     }
                 } catch (error) {
