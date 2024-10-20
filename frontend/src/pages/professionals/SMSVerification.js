@@ -25,13 +25,16 @@ function SMSVerification() {
     }, [navigate]);
 
     const handleInputChange = (index, value) => {
-        const newCode = [...verificationCode];
-        newCode[index] = value;
-        setVerificationCode(newCode);
-
-        // Automatically move to next input if a value is entered
-        if (value && index < 3) {
-            document.getElementById(`code-${index + 1}`).focus();
+        // Allow only numeric input
+        if (/^\d*$/.test(value)) {
+            const newCode = [...verificationCode];
+            newCode[index] = value;
+            setVerificationCode(newCode);
+    
+            // Automatically move to next input if a value is entered
+            if (value && index < 3) {
+                document.getElementById(`code-${index + 1}`).focus();
+            }
         }
     };
 
@@ -112,12 +115,14 @@ function SMSVerification() {
                     {verificationCode.map((digit, index) => (
                         <input
                             key={index}
-                            type="text"
+                            type="tel"
                             id={`code-${index}`}
                             maxLength="1"
                             className={`${styles['pro-sms-box']} ${isError ? styles['pro-error'] : ''}`}
                             value={digit}
                             onChange={(e) => handleInputChange(index, e.target.value)}
+                            inputMode="numeric" // Add this for numeric keyboard on mobile
+                            pattern="\d*" // Add this to restrict input to numbers only
                         />
                     ))}
                 </div>
