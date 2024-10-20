@@ -57,6 +57,7 @@ function SMSVerification() {
                         navigate('/pro/expert-interface');
                     } else {
                         // If not registered, navigate to registration
+                        
                         navigate('/pro/register');
                     }
                 } catch (error) {
