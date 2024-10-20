@@ -81,7 +81,7 @@
   "errorOccurredMessage": "אירעה שגיאה, נסה שוב מאוחר יותר -.-",
      "editTitle": "ערוך את המידע שלך",
     "saveChangesButton": "שמור שינויים",
-	    "businessCardSMS": "כרטיס הביקור שלך מוכן! ניתן לגשת אליו כאן: {link}"
+	    "businessCardSMS": "כרטיס הביקור שלך מוכן! לחץ כאן: {link}"
 
 
 }

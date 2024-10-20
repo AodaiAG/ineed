@@ -76,6 +76,17 @@ export const languageMapping = {
     ar: 4
 };
 
+export const shortenUrl = async (longUrl) => {
+    try {
+        const response = await axios.get(`https://tinyurl.com/api-create.php?url=${longUrl}`);
+        return response.data; // The API returns the shortened URL as plain text
+    } catch (error) {
+        console.error('Error shortening URL:', error);
+        // If there's an error, just return the original URL
+        return longUrl;
+    }
+};
+
 // Utility to generate a reverse mapping
 export const languageLabelMapping = {
     0: {

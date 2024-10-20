@@ -7,7 +7,7 @@ import { API_URL } from '../../utils/constans';
 import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
 import ImageUpload from '../../components/professionals/ImageUpload';
 import JobFieldsSelection from '../../components/professionals/JobFieldsSelection';
-import { sendSms } from '../../utils/generalUtils';
+import { sendSms ,shortenUrl} from '../../utils/generalUtils';
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import AvailabilityTimes from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
@@ -181,10 +181,10 @@ function ProfessionalRegistration() {
             sessionStorage.setItem('professionalId', registeredId);
             // Redirect to Expert Interface page after successful registration
             const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${registeredId}`;
-            let message = translation.businessCardSMS.replace("{link}", '');
-            console.log('message sent : '+ message)
+            const shortenedLink = await shortenUrl(businessCardLink);
+             console.log('shortenedLink' +shortenedLink)
+            let message = translation.businessCardSMS.replace("{link}", shortenedLink);
             sendSms(formattedPhoneNumber, message);
-            sendSms(formattedPhoneNumber, businessCardLink);
             navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error saving registration:', error);
