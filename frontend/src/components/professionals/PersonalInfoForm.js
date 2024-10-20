@@ -65,6 +65,7 @@ function PersonalInfoForm({
                 id="fullName"
                 ref={fullNameRef} // Attach the ref to this input
                 value={fullName}
+                inputMode="text" // Guide mobile devices to show the alphabetic keyboard
                 onChange={handleFullNameChange}
                 className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.fullName ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.fullNamePlaceholder}
