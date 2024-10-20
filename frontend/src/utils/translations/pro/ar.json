@@ -78,6 +78,8 @@
   "mySettingsButtonLabel": "إعداداتي",
   "errorOccurredMessage": "حدث خطأ، يرجى المحاولة لاحقًا -.-",
       "editTitle": "عدل معلوماتك",
-    "saveChangesButton": "احفظ التغييرات"
+    "saveChangesButton": "احفظ التغييرات",
+	    "businessCardSMS": "بطاقة عملك جاهزة! يمكنك الوصول إليها هنا: {link}"
+
 
 }

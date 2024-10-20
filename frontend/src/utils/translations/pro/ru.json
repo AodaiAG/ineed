@@ -72,6 +72,8 @@
   "mySettingsButtonLabel": "Мои настройки",
   "errorOccurredMessage": "Произошла ошибка, попробуйте позже -.-",
       "editTitle": "Измените свою информацию",
-    "saveChangesButton": "Сохранить изменения"
+    "saveChangesButton": "Сохранить изменения",
+	    "businessCardSMS": "Ваша визитная карточка готова! Вы можете получить к ней доступ здесь: {link}"
+
 
 }

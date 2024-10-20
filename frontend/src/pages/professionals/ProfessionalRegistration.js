@@ -7,7 +7,7 @@ import { API_URL } from '../../utils/constans';
 import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
 import ImageUpload from '../../components/professionals/ImageUpload';
 import JobFieldsSelection from '../../components/professionals/JobFieldsSelection';
-
+import { sendSms } from '../../utils/generalUtils';
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import AvailabilityTimes from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
@@ -180,6 +180,9 @@ function ProfessionalRegistration() {
             // Store the ID in session storage
             sessionStorage.setItem('professionalId', registeredId);
             // Redirect to Expert Interface page after successful registration
+            const businessCardLink = `https://i-need.co.il/pro/bs-card?id=${registeredId}`;
+            let message = translation.businessCardSMS.replace("{link}", businessCardLink);
+            sendSms(formattedPhoneNumber, message);
             navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error saving registration:', error);

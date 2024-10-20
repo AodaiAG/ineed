@@ -80,6 +80,8 @@
   "mySettingsButtonLabel": "My Settings",
   "errorOccurredMessage": "Error Occurred, try again later -.-",
       "editTitle": "Edit Your Information",
-    "saveChangesButton": "Save Changes"
+    "saveChangesButton": "Save Changes",
+	    "businessCardSMS": "Your business card is ready! You can access it here: {link}"
+
 
 }

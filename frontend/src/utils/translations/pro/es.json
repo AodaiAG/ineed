@@ -72,6 +72,8 @@
   "mySettingsButtonLabel": "Mis ajustes",
   "errorOccurredMessage": "Ocurrió un error, inténtalo de nuevo más tarde -.-",
       "editTitle": "Edita tu información",
-    "saveChangesButton": "Guardar cambios"
+    "saveChangesButton": "Guardar cambios",
+	    "businessCardSMS": "¡Tu tarjeta de presentación está lista! Puedes acceder a ella aquí: {link}"
+
 
 }
