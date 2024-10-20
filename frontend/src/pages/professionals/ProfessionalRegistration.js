@@ -36,7 +36,7 @@ function ProfessionalRegistration() {
         fullName: '',
         email: '',
         website: '',
-        mainProfession: '',
+        jobFields: '',
         workArea: '',
         dayAvailability: '',
         language: ''
@@ -46,7 +46,7 @@ function ProfessionalRegistration() {
     const fullNameRef = useRef(null);
     const emailRef = useRef(null);
     const websiteRef = useRef(null);
-    const mainProfessionRef = useRef(null);
+    const jobFieldsRef = useRef(null);
     const workAreaRef = useRef(null);
     const dayAvailabilityRef = useRef(null);
     const languageRef = useRef(null);
@@ -146,11 +146,10 @@ function ProfessionalRegistration() {
             isValid = false;
         }
 
-        const isAnyMainProfessionSelected = mainProfessions.some(main => document.getElementById(`${main.main}-checkbox`)?.checked);
-        if (!isAnyMainProfessionSelected) {
-            newErrors.mainProfession = translation.mainProfessionError || 'Please select at least one main profession.';
-            if (isValid) {
-                mainProfessionRef.current.scrollIntoView({ behavior: 'smooth' });
+        if (selectedProfessionIds.length === 0) {
+            newErrors.jobFields = translation.jobFieldsError || 'Please select at least one job field.';
+            if (isValid && jobFieldsRef && jobFieldsRef.current) {
+                jobFieldsRef.current.scrollIntoView({ behavior: 'smooth' });
             }
             isValid = false;
         }
@@ -257,7 +256,7 @@ function ProfessionalRegistration() {
                         image={image}
                         setImage={setImage}
                         errors={errors} // Pass error messages to PersonalInfoForm
-                        refs={{ fullNameRef, emailRef, websiteRef, mainProfessionRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
+                        refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
                     />
 
                     {/* Job Fields Section */}
@@ -276,6 +275,8 @@ function ProfessionalRegistration() {
                         toggleAllChildren={toggleAllChildren}
                         setSelectedProfessionIds={setSelectedProfessionIds}
                         selectedProfessionIds={selectedProfessionIds}
+                        error={errors.jobFields}
+                        ref={jobFieldsRef||'error'} // Attach the ref here
                     />
                     {/* Work Areas Section */}
                     <WorkAreas
@@ -295,10 +296,17 @@ function ProfessionalRegistration() {
                         setDayAvailability={setDayAvailability}
                         toggleAvailability={toggleAvailability}
                         language={selectedLanguage || 'he'} // Default to 'he' if no language selected
+                        error={errors.dayAvailability}
+                        ref={dayAvailabilityRef}
                     />
 
                     {/* Language Preferences Section */}
-                    <LanguagePreferences languages={languages} setLanguages={setLanguages} />
+                    <LanguagePreferences
+                      languages={languages}
+                      setLanguages={setLanguages}
+                      error={errors.language}
+                      ref={languageRef} // Attach the ref here
+                       />
 
                     {/* Continue Button */}
                     <button className={styles['pro-continue-button']} onClick={handleSubmit}>{translation?.continueLabel || 'המשך'}</button>

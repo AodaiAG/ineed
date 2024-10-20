@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-function AvailabilityForm({ dayAvailability, setDayAvailability, toggleAvailability }) {
+const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, toggleAvailability, error }, ref) => {
     const { translation } = useLanguage();
 
     if (!translation) {
@@ -10,8 +10,9 @@ function AvailabilityForm({ dayAvailability, setDayAvailability, toggleAvailabil
     }
 
     return (
-        <div className={styles['pro-form-group']}>
+        <div ref={ref} className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>{translation.availabilityLabel}</label>
+            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above availability selection */}
             <div className={styles['pro-availability-group']}>
                 {Object.keys(dayAvailability).map((dayInt) => {
                     const dayName = translation.days[dayInt]; // Get the translated day name
@@ -58,6 +59,6 @@ function AvailabilityForm({ dayAvailability, setDayAvailability, toggleAvailabil
             </div>
         </div>
     );
-}
+});
 
 export default AvailabilityForm;

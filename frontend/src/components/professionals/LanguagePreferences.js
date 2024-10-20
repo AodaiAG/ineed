@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-function LanguagePreferences({ languages, setLanguages }) {
+const LanguagePreferences = forwardRef(({ languages, setLanguages, error }, ref) => {
     const { translation } = useLanguage();
 
     if (!translation) {
@@ -20,8 +20,9 @@ function LanguagePreferences({ languages, setLanguages }) {
     };
 
     return (
-        <div className={styles['pro-form-group']}>
+        <div ref={ref} className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>{translation.languagePreferencesLabel}</label>
+            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above language selection */}
             <div className={styles['language-options']}>
                 {Object.keys(translation.languages).map((languageKey) => (
                     <label key={languageKey} className={styles['language-label']}>
@@ -36,6 +37,6 @@ function LanguagePreferences({ languages, setLanguages }) {
             </div>
         </div>
     );
-}
+});
 
 export default LanguagePreferences;
