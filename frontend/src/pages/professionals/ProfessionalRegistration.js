@@ -180,7 +180,7 @@ function ProfessionalRegistration() {
             // Store the ID in session storage
             sessionStorage.setItem('professionalId', registeredId);
             // Redirect to Expert Interface page after successful registration
-            const businessCardLink = `https://i-need.co.il/pro/bs-card?id=${registeredId}`;
+            const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${registeredId}`;
             let message = translation.businessCardSMS.replace("{link}", businessCardLink);
             sendSms(formattedPhoneNumber, message);
             navigate('/pro/expert-interface');
