@@ -77,7 +77,7 @@
 		  "fullNameError": "Por favor ingrese su nombre completo.",
   "emailError": "Por favor ingrese una dirección de correo electrónico válida (ej. example@domain.com).",
   "websiteError": "Por favor ingrese un sitio web válido (ej. example.com) o déjelo vacío.",
-  "mainProfessionError": "Por favor seleccione al menos una profesión principal.",
+  "jobFieldsError": "Por favor seleccione al menos una profesión principal.",
   "workAreaError": "Por favor seleccione al menos un área de trabajo.",
   "dayAvailabilityError": "Por favor seleccione al menos un día en el que esté disponible.",
   "languageError": "Por favor seleccione al menos un idioma."

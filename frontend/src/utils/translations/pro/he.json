@@ -85,7 +85,7 @@
 		  "fullNameError": "אנא הזן שם פרטי ומשפחה.",
   "emailError": "אנא הזן כתובת אימייל תקינה (למשל example@domain.com).",
   "websiteError": "אנא הזן כתובת אתר תקינה (למשל example.com) או השאר אותה ריקה.",
-  "mainProfessionError": "אנא בחר לפחות תחום עיסוק אחד.",
+  "jobFieldsError": "אנא בחר לפחות תחום עיסוק אחד.",
   "workAreaError": "אנא בחר לפחות אזור עבודה אחד.",
   "dayAvailabilityError": "אנא בחר לפחות יום אחד שבו אתה זמין לעבודה.",
   "languageError": "אנא בחר לפחות שפה אחת."
