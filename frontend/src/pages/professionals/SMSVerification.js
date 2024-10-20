@@ -47,7 +47,8 @@ function SMSVerification() {
                         phoneNumber,
                     });
 
-                    if (response.data.success) {
+                    if (response.data.registered) 
+                        {
                         // Redirect to dashboard or registration based on user's status
                         navigate('/pro/dashboard');
                     } else {
