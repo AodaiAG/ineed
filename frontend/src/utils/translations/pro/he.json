@@ -81,7 +81,14 @@
   "errorOccurredMessage": "אירעה שגיאה, נסה שוב מאוחר יותר -.-",
      "editTitle": "ערוך את המידע שלך",
     "saveChangesButton": "שמור שינויים",
-	    "businessCardSMS": "כרטיס הביקור שלך מוכן! לחץ כאן: {link}"
+	    "businessCardSMS": "כרטיס הביקור שלך מוכן! לחץ כאן: {link}",
+		  "fullNameError": "אנא הזן שם פרטי ומשפחה.",
+  "emailError": "אנא הזן כתובת אימייל תקינה (למשל example@domain.com).",
+  "websiteError": "אנא הזן כתובת אתר תקינה (למשל example.com) או השאר אותה ריקה.",
+  "mainProfessionError": "אנא בחר לפחות תחום עיסוק אחד.",
+  "workAreaError": "אנא בחר לפחות אזור עבודה אחד.",
+  "dayAvailabilityError": "אנא בחר לפחות יום אחד שבו אתה זמין לעבודה.",
+  "languageError": "אנא בחר לפחות שפה אחת."
 
 
 }

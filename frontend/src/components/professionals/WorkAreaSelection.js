@@ -1,26 +1,32 @@
-// src/components/professionals/WorkAreaSelection.jsx
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
-function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren, workAreaSelections, setWorkAreaSelections }) {
+const WorkAreaSelection = forwardRef(({
+    groupedLocations,
+    toggleDropdown,
+    toggleAllChildren,
+    workAreaSelections,
+    setWorkAreaSelections,
+    error
+}, ref) => {
     const { translation } = useLanguage();
 
     // Function to toggle work area selection
     const handleLocationToggle = (cityId) => {
         setWorkAreaSelections(prevSelections => {
             if (prevSelections.includes(cityId)) {
-                // If the city is already selected, remove it
                 return prevSelections.filter(id => id !== cityId);
             } else {
-                // Otherwise, add it to the selections
                 return [...prevSelections, cityId];
             }
         });
     };
-   if (!translation) {
+
+    if (!translation) {
         return <div>Loading...</div>; // Wait for translations to load
     }
+
     // Function to count selected cities for a given area
     const countSelectedCities = (area) => {
         return area.cities.filter(city => workAreaSelections.includes(city.cityId)).length;
@@ -32,18 +38,18 @@ function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren
             const areaCities = groupedLocations.find(area => area.areaId === areaId)?.cities || [];
             const areaCityIds = areaCities.map(city => city.cityId);
             if (isChecked) {
-                // Add all cities in this area
                 return [...new Set([...prevSelections, ...areaCityIds])];
             } else {
-                // Remove all cities in this area
                 return prevSelections.filter(id => !areaCityIds.includes(id));
             }
         });
     };
 
     return (
-        <div className={styles['pro-form-group']}>
+        <div ref={ref} className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>{translation.workAreasLabel}</label>
+            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above the work area selection */}
+
             {Array.isArray(groupedLocations) && groupedLocations.length > 0 ? (
                 groupedLocations.map((area) => {
                     const selectedCount = countSelectedCities(area);
@@ -90,6 +96,6 @@ function WorkAreaSelection({ groupedLocations, toggleDropdown, toggleAllChildren
             )}
         </div>
     );
-}
+});
 
 export default WorkAreaSelection;

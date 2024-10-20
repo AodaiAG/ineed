@@ -213,3 +213,34 @@
     color: #aaa;
     margin-top: 5px;
 }
+
+.pro-input-error {
+    border: 2px solid red;
+    animation: shake 0.3s ease-in-out;
+}
+
+/* CSS for the error message - positioned above the input and in red */
+.pro-error {
+    color: red;
+    font-size: 0.9em;
+    margin-bottom: 0.4em; /* Add some space between the error message and the input */
+    font-weight: bold;
+}
+
+/* Keyframes for the shake animation */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    20%, 60% {
+        transform: translateX(-10px);
+    }
+    40%, 80% {
+        transform: translateX(10px);
+    }
+}
+
+/* Applying shake animation */
+.shake {
+    animation: shake 0.3s ease-in-out;
+}

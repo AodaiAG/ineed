@@ -1,5 +1,5 @@
 // src/pages/professionals/ProfessionalRegistration.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef  } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/ProfessionalRegistration.module.css';
@@ -31,13 +31,26 @@ function ProfessionalRegistration() {
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
     const [businessName, setBusinessName] = useState('');
-    const languageMapping = {
-        he: 0,
-        en: 1,
-        ru: 2,
-        es: 3,
-        ar: 4
-    };
+ 
+    const [errors, setErrors] = useState({
+        fullName: '',
+        email: '',
+        website: '',
+        mainProfession: '',
+        workArea: '',
+        dayAvailability: '',
+        language: ''
+    });
+
+    // Refs for each field to scroll to them when needed
+    const fullNameRef = useRef(null);
+    const emailRef = useRef(null);
+    const websiteRef = useRef(null);
+    const mainProfessionRef = useRef(null);
+    const workAreaRef = useRef(null);
+    const dayAvailabilityRef = useRef(null);
+    const languageRef = useRef(null);
+
     
     // Updated state to store selected language IDs
     const [languages, setLanguages] = useState([]);
@@ -106,40 +119,71 @@ function ProfessionalRegistration() {
     }, []);
 
     const validateForm = () => {
+        const newErrors = {};
+        let isValid = true;
+
         if (!fullName) {
-            alert('אנא הזן שם פרטי ומשפחה');
-            return false;
+            newErrors.fullName = translation.fullNameError || 'Please enter your full name.';
+            isValid = false;
+            fullNameRef.current.scrollIntoView({ behavior: 'smooth' });
         }
 
-        if (!email) {
-            alert('אנא הזן אימייל');
-            return false;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+            newErrors.email = translation.emailError || 'Please enter a valid email address.';
+            if (isValid) {
+                emailRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
+
+        const websiteRegex = /^$|^[^\s]+\.[^\s]+$/;
+        if (website && !websiteRegex.test(website)) {
+            newErrors.website = translation.websiteError || 'Please enter a valid website (e.g., example.com) or leave it empty.';
+            if (isValid) {
+                websiteRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
         }
 
         const isAnyMainProfessionSelected = mainProfessions.some(main => document.getElementById(`${main.main}-checkbox`)?.checked);
         if (!isAnyMainProfessionSelected) {
-            alert('אנא בחר לפחות תחום עיסוק אחד');
-            return false;
+            newErrors.mainProfession = translation.mainProfessionError || 'Please select at least one main profession.';
+            if (isValid) {
+                mainProfessionRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
         }
 
         if (workAreaSelections.length === 0) {
-            alert('אנא בחר לפחות אזור עבודה אחד');
-            return false;
+            newErrors.workArea = translation.workAreaError || 'Please select at least one work area.';
+            if (isValid && workAreaRef && workAreaRef.current) {
+                workAreaRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
         }
 
         const isAnyDayAvailable = Object.values(dayAvailability).some(day => day.isWorking);
         if (!isAnyDayAvailable) {
-            alert('אנא בחר לפחות יום אחד שבו אתה זמין לעבודה');
-            return false;
+            newErrors.dayAvailability = translation.dayAvailabilityError || 'Please select at least one day you are available.';
+            if (isValid) {
+                dayAvailabilityRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
         }
 
         const isAnyLanguageSelected = Object.values(languages).some(lang => lang);
         if (!isAnyLanguageSelected) {
-            alert('אנא בחר לפחות שפה אחת');
-            return false;
+            newErrors.language = translation.languageError || 'Please select at least one language.';
+            if (isValid) {
+                languageRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
         }
 
-        return true;
+        setErrors(newErrors);
+
+        return isValid;
     };
     const transformDayAvailabilityForBackend = (dayAvailability) => {
         return Object.entries(dayAvailability).map(([dayInt, data]) => ({
@@ -212,6 +256,8 @@ function ProfessionalRegistration() {
                         setBusinessName={setBusinessName}
                         image={image}
                         setImage={setImage}
+                        errors={errors} // Pass error messages to PersonalInfoForm
+                        refs={{ fullNameRef, emailRef, websiteRef, mainProfessionRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
                     />
 
                     {/* Job Fields Section */}
@@ -238,6 +284,9 @@ function ProfessionalRegistration() {
                         toggleAllChildren={toggleAllChildren}
                         setWorkAreaSelections={setWorkAreaSelections}
                         workAreaSelections={workAreaSelections}
+                        error={errors.workArea} // Pass the work area error message
+                        ref={workAreaRef} // Attach the ref to this component
+
                     />
 
                     {/* Availability Times Section */}

@@ -73,7 +73,14 @@
   "errorOccurredMessage": "Ocurrió un error, inténtalo de nuevo más tarde -.-",
       "editTitle": "Edita tu información",
     "saveChangesButton": "Guardar cambios",
-	    "businessCardSMS": "¡Tu tarjeta de presentación está lista! Puedes acceder a ella aquí: {link}"
+	    "businessCardSMS": "¡Tu tarjeta de presentación está lista! Puedes acceder a ella aquí: {link}",
+		  "fullNameError": "Por favor ingrese su nombre completo.",
+  "emailError": "Por favor ingrese una dirección de correo electrónico válida (ej. example@domain.com).",
+  "websiteError": "Por favor ingrese un sitio web válido (ej. example.com) o déjelo vacío.",
+  "mainProfessionError": "Por favor seleccione al menos una profesión principal.",
+  "workAreaError": "Por favor seleccione al menos un área de trabajo.",
+  "dayAvailabilityError": "Por favor seleccione al menos un día en el que esté disponible.",
+  "languageError": "Por favor seleccione al menos un idioma."
 
 
 }

@@ -81,7 +81,14 @@
   "errorOccurredMessage": "Error Occurred, try again later -.-",
       "editTitle": "Edit Your Information",
     "saveChangesButton": "Save Changes",
-	    "businessCardSMS": "Your business card is ready!: {link}"
+	    "businessCardSMS": "Your business card is ready!: {link}",
+		  "fullNameError": "Please enter your full name.",
+  "emailError": "Please enter a valid email address (e.g., example@domain.com).",
+  "websiteError": "Please enter a valid website (e.g., example.com) or leave it empty.",
+  "mainProfessionError": "Please select at least one main profession.",
+  "workAreaError": "Please select at least one work area.",
+  "dayAvailabilityError": "Please select at least one day you are available.",
+  "languageError": "Please select at least one language."
 
 
 }

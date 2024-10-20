@@ -1,17 +1,24 @@
 import React, { useRef } from 'react';
-import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
+import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
-function PersonalInfoForm({ 
-    fullName, setFullName, 
-    phoneNumber, 
-    email, setEmail, 
-    website, setWebsite, 
+function PersonalInfoForm({
+    fullName, setFullName,
+    phoneNumber,
+    email, setEmail,
+    website, setWebsite,
     businessName, setBusinessName,
-    image, setImage 
+    image, setImage,
+    errors, // Error messages passed from parent component
+    refs // Refs passed from parent component to scroll to each field
 }) {
-    const { translation } = useLanguage(); // Get translation from context
+    const { translation } = useLanguage();
+    const { fullNameRef, emailRef, websiteRef } = refs; // Destructure refs
+
     const fileInputRef = useRef(null);
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -40,20 +47,18 @@ function PersonalInfoForm({
         fileInputRef.current.click();
     };
 
-    if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
-    }
-
     return (
         <div className={styles['pro-form-group']}>
             {/* Full Name Input */}
             <label htmlFor="fullName" className={styles['pro-label']}>{translation.fullNameLabel}</label>
+            {errors.fullName && <p className={styles['pro-error']}>{errors.fullName}</p>} {/* Error Message Above */}
             <input
                 type="text"
                 id="fullName"
+                ref={fullNameRef} // Attach the ref to this input
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.fullName ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.fullNamePlaceholder}
             />
 
@@ -88,23 +93,27 @@ function PersonalInfoForm({
 
             {/* Email Input */}
             <label htmlFor="email" className={styles['pro-label']}>{translation.emailLabel}</label>
+            {errors.email && <p className={styles['pro-error']}>{errors.email}</p>} {/* Error Message Above */}
             <input
                 type="email"
                 id="email"
+                ref={emailRef} // Attach the ref to this input
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.email ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.emailPlaceholder}
             />
 
             {/* Website Input */}
             <label htmlFor="website" className={styles['pro-label']}>{translation.websiteLabel}</label>
+            {errors.website && <p className={styles['pro-error']}>{errors.website}</p>} {/* Error Message Above */}
             <input
                 type="text"
                 id="website"
+                ref={websiteRef} // Attach the ref to this input
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
-                className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.website ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.websitePlaceholder}
             />
 

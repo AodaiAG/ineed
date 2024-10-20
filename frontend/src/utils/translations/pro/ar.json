@@ -79,7 +79,14 @@
   "errorOccurredMessage": "حدث خطأ، يرجى المحاولة لاحقًا -.-",
       "editTitle": "عدل معلوماتك",
     "saveChangesButton": "احفظ التغييرات",
-	    "businessCardSMS": "بطاقة عملك جاهزة! يمكنك الوصول إليها هنا: {link}"
+	    "businessCardSMS": "بطاقة عملك جاهزة! يمكنك الوصول إليها هنا: {link}",
+		  "fullNameError": "يرجى إدخال الاسم الكامل.",
+  "emailError": "يرجى إدخال عنوان بريد إلكتروني صالح (مثل example@domain.com).",
+  "websiteError": "يرجى إدخال موقع ويب صالح (مثل example.com) أو تركه فارغًا.",
+  "mainProfessionError": "يرجى اختيار مهنة رئيسية واحدة على الأقل.",
+  "workAreaError": "يرجى اختيار منطقة عمل واحدة على الأقل.",
+  "dayAvailabilityError": "يرجى اختيار يوم واحد على الأقل تكون فيه متاحًا.",
+  "languageError": "يرجى اختيار لغة واحدة على الأقل."
 
 
 }
