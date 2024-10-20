@@ -47,6 +47,14 @@ function PersonalInfoForm({
         fileInputRef.current.click();
     };
 
+    const handleFullNameChange = (e) => {
+        const value = e.target.value;
+        // Allow only alphabetic characters and spaces
+        if (/^[a-zA-Z\s]*$/.test(value)) {
+            setFullName(value);
+        }
+    };
+
     return (
         <div className={styles['pro-form-group']}>
             {/* Full Name Input */}
@@ -57,7 +65,7 @@ function PersonalInfoForm({
                 id="fullName"
                 ref={fullNameRef} // Attach the ref to this input
                 value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                onChange={handleFullNameChange}
                 className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.fullName ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.fullNamePlaceholder}
             />
