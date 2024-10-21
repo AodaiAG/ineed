@@ -65,6 +65,7 @@ function EditProfessionalSettings() {
     useEffect(() => {
         // Get the user ID from session storage
         const id = sessionStorage.getItem('professionalId');
+        console.log(`prof id: ${id}`);
         if (id) {
             fetchProfessionalData(id);
         } else {
