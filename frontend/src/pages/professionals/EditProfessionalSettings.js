@@ -78,7 +78,11 @@ function EditProfessionalSettings() {
                 console.log('selected lan :'+selectedLanguage)
                 // Pass the selected language in the API request
                 const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
-                setMainProfessions(response.data);
+                let mainProfessionsData = response.data;
+
+                mainProfessionsData = mainProfessionsData.slice(1);
+
+                setMainProfessions(mainProfessionsData);
             } catch (error) {
                 console.error('Error fetching main professions:', error);
             }
@@ -89,6 +93,8 @@ function EditProfessionalSettings() {
             try {
                 const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
                 const locationsData = response.data;
+                locationsData = locationsData.slice(1);
+
                 setGroupedLocations(locationsData);
                 console.log("Fetched locations:", response.data);
             } catch (error) {
