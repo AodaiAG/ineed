@@ -2,7 +2,7 @@
   "name": "I Need App",
   "short_name": "I Need",
   "description": "A platform for experts and professionals.",
-  "start_url": "/",
+  "start_url": "/pro/expert-main",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
