@@ -10,7 +10,10 @@ function BusinessCard() {
     const navigate = useNavigate();
     const id = searchParams.get('id');
 
+    const [deferredPrompt, setDeferredPrompt] = useState(null); // State to store install prompt event
+
     useEffect(() => {
+        // Fetch Professional Data
         const fetchProfessional = async () => {
             try {
                 const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
@@ -24,23 +27,48 @@ function BusinessCard() {
         if (id) {
             fetchProfessional();
         }
+
+        // Listen for the "beforeinstallprompt" event
+        const handleBeforeInstallPrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e); // Save the event to be triggered later
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        };
     }, [id]);
+
+    // Function to handle "Add to Home Screen" button click
+    const handleAddToHomeClick = () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt(); // Show the install prompt
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                setDeferredPrompt(null); // Reset the deferred prompt
+            });
+        } else {
+            alert('To add to your home screen, please use the browser options to create a shortcut.');
+        }
+    };
 
     if (!professional) {
         return <div>Loading...</div>;
     }
 
-    const handleExplainClick = () => {
-        navigate('/pro/explain');
-    };
-
-    const handlePhoneClick = () => {
-        window.open(`tel:${professional.phoneNumber}`, '_self');
+    const handleCallClick = () => {
+        window.location.href = `tel:${professional.phoneNumber}`;
     };
 
     const handleWhatsAppClick = () => {
-        const whatsappLink = `https://wa.me/${professional.phoneNumber}`;
-        window.open(whatsappLink, '_blank');
+        window.open(`https://wa.me/${professional.phoneNumber}`, '_blank');
     };
 
     const handleEmailClick = () => {
@@ -48,13 +76,11 @@ function BusinessCard() {
     };
 
     const handleWebsiteClick = () => {
-        if (professional.website) {
-            window.open(professional.website, '_blank');
-        }
+        window.open(professional.website, '_blank');
     };
 
-    const handleAddToHomeClick = () => {
-        alert('To add to your home screen, please use the browser options to create a shortcut.');
+    const handleExplainClick = () => {
+        navigate('/pro/explain');
     };
 
     return (
@@ -74,7 +100,7 @@ function BusinessCard() {
 
             {/* Contact Icons Section */}
             <div className={styles.proIconsContainer}>
-                <div className={styles.proIcon} onClick={handlePhoneClick}>
+                <div className={styles.proIcon} onClick={handleCallClick}>
                     <img src="/images/Prof/phone-icon.png" alt="Phone Icon" />
                 </div>
                 <div className={styles.proIcon} onClick={handleWhatsAppClick}>
