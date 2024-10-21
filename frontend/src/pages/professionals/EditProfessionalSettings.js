@@ -87,7 +87,7 @@ function EditProfessionalSettings() {
         const fetchLocations = async () => {
             
             try {
-                const response = await axios.get(`${API_URL}/locations?lang=${selectedLanguage}`);
+                const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
                 console.log("Fetched locations:", response.data);
             } catch (error) {
                 console.error('Error fetching locations:', error);
