@@ -54,7 +54,7 @@ function BusinessCard() {
     };
 
     const handlePhoneClick = () => {
-        window.open(`tel:${professional.phoneNumber}`);
+        window.location.href = `tel:${professional.phoneNumber}`;
     };
 
     const handleWhatsAppClick = () => {
