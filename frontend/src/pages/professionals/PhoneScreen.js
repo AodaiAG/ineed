@@ -70,6 +70,7 @@ function PhoneScreen() {
                             className={styles['pro-select']}
                         >
                             <option value="052">052</option>
+                            <option value="053">052</option>
                             <option value="054">054</option>
                             <option value="055">055</option>
                             <option value="056">056</option>
