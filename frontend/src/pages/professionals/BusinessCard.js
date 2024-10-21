@@ -40,7 +40,7 @@ function BusinessCard() {
             window.open(professional.website, '_blank');
         }
     };
-
+// trying the pwa
     // Open a call to the professional's phone number
     const handlePhoneClick = () => {
         window.location.href = `tel:${professional.phoneNumber}`;
