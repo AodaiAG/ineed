@@ -12,6 +12,7 @@ function BusinessCard() {
 
     // State to hold deferred prompt for Add to Home Screen
     const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [isInstallButtonDisabled, setIsInstallButtonDisabled] = useState(true);
 
     useEffect(() => {
         const fetchProfessional = async () => {
@@ -32,6 +33,7 @@ function BusinessCard() {
         const handleBeforeInstallPrompt = (e) => {
             e.preventDefault();
             setDeferredPrompt(e); // Save the event to be triggered later
+            setIsInstallButtonDisabled(false); // Enable the install button
         };
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -75,6 +77,7 @@ function BusinessCard() {
                     console.log('User dismissed the install prompt');
                 }
                 setDeferredPrompt(null); // Reset the deferred prompt
+                setIsInstallButtonDisabled(true); // Disable the install button after prompting
             });
         } else {
             // Manual fallback if `beforeinstallprompt` isn't available
@@ -108,7 +111,10 @@ function BusinessCard() {
                 <div className={styles.proIcon} onClick={handleEmailClick}>
                     <img src="/images/Prof/email-icon.png" alt="Email Icon" />
                 </div>
-                <div className={styles.proIcon} onClick={handleAddToHomeClick}>
+                <div
+                    className={`${styles.proIcon} ${isInstallButtonDisabled ? styles.proIconDisabled : ''}`}
+                    onClick={!isInstallButtonDisabled ? handleAddToHomeClick : null}
+                >
                     <img src="/images/Prof/person-icon.png" alt="Person Icon" />
                 </div>
                 <div className={styles.proIcon} onClick={handleWebsiteClick}>
