@@ -8,13 +8,11 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/images/Prof/footer-worker.png",
-      "sizes": "192x192",
+      "src": "/images/Prof/icon-192x192.png",
       "type": "image/png"
     },
     {
-      "src": "/images/Prof/footer-worker.png",
-      "sizes": "512x512",
+      "src": "/images/Prof/icon-192x192.png",
       "type": "image/png"
     }
   ]
