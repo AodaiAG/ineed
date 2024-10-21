@@ -70,34 +70,32 @@ function EditProfessionalSettings() {
             console.error("No user ID found in session storage");
             navigate('/pro/expert-interface');
         }
-
-        // Fetch other necessary data
+    
+        // Fetch main professions with language
         const fetchMainProfessions = async () => {
             try {
-                const response = await axios.get(`${API_URL}/main-professions`);
+                // Pass the selected language in the API request
+                const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
                 setMainProfessions(response.data);
             } catch (error) {
                 console.error('Error fetching main professions:', error);
             }
         };
-
+    
         const fetchLocations = async () => {
             try {
                 const response = await axios.get(`${API_URL}/professionals/locations`);
                 const locationsData = response.data;
-        
-                // Assuming response.data is already in the correct format
                 setGroupedLocations(locationsData);
-                console.log("Fetched grouped locations:", locationsData);
             } catch (error) {
                 console.error('Error fetching locations:', error);
             }
         };
-        
-
-        fetchMainProfessions();
-        fetchLocations();
-    }, [navigate]);
+    
+        fetchMainProfessions();  // Fetch based on language
+        fetchLocations();        // Fetch other data
+    
+    }, [navigate, selectedLanguage]);  // Add selectedLanguage to dependencies
 
     const fetchProfessionalData = async (id) => {
         try {
@@ -299,8 +297,8 @@ function EditProfessionalSettings() {
                         mainProfessions={mainProfessions}
                         subProfessions={subProfessions}
                         fetchSubProfessions={(main) => {
-                            // Fetch sub-professions based on the selected main profession
-                            axios.get(`${API_URL}/sub-professions/${main}`)
+                            // Modify the request to include the language
+                            axios.get(`${API_URL}/${selectedLanguage}/sub-professions/${main}`)
                                 .then(response => {
                                     setSubProfessions(prev => ({ ...prev, [main]: response.data }));
                                 })

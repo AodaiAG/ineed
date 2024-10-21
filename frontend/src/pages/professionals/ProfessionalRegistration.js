@@ -99,7 +99,8 @@ function ProfessionalRegistration() {
 
         const fetchMainProfessions = async () => {
             try {
-                const response = await axios.get(`${API_URL}/main-professions`);
+                // Modify the request to include the language
+                const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
                 setMainProfessions(response.data);
             } catch (error) {
                 console.error('Error fetching main professions:', error);
@@ -118,7 +119,7 @@ function ProfessionalRegistration() {
 
         fetchMainProfessions();
         fetchLocations();
-    }, []);
+    }, [selectedLanguage]);
 
     const validateForm = () => {
         const newErrors = {};
@@ -269,8 +270,8 @@ function ProfessionalRegistration() {
                         mainProfessions={mainProfessions}
                         subProfessions={subProfessions}
                         fetchSubProfessions={(main) => {
-                            // Fetch sub-professions based on the selected main profession
-                            axios.get(`${API_URL}/sub-professions/${main}`)
+                            // Modify the request to include the language
+                            axios.get(`${API_URL}/${selectedLanguage}/sub-professions/${main}`)
                                 .then(response => {
                                     setSubProfessions(prev => ({ ...prev, [main]: response.data }));
                                 })
