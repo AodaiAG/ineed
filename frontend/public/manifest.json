@@ -23,7 +23,8 @@
       "src": "/images/Prof/sc1.png",
       "sizes": "710x748",
       "type": "image/png",
-      "label": "Home Screen"
+      "label": "Home Screen",
+      "form_factor": "narrow"
     }
   ]
 }
