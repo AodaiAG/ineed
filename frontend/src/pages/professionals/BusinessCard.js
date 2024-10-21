@@ -54,11 +54,14 @@ function BusinessCard() {
     };
 
     const handlePhoneClick = () => {
+        // Use window.location.href to directly prompt the dialer without opening a new tab
         window.location.href = `tel:${professional.phoneNumber}`;
     };
 
     const handleWhatsAppClick = () => {
-        window.open(`https://wa.me/${professional.phoneNumber}`, '_blank');
+        // Clean up the phone number to remove any extra characters or spaces
+        const cleanedPhoneNumber = professional.phoneNumber.replace(/\D/g, '');
+        window.open(`https://wa.me/${cleanedPhoneNumber}`, '_blank');
     };
 
     const handleEmailClick = () => {
