@@ -15,7 +15,7 @@ function ExpertMainPage() {
         if (userSession) {
             // Set professionalId in sessionStorage if it exists
             sessionStorage.setItem('professionalId', userSession);
-
+            console.log(`prof id in expertMainPage: ${userSession}`);
             // Redirect user to the expert interface
             navigate('/pro/expert-interface');
         }
