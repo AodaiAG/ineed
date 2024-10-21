@@ -17,5 +17,13 @@
       "sizes": "427x475",
       "type": "image/png"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/Prof/sc1.png",
+      "sizes": "710x748",
+      "type": "image/png",
+      "label": "Home Screen"
+    }
   ]
 }
