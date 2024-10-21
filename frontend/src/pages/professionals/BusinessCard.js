@@ -50,7 +50,14 @@ function BusinessCard() {
     };
 
     const handleWebsiteClick = () => {
-        window.open(professional.website, '_blank');
+        let websiteUrl = professional.website;
+    
+        // Ensure the URL starts with "http://" or "https://"
+        if (!/^https?:\/\//i.test(websiteUrl)) {
+            websiteUrl = `http://${websiteUrl}`;
+        }
+    
+        window.open(websiteUrl, '_blank');
     };
 
     const handlePhoneClick = () => {
