@@ -112,6 +112,8 @@ function ProfessionalRegistration() {
             
             try {
                 const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
+                const locationsData = response.data;
+                setGroupedLocations(locationsData);
                 console.log("Fetched locations:", response.data);
             } catch (error) {
                 console.error('Error fetching locations:', error);
