@@ -34,6 +34,37 @@ function BusinessCard() {
         navigate('/pro/explain');
     };
 
+    // Open website in a new tab
+    const handleWebsiteClick = () => {
+        if (professional.website) {
+            window.open(professional.website, '_blank');
+        }
+    };
+
+    // Open a call to the professional's phone number
+    const handlePhoneClick = () => {
+        window.location.href = `tel:${professional.phoneNumber}`;
+    };
+
+    // Open WhatsApp chat with the professional
+    const handleWhatsAppClick = () => {
+        const encodedMessage = encodeURIComponent('Hello, I would like to inquire about your services.');
+        window.open(`https://wa.me/${professional.phoneNumber}?text=${encodedMessage}`, '_blank');
+    };
+
+    // Open email client to send an email to the professional
+    const handleEmailClick = () => {
+        if (professional.email) {
+            window.location.href = `mailto:${professional.email}`;
+        }
+    };
+
+    // Save the "I Need" link to the user's home screen
+    const handleAddToHomeClick = () => {
+        alert('To add to your home screen, please use the browser options to create a shortcut.');
+        window.location.href = 'https://ineed.vercel.app/pro/expert-main';
+    };
+
     return (
         <div className={styles.proContainer}>
             {/* Title Section */}
@@ -51,19 +82,19 @@ function BusinessCard() {
 
             {/* Contact Icons Section */}
             <div className={styles.proIconsContainer}>
-                <div className={styles.proIcon}>
+                <div className={styles.proIcon} onClick={handlePhoneClick}>
                     <img src="/images/Prof/phone-icon.png" alt="Phone Icon" />
                 </div>
-                <div className={styles.proIcon}>
+                <div className={styles.proIcon} onClick={handleWhatsAppClick}>
                     <img src="/images/Prof/whatsapp-icon.png" alt="WhatsApp Icon" />
                 </div>
-                <div className={styles.proIcon}>
+                <div className={styles.proIcon} onClick={handleEmailClick}>
                     <img src="/images/Prof/email-icon.png" alt="Email Icon" />
                 </div>
-                <div className={styles.proIcon}>
+                <div className={styles.proIcon} onClick={handleAddToHomeClick}>
                     <img src="/images/Prof/person-icon.png" alt="Person Icon" />
                 </div>
-                <div className={styles.proIcon}>
+                <div className={styles.proIcon} onClick={handleWebsiteClick}>
                     <img src="/images/Prof/website-icon.png" alt="Website Icon" />
                 </div>
             </div>
