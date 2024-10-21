@@ -26,52 +26,38 @@ function BusinessCard() {
         }
     }, [id]);
 
+    const handleAddToHomeClick = () => {
+        alert('To add to your home screen, please use the browser options to create a shortcut or "Install App".');
+    };
+
+    const handleWebsiteClick = () => {
+        if (professional && professional.website) {
+            window.open(professional.website, '_blank');
+        }
+    };
+
+    const handlePhoneClick = () => {
+        window.open(`tel:${professional.phoneNumber}`);
+    };
+
+    const handleWhatsAppClick = () => {
+        const message = encodeURIComponent("Hello, I'm interested in your services.");
+        window.open(`https://wa.me/${professional.phoneNumber}?text=${message}`, '_blank');
+    };
+
+    const handleEmailClick = () => {
+        window.open(`mailto:${professional.email}`);
+    };
+
     if (!professional) {
         return <div>Loading...</div>;
     }
 
-    const handleExplainClick = () => {
-        navigate('/pro/explain');
-    };
-
-    // Open website in a new tab
-    const handleWebsiteClick = () => {
-        if (professional.website) {
-            window.open(professional.website, '_blank');
-        }
-    };
-// trying the pwa
-    // Open a call to the professional's phone number
-    const handlePhoneClick = () => {
-        window.location.href = `tel:${professional.phoneNumber}`;
-    };
-
-    // Open WhatsApp chat with the professional
-    const handleWhatsAppClick = () => {
-        const encodedMessage = encodeURIComponent('Hello, I would like to inquire about your services.');
-        window.open(`https://wa.me/${professional.phoneNumber}?text=${encodedMessage}`, '_blank');
-    };
-
-    // Open email client to send an email to the professional
-    const handleEmailClick = () => {
-        if (professional.email) {
-            window.location.href = `mailto:${professional.email}`;
-        }
-    };
-
-    // Save the "I Need" link to the user's home screen
-    const handleAddToHomeClick = () => {
-        alert('To add to your home screen, please use the browser options to create a shortcut.');
-        window.location.href = 'https://ineed.vercel.app/pro/expert-main';
-    };
-
     return (
         <div className={styles.proContainer}>
-            {/* Title Section */}
             <h1 className={styles.proBusinessName}>{professional.fname} {professional.lname}</h1>
             <h2 className={styles.proCompanyType}>{professional.businessName || 'פרילנסר'}</h2>
 
-            {/* Image Section */}
             <div className={styles.proImageContainer}>
                 <img
                     src={professional.image || '/images/Prof/worker2.png'}
@@ -80,7 +66,6 @@ function BusinessCard() {
                 />
             </div>
 
-            {/* Contact Icons Section */}
             <div className={styles.proIconsContainer}>
                 <div className={styles.proIcon} onClick={handlePhoneClick}>
                     <img src="/images/Prof/phone-icon.png" alt="Phone Icon" />
@@ -99,7 +84,6 @@ function BusinessCard() {
                 </div>
             </div>
 
-            {/* Footer Section */}
             <div className={styles.proFooter}>
                 <div className={styles.proFooterContent}>
                     <img
@@ -114,7 +98,7 @@ function BusinessCard() {
                             href="#"
                             onClick={(e) => {
                                 e.preventDefault(); // Prevent default link behavior
-                                handleExplainClick(); // Use navigate for redirection
+                                navigate('/pro/explain'); // Use navigate for redirection
                             }}
                             className={styles.proExplainLink}
                         >
