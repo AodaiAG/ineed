@@ -16,8 +16,10 @@ router.get('/geocode', getGeocode);
 router.get('/autocomplete',getAutocomplete);
 router.post('/submit-data', submitData);
 router.post('/verify-code', verifyCode); // Add the route to link the verifyCode function
-router.get('/main-professions', getMainProfessions); // Add the route for main professions
-router.get('/sub-professions/:main', getSubProfessions); // Add the route for sub professions
+router.get('/:lang/main-professions', getMainProfessions);
+
+// Route to fetch sub-professions with language and main category parameters
+router.get('/:lang/sub-professions/:main', getSubProfessions);
 
 
 

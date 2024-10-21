@@ -182,8 +182,12 @@ exports.search = async (req, res) => {
     }
 };
 exports.getMainProfessions = async (req, res) => {
+    const lang = req.params.lang || 'he'; // Get language from params, default to Hebrew if not provided
+    const tableName = getTableNameForLanguage(lang); // Get the correct table name based on the language code
+
     try {
-        const mainProfessions = await JobType.findAll({
+        const JobTypeModel = JobType(tableName); // Create the model with the correct table name
+        const mainProfessions = await JobTypeModel.findAll({
             attributes: ['main'],  // Fetch 'main' column
             group: 'main'
         });
@@ -196,9 +200,13 @@ exports.getMainProfessions = async (req, res) => {
 
 // Get sub professions based on main profession
 exports.getSubProfessions = async (req, res) => {
+    const lang = req.params.lang || 'he'; // Get language from params, default to Hebrew if not provided
     const mainCategory = req.params.main;
+    const tableName = getTableNameForLanguage(lang); // Get the correct table name based on the language code
+
     try {
-        const subProfessions = await JobType.findAll({
+        const JobTypeModel = JobType(tableName); // Create the model with the correct table name
+        const subProfessions = await JobTypeModel.findAll({
             where: { main: mainCategory },  // Fetch sub professions where main = selected main
             attributes: ['id', 'sub']       // Fetch 'id' and 'sub' columns
         });
@@ -206,6 +214,16 @@ exports.getSubProfessions = async (req, res) => {
     } catch (error) {
         console.error('Failed to fetch sub professions:', error);
         res.status(500).json({ error: 'Failed to fetch sub professions' });
+    }
+};
+const getTableNameForLanguage = (lang) => {
+    switch (lang) {
+        case 'he': return 'job_type';     // Hebrew
+        case 'ar': return 'job_type_ar';  // Arabic
+        case 'en': return 'job_type_en';  // English
+        case 'es': return 'job_type_es';  // Spanish
+        case 'ru': return 'job_type_ru';  // Russian
+        default: return 'job_type';       // Default to Hebrew if language is not recognized
     }
 };
 

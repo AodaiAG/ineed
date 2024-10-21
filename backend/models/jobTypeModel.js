@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
 // Define the JobType model
-const JobType = sequelize.define('JobType', {
+const JobType = (tableName) => sequelize.define('JobType', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -17,7 +17,7 @@ const JobType = sequelize.define('JobType', {
         allowNull: false
     }
 }, {
-    tableName: 'job_type',
+    tableName, // Dynamically set table name
     timestamps: false
 });
 
