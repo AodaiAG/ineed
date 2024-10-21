@@ -67,7 +67,8 @@ function BusinessCard() {
 
     const handleAddToHomeClick = () => {
         if (deferredPrompt) {
-            deferredPrompt.prompt(); // Show the install prompt
+            // Show the install prompt if available
+            deferredPrompt.prompt(); 
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
                     console.log('User accepted the install prompt');
@@ -77,8 +78,14 @@ function BusinessCard() {
                 setDeferredPrompt(null); // Reset the deferred prompt
             });
         } else {
-            // Manual fallback if `beforeinstallprompt` isn't available
-            alert('To add to your home screen, please open your browser’s menu and select "Add to Home screen".');
+            // Provide manual instructions for different environments
+            if (navigator.userAgent.toLowerCase().includes('iphone') || navigator.userAgent.toLowerCase().includes('ipad')) {
+                alert('To add to your home screen, please tap the share button and select "Add to Home Screen".');
+            } else if (navigator.userAgent.toLowerCase().includes('android')) {
+                alert('To add to your home screen, please open your browser’s menu and select "Add to Home Screen".');
+            } else {
+                alert('To add to your home screen, please use the appropriate browser options to create a shortcut.');
+            }
         }
     };
 
