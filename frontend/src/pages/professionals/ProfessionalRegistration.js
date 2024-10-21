@@ -116,7 +116,7 @@ function ProfessionalRegistration() {
             
             try {
                 const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
-                const locationsData = response.data;
+                let locationsData = response.data;
                 locationsData = locationsData.slice(1);
 
                 setGroupedLocations(locationsData);
