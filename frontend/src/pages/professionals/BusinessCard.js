@@ -26,38 +26,44 @@ function BusinessCard() {
         }
     }, [id]);
 
-    const handleAddToHomeClick = () => {
-        alert('To add to your home screen, please use the browser options to create a shortcut or "Install App".');
-    };
-
-    const handleWebsiteClick = () => {
-        if (professional && professional.website) {
-            window.open(professional.website, '_blank');
-        }
-    };
-
-    const handlePhoneClick = () => {
-        window.open(`tel:${professional.phoneNumber}`);
-    };
-
-    const handleWhatsAppClick = () => {
-        const message = encodeURIComponent("Hello, I'm interested in your services.");
-        window.open(`https://wa.me/${professional.phoneNumber}?text=${message}`, '_blank');
-    };
-
-    const handleEmailClick = () => {
-        window.open(`mailto:${professional.email}`);
-    };
-
     if (!professional) {
         return <div>Loading...</div>;
     }
 
+    const handleExplainClick = () => {
+        navigate('/pro/explain');
+    };
+
+    const handlePhoneClick = () => {
+        window.open(`tel:${professional.phoneNumber}`, '_self');
+    };
+
+    const handleWhatsAppClick = () => {
+        const whatsappLink = `https://wa.me/${professional.phoneNumber}`;
+        window.open(whatsappLink, '_blank');
+    };
+
+    const handleEmailClick = () => {
+        window.location.href = `mailto:${professional.email}`;
+    };
+
+    const handleWebsiteClick = () => {
+        if (professional.website) {
+            window.open(professional.website, '_blank');
+        }
+    };
+
+    const handleAddToHomeClick = () => {
+        alert('To add to your home screen, please use the browser options to create a shortcut.');
+    };
+
     return (
         <div className={styles.proContainer}>
+            {/* Title Section */}
             <h1 className={styles.proBusinessName}>{professional.fname} {professional.lname}</h1>
             <h2 className={styles.proCompanyType}>{professional.businessName || 'פרילנסר'}</h2>
 
+            {/* Image Section */}
             <div className={styles.proImageContainer}>
                 <img
                     src={professional.image || '/images/Prof/worker2.png'}
@@ -66,6 +72,7 @@ function BusinessCard() {
                 />
             </div>
 
+            {/* Contact Icons Section */}
             <div className={styles.proIconsContainer}>
                 <div className={styles.proIcon} onClick={handlePhoneClick}>
                     <img src="/images/Prof/phone-icon.png" alt="Phone Icon" />
@@ -84,6 +91,7 @@ function BusinessCard() {
                 </div>
             </div>
 
+            {/* Footer Section */}
             <div className={styles.proFooter}>
                 <div className={styles.proFooterContent}>
                     <img
@@ -98,7 +106,7 @@ function BusinessCard() {
                             href="#"
                             onClick={(e) => {
                                 e.preventDefault(); // Prevent default link behavior
-                                navigate('/pro/explain'); // Use navigate for redirection
+                                handleExplainClick(); // Use navigate for redirection
                             }}
                             className={styles.proExplainLink}
                         >
