@@ -10,7 +10,7 @@ const checkIfRegistered = async (req, res) => {
         const professional = await Professional.findOne({ where: { phoneNumber } });
 
         if (professional) {
-            return res.status(200).json({ registered: true });
+            return res.status(200).json({ registered: true, id: professional.id });
         } else {
             return res.status(200).json({ registered: false });
         }
@@ -19,7 +19,6 @@ const checkIfRegistered = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
-
 const getAllLocations = async (req, res) => {
     try {
         const { lang } = req.query;  // Get the language from query parameters
