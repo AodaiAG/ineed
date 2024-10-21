@@ -17,8 +17,9 @@ function EditProfessionalSettings() {
 
     const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState('he'); // Default is 'he' for Hebrew
-
+    const [selectedLanguage, setSelectedLanguage] = useState(() => {
+        return localStorage.getItem('userLanguage') || 'he';
+    });
     const [phoneNumber, setPhoneNumber] = useState('');
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
@@ -74,6 +75,7 @@ function EditProfessionalSettings() {
         // Fetch main professions with language
         const fetchMainProfessions = async () => {
             try {
+                console.log('selected lan :'+selectedLanguage)
                 // Pass the selected language in the API request
                 const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
                 setMainProfessions(response.data);

@@ -25,8 +25,9 @@ function ProfessionalRegistration() {
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
-    const [selectedLanguage, setSelectedLanguage] = useState('he'); // Default is 'he' for Hebrew
-
+    const [selectedLanguage, setSelectedLanguage] = useState(() => {
+        return localStorage.getItem('userLanguage') || 'he';
+    });
     const [image, setImage] = useState('/images/Prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
