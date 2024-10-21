@@ -59,9 +59,15 @@ function BusinessCard() {
     };
 
     const handleWhatsAppClick = () => {
-        // Clean up the phone number to remove any extra characters or spaces
+        // Remove non-digit characters and add the country code if needed
         const cleanedPhoneNumber = professional.phoneNumber.replace(/\D/g, '');
-        window.open(`https://wa.me/${cleanedPhoneNumber}`, '_blank');
+    
+        // Assuming the numbers are from Israel, prepend the country code (+972)
+        const internationalPhoneNumber = cleanedPhoneNumber.startsWith('0')
+            ? `+972${cleanedPhoneNumber.substring(1)}`
+            : `+972${cleanedPhoneNumber}`;
+    
+        window.open(`https://wa.me/${internationalPhoneNumber}`, 'Hi ya prof , ma neshmaaaa');
     };
 
     const handleEmailClick = () => {
