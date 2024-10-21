@@ -17,6 +17,10 @@ const Location = sequelize.define('Location', {
     Area_ID: {
         type: DataTypes.INTEGER
     },
+    Area_English: {
+        type: DataTypes.STRING
+    },
+
     Area_Name: {
         type: DataTypes.STRING
     }

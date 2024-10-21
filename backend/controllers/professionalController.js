@@ -22,12 +22,27 @@ const checkIfRegistered = async (req, res) => {
 
 const getAllLocations = async (req, res) => {
     try {
-        const locations = await Location.findAll();
-        console.log('Fetched locations:', locations);
+        const { lang } = req.query;  // Get the language from query parameters
 
-        // Group locations by Area_ID and Area_Name
+        // Determine the language columns based on the 'lang' parameter
+        let cityNameColumn = 'City_Name_Eng';  // Default to English
+        let areaNameColumn = 'Area_English';   // Default to English
+
+        if (lang === 'he') {
+            cityNameColumn = 'City_Name';
+            areaNameColumn = 'Area_Name';
+        }
+
+        // Fetch all locations with the correct language columns
+        const locations = await Location.findAll({
+            attributes: ['City_ID', cityNameColumn, 'Area_ID', areaNameColumn]
+        });
+
+        // Group locations by Area_ID and the chosen area name
         const groupedLocations = locations.reduce((acc, location) => {
-            const { Area_ID, Area_Name, City_ID, City_Name } = location;
+            const { Area_ID, City_ID } = location;
+            const areaName = location[areaNameColumn];  // Dynamic area name
+            const cityName = location[cityNameColumn];  // Dynamic city name
 
             // Find if area already exists in the accumulator
             let area = acc.find(a => a.areaId === Area_ID);
@@ -36,7 +51,7 @@ const getAllLocations = async (req, res) => {
                 // If the area doesn't exist, create a new area entry
                 area = {
                     areaId: Area_ID,
-                    areaName: Area_Name,
+                    areaName: areaName,
                     cities: []
                 };
                 acc.push(area);
@@ -45,12 +60,13 @@ const getAllLocations = async (req, res) => {
             // Add the city to the corresponding area
             area.cities.push({
                 cityId: City_ID,
-                cityName: City_Name
+                cityName: cityName
             });
 
             return acc;
         }, []);
 
+        // Respond with the grouped locations
         res.status(200).json(groupedLocations);
     } catch (error) {
         console.error('Error fetching locations:', error);
