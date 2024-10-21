@@ -67,9 +67,12 @@ function BusinessCard() {
             ? `+972${cleanedPhoneNumber.substring(1)}`
             : `+972${cleanedPhoneNumber}`;
     
-        window.open(`https://wa.me/${internationalPhoneNumber}`, 'Hi ya prof , ma neshmaaaa');
+        // Define the message you want to send
+        const message = encodeURIComponent('hi ya prof , ma neshmaaaaaaaaa');
+    
+        // Redirect to WhatsApp without opening a new tab
+        window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
     };
-
     const handleEmailClick = () => {
         window.open(`mailto:${professional.email}`);
     };
