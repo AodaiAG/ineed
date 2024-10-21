@@ -57,6 +57,7 @@ function SMSVerification() {
                         {
                         // Redirect to dashboard or registration based on user's status/
                         sessionStorage.setItem('professionalId', response.data.id);
+                        console.log(`prof id in smsVerification: ${response.data.id}`);
 
                         Cookies.set('userSession', response.data.id, { expires: 7 });
 
