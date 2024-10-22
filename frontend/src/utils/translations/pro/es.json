@@ -80,7 +80,16 @@
   "jobFieldsError": "Por favor seleccione al menos una profesión principal.",
   "workAreaError": "Por favor seleccione al menos un área de trabajo.",
   "dayAvailabilityError": "Por favor seleccione al menos un día en el que esté disponible.",
-  "languageError": "Por favor seleccione al menos un idioma."
+  "languageError": "Por favor seleccione al menos un idioma.",
+    "location": {
+    "selectLocation": "Seleccionar una ubicación para el servicio",
+    "enterLocation": "Ingrese ubicación:",
+    "locationPlaceholder": "Afarani 13, Rosh HaAyin, Israel",
+    "locationIconAlt": "Icono de ubicación",
+    "findMe": "Encuéntrame",
+    "mapLocationAlt": "Ubicación en el mapa",
+    "continue": "Continuar"
+  }
 
 
 }

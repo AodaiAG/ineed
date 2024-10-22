@@ -86,7 +86,16 @@
   "jobFieldsError": "يرجى اختيار مهنة رئيسية واحدة على الأقل.",
   "workAreaError": "يرجى اختيار منطقة عمل واحدة على الأقل.",
   "dayAvailabilityError": "يرجى اختيار يوم واحد على الأقل تكون فيه متاحًا.",
-  "languageError": "يرجى اختيار لغة واحدة على الأقل."
+  "languageError": "يرجى اختيار لغة واحدة على الأقل.",
+    "location": {
+    "selectLocation": "اختر موقعًا للخدمة",
+    "enterLocation": "اكتب الموقع:",
+    "locationPlaceholder": "عفورني 13، روش هاعين، إسرائيل",
+    "locationIconAlt": "أيقونة الموقع",
+    "findMe": "اعثر عليّ",
+    "mapLocationAlt": "الموقع على الخريطة",
+    "continue": "متابعة"
+  }
 
 
 }

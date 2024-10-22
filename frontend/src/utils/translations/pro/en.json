@@ -88,7 +88,16 @@
   "jobFieldsError": "Please select at least one main profession.",
   "workAreaError": "Please select at least one work area.",
   "dayAvailabilityError": "Please select at least one day you are available.",
-  "languageError": "Please select at least one language."
+  "languageError": "Please select at least one language.",
+    "location": {
+    "selectLocation": "Select a Location for Service",
+    "enterLocation": "Enter location:",
+    "locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel",
+    "locationIconAlt": "Location icon",
+    "findMe": "Find Me",
+    "mapLocationAlt": "Map location",
+    "continue": "Continue"
+  }
 
 
 }

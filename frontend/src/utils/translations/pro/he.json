@@ -88,7 +88,16 @@
   "jobFieldsError": "אנא בחר לפחות תחום עיסוק אחד.",
   "workAreaError": "אנא בחר לפחות אזור עבודה אחד.",
   "dayAvailabilityError": "אנא בחר לפחות יום אחד שבו אתה זמין לעבודה.",
-  "languageError": "אנא בחר לפחות שפה אחת."
+  "languageError": "אנא בחר לפחות שפה אחת.",
+    "location": {
+    "selectLocation": "בחירת מקום לשירות",
+    "enterLocation": "הקלד מיקום:",
+    "locationPlaceholder": "עפרוני 13, ראש העין, ישראל",
+    "locationIconAlt": "סמל מיקום",
+    "findMe": "מצא אותי",
+    "mapLocationAlt": "מיקום במפה",
+    "continue": "המשך"
+  }
 
 
 }
