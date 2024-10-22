@@ -85,26 +85,9 @@ function BusinessCard() {
     };
 
     const handleAddToHomeClick = () => {
-        // Get the current page URL (business card URL or any dynamic URL you want)
-        const currentUrl = window.location.pathname; // or use window.location.href for full URL
-    
-        // Dynamically point to the manifest with the current page as start_url
-        const dynamicManifestUrl = `${API_URL}/dynamic-manifest?start_url=${encodeURIComponent(currentUrl)}`;
-        
-        // Set the manifest link in the document head dynamically
-        let manifestLink = document.querySelector('link[rel="manifest"]');
-        if (manifestLink) {
-            manifestLink.setAttribute('href', dynamicManifestUrl);
-        } else {
-            manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
-            manifestLink.href = dynamicManifestUrl;
-            document.head.appendChild(manifestLink);
-        }
-    
-        // Now trigger the install prompt if available
         if (deferredPrompt) {
-            deferredPrompt.prompt();
+            // Show the install prompt if available
+            deferredPrompt.prompt(); 
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
                     console.log('User accepted the install prompt');
@@ -114,7 +97,7 @@ function BusinessCard() {
                 setDeferredPrompt(null); // Reset the deferred prompt
             });
         } else {
-            // Manual instructions for other environments
+            // Provide manual instructions for different environments
             if (navigator.userAgent.toLowerCase().includes('iphone') || navigator.userAgent.toLowerCase().includes('ipad')) {
                 alert('To add to your home screen, please tap the share button and select "Add to Home Screen".');
             } else if (navigator.userAgent.toLowerCase().includes('android')) {
