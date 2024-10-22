@@ -108,6 +108,16 @@ function BusinessCard() {
         }
     };
 
+    const handleNavigateClick = () => {
+        const { address } = professional.location;
+        if (address) {
+            // Generate Waze link using the address
+            const wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(address)}&navigate=yes`;
+            window.open(wazeUrl, '_blank');
+        } else {
+            alert('Location information is not available for this professional.');
+        }
+    };
     return (
         <div className={styles.proContainer}>
             {/* Title Section */}
@@ -139,6 +149,9 @@ function BusinessCard() {
                 </div>
                 <div className={styles.proIcon} onClick={handleWebsiteClick}>
                     <img src="/images/Prof/website-icon.png" alt="Website Icon" />
+                </div>
+                <div className={styles.proIcon} onClick={handleNavigateClick}>
+                    <img src="/images/Prof/waze.png" alt="Navigate Icon" />
                 </div>
             </div>
 
