@@ -97,7 +97,8 @@
     "findMe": "מצא אותי",
     "mapLocationAlt": "מיקום במפה",
     "continue": "המשך"
-  }
+  },
+  "locationLabel": "בחר מיקום"
 
 
 }

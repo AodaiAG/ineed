@@ -97,7 +97,9 @@
     "findMe": "Find Me",
     "mapLocationAlt": "Map location",
     "continue": "Continue"
-  }
+  },
+    "locationLabel": "Select Your Location"
+
 
 
 }

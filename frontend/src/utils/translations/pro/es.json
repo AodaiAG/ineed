@@ -89,7 +89,8 @@
     "findMe": "Encuéntrame",
     "mapLocationAlt": "Ubicación en el mapa",
     "continue": "Continuar"
-  }
+  },
 
+  "locationLabel": "Selecciona tu ubicación"
 
 }

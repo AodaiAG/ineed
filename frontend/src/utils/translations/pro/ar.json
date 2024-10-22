@@ -95,7 +95,8 @@
     "findMe": "اعثر عليّ",
     "mapLocationAlt": "الموقع على الخريطة",
     "continue": "متابعة"
-  }
+  },
+  "locationLabel": "اختر موقعك"
 
 
 }

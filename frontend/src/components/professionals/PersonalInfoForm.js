@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
+import LocationComponentPopup from './LocationComponentPopup';
 
 function PersonalInfoForm({
     fullName, setFullName,
@@ -16,6 +17,9 @@ function PersonalInfoForm({
     const { fullNameRef, emailRef, websiteRef } = refs; // Destructure refs
 
     const fileInputRef = useRef(null);
+    const [showLocationPopup, setShowLocationPopup] = useState(false);
+    const [location, setLocation] = useState(''); // Location input value
+
     if (!translation) {
         return <div>Loading...</div>; // Wait for translations to load
     }
@@ -53,6 +57,19 @@ function PersonalInfoForm({
         if (/^[\p{L}\s]*$/u.test(value)) {
             setFullName(value);
         }
+    };
+
+    const handleLocationInputClick = () => {
+        setShowLocationPopup(true); // Show the location popup when the input is clicked
+    };
+
+    const handleLocationSelect = (selectedLocation) => {
+        setLocation(selectedLocation);
+        setShowLocationPopup(false); // Hide the popup after selecting a location
+    };
+
+    const handleLocationPopupClose = () => {
+        setShowLocationPopup(false); // Close the popup without selecting a location
     };
 
     return (
@@ -136,6 +153,27 @@ function PersonalInfoForm({
                 className={`${styles['pro-input']} ${styles['pro-input-white']}`}
                 placeholder={translation.businessNamePlaceholder}
             />
+
+            {/* Location Input */}
+            <label htmlFor="location" className={styles['pro-label']}>{translation.locationLabel}</label>
+            <input
+                type="text"
+                id="location"
+                value={location}
+                readOnly
+                onClick={handleLocationInputClick}
+                className={`${styles['pro-input']} ${styles['pro-input-white']}`}
+                placeholder={translation.locationPlaceholder}
+            />
+
+            {/* Location Popup */}
+            {showLocationPopup && (
+                <div className={styles['popupOverlay']}>
+                    <div className={styles['popupContainer']}>
+                        <LocationComponentPopup onClose={handleLocationPopupClose} onSelect={handleLocationSelect} />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
