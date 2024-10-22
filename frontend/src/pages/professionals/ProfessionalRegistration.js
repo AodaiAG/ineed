@@ -20,7 +20,11 @@ function ProfessionalRegistration() {
     const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
     const { translation } = useLanguage(); // Use translation from context
-
+    const [location, setLocation] = useState({
+        address: '',
+        lat: null,
+        lon: null,
+      });
     const [phoneNumber, setPhoneNumber] = useState('');
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
@@ -224,7 +228,9 @@ function ProfessionalRegistration() {
             dayAvailability: transformDayAvailabilityForBackend(dayAvailability),
             professions: selectedProfessionIds, // Store only the IDs of selected professions
             workAreas: workAreaSelections, // Store only the IDs of selected work areas (cities)
-            languages // Use numeric language IDs
+            languages, // Use numeric language IDs
+            location, // Add the location JSON object
+
         };
 
        
@@ -270,6 +276,9 @@ function ProfessionalRegistration() {
                         setBusinessName={setBusinessName}
                         image={image}
                         setImage={setImage}
+                        location={location} // Pass location to PersonalInfoForm
+                        setLocation={setLocation} // Pass setLocation to PersonalInfoForm
+
                         errors={errors} // Pass error messages to PersonalInfoForm
                         refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
                     />

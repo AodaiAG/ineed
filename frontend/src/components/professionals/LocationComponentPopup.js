@@ -3,20 +3,23 @@ import ReactDOM from 'react-dom';
 import { useLanguage } from '../../contexts/LanguageContext'; // Import useLanguage hook
 import styles from '../../styles/LocationComponentPopup.module.css'; // Ensure the path is correct
 
-function LocationComponentPopup({ onClose, onSelect }) {
+function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
   const { translation } = useLanguage(); // Use the translation object from context
-  const [address, setAddress] = useState('');
-  const [lat, setLat] = useState('');
-  const [lon, setLon] = useState('');
+  const [address, setAddress] = useState(initialLocation?.address || '');
+  const [lat, setLat] = useState(initialLocation?.lat || 31.0461);
+  const [lon, setLon] = useState(initialLocation?.lon || 34.8516);
 
   useEffect(() => {
     const loadGoogleMaps = () => {
       if (window.google && window.google.maps) {
+        console.log('Google Maps API is ready');
         initMap();
       } else {
+        console.log('Waiting for Google Maps API to load');
         const interval = setInterval(() => {
           if (window.google && window.google.maps) {
             clearInterval(interval);
+            console.log('Google Maps API has loaded');
             initMap();
           }
         }, 100);
@@ -26,36 +29,65 @@ function LocationComponentPopup({ onClose, onSelect }) {
     loadGoogleMaps();
   }, []);
 
+  useEffect(() => {
+    if (initialLocation) {
+      setAddress(initialLocation.address || '');
+      setLat(initialLocation.lat || 31.0461);
+      setLon(initialLocation.lon || 34.8516);
+    }
+  }, [initialLocation]);
+
   const initMap = () => {
-    const initialLocation = { lat: 31.0461, lng: 34.8516 };
+    console.log('Initializing map');
+    const initialLocationLatLng = { lat: lat, lng: lon };
     const map = new window.google.maps.Map(document.getElementById('popupMap'), {
-      center: initialLocation,
-      zoom: 7,
+      center: initialLocationLatLng,
+      zoom: 13,
     });
 
     const marker = new window.google.maps.Marker({
-      position: initialLocation,
+      position: initialLocationLatLng,
       map,
     });
 
     const input = document.getElementById('popupLocationInput');
-    const autocomplete = new window.google.maps.places.Autocomplete(input);
-    autocomplete.bindTo('bounds', map);
+    if (input) {
+      console.log('Initializing Autocomplete on the input field');
+      const autocomplete = new window.google.maps.places.Autocomplete(input);
+      autocomplete.bindTo('bounds', map);
 
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (!place.geometry) {
-        alert("No details available for input: '" + place.name + "'");
-        return;
-      }
-      map.setCenter(place.geometry.location);
-      map.setZoom(13);
-      marker.setPosition(place.geometry.location);
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) {
+          alert("No details available for input: '" + place.name + "'");
+          return;
+        }
 
-      setLat(place.geometry.location.lat());
-      setLon(place.geometry.location.lng());
-      setAddress(place.formatted_address);
-    });
+        console.log('Place selected:', place);
+        map.setCenter(place.geometry.location);
+        map.setZoom(13);
+        marker.setPosition(place.geometry.location);
+
+        // Update state with the selected place details
+        setLat(place.geometry.location.lat());
+        setLon(place.geometry.location.lng());
+        setAddress(place.formatted_address);
+      });
+
+      // Add a listener for when the user types in the input box
+      input.addEventListener('input', () => {
+        const service = new window.google.maps.places.AutocompleteService();
+        service.getPlacePredictions({ input: input.value }, (predictions, status) => {
+          if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
+            console.log('Predictions:', predictions);
+          } else {
+            console.log('No predictions available');
+          }
+        });
+      });
+    } else {
+      console.error('Input field for Autocomplete was not found');
+    }
   };
 
   const handleFindMe = () => {
@@ -103,6 +135,7 @@ function LocationComponentPopup({ onClose, onSelect }) {
           id="popupLocationInput"
           className={styles['location-input']}
           value={address}
+          onFocus={() => setAddress('')} // Clear the value when the input gains focus
           onChange={(e) => setAddress(e.target.value)}
           placeholder={translation.location.locationPlaceholder}
         />
@@ -120,7 +153,11 @@ function LocationComponentPopup({ onClose, onSelect }) {
         <button
           className={styles['location-continue-button']}
           onClick={() => {
-            onSelect(address);
+            onSelect({
+              address,
+              lat,
+              lon,
+            });
             onClose();
           }}
         >

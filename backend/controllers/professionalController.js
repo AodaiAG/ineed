@@ -85,7 +85,8 @@ const registerProfessional = async (req, res) => {
         dayAvailability,
         professions, // Array of profession IDs (includes both main and sub professions)
         workAreas, // Array of city IDs directly from the frontend
-        languages
+        languages,
+        location, // New JSON field for location
     } = req.body;
 
     try {
@@ -106,7 +107,8 @@ const registerProfessional = async (req, res) => {
             dayAvailability,
             professions, // Save the array of selected profession IDs
             workAreas,   // Save the array of city IDs directly
-            languages
+            languages,
+            location, // Save location as a JSON object
         });
 
         res.status(201).json({ message: 'Professional registered successfully', data: newProfessional, id: newProfessional.id });
@@ -146,7 +148,8 @@ const updateProfessional = async (req, res) => {
         mainProfessions,
         subProfessions,
         workAreas,
-        languages
+        languages,
+        location,
     } = req.body;
 
     try {
@@ -178,7 +181,8 @@ const updateProfessional = async (req, res) => {
             dayAvailability,
             professions: subProfessions,
             workAreas,
-            languages
+            languages,
+            location,
         });
 
         res.status(200).json({ message: 'Professional updated successfully', data: professional });

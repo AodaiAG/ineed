@@ -12,9 +12,16 @@ import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 
-function EditProfessionalSettings() {
-    const { translation } = useLanguage();
 
+function EditProfessionalSettings() 
+{
+
+    const { translation } = useLanguage();
+    const [location, setLocation] = useState({
+        address: '',
+        lat: null,
+        lon: null,
+    });
     const navigate = useNavigate();
     const [availability24_7, setAvailability24_7] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState(() => {
@@ -34,6 +41,7 @@ function EditProfessionalSettings() {
     });
     const [image, setImage] = useState('/images/Prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState([]);
+
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
@@ -61,6 +69,43 @@ function EditProfessionalSettings() {
     const dayAvailabilityRef = useRef(null);
     const languageRef = useRef(null);
 
+    const [isLoading, setIsLoading] = useState(true);
+    const fetchProfessionalData = async (id) => {
+        try {
+            const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
+            const data = response.data;
+
+            // Log the data to inspect the response structure
+            
+
+            // Populate form with existing data
+            setFullName(data.fname + ' ' + (data.lname || '')); // Set full name from fname and lname
+            setPhoneNumber(data.phoneNumber); // Set phone number correctly
+            setEmail(data.email);
+            setWebsite(data.website);
+            setBusinessName(data.businessName);
+            setImage(data.image);
+            setDayAvailability(data.dayAvailability || dayAvailability);
+            setWorkAreaSelections(data.workAreas || []);
+            setLocation(data.location || { address: 'not found', lat: null, lon: null }); // Set the location state
+
+            console.log('Fetched location from db in EditProfessionalSettings', data.location);
+
+            setLanguages(data.languages || []); // Assuming `data.languages` is an array of language IDs
+
+
+            // Check if `data.professions` is an array before setting state
+            if (Array.isArray(data.professions)) {
+                setSelectedProfessionIds(data.professions);
+            } else {
+                console.error("Expected `data.professions` to be an array, got:", data.professions);
+            }
+
+            
+        } catch (error) {
+            console.error('Error fetching professional data:', error);
+        }
+    };
 
     useEffect(() => {
         // Get the user ID from session storage
@@ -97,7 +142,6 @@ function EditProfessionalSettings() {
                 locationsData = locationsData.slice(1);
 
                 setGroupedLocations(locationsData);
-                console.log("Fetched locations:", response.data);
             } catch (error) {
                 console.error('Error fetching locations:', error);
             }
@@ -105,43 +149,15 @@ function EditProfessionalSettings() {
     
         fetchMainProfessions();  // Fetch based on language
         fetchLocations();        // Fetch other data
-    
+        setIsLoading(false);
+
     }, [navigate, selectedLanguage]);  // Add selectedLanguage to dependencies
 
-    const fetchProfessionalData = async (id) => {
-        try {
-            const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
-            const data = response.data;
+    if (isLoading) 
+        {
+        return <div>Loading...</div>;
+      }
 
-            // Log the data to inspect the response structure
-            
-
-            // Populate form with existing data
-            setFullName(data.fname + ' ' + (data.lname || '')); // Set full name from fname and lname
-            setPhoneNumber(data.phoneNumber); // Set phone number correctly
-            setEmail(data.email);
-            setWebsite(data.website);
-            setBusinessName(data.businessName);
-            setImage(data.image);
-            setDayAvailability(data.dayAvailability || dayAvailability);
-            setWorkAreaSelections(data.workAreas || []);
-            console.log('Fetched work areas:', data.workAreas);
-
-            setLanguages(data.languages || []); // Assuming `data.languages` is an array of language IDs
-
-
-            // Check if `data.professions` is an array before setting state
-            if (Array.isArray(data.professions)) {
-                setSelectedProfessionIds(data.professions);
-            } else {
-                console.error("Expected `data.professions` to be an array, got:", data.professions);
-            }
-
-            
-        } catch (error) {
-            console.error('Error fetching professional data:', error);
-        }
-    };
     const transformDayAvailabilityForBackend = (dayAvailability) => {
         return Object.entries(dayAvailability).map(([dayInt, data]) => ({
             day: parseInt(dayInt), // Numeric day value (0-6)
@@ -240,7 +256,9 @@ function EditProfessionalSettings() {
             mainProfessions: mainProfessions.filter(main => selectedProfessionIds.includes(main.id)),
             subProfessions: selectedProfessionIds,
             workAreas: workAreaSelections,
-            languages
+            languages,
+            location, // Add the location JSON object
+
         };
     
         try {
@@ -300,6 +318,9 @@ function EditProfessionalSettings() {
                         setBusinessName={setBusinessName}
                         image={image}
                         setImage={setImage}
+                        setLocation={setLocation}  // Pass setLocation to enable editing
+                        location={location}  // Log this to ensure it holds the expected value
+
                         errors={errors} // Pass error messages to PersonalInfoForm
                         refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
                     />

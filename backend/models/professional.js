@@ -50,6 +50,9 @@ const Professional = sequelize.define('Professional', {
     languages: {
         type: DataTypes.JSON, // Adding the languages field as JSON
     },
+    location: {
+        type: DataTypes.JSON, // Store address, latitude, and longitude as a JSON object
+    },
 }, {
     timestamps: true, // This will add createdAt and updatedAt fields automatically
 });

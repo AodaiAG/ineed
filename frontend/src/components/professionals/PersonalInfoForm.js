@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import LocationComponentPopup from './LocationComponentPopup';
@@ -9,6 +9,7 @@ function PersonalInfoForm({
     email, setEmail,
     website, setWebsite,
     businessName, setBusinessName,
+    location, setLocation, // Add location and setLocation props here
     image, setImage,
     errors, // Error messages passed from parent component
     refs // Refs passed from parent component to scroll to each field
@@ -18,11 +19,11 @@ function PersonalInfoForm({
 
     const fileInputRef = useRef(null);
     const [showLocationPopup, setShowLocationPopup] = useState(false);
-    const [location, setLocation] = useState(''); // Location input value
 
-    if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
-    }
+    // Initialize hooks at the top level to ensure they always run in the same order
+    useEffect(() => {
+        console.log('Location received in PersonalInfoForm:', location);
+    }, [location]);
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -64,13 +65,23 @@ function PersonalInfoForm({
     };
 
     const handleLocationSelect = (selectedLocation) => {
-        setLocation(selectedLocation);
+        console.log('Location selected in PersonalInfoForm:', selectedLocation);
+        setLocation({
+            address: selectedLocation.address,
+            lat: selectedLocation.lat,
+            lon: selectedLocation.lon,
+        }); // Use setLocation from props to update the location in the main component
+
         setShowLocationPopup(false); // Hide the popup after selecting a location
     };
 
     const handleLocationPopupClose = () => {
         setShowLocationPopup(false); // Close the popup without selecting a location
     };
+
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
 
     return (
         <div className={styles['pro-form-group']}>
@@ -159,7 +170,7 @@ function PersonalInfoForm({
             <input
                 type="text"
                 id="location"
-                value={location}
+                value={location?.address || ''}  // Safely access location.address to prevent undefined errors
                 readOnly
                 onClick={handleLocationInputClick}
                 className={`${styles['pro-input']} ${styles['pro-input-white']}`}
@@ -170,7 +181,11 @@ function PersonalInfoForm({
             {showLocationPopup && (
                 <div className={styles['popupOverlay']}>
                     <div className={styles['popupContainer']}>
-                        <LocationComponentPopup onClose={handleLocationPopupClose} onSelect={handleLocationSelect} />
+                        <LocationComponentPopup
+                            onClose={handleLocationPopupClose}
+                            onSelect={handleLocationSelect}
+                            initialLocation={location} // Pass the initial location here
+                        />
                     </div>
                 </div>
             )}
