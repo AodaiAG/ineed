@@ -109,10 +109,10 @@ function BusinessCard() {
     };
 
     const handleNavigateClick = () => {
-        const { address } = professional.location;
-        if (address) {
-            // Generate Waze link using the address
-            const wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(address)}&navigate=yes`;
+        const { lat, lon } = professional.location;
+        if (lat && lon) {
+            // Generate Waze link
+            const wazeUrl = `https://waze.com/ul?ll=${lat},${lon}&navigate=yes`;
             window.open(wazeUrl, '_blank');
         } else {
             alert('Location information is not available for this professional.');
