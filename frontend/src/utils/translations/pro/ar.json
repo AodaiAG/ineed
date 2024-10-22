@@ -96,7 +96,7 @@
     "mapLocationAlt": "الموقع على الخريطة",
     "continue": "متابعة"
   },
-  "locationLabel": "اختر موقعك"
-
+  "locationLabel": "اختر موقعك",
+"locationPlaceholder": "عفورني 13، روش هاعين، إسرائيل"
 
 }
