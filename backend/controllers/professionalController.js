@@ -72,7 +72,7 @@ const getAllLocations = async (req, res) => {
         res.status(500).json({ error: 'Server error', details: error.message });
     }
 };
-
+//before changing the backend
 const registerProfessional = async (req, res) => {
     const {
         phoneNumber,
