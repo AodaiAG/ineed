@@ -98,7 +98,7 @@
     "mapLocationAlt": "מיקום במפה",
     "continue": "המשך"
   },
-  "locationLabel": "בחר מיקום"
-
+  "locationLabel": "בחר מיקום",
+"locationPlaceholder": "עפרוני 13, ראש העין, ישראל"
 
 }

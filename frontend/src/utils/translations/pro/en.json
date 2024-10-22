@@ -98,7 +98,8 @@
     "mapLocationAlt": "Map location",
     "continue": "Continue"
   },
-    "locationLabel": "Select Your Location"
+    "locationLabel": "Select Your Location"  ,  
+	"locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel"
 
 
 
