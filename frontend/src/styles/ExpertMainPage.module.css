@@ -1,6 +1,5 @@
 /* ExpertMainPage.module.css */
 
-/* Base Styles (Mobile-First Approach) */
 .expertPage_body {
     background-color: #000; /* Black background */
     color: #fff; /* White text color */
@@ -10,25 +9,19 @@
     align-items: center;
     height: 100vh;
     margin: 0;
-    padding: 0 10px; /* Add padding to avoid overflow issues */
 }
 
 .expertPage_mainContainer {
     text-align: center;
     padding: 20px;
     position: relative; /* Allows for absolute positioning of the icon within the container */
-    width: 100%;
-    max-width: 600px; /* Set a maximum width for better readability on smaller screens */
-    box-sizing: border-box;
 }
 
-/* Language Icon */
 .expertPage_languageIcon {
     position: absolute;
     top: 10px; /* Place it slightly above the title */
     right: 15%; /* Move it to be aligned slightly to the right */
     transform: translateX(50%); /* Adjust to shift it into place */
-    z-index: 10; /* Ensure it stays above other elements */
 }
 
 .expertPage_languageIcon img {
@@ -36,165 +29,44 @@
     height: 35px;
 }
 
-/* Main Title */
 .expertPage_mainTitle {
-    font-size: 2.5rem; /* Adjusted for smaller devices */
+    font-size: 2.8em;
     font-weight: bold;
-    margin-top: 20px; /* Reduce spacing for compact layout */
+    margin-top: 40px; /* Ensure enough spacing below the language icon */
 }
 
-/* Subtitle */
 .expertPage_subTitle {
-    font-size: 1.4rem;
-    margin-bottom: 15px; /* Reduce gap for compact layout */
+    font-size: 1.5em;
+    margin-bottom: 20px;
 }
 
-/* Expert Interface Text */
 .expertPage_expertInterface {
-    font-size: 1.5rem;
+    font-size: 1.8em;
     font-weight: bold;
-    margin-bottom: 20px; /* Reduce gap */
+    margin-bottom: 30px;
 }
 
-/* Image Container */
 .expertPage_imageContainer {
-    margin: 15px 0; /* Adjusted for better balance */
+    margin: 20px 0;
 }
 
 .expertPage_imageContainer img {
-    width: 180px; /* Smaller image for mobile devices */
+    width: 220px; /* Adjust size based on the actual image */
     height: auto;
-    margin: 0 auto; /* Center the image */
+    margin-left: 50px; /* Increase this value to move the image to the right */
 }
 
-/* CTA Button */
 .expertPage_ctaButton {
     background-color: #FFCC00; /* Yellow color */
     color: #000;
-    font-size: 1rem; /* Adjusted font size for mobile */
+    font-size: 1.2em;
     border: none;
-    padding: 10px 40px; /* Adjust padding for better look on smaller screens */
+    padding: 10px 70px; /* Make the button wider */
     cursor: pointer;
     border-radius: 5px;
-    margin-top: 20px; /* Margin to create space above the button */
+    margin-right: 15px; /* Adjust to move the button slightly */
 }
 
 .expertPage_ctaButton:hover {
     background-color: #ffbf00; /* Slightly darker shade for hover effect */
-}
-
-/* Responsive Styles for Larger Screens (Using Bootstrap Breakpoints) */
-
-/* Small devices (≥576px) */
-@media (min-width: 576px) {
-    .expertPage_mainContainer {
-        max-width: 700px; /* Increase maximum width for larger screens */
-        padding: 30px;
-    }
-
-    .expertPage_mainTitle {
-        font-size: 2.8rem; /* Slightly larger title for more readability */
-    }
-
-    .expertPage_imageContainer img {
-        width: 200px; /* Increase image size for small devices */
-    }
-
-    .expertPage_ctaButton {
-        padding: 12px 50px; /* Increased padding for larger screens */
-    }
-}
-
-/* Medium devices (≥768px) */
-@media (min-width: 768px) {
-    .expertPage_mainContainer {
-        max-width: 800px; /* Increase maximum width for tablets */
-    }
-
-    .expertPage_languageIcon {
-        top: 20px;
-        right: 20px;
-    }
-
-    .expertPage_mainTitle {
-        font-size: 3rem; /* Increase title size for better visibility */
-        margin-top: 25px; /* Add more spacing for better visual balance */
-    }
-
-    .expertPage_subTitle {
-        font-size: 1.6rem; /* Increase subtitle size */
-        margin-bottom: 20px; /* Add more spacing for a better layout */
-    }
-
-    .expertPage_expertInterface {
-        font-size: 1.8rem; /* Increase expert interface text size */
-        margin-bottom: 25px;
-    }
-
-    .expertPage_imageContainer img {
-        width: 220px; /* Increase image size for larger screens */
-        margin-bottom: 20px; /* Add spacing below image */
-    }
-
-    .expertPage_ctaButton {
-        padding: 15px 60px; /* Increased padding for larger screens */
-        font-size: 1.2rem; /* Larger font size for button */
-        margin-top: 25px; /* Add more space above the button */
-    }
-}
-
-/* Large devices (≥992px) */
-@media (min-width: 992px) {
-    .expertPage_mainContainer {
-        max-width: 1000px; /* Further increase maximum width for desktop */
-        padding: 30px; /* Reduced padding for a more compact layout */
-        min-height: 70vh; /* Reduce the height to avoid excessive vertical space */
-    }
-
-    .expertPage_mainTitle {
-        font-size: 3.2rem; /* Adjust title size for better balance */
-        margin-top: 20px; /* Adjust spacing */
-    }
-
-    .expertPage_subTitle {
-        font-size: 1.7rem; /* Adjust subtitle size */
-        margin-bottom: 20px;
-    }
-
-    .expertPage_expertInterface {
-        font-size: 1.9rem; /* Increase text size slightly */
-        margin-bottom: 25px; /* Adjust spacing below the interface text */
-    }
-
-    .expertPage_imageContainer img {
-        width: 240px; /* Adjust image size */
-        margin-bottom: 20px; /* Adjust margin */
-    }
-
-    .expertPage_ctaButton {
-        padding: 15px 60px; /* Adjust padding */
-        font-size: 1.3rem; /* Adjust font size */
-        margin-top: 20px;
-    }
-}
-
-/* Extra Large devices (≥1200px) */
-@media (min-width: 1200px) {
-    .expertPage_mainContainer {
-        max-width: 1200px; /* Even wider for large desktop screens */
-        min-height: 60vh; /* Further reduce height for extra large screens */
-    }
-
-    .expertPage_mainTitle {
-        font-size: 3.8rem; /* Slightly reduced title size for better balance */
-    }
-
-    .expertPage_subTitle {
-        font-size: 1.9rem; /* Adjust subtitle size for better balance */
-    }
-
-    .expertPage_ctaButton {
-        padding: 15px 60px; /* Adjust padding for better visual weight */
-        font-size: 1.4rem; /* Adjust button text size */
-    }
 }
