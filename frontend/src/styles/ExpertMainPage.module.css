@@ -20,7 +20,7 @@
 .expertPage_languageIcon {
     position: absolute;
     top: 10px; /* Place it slightly above the title */
-    right: 15%; /* Move it to be aligned slightly to the right */
+    right: 20%; /* Move it to be aligned slightly to the right */
     transform: translateX(50%); /* Adjust to shift it into place */
 }
 
