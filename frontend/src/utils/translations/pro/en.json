@@ -101,10 +101,13 @@
   "positionUnavailable": "Position unavailable. Please try again later.",
   "timeout": "The request to get your location timed out.",
   "unknownError": "An unknown error occurred.",
+  	"locationError": "Please enter your location.",
   "noGeolocationSupport": "Your browser does not support geolocation."
   },
     "locationLabel": "Select Your Location"  ,  
 	"locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel"
+
+
 
 
 

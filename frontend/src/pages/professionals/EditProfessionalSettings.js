@@ -57,7 +57,8 @@ function EditProfessionalSettings()
         jobFields: '',
         workArea: '',
         dayAvailability: '',
-        language: ''
+        language: '',
+        location:''
     });
 
     // Refs for each field to scroll to them when needed
@@ -68,6 +69,8 @@ function EditProfessionalSettings()
     const workAreaRef = useRef(null);
     const dayAvailabilityRef = useRef(null);
     const languageRef = useRef(null);
+    const locationRef = useRef(null); // New ref for the location input
+
 
     const [isLoading, setIsLoading] = useState(true);
     const fetchProfessionalData = async (id) => {
@@ -227,6 +230,13 @@ function EditProfessionalSettings()
             }
             isValid = false;
         }
+        if (!location.address) {
+            newErrors.location = translation.location.locationError || 'Please enter your location.';
+            if (isValid) {
+                locationRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
 
         setErrors(newErrors);
 
@@ -322,7 +332,7 @@ function EditProfessionalSettings()
                         location={location}  // Log this to ensure it holds the expected value
 
                         errors={errors} // Pass error messages to PersonalInfoForm
-                        refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
+                        refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef,locationRef }} // Pass refs to PersonalInfoForm
                     />
 
                     <JobFieldsSelection

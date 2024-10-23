@@ -46,7 +46,8 @@ function ProfessionalRegistration() {
         jobFields: '',
         workArea: '',
         dayAvailability: '',
-        language: ''
+        language: '',
+        location:''
     });
 
     // Refs for each field to scroll to them when needed
@@ -57,6 +58,8 @@ function ProfessionalRegistration() {
     const workAreaRef = useRef(null);
     const dayAvailabilityRef = useRef(null);
     const languageRef = useRef(null);
+    const locationRef = useRef(null); // New ref for the location input
+
 
     
     // Updated state to store selected language IDs
@@ -195,6 +198,13 @@ function ProfessionalRegistration() {
             }
             isValid = false;
         }
+        if (!location.address) {
+            newErrors.location = translation.location.locationError || 'Please enter your location.';
+            if (isValid) {
+                locationRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+            isValid = false;
+        }
 
         setErrors(newErrors);
 
@@ -280,7 +290,7 @@ function ProfessionalRegistration() {
                         setLocation={setLocation} // Pass setLocation to PersonalInfoForm
 
                         errors={errors} // Pass error messages to PersonalInfoForm
-                        refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef }} // Pass refs to PersonalInfoForm
+                        refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef,locationRef }} // Pass refs to PersonalInfoForm
                     />
 
                     {/* Job Fields Section */}

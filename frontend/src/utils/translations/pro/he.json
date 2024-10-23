@@ -101,9 +101,12 @@
   "positionUnavailable": "המיקום אינו זמין. נסה שוב מאוחר יותר.",
   "timeout": "הבקשה לקבלת המיקום שלך פגה.",
   "unknownError": "אירעה שגיאה לא ידועה.",
-  "noGeolocationSupport": "הדפדפן שלך אינו תומך במיקום גיאוגרפי."
+  "noGeolocationSupport": "הדפדפן שלך אינו תומך במיקום גיאוגרפי.",
+  "locationError": "אנא הזן את המיקום שלך."
   },
   "locationLabel": "בחר מיקום",
 "locationPlaceholder": "עפרוני 13, ראש העין, ישראל"
+
+
 
 }

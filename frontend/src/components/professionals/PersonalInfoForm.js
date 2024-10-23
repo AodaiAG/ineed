@@ -15,7 +15,7 @@ function PersonalInfoForm({
     refs // Refs passed from parent component to scroll to each field
 }) {
     const { translation } = useLanguage();
-    const { fullNameRef, emailRef, websiteRef } = refs; // Destructure refs
+    const { fullNameRef, emailRef, websiteRef,locationRef } = refs; // Destructure refs
 
     const fileInputRef = useRef(null);
     const [showLocationPopup, setShowLocationPopup] = useState(false);
@@ -166,29 +166,30 @@ function PersonalInfoForm({
             />
 
             {/* Location Input */}
-            <label htmlFor="location" className={styles['pro-label']}>{translation.locationLabel}</label>
-            <input
-                type="text"
-                id="location"
-                value={location?.address || ''}  // Safely access location.address to prevent undefined errors
-                readOnly
-                onClick={handleLocationInputClick}
-                className={`${styles['pro-input']} ${styles['pro-input-white']}`}
-                placeholder={translation.locationPlaceholder}
-            />
-
-            {/* Location Popup */}
-            {showLocationPopup && (
-                <div className={styles['popupOverlay']}>
-                    <div className={styles['popupContainer']}>
-                        <LocationComponentPopup
-                            onClose={handleLocationPopupClose}
-                            onSelect={handleLocationSelect}
-                            initialLocation={location} // Pass the initial location here
-                        />
-                    </div>
-                </div>
-            )}
+            <div ref={locationRef}>
+                <label htmlFor="location" className={styles['pro-label']}>
+                    {translation.location.selectLocation}
+                </label>
+                {errors.location && (
+                    <p className={styles['pro-error']}>{errors.location}</p>
+                )}
+                <input
+                    type="text"
+                    id="location"
+                    value={location?.address || ''}
+                    readOnly
+                    onClick={handleLocationInputClick}
+                    className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.location ? styles['pro-input-error'] : ''}`}
+                    placeholder={translation.location.locationPlaceholder}
+                />
+                {showLocationPopup && (
+                    <LocationComponentPopup
+                        onClose={() => setShowLocationPopup(false)}
+                        onSelect={handleLocationSelect}
+                        initialLocation={location}
+                    />
+                )}
+            </div>
         </div>
     );
 }
