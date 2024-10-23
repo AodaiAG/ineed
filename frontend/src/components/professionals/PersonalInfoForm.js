@@ -18,6 +18,8 @@ function PersonalInfoForm({
 }) {
     const { translation } = useLanguage();
     const { fullNameRef, emailRef, websiteRef,locationRef } = refs; // Destructure refs
+    const [isPictureLoading, setIsPictureLoading] = useState(false);
+
 
     const fileInputRef = useRef(null);
     const [showLocationPopup, setShowLocationPopup] = useState(false);
@@ -30,6 +32,8 @@ function PersonalInfoForm({
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
+            setIsPictureLoading(true); // Start loading indicator
+
           const formData = new FormData();
           formData.append('image', file);
       
@@ -45,7 +49,10 @@ function PersonalInfoForm({
             setImage(response.data.imageUrl);
           } catch (error) {
             console.error('Error uploading image:', error);
-          }
+          }finally {
+            setIsPictureLoading(false); // Stop loading indicator
+        }
+
         }
       };
 
@@ -115,7 +122,11 @@ function PersonalInfoForm({
             {/* Image Upload Section */}
             <label className={styles['pro-label']}>{translation.addImageLabel}</label>
             <div className={styles['pro-image-upload']}>
-                <img src={image} alt={translation.imageAlt} className={styles['pro-image-preview']} />
+            {isPictureLoading ? (
+        <div className={styles['loading-indicator']}>Uploading...</div> // Show loading indicator
+    ) : (
+        <img src={image} alt={translation.imageAlt} className={styles['pro-image-preview']} />
+    )}
                 <input
                     type="file"
                     accept="image/*"
