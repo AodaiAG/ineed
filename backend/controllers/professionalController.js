@@ -2,7 +2,38 @@
 const Professional = require('../models/professional');
 const Location = require('../models/Location'); // Import the Location model
 const multer = require('multer');
-const path = require('path');
+const streamifier = require('streamifier');
+
+const cloudinary = require('../config/cloudinaryConfig'); // Import the Cloudinary config
+const storage = multer.memoryStorage();
+
+const uploadImage = async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+  
+      // Use a stream to upload the image to Cloudinary
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'your_folder_name', resource_type: 'image' },
+        (error, result) => {
+          if (error) {
+            console.error('Error uploading to Cloudinary:', error);
+            return res.status(500).json({ error: 'Failed to upload image' });
+          }
+          // Return the URL of the uploaded image
+          return res.status(200).json({ imageUrl: result.secure_url });
+        }
+      );
+  
+      // Use streamifier to create a readable stream from the buffer
+      streamifier.createReadStream(req.file.buffer).pipe(stream);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+
 
 
 
@@ -200,5 +231,5 @@ const updateProfessional = async (req, res) => {
 module.exports = {
     checkIfRegistered,
     getAllLocations,
-    registerProfessional,getProfessionalById,updateProfessional
+    registerProfessional,getProfessionalById,updateProfessional,uploadImage
 };

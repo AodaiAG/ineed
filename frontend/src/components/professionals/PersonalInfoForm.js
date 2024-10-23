@@ -30,29 +30,24 @@ function PersonalInfoForm({
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            // Create a FormData object to handle the image file
-            const formData = new FormData();
-            formData.append('image', file);
-    
-            try {
-                // Make the API request to upload the image
-                const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-
-                // Set the image URL returned from the server
-                const { imageUrl } = response.data;
-                console.log('Image URL:', imageUrl);
-
-                setImage(imageUrl);
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                alert('Error uploading image, please try again.');
-            }
+          const formData = new FormData();
+          formData.append('image', file);
+      
+          try {
+            // Upload to the backend which will handle Cloudinary
+            const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+      
+            // Use the URL returned by Cloudinary
+            setImage(response.data.imageUrl);
+          } catch (error) {
+            console.error('Error uploading image:', error);
+          }
         }
-    };
+      };
 
     const handleUploadButtonClick = () => {
         fileInputRef.current.click();
