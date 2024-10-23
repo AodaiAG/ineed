@@ -1,6 +1,6 @@
 /* ExpertInterface.module.css */
 
-body {
+.expertInterface_body {
     font-family: 'Arial', sans-serif;
     background-color: #000;
     color: #fff;
@@ -10,54 +10,53 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    /*direction: rtl; /* Right-to-Left for Hebrew */
     overflow: hidden;
 }
 
-.proContainer {
+.expertInterface_container {
     text-align: center;
     max-width: 400px;
     width: 100%;
     padding: 20px;
 }
 
-.proLanguageSwitch {
+.expertInterface_languageSwitch {
     position: absolute;
     top: 20px; /* Place it slightly above the title */
     right: 28%; /* Move it to be aligned slightly to the right */
     transform: translateX(50%); /* Adjust to shift it into place */
 }
 
-.proLanguageSwitch img {
+.expertInterface_languageSwitch img {
     width: 35px; /* Adjust size accordingly */
     height: 35px;
 }
 
-.proMainTitle {
+.expertInterface_mainTitle {
     font-size: 2.5rem;
     margin: 0;
 }
 
-.proSubTitle {
+.expertInterface_subTitle {
     font-size: 1.5rem;
     margin: 5px 0 20px;
 }
 
-.proImageContainer {
+.expertInterface_imageContainer {
     margin: 20px 0;
 }
 
-.proWorkerImage {
+.expertInterface_workerImage {
     width: 150px;
     height: auto;
 }
 
-.proMessageText {
+.expertInterface_messageText {
     font-size: 1.2rem;
     margin: 20px 0;
 }
 
-.proSettingsButton {
+.expertInterface_settingsButton {
     background-color: #007bff;
     color: #fff;
     border: none;
@@ -69,6 +68,6 @@ body {
     transition: background-color 0.3s;
 }
 
-.proSettingsButton:hover {
+.expertInterface_settingsButton:hover {
     background-color: #0056b3;
 }

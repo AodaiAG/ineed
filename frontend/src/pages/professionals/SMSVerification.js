@@ -16,6 +16,16 @@ function SMSVerification() {
     const { translation } = useLanguage(); // Using the translation from the context
 
     useEffect(() => {
+        // Add a unique class to the body element for SMSVerification
+        document.body.classList.add(styles.smsVerification_body);
+
+        // Clean up by removing the unique class when the component is unmounted
+        return () => {
+            document.body.classList.remove(styles.smsVerification_body);
+        };
+    }, []);
+
+    useEffect(() => {
         // Get the phone number from session storage
         const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
         if (!storedPhoneNumber) {
@@ -43,28 +53,17 @@ function SMSVerification() {
     const handleVerification = async () => {
         const code = verificationCode.join('');
         if (code.length === 4) {
-            // Check if the code matches the one stored in sessionStorage
             const storedCode = sessionStorage.getItem('smsVerificationCode');
             if (code === storedCode) {
                 try {
-                    // Make a request to verify or create the professional
-                    console.log('phone number : '+phoneNumber )
                     const response = await axios.post(`${API_URL}/professionals/check-if-registered`, {
                         phoneNumber,
                     });
-                     console.log(response.data.registered +' is registerd')
-                    if (response.data.registered) 
-                        {
-                        // Redirect to dashboard or registration based on user's status/
+                    if (response.data.registered) {
                         sessionStorage.setItem('professionalId', response.data.id);
-                        console.log(`prof id in smsVerification: ${response.data.id}`);
-
                         Cookies.set('userSession', response.data.id, { expires: 7 });
-
                         navigate('/pro/expert-interface');
                     } else {
-                        // If not registered, navigate to registration
-
                         navigate('/pro/register');
                     }
                 } catch (error) {
@@ -99,48 +98,48 @@ function SMSVerification() {
     }
 
     return (
-        <div className={styles['pro-container']}>
-            <div className={styles['pro-content']}>
-                <h1 className={styles['pro-validation-title']}>{translation.phoneValidationTitle}</h1>
+        <div className={styles.smsVerification_container}>
+            <div className={styles.smsVerification_content}>
+                <h1 className={styles.smsVerification_validationTitle}>{translation.phoneValidationTitle}</h1>
 
-                <div className={styles['pro-phone-field']}>
-                    <label htmlFor="phone" className={styles['pro-phone-label']}>
+                <div className={styles.smsVerification_phoneField}>
+                    <label htmlFor="phone" className={styles.smsVerification_phoneLabel}>
                         {translation.phoneLabel}
                     </label>
                     <input
                         type="text"
-                        id="pro-phone"
+                        id="smsVerification_phone"
                         value={phoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3')}
                         readOnly
-                        className={styles['pro-phone']}
+                        className={styles.smsVerification_phone}
                     />
                 </div>
 
-                <p className={styles['pro-sms-code-label']}>
+                <p className={styles.smsVerification_smsCodeLabel}>
                     {isError ? translation.wrongCodeMessage : translation.enterCodeMessage}
                 </p>
-                <div className={`${styles['pro-sms-code-input']} ${shake ? styles['shake'] : ''}`}>
+                <div className={`${styles.smsVerification_smsCodeInput} ${shake ? styles.smsVerification_shake : ''}`}>
                     {verificationCode.map((digit, index) => (
                         <input
                             key={index}
                             type="tel"
                             id={`code-${index}`}
                             maxLength="1"
-                            className={`${styles['pro-sms-box']} ${isError ? styles['pro-error'] : ''}`}
+                            className={`${styles.smsVerification_smsBox} ${isError ? styles.smsVerification_error : ''}`}
                             value={digit}
                             onChange={(e) => handleInputChange(index, e.target.value)}
-                            inputMode="numeric" // Add this for numeric keyboard on mobile
-                            pattern="\d*" // Add this to restrict input to numbers only
+                            inputMode="numeric"
+                            pattern="\d*"
                         />
                     ))}
                 </div>
 
-                <div className={styles['pro-action-buttons']}>
-                    <button className={styles['pro-button']} onClick={handleVerification}>
+                <div className={styles.smsVerification_actionButtons}>
+                    <button className={styles.smsVerification_button} onClick={handleVerification}>
                         {isError ? translation.tryAgainButton : translation.okButton}
                     </button>
                     {isError && (
-                        <button className={styles['pro-button']} onClick={handleBack}>
+                        <button className={styles.smsVerification_button} onClick={handleBack}>
                             {translation.backButton}
                         </button>
                     )}

@@ -1,48 +1,62 @@
-.pro-container {
+/* PhoneScreen.module.css */
+
+.phoneScreen_body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.phoneScreen_container {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     width: 100%;
     max-width: 400px;
-    height: 100vh; /* Center vertically */
-    background-color: #000; /* Black background for professional side */
+    height: 100vh;
+    background-color: #000;
     color: #fff;
-    padding: 0 20px; /* Add side padding to make content more contained */
+    padding: 0 20px;
 }
 
-.pro-content {
+.phoneScreen_content {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
 }
 
-.pro-main-title {
+.phoneScreen_mainTitle {
     font-size: 2.5rem;
     font-weight: bold;
-    margin: 0 0 5px 0; /* Remove extra margin, add small spacing below */
+    margin: 0 0 5px 0;
 }
 
-.pro-subtitle {
+.phoneScreen_subtitle {
     font-size: 1.2rem;
-    margin: 5px 0; /* Reduce space between the subtitle and next element */
+    margin: 5px 0;
     font-weight: 400;
 }
 
-.pro-enter-title {
+.phoneScreen_enterTitle {
     font-size: 1.5rem;
-    margin: 10px 0; /* Reduced margin for a tighter layout */
+    margin: 10px 0;
     font-weight: bold;
 }
 
-.pro-phone-input-section {
+.phoneScreen_phoneInputSection {
     display: flex;
     gap: 10px;
-    margin: 15px 0; /* Reduce margin for a more compact look */
+    margin: 15px 0;
 }
 
-.pro-country-code {
+.phoneScreen_countryCode {
     position: relative;
     display: flex;
     align-items: center;
@@ -51,7 +65,7 @@
     padding: 5px;
 }
 
-.pro-select {
+.phoneScreen_select {
     border: none;
     background: none;
     color: #000;
@@ -64,11 +78,11 @@
     outline: none;
 }
 
-.pro-hidden-label {
+.phoneScreen_hiddenLabel {
     display: none;
 }
 
-.pro-phone-number {
+.phoneScreen_phoneNumber {
     width: 150px;
     padding: 10px;
     border-radius: 8px;
@@ -77,33 +91,33 @@
     text-align: center;
 }
 
-.pro-terms-text {
+.phoneScreen_termsText {
     font-size: 0.9rem;
-    margin: 5px 0; /* Reduce margin for tighter layout */
+    margin: 5px 0;
     color: #fff;
 }
 
-.pro-terms-link {
+.phoneScreen_termsLink {
     color: #f1c40f;
     text-decoration: none;
     font-weight: bold;
 }
 
-.pro-illustration {
-    margin: 15px 0; /* Reduced margin to bring it closer to other elements */
+.phoneScreen_illustration {
+    margin: 15px 0;
 }
 
-.pro-illustration img {
+.phoneScreen_illustration img {
     width: 100px;
     height: auto;
-    margin-left: 10px; /* Move the worker image slightly to the right */
+    margin-left: 10px;
 }
 
-.pro-enter-button {
+.phoneScreen_enterButton {
     background-color: #f1c40f;
     color: #000;
     border: none;
-    padding: 15px 50px; /* Increased padding for a wider button */
+    padding: 15px 50px;
     font-size: 1.2rem;
     font-weight: bold;
     border-radius: 10px;
@@ -111,7 +125,7 @@
     transition: background-color 0.3s, transform 0.2s;
 }
 
-.pro-enter-button:hover {
+.phoneScreen_enterButton:hover {
     background-color: #d4a30e;
-    transform: scale(1.05); /* Slight hover effect */
+    transform: scale(1.05);
 }

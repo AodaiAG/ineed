@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
 import styles from '../../styles/PhoneScreen.module.css'; // Use module CSS for styles
@@ -11,9 +11,18 @@ function PhoneScreen() {
     const [countryCode, setCountryCode] = useState('052');
     const { translation } = useLanguage(); // Using the translation from the context
 
+    useEffect(() => {
+        // Add a unique class to the body element for PhoneScreen
+        document.body.classList.add(styles.phoneScreen_body);
+
+        // Clean up by removing the unique class when the component is unmounted
+        return () => {
+            document.body.classList.remove(styles.phoneScreen_body);
+        };
+    }, []);
+
     const handlePhoneNumberChange = (e) => {
         const value = e.target.value;
-        // Only set value if it contains digits (remove any non-numeric characters)
         if (/^\d*$/.test(value)) {
             setPhoneNumber(value);
         }
@@ -28,13 +37,11 @@ function PhoneScreen() {
             const fullPhoneNumber = `${countryCode}${phoneNumber}`;
             sessionStorage.setItem('professionalPhoneNumber', fullPhoneNumber);
 
-            // Send SMS using generalUtils function/
             try {
                 const verificationCode = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit code
                 const message = `${translation.verificationCodeMessage} ${verificationCode}`;
 
-                 sendSms(fullPhoneNumber, message);
-                // Store the verification code in sessionStorage for verification purposes
+                sendSms(fullPhoneNumber, message);
                 sessionStorage.setItem('smsVerificationCode', verificationCode);
 
                 navigate('/pro/sms-verification'); // Redirect to the SMS verification page
@@ -52,22 +59,22 @@ function PhoneScreen() {
     }
 
     return (
-        <div className={styles['pro-container']}>
-            <div className={styles['pro-content']}>
-                <h1 className={styles['pro-main-title']}>{translation.mainTitle}</h1>
-                <p className={styles['pro-subtitle']}>{translation.subtitle}</p>
-                <h2 className={styles['pro-enter-title']}>{translation.enterTitle}</h2>
+        <div className={styles.phoneScreen_container}>
+            <div className={styles.phoneScreen_content}>
+                <h1 className={styles.phoneScreen_mainTitle}>{translation.mainTitle}</h1>
+                <p className={styles.phoneScreen_subtitle}>{translation.subtitle}</p>
+                <h2 className={styles.phoneScreen_enterTitle}>{translation.enterTitle}</h2>
 
-                <div className={styles['pro-phone-input-section']}>
-                    <label htmlFor="country-code" className={styles['pro-hidden-label']}>
+                <div className={styles.phoneScreen_phoneInputSection}>
+                    <label htmlFor="country-code" className={styles.phoneScreen_hiddenLabel}>
                         {translation.countryCodeLabel}
                     </label>
-                    <div className={styles['pro-country-code']}>
+                    <div className={styles.phoneScreen_countryCode}>
                         <select
                             id="country-code"
                             value={countryCode}
                             onChange={handleCountryCodeChange}
-                            className={styles['pro-select']}
+                            className={styles.phoneScreen_select}
                         >
                             <option value="050">050</option>
                             <option value="052">052</option>
@@ -79,38 +86,38 @@ function PhoneScreen() {
                             <option value="058">058</option>
                             <option value="059">059</option>
                         </select>
-                        <div className={`${styles['arrow-background']}`}>
+                        <div className={`${styles.phoneScreen_arrowBackground}`}>
                             <i className="ri-arrow-down-s-fill dropdown-icon"></i>
                         </div>
                     </div>
 
-                    <label htmlFor="phone-number" className={styles['pro-hidden-label']}>
+                    <label htmlFor="phone-number" className={styles.phoneScreen_hiddenLabel}>
                         {translation.phoneNumberLabel}
                     </label>
                     <input
                         type="tel"
-                        id="pro-phone-number"
-                        className={styles['pro-phone-number']}
+                        id="phone-number"
+                        className={styles.phoneScreen_phoneNumber}
                         placeholder={translation.phoneNumberPlaceholder}
                         value={phoneNumber}
                         maxLength="7"
-                        pattern="[0-9]*" // Only allow numeric input
+                        pattern="[0-9]*"
                         onChange={handlePhoneNumberChange}
                     />
                 </div>
 
-                <p className={styles['pro-terms-text']}>
+                <p className={styles.phoneScreen_termsText}>
                     {translation.termsText}{' '}
-                    <a href="#" className={styles['pro-terms-link']}>
+                    <a href="#" className={styles.phoneScreen_termsLink}>
                         {translation.termsLink}
                     </a>
                 </p>
 
-                <div className={styles['pro-illustration']}>
+                <div className={styles.phoneScreen_illustration}>
                     <img src="/images/Prof/worker.png" alt={translation.workerImageAlt} />
                 </div>
 
-                <button className={styles['pro-enter-button']} onClick={handleEnterClick}>
+                <button className={styles.phoneScreen_enterButton} onClick={handleEnterClick}>
                     {translation.enterButton}
                 </button>
             </div>

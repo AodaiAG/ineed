@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../styles/ExpertInterface.module.css';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
@@ -8,6 +8,16 @@ function ExpertInterface() {
     const navigate = useNavigate();
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
+
+    useEffect(() => {
+        // Add a unique class to the body element for ExpertInterface
+        document.body.classList.add(styles.expertInterface_body);
+
+        // Clean up by removing the unique class when the component is unmounted
+        return () => {
+            document.body.classList.remove(styles.expertInterface_body);
+        };
+    }, []);
 
     if (!translation) {
         return <div>Loading...</div>; // Wait for translations to load
@@ -29,29 +39,31 @@ function ExpertInterface() {
     };
 
     return (
-        <div className={styles.proContainer}>
+        <div className={styles.expertInterface_container}>
             {/* Language Switch Component */}
-            <div className={styles.proLanguageSwitch} onClick={handleLanguageIconClick}>
+            <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
                 <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
             </div>
-            
+
             {/* Language Selection Popup */}
             {isLanguagePopupOpen && <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} />}
 
             {/* Title */}
-            <h1 className={styles.proMainTitle}>I Need</h1>
-            <h2 className={styles.proSubTitle}>{translation.expertInterfaceTitle}</h2>
+            <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
+            <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
 
             {/* Image Section */}
-            <div className={styles.proImageContainer}>
-                <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.proWorkerImage} />
+            <div className={styles.expertInterface_imageContainer}>
+                <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.expertInterface_workerImage} />
             </div>
 
             {/* Message Section */}
-            <p className={styles.proMessageText}>{translation.businessCardMessage}</p>
+            <p className={styles.expertInterface_messageText}>{translation.businessCardMessage}</p>
 
             {/* Button */}
-            <button className={styles.proSettingsButton} onClick={handleMySettingsClick}>{translation.mySettingsButtonLabel}</button>
+            <button className={styles.expertInterface_settingsButton} onClick={handleMySettingsClick}>
+                {translation.mySettingsButtonLabel}
+            </button>
         </div>
     );
 }

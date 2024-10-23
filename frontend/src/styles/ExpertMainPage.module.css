@@ -1,6 +1,6 @@
 /* ExpertMainPage.module.css */
 
-body {
+.expertPage_body {
     background-color: #000; /* Black background */
     color: #fff; /* White text color */
     font-family: Arial, sans-serif;
@@ -11,53 +11,52 @@ body {
     margin: 0;
 }
 
-.mainContainer {
+.expertPage_mainContainer {
     text-align: center;
     padding: 20px;
     position: relative; /* Allows for absolute positioning of the icon within the container */
 }
 
-.languageIcon {
+.expertPage_languageIcon {
     position: absolute;
     top: 10px; /* Place it slightly above the title */
     right: 15%; /* Move it to be aligned slightly to the right */
     transform: translateX(50%); /* Adjust to shift it into place */
 }
 
-.languageIcon img {
+.expertPage_languageIcon img {
     width: 35px; /* Adjust size accordingly */
     height: 35px;
 }
 
-.mainTitle {
+.expertPage_mainTitle {
     font-size: 2.8em;
     font-weight: bold;
     margin-top: 40px; /* Ensure enough spacing below the language icon */
 }
 
-.subTitle {
+.expertPage_subTitle {
     font-size: 1.5em;
     margin-bottom: 20px;
 }
 
-.expertInterface {
+.expertPage_expertInterface {
     font-size: 1.8em;
     font-weight: bold;
     margin-bottom: 30px;
 }
 
-.imageContainer {
+.expertPage_imageContainer {
     margin: 20px 0;
 }
 
-.imageContainer img {
+.expertPage_imageContainer img {
     width: 220px; /* Adjust size based on the actual image */
     height: auto;
-	margin-left: 50px; /* Increase this value to move the image to the right */
-
+    margin-left: 50px; /* Increase this value to move the image to the right */
 }
 
-.ctaButton {
+.expertPage_ctaButton {
     background-color: #FFCC00; /* Yellow color */
     color: #000;
     font-size: 1.2em;
@@ -68,6 +67,6 @@ body {
     margin-right: 15px; /* Adjust to move the button slightly */
 }
 
-.ctaButton:hover {
+.expertPage_ctaButton:hover {
     background-color: #ffbf00; /* Slightly darker shade for hover effect */
 }

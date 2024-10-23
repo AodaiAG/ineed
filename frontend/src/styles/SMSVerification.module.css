@@ -1,4 +1,6 @@
-body {
+/* SMSVerification.module.css */
+
+.smsVerification_body {
     font-family: 'Arial', sans-serif;
     background-color: #000;
     color: #fff;
@@ -10,96 +12,94 @@ body {
     height: 100vh;
 }
 
-.pro-container {
+.smsVerification_container {
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     width: 100%;
     max-width: 400px;
-    height: 100vh;  /* Added to center vertically */
-    background-color: #000; /* Black background for professional side */
+    height: 100vh;
+    background-color: #000;
     color: #fff;
 }
 
-.pro-content {
+.smsVerification_content {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 20px; /* Added padding for better content spacing */
+    padding: 20px;
 }
 
-.pro-validation-title {
+.smsVerification_validationTitle {
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
 }
 
-.pro-phone-field {
+.smsVerification_phoneField {
     width: 100%;
     margin-bottom: 10px;
 }
 
-.pro-phone-label {
+.smsVerification_phoneLabel {
     display: block;
     margin-bottom: 8px;
     font-size: 1rem;
 }
 
-.pro-phone {
+.smsVerification_phone {
     width: 100%;
     padding: 10px;
     font-size: 1rem;
     border-radius: 8px;
     border: none;
-    background-color: #444; /* Darker gray for read-only input */
+    background-color: #444;
     color: #fff;
     text-align: center;
 }
 
-.pro-sms-code-label {
+.smsVerification_smsCodeLabel {
     font-size: 1.2rem;
     margin: 20px 0 10px 0;
     text-align: center;
 }
 
-.pro-sms-code-input {
+.smsVerification_smsCodeInput {
     display: flex;
-    gap: 15px; /* Increased gap for better spacing */
+    gap: 15px;
     margin-bottom: 20px;
-    justify-content: center; /* Centers the input fields */
+    justify-content: center;
 }
 
-.pro-sms-box {
-    width: 35px; /* Reduced size for better fit */
-    height: 35px; /* Reduced size for better fit */
+.smsVerification_smsBox {
+    width: 35px;
+    height: 35px;
     font-size: 1.5rem;
     text-align: center;
     border-radius: 8px;
-    border: 2px solid transparent; /* Default border */
+    border: 2px solid transparent;
     background-color: #fff;
     color: #000;
-    transition: border-color 0.3s; /* Smooth transition for border color */
+    transition: border-color 0.3s;
 }
 
-.pro-sms-box.pro-error {
-    border-color: red; /* Highlight the border in red for error */
-    animation: flash 0.5s ease-in-out 3, shake 0.5s ease-in-out 1; /* Flash and shake animations */
+.smsVerification_smsBox.smsVerification_error {
+    border-color: red;
+    animation: flash 0.5s ease-in-out 3, shake 0.5s ease-in-out 1;
 }
 
-/* Flashing animation */
 @keyframes flash {
     0%, 100% {
-        background-color: #fff; /* Normal color */
+        background-color: #fff;
     }
     50% {
-        background-color: #ffcccc; /* Light red for flashing effect */
+        background-color: #ffcccc;
     }
 }
 
-/* Shaking animation */
 @keyframes shake {
     0%, 100% {
         transform: translateX(0);
@@ -115,30 +115,30 @@ body {
     }
 }
 
-.pro-action-buttons {
+.smsVerification_actionButtons {
     display: flex;
     gap: 20px;
     margin-top: 20px;
-    justify-content: center; /* Center the buttons */
+    justify-content: center;
 }
 
-.pro-button {
+.smsVerification_button {
     background-color: #f1c40f;
     color: #000;
     border: none;
-    padding: 10px 25px;  /* Reduced button size */
-    font-size: 1rem;     /* Reduced font size */
+    padding: 10px 25px;
+    font-size: 1rem;
     font-weight: bold;
     border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s; /* Add hover effect */
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.pro-button:hover {
+.smsVerification_button:hover {
     background-color: #d4a30e;
-    transform: scale(1.05); /* Slightly larger when hovered */
+    transform: scale(1.05);
 }
 
-.shake {
-    animation: shake 0.5s ease-in-out; /* Shaking effect when wrong code is entered */
+.smsVerification_shake {
+    animation: shake 0.5s ease-in-out;
 }
