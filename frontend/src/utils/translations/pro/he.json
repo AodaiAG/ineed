@@ -96,7 +96,12 @@
     "locationIconAlt": "סמל מיקום",
     "findMe": "מצא אותי",
     "mapLocationAlt": "מיקום במפה",
-    "continue": "המשך"
+    "continue": "המשך",
+	  "permissionDenied": "ההרשאה נדחתה. נא לאפשר גישה ל-GPS.",
+  "positionUnavailable": "המיקום אינו זמין. נסה שוב מאוחר יותר.",
+  "timeout": "הבקשה לקבלת המיקום שלך פגה.",
+  "unknownError": "אירעה שגיאה לא ידועה.",
+  "noGeolocationSupport": "הדפדפן שלך אינו תומך במיקום גיאוגרפי."
   },
   "locationLabel": "בחר מיקום",
 "locationPlaceholder": "עפרוני 13, ראש העין, ישראל"

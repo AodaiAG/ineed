@@ -8,6 +8,7 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
   const [address, setAddress] = useState(initialLocation?.address || '');
   const [lat, setLat] = useState(initialLocation?.lat || 31.0461);
   const [lon, setLon] = useState(initialLocation?.lon || 34.8516);
+  const [errorMessage, setErrorMessage] = useState(''); // State to hold error messages
 
   useEffect(() => {
     const loadGoogleMaps = () => {
@@ -111,17 +112,31 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
           geocoder.geocode({ location }, (results, status) => {
             if (status === 'OK' && results[0]) {
               setAddress(results[0].formatted_address);
+              setErrorMessage(''); // Clear any previous error messages
             } else {
-              alert('Geocoder failed due to: ' + status);
+              setErrorMessage(translation.location.geolocationError);
             }
           });
         },
         (error) => {
-          alert(translation.geolocationError);
+          // Handle geolocation errors
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              setErrorMessage(translation.location.permissionDenied);
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setErrorMessage(translation.location.positionUnavailable);
+              break;
+            case error.TIMEOUT:
+              setErrorMessage(translation.location.timeout);
+              break;
+            default:
+              setErrorMessage(translation.location.unknownError);
+          }
         }
       );
     } else {
-      alert(translation.geolocationError);
+      setErrorMessage(translation.location.noGeolocationSupport);
     }
   };
 
@@ -150,6 +165,7 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
         <div className={styles['location-map-container']}>
           <div id="popupMap" className={styles['location-map-image']} style={{ height: '200px', width: '100%' }}></div>
         </div>
+        {errorMessage && <p className={styles['error-message']}>{errorMessage}</p>} {/* Display error messages */}
         <button
           className={styles['location-continue-button']}
           onClick={() => {

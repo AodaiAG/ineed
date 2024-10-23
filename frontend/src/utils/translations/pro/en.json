@@ -96,7 +96,12 @@
     "locationIconAlt": "Location icon",
     "findMe": "Find Me",
     "mapLocationAlt": "Map location",
-    "continue": "Continue"
+    "continue": "Continue",
+	  "permissionDenied": "Permission denied. Please enable GPS access.",
+  "positionUnavailable": "Position unavailable. Please try again later.",
+  "timeout": "The request to get your location timed out.",
+  "unknownError": "An unknown error occurred.",
+  "noGeolocationSupport": "Your browser does not support geolocation."
   },
     "locationLabel": "Select Your Location"  ,  
 	"locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel"

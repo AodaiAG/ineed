@@ -88,7 +88,12 @@
     "locationIconAlt": "Icono de ubicación",
     "findMe": "Encuéntrame",
     "mapLocationAlt": "Ubicación en el mapa",
-    "continue": "Continuar"
+    "continue": "Continuar",
+	  "permissionDenied": "Permiso denegado. Por favor, habilite el acceso al GPS.",
+  "positionUnavailable": "Ubicación no disponible. Por favor, inténtelo más tarde.",
+  "timeout": "La solicitud para obtener su ubicación ha expirado.",
+  "unknownError": "Ocurrió un error desconocido.",
+  "noGeolocationSupport": "Su navegador no soporta la geolocalización."
   },
 
   "locationLabel": "Selecciona tu ubicación"
