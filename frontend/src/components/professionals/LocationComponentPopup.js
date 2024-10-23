@@ -107,36 +107,35 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
             position: location,
             map,
           });
-
+  
           const geocoder = new window.google.maps.Geocoder();
           geocoder.geocode({ location }, (results, status) => {
             if (status === 'OK' && results[0]) {
               setAddress(results[0].formatted_address);
-              setErrorMessage(''); // Clear any previous error messages
             } else {
-              setErrorMessage(translation.location.geolocationError);
+              alert(translation.location.unknownError);
             }
           });
         },
         (error) => {
-          // Handle geolocation errors
           switch (error.code) {
             case error.PERMISSION_DENIED:
-              setErrorMessage(translation.location.permissionDenied);
+              alert(translation.location.permissionDenied);
               break;
             case error.POSITION_UNAVAILABLE:
-              setErrorMessage(translation.location.positionUnavailable);
+              alert(translation.location.positionUnavailable);
               break;
             case error.TIMEOUT:
-              setErrorMessage(translation.location.timeout);
+              alert(translation.location.timeout);
               break;
             default:
-              setErrorMessage(translation.location.unknownError);
+              alert(translation.location.unknownError);
+              break;
           }
         }
       );
     } else {
-      setErrorMessage(translation.location.noGeolocationSupport);
+      alert(translation.location.noGeolocationSupport);
     }
   };
 
