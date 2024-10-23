@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import LocationComponentPopup from './LocationComponentPopup';
+import { API_URL } from '../../utils/constans';
+import axios from 'axios';
 
 function PersonalInfoForm({
     fullName, setFullName,
@@ -25,32 +27,30 @@ function PersonalInfoForm({
         console.log('Location received in PersonalInfoForm:', location);
     }, [location]);
 
-    const handleImageUpload = (event) => {
+    const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    // Set the desired target width while preserving the aspect ratio
-                    const targetWidth = 300;
-                    const scaleFactor = targetWidth / img.width;
-                    const targetHeight = img.height * scaleFactor;
+            // Create a FormData object to handle the image file
+            const formData = new FormData();
+            formData.append('image', file);
     
-                    canvas.width = targetWidth;
-                    canvas.height = targetHeight;
-                    ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-                    
-                    // Set high-quality JPEG output
-                    const resizedImageUrl = canvas.toDataURL('image/jpeg', 1.0);
-                    setImage(resizedImageUrl);
-                };
-                img.src = reader.result;
-            };
-            reader.readAsDataURL(file);
+            try {
+                // Make the API request to upload the image
+                const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                // Set the image URL returned from the server
+                const { imageUrl } = response.data;
+                console.log('Image URL:', imageUrl);
+
+                setImage(imageUrl);
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                alert('Error uploading image, please try again.');
+            }
         }
     };
 
