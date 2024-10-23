@@ -34,12 +34,18 @@ function PersonalInfoForm({
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
+                    
+                    // Set the desired target width while preserving the aspect ratio
                     const targetWidth = 300;
-                    const targetHeight = 200;
+                    const scaleFactor = targetWidth / img.width;
+                    const targetHeight = img.height * scaleFactor;
+    
                     canvas.width = targetWidth;
                     canvas.height = targetHeight;
                     ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-                    const resizedImageUrl = canvas.toDataURL('image/jpeg');
+                    
+                    // Set high-quality JPEG output
+                    const resizedImageUrl = canvas.toDataURL('image/jpeg', 1.0);
                     setImage(resizedImageUrl);
                 };
                 img.src = reader.result;
