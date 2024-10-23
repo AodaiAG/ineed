@@ -15,7 +15,7 @@ const uploadImage = async (req, res) => {
   
       // Use a stream to upload the image to Cloudinary
       const stream = cloudinary.uploader.upload_stream(
-        { folder: 'your_folder_name', resource_type: 'image' },
+        { folder: 'Professionals', resource_type: 'image' },
         (error, result) => {
           if (error) {
             console.error('Error uploading to Cloudinary:', error);
