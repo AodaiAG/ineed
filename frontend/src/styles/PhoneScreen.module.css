@@ -2,9 +2,9 @@
 
 /* Body */
 .phoneScreen_body {
-    font-family: 'Arial', sans-serif;
-    background-color: #000; /* Black background */
+    background: linear-gradient(135deg, #000000 50%, #000000 50%, rgba(241, 196, 15, 0.2) 70%);
     color: #fff; /* White text color */
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
@@ -12,6 +12,7 @@
     align-items: center;
     height: 100vh;
     box-sizing: border-box; /* Ensure padding is included in total width/height */
+    background-attachment: fixed; /* Fix background for cool effect */
 }
 
 /* Container */
@@ -23,11 +24,18 @@
     width: 100%;
     max-width: 400px; /* Maximum width for small screens */
     height: auto; /* Allow height to adjust based on content */
-    background-color: #000; /* Black background for the container */
-    color: #fff; /* White text color */
     padding: 20px; /* Add padding to make the content look better */
     box-sizing: border-box;
     margin: 0 auto; /* Center the container horizontally */
+
+    /* Remove container background to merge better with body */
+    background-color: transparent; 
+    
+    /* Add a border with slight transparency to blend with background */
+    border: 2px solid rgba(241, 196, 15, 0.2); /* Use a transparent golden border */
+    
+    /* Add box shadow for blending effect */
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2); /* Soft shadow to merge edges with body */
 }
 
 /* Content */
@@ -139,6 +147,7 @@
     width: 100px;
     height: auto;
     margin-left: 0; /* Remove unnecessary left margin */
+    box-shadow: none; /* Removed black shadow to blend with the background */
 }
 
 /* Enter Button */
