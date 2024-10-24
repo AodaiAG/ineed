@@ -20,7 +20,7 @@
 .expertPage_languageIcon {
     position: absolute;
     top: 10px; /* Place it slightly above the title */
-    right: 20%; /* Move it to be aligned slightly to the right */
+    right: 15%; /* Move it to be aligned slightly to the right */
     transform: translateX(50%); /* Adjust to shift it into place */
 }
 
@@ -32,7 +32,7 @@
 .expertPage_mainTitle {
     font-size: 3em;
     font-weight: bold;
-    margin-top: 30px; /* Ensure enough spacing below the language icon */
+    margin-top: 40px; /* Ensure enough spacing below the language icon */
 }
 
 .expertPage_subTitle {
