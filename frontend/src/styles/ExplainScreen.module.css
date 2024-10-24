@@ -84,13 +84,13 @@
     background-color: #f1c40f;
     color: #000;
     border: none;
-    padding: 10px 50px; /* Adjusted padding for a more compact look */
+    padding: 10px 100px; /* Adjusted padding for a more compact look */
     font-size: 1rem;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    margin-top: 10px; /* Reduced margin to prevent extra space below */
+    margin-top: 15px; /* Reduced margin to prevent extra space below */
 }
 
 .explainScreen_continueButton:hover {
