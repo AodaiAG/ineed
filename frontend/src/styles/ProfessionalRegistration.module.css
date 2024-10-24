@@ -12,7 +12,7 @@ html, body {
 /* Body */
 .pro-body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #000000 75%, #000000 75%, rgba(241, 196, 15, 0.1) 90%); /* Reduced brightness */
+    background: linear-gradient(135deg, #000000 85%, #000000 85%, rgba(241, 196, 15, 0.05) 100%); /* Smooth gradient with less intensity */
     color: #fff; /* White text color */
     margin: 0;
     padding: 0;
@@ -23,7 +23,6 @@ html, body {
     overflow-y: auto; /* Enable vertical scrolling */
     overflow-x: hidden; /* Prevent horizontal scrolling */
     box-sizing: border-box; /* Ensure padding is included in total width/height */
-    background-attachment: fixed; /* Fix background for cool effect */
 }
 
 /* Highlight Section */
@@ -265,7 +264,7 @@ html, body {
 
 /* Buttons */
 .pro-upload-button, .pro-continue-button {
-    background-color: rgba(241, 196, 15, 0.5); /* Reduced brightness of golden color */
+    background-color: rgba(241, 196, 15, 0.4); /* Reduced brightness of golden color */
     color: #000;
     border: none;
     padding: 10px 20px;
