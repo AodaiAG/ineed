@@ -12,7 +12,7 @@ html, body {
 /* Body */
 .pro-body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #000000 75%, #000000 75%, rgba(241, 196, 15, 0.2) 90%);
+    background: linear-gradient(135deg, #000000 75%, #000000 75%, rgba(241, 196, 15, 0.1) 90%); /* Reduced brightness */
     color: #fff; /* White text color */
     margin: 0;
     padding: 0;
@@ -20,7 +20,6 @@ html, body {
     justify-content: center;
     align-items: flex-start;
     min-height: 100vh; /* Use min-height to allow the body to expand with content */
-    direction: rtl; /* Right-to-Left for Hebrew */
     overflow-y: auto; /* Enable vertical scrolling */
     overflow-x: hidden; /* Prevent horizontal scrolling */
     box-sizing: border-box; /* Ensure padding is included in total width/height */
@@ -68,7 +67,7 @@ html, body {
     align-items: center;
     text-align: center;
     width: 100%;
-    
+    max-width: 400px;
     padding: 20px;
     margin-top: 20px; /* Allow some spacing from the top */
     box-sizing: border-box; /* Ensure padding is included in total width/height */
@@ -86,7 +85,6 @@ html, body {
 .pro-form-title {
     font-size: 1.8rem;
     margin-bottom: 20px;
-    text-align: right; /* Keep the text aligned to the right */
 }
 
 /* Form Group */
@@ -116,6 +114,11 @@ html, body {
     color: #fff;
     margin-bottom: 10px;
     box-sizing: border-box; /* Ensure padding is included in total width/height */
+    text-align: right; /* Align the placeholder text to the right */
+}
+
+.pro-input::placeholder {
+    text-align: right; /* Ensure placeholders are also aligned to the right */
 }
 
 .pro-input-readonly {
@@ -127,6 +130,7 @@ html, body {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    justify-content: flex-end; /* Align checkbox items to the right */
 }
 
 /* Dropdown */
@@ -173,7 +177,7 @@ html, body {
     margin-bottom: 10px;
     display: block;
     font-size: 1rem;
-    text-align: right; /* Keep sub-labels aligned to the right */
+    text-align: right;
 }
 
 /* Availability Group */
@@ -182,21 +186,25 @@ html, body {
     flex-direction: column;
     gap: 15px;
     margin-top: 10px;
+    align-items: flex-end; /* Align all items in the availability group to the right */
 }
 
 .day {
     display: flex;
     align-items: center;
     gap: 10px;
+    justify-content: flex-end; /* Align checkbox items to the right */
 }
 
 .day-label {
     font-size: 1rem;
     font-weight: bold;
     color: #fff;
-    margin-right: 5px; /* To add some spacing between checkbox and label */
+    margin-left: 5px; /* To add some spacing between checkbox and label */
+    text-align: right; /* Align the day label text to the right */
 }
 
+/* Day Input */
 .day-input {
     background-color: #444;
     color: #fff;
@@ -204,6 +212,7 @@ html, body {
     padding: 5px;
     font-size: 1rem;
     border-radius: 5px;
+    text-align: right; /* Align text inside the input to the right */
 }
 
 .day-input:disabled {
@@ -256,7 +265,7 @@ html, body {
 
 /* Buttons */
 .pro-upload-button, .pro-continue-button {
-    background-color: rgba(241, 196, 15, 0.8); /* Updated to match the golden color */
+    background-color: rgba(241, 196, 15, 0.5); /* Reduced brightness of golden color */
     color: #000;
     border: none;
     padding: 10px 20px;
@@ -290,7 +299,6 @@ html, body {
     font-size: 0.9em;
     margin-bottom: 0.4em; /* Add some space between the error message and the input */
     font-weight: bold;
-    text-align: right; /* Align error messages to the right */
 }
 
 /* Keyframes for Shake Animation */
