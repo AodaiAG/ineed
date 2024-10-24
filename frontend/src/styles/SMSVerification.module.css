@@ -3,7 +3,7 @@
 /* Body */
 .smsVerification_body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #000000 50%, #000000 50%, rgba(241, 196, 15, 0.2) 70%);
+    background: linear-gradient(145deg, #000000 60%, #000000 60%, rgba(241, 196, 15, 0.15) 90%); /* Less bright with a subtle golden touch and adjusted down */
     color: #fff; /* White text color */
     margin: 0;
     padding: 0;
@@ -21,9 +21,9 @@
     align-items: center;
     text-align: center;
     width: 100%;
-    max-width: 400px; /* Maximum width for small screens */
+    max-width: 600px; /* Increase container width for larger screens */
     height: auto; /* Allow height to adjust based on content */
-    padding: 20px;
+    padding: 30px; /* Increase padding for better spacing */
     box-sizing: border-box;
     margin: 0 auto; /* Center the container horizontally */
 
@@ -31,10 +31,10 @@
     background-color: transparent;
 
     /* Add a border with slight transparency to blend with background */
-    border: 2px solid rgba(241, 196, 15, 0.2); /* Use a transparent golden border */
+    border: 2px solid rgba(241, 196, 15, 0.3); /* More vibrant transparent golden border */
     
     /* Add box shadow for blending effect */
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2); /* Soft shadow to merge edges with body */
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.3); /* Stronger golden shadow to merge edges with body */
 }
 
 /* Content */
@@ -148,7 +148,7 @@
 
 /* Button */
 .smsVerification_button {
-    background-color: rgba(241, 196, 15, 0.8); /* Golden background to match theme */
+    background-color: rgba(241, 196, 15, 0.85); /* More vibrant golden background */
     color: #000; /* Black text for contrast */
     border: none;
     padding: 10px 25px;
@@ -160,7 +160,7 @@
 }
 
 .smsVerification_button:hover {
-    background-color: #d4a30e;
+    background-color: #e1b500; /* Slightly more golden shade for hover effect */
     transform: scale(1.05);
 }
 

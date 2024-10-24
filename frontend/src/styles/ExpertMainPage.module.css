@@ -2,7 +2,7 @@
 
 /* Body */
 .expertPage_body {
-    background: linear-gradient(135deg, #000000 50%, #000000 50%, rgba(241, 196, 15, 0.2) 70%);
+    background: linear-gradient(135deg, #000000 60%, #000000 60%, rgba(241, 196, 15, 0.15) 90%); /* Subtle golden touch, less bright */
     color: #fff; /* White text color */
     font-family: Arial, sans-serif;
     display: flex;
@@ -28,10 +28,10 @@
     background-color: transparent;
     
     /* Add a border with slight transparency to blend with background */
-    border: 2px solid rgba(241, 196, 15, 0.2); /* Transparent golden border */
+    border: 2px solid rgba(241, 196, 15, 0.3); /* More vibrant golden border */
     
     /* Add box shadow for blending effect */
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2); /* Soft shadow to merge edges with body */
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.3); /* Stronger golden shadow to merge edges with body */
 }
 
 /* Language Icon */
@@ -83,7 +83,7 @@
 
 /* CTA Button */
 .expertPage_ctaButton {
-    background-color: rgba(241, 196, 15, 0.8); /* Golden background */
+    background-color: rgba(241, 196, 15, 0.85); /* More vibrant golden background */
     color: #000; /* Black text for contrast */
     font-size: 1.2rem; /* Adjusted font size */
     border: none;
@@ -95,6 +95,6 @@
 }
 
 .expertPage_ctaButton:hover {
-    background-color: #d4a30e; /* Slightly darker shade for hover effect */
+    background-color: #e1b500; /* Slightly more golden shade for hover effect */
     transform: scale(1.05);
 }
