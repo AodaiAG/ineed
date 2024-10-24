@@ -1,20 +1,38 @@
+/* ProfessionalRegistration.module.css */
+
+/* HTML & Body Reset */
+html, body {
+    height: 100%; /* Ensure both html and body take the full viewport height */
+    margin: 0; /* Remove any default margins */
+    padding: 0; /* Remove any default padding */
+    overflow-x: hidden; /* Prevent unwanted horizontal scrolling */
+    box-sizing: border-box;
+}
+
+/* Body */
 .pro-body {
     font-family: 'Arial', sans-serif;
-    background-color: #000;
-    color: #fff;
+    background: linear-gradient(135deg, #000000 75%, #000000 75%, rgba(241, 196, 15, 0.2) 90%);
+    color: #fff; /* White text color */
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    height: 100vh;
+    min-height: 100vh; /* Use min-height to allow the body to expand with content */
     direction: rtl; /* Right-to-Left for Hebrew */
-    overflow-y: auto; /* Scrollable for large forms */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
+    background-attachment: fixed; /* Fix background for cool effect */
 }
+
+/* Highlight Section */
 .pro-highlight {
     border: 2px solid #4caf50; /* Green color to indicate selection */
     background-color: #f0fff4; /* Light green background */
 }
+
 .pro-badge {
     background-color: #ff6347;
     color: white;
@@ -24,7 +42,9 @@
     margin-left: 8px;
     display: inline-block;
     vertical-align: middle;
-} 
+}
+
+/* Image Preview */
 .pro-image-preview {
     width: 300px; /* Set a fixed width */
     height: 300px; /* Set a fixed height to make it square */
@@ -36,12 +56,12 @@
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transitions for hover effects */
 }
 
-
 .pro-image-preview:hover {
     transform: scale(1.05); /* Slight zoom-in effect when hovering */
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Make the shadow stronger when hovering for a pop effect */
 }
 
+/* Container */
 .pro-container {
     display: flex;
     justify-content: center;
@@ -50,8 +70,11 @@
     width: 100%;
     max-width: 400px;
     padding: 20px;
+    margin-top: 20px; /* Allow some spacing from the top */
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
+/* Content */
 .pro-content {
     display: flex;
     flex-direction: column;
@@ -59,23 +82,30 @@
     width: 100%;
 }
 
+/* Form Title */
 .pro-form-title {
     font-size: 1.8rem;
     margin-bottom: 20px;
+    text-align: right; /* Keep the text aligned to the right */
 }
 
+/* Form Group */
 .pro-form-group {
     width: 100%;
     margin-bottom: 20px;
     text-align: right; /* Align labels and inputs properly for RTL */
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
+/* Label */
 .pro-label {
     display: block;
     margin-bottom: 5px;
     font-size: 1rem;
+    text-align: right; /* Keep labels aligned to the right */
 }
 
+/* Input */
 .pro-input {
     width: 100%;
     padding: 10px;
@@ -85,21 +115,25 @@
     background-color: #444;
     color: #fff;
     margin-bottom: 10px;
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
 .pro-input-readonly {
     background-color: #888; /* Gray background for read-only */
 }
 
+/* Checkbox Group */
 .pro-checkbox-group {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
+/* Dropdown */
 .pro-dropdown {
     width: 100%;
     margin-bottom: 10px;
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
 .pro-dropdown-toggle {
@@ -115,6 +149,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
 .pro-arrow {
@@ -130,15 +165,18 @@
     margin-top: 5px;
     flex-direction: column; /* Ensure children are displayed vertically */
     text-align: right; /* Align text for RTL */
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
+/* Sub Label */
 .pro-sub-label {
     margin-bottom: 10px;
     display: block;
     font-size: 1rem;
-    text-align: right;
+    text-align: right; /* Keep sub-labels aligned to the right */
 }
 
+/* Availability Group */
 .pro-availability-group {
     display: flex;
     flex-direction: column;
@@ -158,6 +196,7 @@
     color: #fff;
     margin-right: 5px; /* To add some spacing between checkbox and label */
 }
+
 .day-input {
     background-color: #444;
     color: #fff;
@@ -166,50 +205,58 @@
     font-size: 1rem;
     border-radius: 5px;
 }
+
 .day-input:disabled {
     background-color: #ccc; /* Light gray background for disabled input */
     color: #999; /* Light text color to show it's disabled */
     border: 1px solid #aaa; /* Add a subtle border to distinguish */
     cursor: not-allowed; /* Show that the input is disabled */
 }
+
 .day-checkbox {
     width: 20px;
     height: 20px;
     cursor: pointer;
 }
 
+/* Image Upload */
 .pro-image-upload {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
 }
+
 .pro-input-white {
     background-color: #fff;
     color: #000;
 }
 
+/* Disabled Input */
 .disabled-input {
     background-color: #d3d3d3; /* A light gray color to indicate it's disabled */
     cursor: not-allowed;
-	color: #666
+    color: #666;
 }
+
 .pro-input-disabled {
     background-color: #f0f0f0; /* Lighter gray to indicate the input is disabled */
     color: #999; /* Lighter text color */
     cursor: not-allowed; /* Cursor indicating it's not clickable */
     border: 1px solid #ccc; /* Light border to differentiate */
 }
+
+/* Separator */
 .pro-separator {
     width: 100%;
     height: 2px; /* Adjust thickness as needed */
     background-color: white;
     margin: 0px 0 10px 0; /* 10px above and 5px below */
-
 }
 
+/* Buttons */
 .pro-upload-button, .pro-continue-button {
-    background-color: #f1c40f;
+    background-color: rgba(241, 196, 15, 0.8); /* Updated to match the golden color */
     color: #000;
     border: none;
     padding: 10px 20px;
@@ -224,26 +271,29 @@
     background-color: #d4a30e;
 }
 
+/* Note */
 .pro-note {
     font-size: 0.8rem;
     color: #aaa;
     margin-top: 5px;
 }
 
+/* Error Input */
 .pro-input-error {
     border: 2px solid red;
     animation: shake 0.3s ease-in-out;
 }
 
-/* CSS for the error message - positioned above the input and in red */
+/* Error Message */
 .pro-error {
     color: red;
     font-size: 0.9em;
     margin-bottom: 0.4em; /* Add some space between the error message and the input */
     font-weight: bold;
+    text-align: right; /* Align error messages to the right */
 }
 
-/* Keyframes for the shake animation */
+/* Keyframes for Shake Animation */
 @keyframes shake {
     0%, 100% {
         transform: translateX(0);
@@ -256,15 +306,19 @@
     }
 }
 
+/* Loading Indicator */
 .loading-indicator {
     font-size: 1rem;
     color: #555;
     text-align: center;
 }
-/* Applying shake animation */
+
+/* Applying Shake Animation */
 .shake {
     animation: shake 0.3s ease-in-out;
 }
+
+/* Disabled Icon */
 .proIconDisabled {
     opacity: 0.5;
     pointer-events: none; /* Prevent click events when disabled */

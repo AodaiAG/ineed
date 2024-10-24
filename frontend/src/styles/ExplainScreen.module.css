@@ -3,7 +3,7 @@
 /* Base Styles (Mobile-First Approach) */
 .explainScreen_body {
     font-family: 'Arial', sans-serif;
-    background-color: #000; /* Black background */
+    background: linear-gradient(135deg, #000000 50%, #000000 50%, rgba(241, 196, 15, 0.2) 70%);
     color: #fff; /* White text color */
     margin: 0;
     padding: 0;
@@ -12,8 +12,10 @@
     align-items: center;
     height: 100vh;
     overflow: hidden; /* Hide overflow to remove extra gaps */
+    background-attachment: fixed; /* Fix background for cool effect */
 }
 
+/* Main Container */
 .explainScreen_container {
     text-align: center;
     width: 100%;
@@ -21,13 +23,21 @@
     padding: 10px;
     margin: 0; /* Remove extra margin around the container */
     box-sizing: border-box;
-    background-color: #000; /* Black background for the container */
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100%; /* Ensure container takes full height */
     justify-content: center; /* Center content vertically */
     overflow-x: hidden;
+
+    /* Remove container background to merge better with body */
+    background-color: transparent;
+
+    /* Add a border with slight transparency to blend with background */
+    border: 2px solid rgba(241, 196, 15, 0.2); /* Use a transparent golden border */
+    
+    /* Add box shadow for blending effect */
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2); /* Soft shadow to merge edges with body */
 }
 
 /* Greeting Section */
@@ -59,7 +69,7 @@
     content: "•";
     position: absolute;
     right: 0;
-    color: #f1c40f;
+    color: rgba(241, 196, 15, 0.8); /* Golden color to match theme */
 }
 
 /* Footer Note */
@@ -77,12 +87,13 @@
 .explainScreen_characterImage {
     width: 120px;
     height: auto;
+    box-shadow: none; /* Remove black shadow to blend image with the background */
 }
 
 /* Continue Button */
 .explainScreen_continueButton {
-    background-color: #f1c40f;
-    color: #000;
+    background-color: rgba(241, 196, 15, 0.8); /* Golden background */
+    color: #000; /* Black text for contrast */
     border: none;
     padding: 10px 100px; /* Adjusted padding for a more compact look */
     font-size: 1rem;
@@ -94,14 +105,14 @@
 }
 
 .explainScreen_continueButton:hover {
-    background-color: #d4a30e;
+    background-color: #d4a30e; /* Slightly darker shade for hover effect */
     transform: scale(1.05);
 }
 
 /* Responsive styles */
 @media (min-width: 600px) {
     .explainScreen_container {
-        max-width: 400px; /* Keep max-width consistent for readability */
+        max-width: 500px; /* Increase container width for larger screens */
     }
 
     .explainScreen_continueButton {
