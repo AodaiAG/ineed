@@ -30,13 +30,13 @@
 }
 
 .expertPage_mainTitle {
-    font-size: 2.8em;
+    font-size: 3em;
     font-weight: bold;
-    margin-top: 40px; /* Ensure enough spacing below the language icon */
+    margin-top: 30px; /* Ensure enough spacing below the language icon */
 }
 
 .expertPage_subTitle {
-    font-size: 1.5em;
+    font-size: 1.7em;
     margin-bottom: 20px;
 }
 
@@ -61,7 +61,7 @@
     color: #000;
     font-size: 1.2em;
     border: none;
-    padding: 10px 70px; /* Make the button wider */
+    padding: 10px 100px; /* Make the button wider */
     cursor: pointer;
     border-radius: 5px;
     margin-right: 15px; /* Adjust to move the button slightly */
