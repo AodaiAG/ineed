@@ -82,7 +82,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    background-color: #f1c40f; /* Yellow background */
+    background-color: rgba(241, 196, 15, 0.8); /* Golden background */
     border-radius: 8px;
     padding: 5px;
 }
@@ -133,7 +133,7 @@
 
 /* Terms Link */
 .phoneScreen_termsLink {
-    color: #f1c40f; /* Yellow color for emphasis */
+    color: rgba(241, 196, 15, 0.8); /* Golden color for emphasis */
     text-decoration: none;
     font-weight: bold;
 }
@@ -152,7 +152,7 @@
 
 /* Enter Button */
 .phoneScreen_enterButton {
-    background-color: #f1c40f; /* Yellow background */
+    background-color: rgba(241, 196, 15, 0.8); /* Golden background */
     color: #000; /* Black text for contrast */
     border: none;
     padding: 12px 100px; /* Adjust padding for better balance */
