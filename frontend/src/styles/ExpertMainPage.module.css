@@ -98,7 +98,8 @@
     font-size: 1.8rem; /* Adjusted font size */
     font-weight: 600;
     border: none;
-    padding: 10px 100px; /* Make the button wider */
+    padding: 10px;
+    width: 100%;    
     cursor: pointer;
     border-radius: 14px;
     margin-top: 28px; /* Add margin for spacing */
