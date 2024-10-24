@@ -102,7 +102,6 @@
     width: 100%;    
     cursor: pointer;
     border-radius: 14px;
-    margin-top: 28px; /* Add margin for spacing */
     transition: background-color 0.3s, transform 0.2s;
 }
 

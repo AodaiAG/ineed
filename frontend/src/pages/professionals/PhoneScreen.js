@@ -1,128 +1,158 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
-import styles from '../../styles/PhoneScreen.module.css'; // Use module CSS for styles
-import 'remixicon/fonts/remixicon.css'; // Include Remixicon for the arrow icon
-import { sendSms } from '../../utils/generalUtils'; // Import sendSms from utils
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
+import styles from "../../styles/PhoneScreen.module.css";
+import "remixicon/fonts/remixicon.css";
+import { sendSms } from "../../utils/generalUtils";
 
 function PhoneScreen() {
-    const navigate = useNavigate();
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [countryCode, setCountryCode] = useState('052');
-    const { translation } = useLanguage(); // Using the translation from the context
+  const navigate = useNavigate();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [countryCode, setCountryCode] = useState("052");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { translation } = useLanguage();
 
-    useEffect(() => {
-        // Add a unique class to the body element for PhoneScreen
-        document.body.classList.add(styles.phoneScreen_body);
+  useEffect(() => {
+    document.body.classList.add(styles.phoneScreen_body);
+    return () => document.body.classList.remove(styles.phoneScreen_body);
+  }, []);
 
-        // Clean up by removing the unique class when the component is unmounted
-        return () => {
-            document.body.classList.remove(styles.phoneScreen_body);
-        };
-    }, []);
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) setPhoneNumber(value);
+  };
 
-    const handlePhoneNumberChange = (e) => {
-        const value = e.target.value;
-        if (/^\d*$/.test(value)) {
-            setPhoneNumber(value);
-        }
-    };
+  const handleCountryCodeChange = (code) => {
+    setCountryCode(code);
+    setIsDropdownOpen(false);
+  };
 
-    const handleCountryCodeChange = (e) => {
-        setCountryCode(e.target.value);
-    };
+  const handleEnterClick = async () => {
+    if (phoneNumber.trim() !== "") {
+      const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+      sessionStorage.setItem("professionalPhoneNumber", fullPhoneNumber);
 
-    const handleEnterClick = async () => {
-        if (phoneNumber.trim() !== '') {
-            const fullPhoneNumber = `${countryCode}${phoneNumber}`;
-            sessionStorage.setItem('professionalPhoneNumber', fullPhoneNumber);
+      try {
+        const verificationCode = Math.floor(1000 + Math.random() * 9000);
+        const message = `${translation.verificationCodeMessage} ${verificationCode}`;
 
-            try {
-                const verificationCode = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit code
-                const message = `${translation.verificationCodeMessage} ${verificationCode}`;
+        sendSms(fullPhoneNumber, message);
+        sessionStorage.setItem("smsVerificationCode", verificationCode);
 
-                sendSms(fullPhoneNumber, message);
-                sessionStorage.setItem('smsVerificationCode', verificationCode);
-
-                navigate('/pro/sms-verification'); // Redirect to the SMS verification page
-            } catch (error) {
-                console.error('Failed to send SMS:', error);
-                alert(translation.failedToSendSmsMessage);
-            }
-        } else {
-            alert(translation.enterPhoneNumberMessage);
-        }
-    };
-
-    if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
+        navigate("/pro/sms-verification");
+      } catch (error) {
+        console.error("Failed to send SMS:", error);
+        alert(translation.failedToSendSmsMessage);
+      }
+    } else {
+      alert(translation.enterPhoneNumberMessage);
     }
+  };
 
-    return (
-        <div className={styles.phoneScreen_container}>
-            <div className={styles.phoneScreen_content}>
-                <h1 className={styles.phoneScreen_mainTitle}>{translation.mainTitle}</h1>
-                <p className={styles.phoneScreen_subtitle}>{translation.subtitle}</p>
-                <h2 className={styles.phoneScreen_enterTitle}>{translation.enterTitle}</h2>
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
-                <div className={styles.phoneScreen_phoneInputSection}>
-                    <label htmlFor="country-code" className={styles.phoneScreen_hiddenLabel}>
-                        {translation.countryCodeLabel}
-                    </label>
-                    <div className={styles.phoneScreen_countryCode}>
-                        <select
-                            id="country-code"
-                            value={countryCode}
-                            onChange={handleCountryCodeChange}
-                            className={styles.phoneScreen_select}
-                        >
-                            <option value="050">050</option>
-                            <option value="052">052</option>
-                            <option value="053">053</option>
-                            <option value="054">054</option>
-                            <option value="055">055</option>
-                            <option value="056">056</option>
-                            <option value="057">057</option>
-                            <option value="058">058</option>
-                            <option value="059">059</option>
-                        </select>
-                        <div className={`${styles.phoneScreen_arrowBackground}`}>
-                            <i className="ri-arrow-down-s-fill dropdown-icon"></i>
-                        </div>
-                    </div>
+  const countryCodes = [
+    "050",
+    "052",
+    "053",
+    "054",
+    "055",
+    "056",
+    "057",
+    "058",
+    "059",
+  ];
 
-                    <label htmlFor="phone-number" className={styles.phoneScreen_hiddenLabel}>
-                        {translation.phoneNumberLabel}
-                    </label>
-                    <input
-                        type="tel"
-                        id="phone-number"
-                        className={styles.phoneScreen_phoneNumber}
-                        placeholder={translation.phoneNumberPlaceholder}
-                        value={phoneNumber}
-                        maxLength="7"
-                        pattern="[0-9]*"
-                        onChange={handlePhoneNumberChange}
-                    />
-                </div>
+  if (!translation) return <div>Loading...</div>;
 
-                <p className={styles.phoneScreen_termsText}>
-                    {translation.termsText}{' '}
-                    <a href="#" className={styles.phoneScreen_termsLink}>
-                        {translation.termsLink}
-                    </a>
-                </p>
+  return (
+    <div className={styles.phoneScreen_container}>
+      
+        <section className={styles.phoneScreen_mainSection}>
+          <h1 className={styles.phoneScreen_mainTitle}>
+            {translation.mainTitle}
+          </h1>
+          <p className={styles.phoneScreen_subtitle}>{translation.subtitle}</p>
+          <h2 className={styles.phoneScreen_enterTitle}>
+            {translation.enterTitle}
+          </h2>
 
-                <div className={styles.phoneScreen_illustration}>
-                    <img src="/images/Prof/worker.png" alt={translation.workerImageAlt} />
-                </div>
+          <div className={styles.phoneScreen_phoneInputSection}>
+            <label
+              htmlFor="country-code"
+              className={styles.phoneScreen_hiddenLabel}
+            >
+              {translation.countryCodeLabel}
+            </label>
+            <div className={styles.phoneScreen_customDropdown}>
+              <div
+                className={styles.phoneScreen_countryCode}
+                onClick={toggleDropdown}
+              >
+                <span>{countryCode}</span>
+                <i
+                  className={`ri-arrow-down-s-fill ${styles.phoneScreen_dropdownIcon}`}
+                />
+              </div>
 
-                <button className={styles.phoneScreen_enterButton} onClick={handleEnterClick}>
-                    {translation.enterButton}
-                </button>
+              {isDropdownOpen && (
+                <ul className={styles.phoneScreen_dropdownMenu}>
+                  {countryCodes.map((code) => (
+                    <li
+                      key={code}
+                      onClick={() => handleCountryCodeChange(code)}
+                      className={styles.phoneScreen_dropdownItem}
+                    >
+                      {code}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
-        </div>
-    );
+
+            <label
+              htmlFor="phone-number"
+              className={styles.phoneScreen_hiddenLabel}
+            >
+              {translation.phoneNumberLabel}
+            </label>
+            <input
+              type="tel"
+              id="phone-number"
+              className={styles.phoneScreen_phoneNumber}
+              placeholder={translation.phoneNumberPlaceholder}
+              value={phoneNumber}
+              maxLength="7"
+              pattern="[0-9]*"
+              onChange={handlePhoneNumberChange}
+            />
+          </div>
+
+          <p className={styles.phoneScreen_termsText}>
+            {translation.termsText}{" "}
+            <a href="#" className={styles.phoneScreen_termsLink}>
+              {translation.termsLink}
+            </a>
+          </p>
+        </section>
+
+        <section className={styles.phoneScreen_illustrationSection}>
+          <div className={styles.phoneScreen_illustration}>
+            <img
+              src="/images/Prof/worker.png"
+              alt={translation.workerImageAlt}
+            />
+          </div>
+
+          <button
+            className={styles.phoneScreen_enterButton}
+            onClick={handleEnterClick}
+          >
+            {translation.enterButton}
+          </button>
+        </section>
+    </div>
+  );
 }
 
 export default PhoneScreen;

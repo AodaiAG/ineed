@@ -1,9 +1,10 @@
 /* SMSVerification.module.css */
 
+
 /* Body */
 .smsVerification_body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(145deg, #000000 60%, #000000 60%, rgba(241, 196, 15, 0.15) 90%); /* Less bright with a subtle golden touch and adjusted down */
+    background: black;
     color: #fff; /* White text color */
     margin: 0;
     padding: 0;
@@ -25,16 +26,7 @@
     height: auto; /* Allow height to adjust based on content */
     padding: 30px; /* Increase padding for better spacing */
     box-sizing: border-box;
-    margin: 0 auto; /* Center the container horizontally */
-
-    /* Remove container background to merge better with body */
-    background-color: transparent;
-
-    /* Add a border with slight transparency to blend with background */
-    border: 2px solid rgba(241, 196, 15, 0.3); /* More vibrant transparent golden border */
-    
-    /* Add box shadow for blending effect */
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.3); /* Stronger golden shadow to merge edges with body */
+  
 }
 
 /* Content */
@@ -48,9 +40,9 @@
 
 /* Validation Title */
 .smsVerification_validationTitle {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 20px;
+    font-size:3rem;
+    font-weight: 100;
+    margin-bottom: 30px;
     text-align: center;
 }
 
@@ -58,6 +50,8 @@
 .smsVerification_phoneField {
     width: 100%;
     margin-bottom: 10px;
+    text-align:  right;
+    direction: rtl;
 }
 
 /* Phone Label */
@@ -74,7 +68,7 @@
     font-size: 1rem;
     border-radius: 8px;
     border: none;
-    background-color: #444; /* Darker background to contrast with text */
+    background-color: #979797; /* Darker background to contrast with text */
     color: #fff;
     text-align: center;
 }
@@ -142,25 +136,29 @@
 .smsVerification_actionButtons {
     display: flex;
     gap: 20px;
+    width: 100%;
     margin-top: 20px;
     justify-content: center;
 }
 
 /* Button */
 .smsVerification_button {
-    background-color: rgba(241, 196, 15, 0.85); /* More vibrant golden background */
-    color: #000; /* Black text for contrast */
+    background-color: #fdbe00; /* More vibrant golden background */
+    color: white; /* Black text for contrast */
+    font-size: 1.8rem; /* Adjusted font size */
+    font-weight: 600;
     border: none;
-    padding: 10px 25px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 10px;
+    padding: 10px; /* Make the button wider */
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
+    border-radius: 14px;
+    margin: 5px auto;
+    width: 100%;
+    transition: background-color 0.3s;
+    max-width: 300px;
+
 }
 
 .smsVerification_button:hover {
-    background-color: #e1b500; /* Slightly more golden shade for hover effect */
     transform: scale(1.05);
 }
 
