@@ -68,7 +68,7 @@ html, body {
     align-items: center;
     text-align: center;
     width: 100%;
-    max-width: 400px;
+    
     padding: 20px;
     margin-top: 20px; /* Allow some spacing from the top */
     box-sizing: border-box; /* Ensure padding is included in total width/height */
