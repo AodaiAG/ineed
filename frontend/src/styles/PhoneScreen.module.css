@@ -29,13 +29,9 @@
     margin: 0 auto; /* Center the container horizontally */
 
     /* Remove container background to merge better with body */
-    background-color: transparent; 
-    
-    /* Add a border with slight transparency to blend with background */
-    border: 2px solid rgba(241, 196, 15, 0.2); /* Use a transparent golden border */
-    
-    /* Add box shadow for blending effect */
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2); /* Soft shadow to merge edges with body */
+    background-color: transparent;
+
+    /* Removed border and box shadow to merge seamlessly */
 }
 
 /* Content */
