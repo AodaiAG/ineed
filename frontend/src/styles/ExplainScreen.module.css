@@ -1,5 +1,6 @@
 /* ExplainScreen.module.css */
 
+/* Base Styles (Mobile-First Approach) */
 .explainScreen_body {
     font-family: 'Arial', sans-serif;
     background-color: #000; /* Black background */
@@ -9,25 +10,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden; /* Hide overflow to remove extra gaps */
 }
 
 .explainScreen_container {
     text-align: center;
-    max-width: 95%;
     width: 100%;
+    max-width: 400px; /* Set a maximum width for better readability */
     padding: 10px;
+    margin: 0; /* Remove extra margin around the container */
     box-sizing: border-box;
-    margin: 0; /* Remove auto margin */
     background-color: #000; /* Black background for the container */
-    color: #fff; /* White text color */
-    font-family: 'Arial', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%; /* Set height to 100% */
-    min-height: 100vh; /* Ensure it takes full viewport height */
-    direction: rtl; /* Right-to-Left for Hebrew */
+    height: 100%; /* Ensure container takes full height */
+    justify-content: center; /* Center content vertically */
     overflow-x: hidden;
 }
 
@@ -72,7 +71,7 @@
 
 /* Character Image */
 .explainScreen_characterImageContainer {
-    margin-bottom: 20px; /* Reduce margin for better balance */
+    margin-bottom: 10px; /* Reduced margin to remove excess gap */
 }
 
 .explainScreen_characterImage {
@@ -85,13 +84,13 @@
     background-color: #f1c40f;
     color: #000;
     border: none;
-    padding: 10px 100px;
+    padding: 10px 50px; /* Adjusted padding for a more compact look */
     font-size: 1rem;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    margin: 0; /* Ensure there is no margin around the button */
+    margin-top: 10px; /* Reduced margin to prevent extra space below */
 }
 
 .explainScreen_continueButton:hover {
@@ -102,11 +101,11 @@
 /* Responsive styles */
 @media (min-width: 600px) {
     .explainScreen_container {
-        max-width: 400px;
+        max-width: 400px; /* Keep max-width consistent for readability */
     }
 
     .explainScreen_continueButton {
-        padding: 15px 100px;
+        padding: 15px 80px; /* Adjusted padding for larger devices */
         font-size: 1.2rem;
     }
 }
