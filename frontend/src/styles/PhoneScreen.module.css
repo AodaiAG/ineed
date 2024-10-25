@@ -127,7 +127,16 @@
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black for better visibility */
   border-radius: 3px;
   pointer-events: none; /* Prevent interaction with the indicator */
+  opacity: 1;
   animation: scrollHint 1.5s infinite alternate; /* Animation to draw attention */
+  transition: opacity 0.3s;
+}
+
+.phoneScreen_dropdownMenu:hover::after,
+.phoneScreen_dropdownMenu:focus::after,
+.phoneScreen_dropdownMenu:active::after,
+.phoneScreen_dropdownMenu:scroll::after {
+  opacity: 0; /* Hide indicator when user interacts with dropdown */
 }
 
 /* Keyframes for scroll indicator animation */
