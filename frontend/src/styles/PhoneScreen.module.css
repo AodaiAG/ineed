@@ -1,3 +1,5 @@
+/* PhoneScreen.module.css */
+
 * {
   margin: 0;
   padding: 0;
@@ -20,7 +22,7 @@
 }
 
 /* Content */
-.phoneScreen_container{
+.phoneScreen_container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -94,6 +96,23 @@
   z-index: 10;
   max-height: 150px; /* Max height with scrolling */
   overflow-y: auto;
+
+  /* Custom Scrollbar Styles */
+  scrollbar-width: 19px; /* Increased width of the scrollbar for better visibility */
+  scrollbar-color: #fdbe00 black;
+}
+
+.phoneScreen_dropdownMenu::-webkit-scrollbar {
+  width: 12px; /* Increased width of the scrollbar */
+}
+
+.phoneScreen_dropdownMenu::-webkit-scrollbar-thumb {
+  background-color: #fdbe00; /* Yellow scrollbar thumb */
+  border-radius: 10px; /* Rounded corners for the thumb */
+}
+
+.phoneScreen_dropdownMenu::-webkit-scrollbar-track {
+  background: black; /* Track background color */
 }
 
 /* Dropdown Item */
@@ -106,12 +125,7 @@
 
 /* Dropdown Item Hover */
 .phoneScreen_dropdownItem:hover {
-  background-color: rgba(
-    241,
-    196,
-    15,
-    0.75
-  ); /* Slightly darker shade on hover */
+  background-color: rgba(241, 196, 15, 0.75); /* Slightly darker shade on hover */
 }
 
 /* Phone Number Input */
@@ -151,10 +165,11 @@
   font-weight: bold;
 }
 
+/* Illustration Section */
 .phoneScreen_illustrationSection {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* Center the illustration section */
   width: 100%;
   max-width: 300px;
   margin-top: 40px;
@@ -162,11 +177,13 @@
 
 .phoneScreen_illustration img {
   width: 165px;
+  margin: 0 auto; /* Center the image */
 }
 
+/* Enter Button */
 .phoneScreen_enterButton {
   background-color: #fdbe00; /* More vibrant golden background */
-  color: white; /* Black text for contrast */
+  color: white; /* White text for contrast */
   font-size: 1.8rem; /* Adjusted font size */
   font-weight: 600;
   border: none;
@@ -184,4 +201,3 @@
 }
 
 /* Responsive Styles */
-
