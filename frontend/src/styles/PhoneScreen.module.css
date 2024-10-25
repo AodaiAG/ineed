@@ -118,14 +118,15 @@
 /* Scroll Indicators */
 .phoneScreen_dropdownMenu::after {
   content: "";
-  position: absolute;
-  bottom: 10px; /* Make the indicator more visible */
+  position: sticky;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 30px;
   height: 6px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 3px;
+  pointer-events: none; /* Prevent interaction with the indicator */
 }
 
 /* Dropdown Item */
