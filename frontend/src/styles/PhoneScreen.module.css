@@ -96,23 +96,6 @@
   z-index: 10;
   max-height: 150px; /* Max height with scrolling */
   overflow-y: auto;
-
-  /* Custom Scrollbar Styles */
-  scrollbar-width: 19px; /* Increased width of the scrollbar for better visibility */
-  scrollbar-color: #fdbe00 black;
-}
-
-.phoneScreen_dropdownMenu::-webkit-scrollbar {
-  width: 12px; /* Increased width of the scrollbar */
-}
-
-.phoneScreen_dropdownMenu::-webkit-scrollbar-thumb {
-  background-color: #fdbe00; /* Yellow scrollbar thumb */
-  border-radius: 10px; /* Rounded corners for the thumb */
-}
-
-.phoneScreen_dropdownMenu::-webkit-scrollbar-track {
-  background: black; /* Track background color */
 }
 
 /* Scroll Indicators */
@@ -134,8 +117,7 @@
 
 .phoneScreen_dropdownMenu:hover::after,
 .phoneScreen_dropdownMenu:focus::after,
-.phoneScreen_dropdownMenu:active::after,
-.phoneScreen_dropdownMenu:scroll::after {
+.phoneScreen_dropdownMenu:active::after {
   opacity: 0; /* Hide indicator when user interacts with dropdown */
 }
 
