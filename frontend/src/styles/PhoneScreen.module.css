@@ -118,15 +118,26 @@
 /* Scroll Indicators */
 .phoneScreen_dropdownMenu::after {
   content: "";
-  position: sticky;
-  bottom: 0;
+  position: absolute;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   width: 30px;
   height: 6px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black for better visibility */
   border-radius: 3px;
   pointer-events: none; /* Prevent interaction with the indicator */
+  animation: scrollHint 1.5s infinite alternate; /* Animation to draw attention */
+}
+
+/* Keyframes for scroll indicator animation */
+@keyframes scrollHint {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    transform: translateX(-50%) translateY(5px); /* Move down slightly */
+  }
 }
 
 /* Dropdown Item */
