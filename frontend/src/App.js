@@ -35,7 +35,7 @@ function App() {
                     <Route path="/location" element={<LocationPage />} />
                     <Route path="/information" element={<InfoPage />} />
                     <Route path="/thankyou" element={<ThankYouPage />} />
-
+//
                     {/* Professional Side Routes */}
                     <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />
                     <Route path="/pro/sms-verification" element={<SMSVerification />} />
