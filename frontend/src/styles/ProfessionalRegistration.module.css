@@ -2,7 +2,6 @@
 
 /* HTML & Body Reset */
 
-
 /* Body */
 .pro-body {
     background: black;
@@ -11,6 +10,8 @@
     display: flex;
     justify-content: center;
     box-sizing: border-box; /* Ensure padding is included in total width/height */
+	 direction: rtl; /* Right-to-Left for Hebrew */
+
 }
 
 /* Highlight Section */
@@ -49,15 +50,15 @@
 
 /* Container */
 .pro-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 500px;
-  width: 100%;
-  padding: 10.5px;
-  margin: 0 auto;
-  background-color: transparent;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px;
+    width: 100%;
+    padding: 10.5px;
+    margin: 0 auto;
+    background-color: transparent;
+    position: relative;
 }
 
 /* Content */
@@ -118,6 +119,22 @@
     flex-wrap: wrap;
     gap: 10px;
     justify-content: flex-end;
+    align-items: center;
+}
+
+.pro-checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pro-checkbox-group input[type="checkbox"] {
+    order: 2; /* Set order for checkbox to appear after the text */
+}
+
+.pro-checkbox-group label span {
+    order: 1; /* Place text before checkbox */
+    margin-right: 8px; /* Add spacing between text and checkbox */
 }
 
 /* Dropdown */
@@ -140,8 +157,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-sizing: border-box;
-	flex-direction: row-reverse;
 }
 
 .pro-arrow {
@@ -156,7 +171,7 @@
     border-radius: 8px;
     margin-top: 5px;
     flex-direction: column;
-    text-align: right ;
+    text-align: right;
     box-sizing: border-box;
 }
 
@@ -174,7 +189,7 @@
     flex-direction: column;
     gap: 15px;
     margin-top: 10px;
-    align-items: center; /* Center all items horizontally */
+    align-items: center;
     justify-content: center;
 }
 
@@ -190,9 +205,8 @@
     font-weight: bold;
     color: #fff;
     margin-left: 5px;
-    text-align: center; /* Center-align label text */
+    text-align: center;
 }
-
 
 /* Day Input */
 .day-input {
@@ -254,8 +268,9 @@
 }
 
 /* Buttons */
-.pro-upload-button, .pro-continue-button {
-  background-color: #fdbe00; /* Vibrant golden background */
+.pro-upload-button,
+.pro-continue-button {
+    background-color: #fdbe00;
     color: #000;
     border: none;
     padding: 10px 20px;
@@ -263,9 +278,11 @@
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;}
+    transition: background-color 0.3s, transform 0.3s;
+}
 
-.pro-upload-button:hover, .pro-continue-button:hover {
+.pro-upload-button:hover,
+.pro-continue-button:hover {
     background-color: #d4a30e;
 }
 
@@ -292,13 +309,16 @@
 
 /* Keyframes for Shake Animation */
 @keyframes shake {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateX(0);
     }
-    20%, 60% {
+    20%,
+    60% {
         transform: translateX(-10px);
     }
-    40%, 80% {
+    40%,
+    80% {
         transform: translateX(10px);
     }
 }
