@@ -13,6 +13,7 @@
     align-items: center;
     height: 100vh;
     background-attachment: fixed; /* Fix background for cool effect */
+		    overflow: hidden; /* Prevent scroll if extra space appears */
 }
 
 /* Container */
