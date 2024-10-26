@@ -10,7 +10,7 @@
     display: flex;
     justify-content: center;
     box-sizing: border-box;
-    direction: rtl; /* Right-to-Left for Hebrew */
+
 }
 
 /* Highlight Section */
