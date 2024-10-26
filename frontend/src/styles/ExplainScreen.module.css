@@ -28,6 +28,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  		    overflow: hidden; /* Prevent scroll if extra space appears */
+
 }
 
 /* Greeting Section */

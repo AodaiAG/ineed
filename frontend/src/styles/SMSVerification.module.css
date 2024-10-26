@@ -27,6 +27,8 @@
     height: auto; /* Allow height to adjust based on content */
     padding: 30px; /* Increase padding for better spacing */
     box-sizing: border-box;
+	  	    overflow: hidden; /* Prevent scroll if extra space appears */
+
   
 }
 

@@ -16,7 +16,6 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-	    overflow: hidden; /* Prevent scroll if extra space appears */
 
 }
 
@@ -32,6 +31,8 @@
   background-color: transparent;
   position: relative;
   min-height: 100vh; /* Ensure it takes the full viewport height */
+  	    overflow: hidden; /* Prevent scroll if extra space appears */
+
 }
 
 /* Language Switch */
