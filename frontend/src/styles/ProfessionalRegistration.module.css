@@ -141,6 +141,7 @@
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+	flex-direction: row-reverse;
 }
 
 .pro-arrow {
@@ -155,7 +156,7 @@
     border-radius: 8px;
     margin-top: 5px;
     flex-direction: column;
-    text-align: right;
+    text-align: right ;
     box-sizing: border-box;
 }
 
