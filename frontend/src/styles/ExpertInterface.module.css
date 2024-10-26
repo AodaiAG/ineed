@@ -10,12 +10,12 @@
 /* Body */
 .expertInterface_body {
     background: black;
-    color: #fff; /* White text color */
+    color: #fff;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box; /* Ensure padding is included in total width/height */
+    box-sizing: border-box;
 }
 
 /* Container */
@@ -29,13 +29,14 @@
   margin: 0 auto;
   background-color: transparent;
   position: relative;
+  min-height: 100vh; /* Ensure it takes the full viewport height */
 }
 
 /* Language Switch */
 .expertInterface_languageSwitch {
     position: absolute;
-    top: 18px; /* Place it slightly above the title */
-    right: 20px; /* Move it to be aligned slightly to the right */
+    top: 18px;
+    right: 20px;
 }
 
 .expertInterface_languageSwitch img {
@@ -50,45 +51,50 @@
     opacity: 0.8;
 }
 
-
 /* Main Title */
 .expertInterface_mainTitle {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 500;
   margin: 10px 0;
+  max-width: 100%;
+  text-align: center;
 }
 
 /* Subtitle */
 .expertInterface_subTitle {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 500;
   margin: 5px 0 20px;
+  max-width: 100%;
+  text-align: center;
 }
 
 /* Image Container */
 .expertInterface_imageContainer {
     margin: 15px 0;
     width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 /* Worker Image */
 .expertInterface_workerImage {
     width: 100%;
     max-width: 250px;
-    margin:auto;
+    margin: auto;
 }
 
 /* Message Text */
 .expertInterface_messageText {
   font-size: 1.2rem;
-  margin: 10px 0;
+  margin: 10px 30px;
   text-align: center;
 }
 
 /* Settings Button */
 .expertInterface_settingsButton {
-  background-color: #fdbe00; /* Vibrant golden background */
-  color: #000; /* Black text for contrast */
+  background-color: #fdbe00;
+  color: #000;
   font-size: 1.8rem;
   font-weight: 600;
   padding: 10px;
@@ -101,7 +107,15 @@
   margin: 17px auto;
 }
 
+/* Button Container to control spacing */
+.expertInterface_buttonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px; /* Control space below the button */
+}
+
 .expertInterface_settingsButton:hover {
-  background-color: #e1b500; /* Slightly darker golden on hover */
+  background-color: #e1b500;
   transform: scale(1.05);
 }
