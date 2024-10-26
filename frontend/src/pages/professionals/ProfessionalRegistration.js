@@ -14,6 +14,7 @@ import LanguagePreferences from '../../components/professionals/LanguagePreferen
 import { useLanguage } from '../../contexts/LanguageContext';
 import Cookies from 'js-cookie'; // Import js-cookie
 
+import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 
 function ProfessionalRegistration() {
     
@@ -267,7 +268,9 @@ function ProfessionalRegistration() {
 
     return (
         <div className={styles['pro-body']}>
-            <div className={styles['pro-container']}>
+            <div className={styles['pro-container']}
+             style={{ direction: getDirection(selectedLanguage) }}
+            >
                 <div className={styles['pro-content']}>
                     {/* Form Title */}
                     <h1 className={styles['pro-form-title']}>{translation?.aboutYouLabel}</h1>

@@ -10,6 +10,7 @@ import AvailabilityForm from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 
 
 
@@ -310,7 +311,9 @@ function EditProfessionalSettings()
 
     return (
         <div className={styles['pro-body']}>
-            <div className={styles['pro-container']}>
+            <div className={styles['pro-container']}
+             style={{ direction: getDirection(selectedLanguage) }}
+            >
                 <div className={styles['pro-content']}>
                     {/* Form Title */}
                     <h1 className={styles['pro-form-title']}>{translation.editTitle}</h1>

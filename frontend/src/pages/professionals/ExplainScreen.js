@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import styles from "../../styles/ExplainScreen.module.css";
+import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 
 function ExplainScreen() {
   const navigate = useNavigate();
-  const { translation } = useLanguage();
+  const { translation,language } = useLanguage();
 
   useEffect(() => {
     // Add a unique class to the body element for ExplainScreen
@@ -27,7 +28,9 @@ function ExplainScreen() {
   }
 
   return (
-    <div className={styles.explainScreen_container}>
+    <div className={styles.explainScreen_container}
+    style={{ direction: getDirection(language) }}
+    >
       <div>
         {/* Greeting Text */}
         <div className={styles.explainScreen_greetingSection}>
