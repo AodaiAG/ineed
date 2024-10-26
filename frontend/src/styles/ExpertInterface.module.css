@@ -67,7 +67,7 @@
 
 /* Image Container */
 .expertInterface_imageContainer {
-    margin: 20px 0;
+    margin: 15px 0;
     width: 100%;
 }
 
@@ -98,7 +98,7 @@
   transition: background-color 0.3s, transform 0.3s;
   width: 100%;
   max-width: 300px;
-  margin: 25px auto;
+  margin: 17px auto;
 }
 
 .expertInterface_settingsButton:hover {
