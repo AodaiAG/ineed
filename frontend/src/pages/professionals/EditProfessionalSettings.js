@@ -337,6 +337,7 @@ function EditProfessionalSettings()
                         errors={errors} // Pass error messages to PersonalInfoForm
                         refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef,locationRef }} // Pass refs to PersonalInfoForm
                     />
+                        <div className={styles["pro-separator"]}></div>
 
                     <JobFieldsSelection
                         mainProfessions={mainProfessions}
@@ -357,6 +358,8 @@ function EditProfessionalSettings()
                         ref={jobFieldsRef||'error'} // Attach the ref here
                     />
 
+                        <div className={styles["pro-separator"]}></div>
+
                     <WorkAreas
                         groupedLocations={groupedLocations}
                         toggleDropdown={toggleDropdown}
@@ -367,6 +370,7 @@ function EditProfessionalSettings()
                         error={errors.workArea} // Pass the work area error message
                         ref={workAreaRef} // Attach the ref to this component
                     />
+                        <div className={styles["pro-separator"]}></div>
 
                     <AvailabilityForm
                         dayAvailability={dayAvailability}
@@ -376,6 +380,9 @@ function EditProfessionalSettings()
                         error={errors.dayAvailability}
                         ref={dayAvailabilityRef}
                     />
+
+<div className={styles["pro-separator"]}></div>
+
                 <LanguagePreferences
                  languages={languages} 
                  setLanguages={setLanguages}

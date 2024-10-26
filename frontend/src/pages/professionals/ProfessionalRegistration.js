@@ -295,6 +295,7 @@ function ProfessionalRegistration() {
                         errors={errors} // Pass error messages to PersonalInfoForm
                         refs={{ fullNameRef, emailRef, websiteRef, jobFieldsRef, workAreaRef, dayAvailabilityRef, languageRef,locationRef }} // Pass refs to PersonalInfoForm
                     />
+                        <div className={styles["pro-separator"]}></div>
 
                     {/* Job Fields Section */}
                     <JobFieldsSelection
@@ -315,6 +316,8 @@ function ProfessionalRegistration() {
                         error={errors.jobFields}
                         ref={jobFieldsRef||'error'} // Attach the ref here
                     />
+                                            <div className={styles["pro-separator"]}></div>
+
                     {/* Work Areas Section */}
                     <WorkAreas
                         groupedLocations={groupedLocations}
@@ -326,6 +329,7 @@ function ProfessionalRegistration() {
                         ref={workAreaRef} // Attach the ref to this component
 
                     />
+                        <div className={styles["pro-separator"]}></div>
 
                     {/* Availability Times Section */}
                     <AvailabilityTimes
@@ -336,6 +340,7 @@ function ProfessionalRegistration() {
                         error={errors.dayAvailability}
                         ref={dayAvailabilityRef}
                     />
+                        <div className={styles["pro-separator"]}></div>
 
                     {/* Language Preferences Section */}
                     <LanguagePreferences
