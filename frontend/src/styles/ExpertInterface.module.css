@@ -9,15 +9,13 @@
 
 /* Body */
 .expertInterface_body {
-  font-family: 'Arial', sans-serif;
-  background-color: black;
-  color: #fff; /* White text color */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  height: auto;
-  overflow: hidden; /* Hide overflow for seamless look */
+    background: black;
+    color: #fff; /* White text color */
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
 /* Container */
@@ -36,7 +34,7 @@
 /* Language Switch */
 .expertInterface_languageSwitch {
     position: absolute;
-    top: 10px; /* Place it slightly above the title */
+    top: 18px; /* Place it slightly above the title */
     right: 20px; /* Move it to be aligned slightly to the right */
 }
 
@@ -69,22 +67,21 @@
 
 /* Image Container */
 .expertInterface_imageContainer {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
+    margin: 20px 0;
+    width: 100%;
 }
 
 /* Worker Image */
 .expertInterface_workerImage {
-  width: 165px;
-  height: auto;
-  margin: 0 auto;
+    width: 100%;
+    max-width: 250px;
+    margin:auto;
 }
 
 /* Message Text */
 .expertInterface_messageText {
   font-size: 1.2rem;
-  margin: 20px 0;
+  margin: 10px 0;
   text-align: center;
 }
 
