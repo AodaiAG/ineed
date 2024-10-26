@@ -58,6 +58,8 @@
     margin: 0 auto;
     background-color: transparent;
     position: relative;
+	    overflow-y: hidden; /* Hide overflow beyond the container */
+
 }
 
 /* Content */
