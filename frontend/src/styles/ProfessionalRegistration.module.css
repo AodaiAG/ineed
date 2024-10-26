@@ -86,7 +86,22 @@
     display: block;
     margin-bottom: 5px;
     font-size: 1rem;
+	
+
 }
+.language-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* Space between checkboxes */
+    justify-content: flex-start;
+}
+
+.language-label {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between checkbox and label text */
+}
+
 
 /* Input */
 .pro-input {
@@ -109,25 +124,20 @@
 .pro-checkbox-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
     justify-content: flex-end;
     align-items: center;
-}
 
-.pro-checkbox-group label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
 }
-
 .pro-checkbox-group input[type="checkbox"] {
-    order: 2; /* Set order for checkbox to appear after the text */
+    margin-left: 8px; /* Adds space to the left of the checkbox */
 }
 
 .pro-checkbox-group label span {
-    order: 1; /* Place text before checkbox */
-    margin-right: 8px; /* Add spacing between text and checkbox */
+    margin-right: 8px; /* Adds space to the right of the label text */
 }
+
+
+
 
 /* Dropdown */
 .pro-dropdown {
