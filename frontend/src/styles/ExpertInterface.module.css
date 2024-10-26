@@ -16,7 +16,6 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-	  	    overflow: hidden; /* Prevent scroll if extra space appears */
 
 
 }
@@ -26,7 +25,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 600px;
   width: 100%;
   padding: 30px;
   margin: 0 auto;
@@ -108,7 +106,6 @@
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   width: 100%;
-  max-width: 300px;
   margin: 29px 20px;
 }
 
