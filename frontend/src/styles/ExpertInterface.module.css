@@ -35,16 +35,23 @@
 
 /* Language Switch */
 .expertInterface_languageSwitch {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
+    position: absolute;
+    top: 10px; /* Place it slightly above the title */
+    right: 20px; /* Move it to be aligned slightly to the right */
 }
 
 .expertInterface_languageSwitch img {
-  width: 35px;
-  height: 35px;
+    width: 50px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s;
 }
+
+.expertInterface_languageSwitch img:hover {
+    transform: rotate(15deg);
+    opacity: 0.8;
+}
+
 
 /* Main Title */
 .expertInterface_mainTitle {
