@@ -20,7 +20,6 @@
 
 /* Main Container */
 .explainScreen_container {
-  text-align: right;
   width: 366px;
   max-width: 100%; /* Set a maximum width for better readability */
   padding: 20px;
