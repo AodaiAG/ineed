@@ -16,8 +16,8 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    height: 100vh; /* Fill the viewport height */
-    overflow: hidden; /* Prevent scroll if extra space appears */
+	    overflow: hidden; /* Prevent scroll if extra space appears */
+
 }
 
 /* Container */
@@ -31,6 +31,7 @@
   margin: 0 auto;
   background-color: transparent;
   position: relative;
+  min-height: 100vh; /* Ensure it takes the full viewport height */
 }
 
 /* Language Switch */
@@ -113,6 +114,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    padding-bottom: 20px; /* Control space below the button */
 }
 
 .expertInterface_settingsButton:hover {
