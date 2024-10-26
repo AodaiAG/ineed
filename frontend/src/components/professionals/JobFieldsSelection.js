@@ -66,8 +66,11 @@ const JobFieldsSelection = forwardRef(({
                     <div key={mainProfession.main} className={styles['pro-dropdown']}>
                         <div
                             className={styles['pro-dropdown-toggle']}
-                            onClick={() => {
-                                toggleDropdown(mainProfession.main);
+                            onClick={(e) => {
+                                // Prevent the checkbox click from triggering dropdown toggle
+                                if (e.target.tagName !== "INPUT") {
+                                    toggleDropdown(mainProfession.main);
+                                }
                             }}
                         >
                             <label>
