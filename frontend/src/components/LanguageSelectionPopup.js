@@ -3,7 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import styles from '../styles/LanguageSelectionPopup.module.css';
 
 function LanguageSelectionPopup({ onClose }) {
-    const { language, setLanguage } = useLanguage();
+    const { language, setLanguage,translation } = useLanguage();
 
     // Handle language change
     const handleLanguageChange = (event) => {
@@ -23,7 +23,7 @@ function LanguageSelectionPopup({ onClose }) {
                 </button>
 
                 {/* Title */}
-                <h2>בחר את שפת הממשק</h2>
+                <h2>{translation.interface_language_selection}</h2>
 
                 {/* Icon under the title (decorative only) */}
                 <div className={styles.popupLanguageIconContainer}>

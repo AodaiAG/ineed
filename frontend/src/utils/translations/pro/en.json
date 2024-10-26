@@ -105,7 +105,9 @@
   "noGeolocationSupport": "Your browser does not support geolocation."
   },
     "locationLabel": "Select Your Location"  ,  
-	"locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel"
+	"locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel",
+	    "interface_language_selection": "Select interface language"
+
 
 
 

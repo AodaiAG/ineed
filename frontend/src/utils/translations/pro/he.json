@@ -105,7 +105,8 @@
   "locationError": "אנא הזן את המיקום שלך."
   },
   "locationLabel": "בחר מיקום",
-"locationPlaceholder": "עפרוני 13, ראש העין, ישראל"
+"locationPlaceholder": "עפרוני 13, ראש העין, ישראל",
+    "interface_language_selection": "בחר את שפת הממשק"
 
 
 
