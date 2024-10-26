@@ -1,98 +1,103 @@
 /* ExpertInterface.module.css */
 
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 /* Body */
 .expertInterface_body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(145deg, #000000 60%, #000000 60%, rgba(241, 196, 15, 0.15) 90%); /* Less bright with a subtle golden touch and adjusted down */
-    color: #fff; /* White text color */
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden; /* Hide overflow to remove extra gaps */
-    background-attachment: fixed; /* Fix background for cool effect */
+  font-family: 'Arial', sans-serif;
+  background-color: black;
+  color: #fff; /* White text color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  height: auto;
+  overflow: hidden; /* Hide overflow for seamless look */
 }
 
 /* Container */
 .expertInterface_container {
-    text-align: center;
-    max-width: 600px; /* Increased container width for larger screens */
-    width: 100%;
-    padding: 30px; /* Increase padding for better spacing */
-    box-sizing: border-box;
-    margin: 0 auto; /* Center the container horizontally */
-
-    /* Remove container background to merge better with body */
-    background-color: transparent;
-    
-    /* Add a border with slight transparency to blend with background */
-    border: 2px solid rgba(241, 196, 15, 0.3); /* More vibrant transparent golden border */
-    
-    /* Add box shadow for blending effect */
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.3); /* Stronger golden shadow to merge edges with body */
-    position: relative; /* Set position to relative to control child elements */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 100%;
+  padding: 30px;
+  margin: 0 auto;
+  background-color: transparent;
+  position: relative;
 }
 
 /* Language Switch */
 .expertInterface_languageSwitch {
-    position: absolute;
-    top: 5px; /* Place it closer to the top */
-    left: 65%; /* Move it to align it over the letter 'D' in the title */
-    z-index: 10; /* Ensure it stays above other elements */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
 }
 
 .expertInterface_languageSwitch img {
-    width: 35px; /* Adjust size accordingly */
-    height: 35px;
+  width: 35px;
+  height: 35px;
 }
 
 /* Main Title */
 .expertInterface_mainTitle {
-    font-size: 2.5rem;
-    margin: 10px 0; /* Adjusted for better spacing */
+  font-size: 3.5rem;
+  font-weight: 500;
+  margin: 10px 0;
 }
 
 /* Subtitle */
 .expertInterface_subTitle {
-    font-size: 1.5rem;
-    margin: 5px 0 20px;
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 5px 0 20px;
 }
 
 /* Image Container */
 .expertInterface_imageContainer {
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 /* Worker Image */
 .expertInterface_workerImage {
-    width: 150px;
-    height: auto;
-    box-shadow: none; /* Removed shadow to blend with the background */
+  width: 165px;
+  height: auto;
+  margin: 0 auto;
 }
 
 /* Message Text */
 .expertInterface_messageText {
-    font-size: 1.2rem;
-    margin: 20px 0;
+  font-size: 1.2rem;
+  margin: 20px 0;
+  text-align: center;
 }
 
 /* Settings Button */
 .expertInterface_settingsButton {
-    background-color: rgba(241, 196, 15, 0.85); /* More vibrant golden background */
-    color: #000; /* Black text for contrast */
-    border: none;
-    padding: 15px 30px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    margin-top: 20px; /* Add consistent spacing */
+  background-color: #fdbe00; /* Vibrant golden background */
+  color: #000; /* Black text for contrast */
+  font-size: 1.8rem;
+  font-weight: 600;
+  padding: 10px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  width: 100%;
+  max-width: 300px;
+  margin: 25px auto;
 }
 
 .expertInterface_settingsButton:hover {
-    background-color: #e1b500; /* Slightly more golden shade for hover effect */
-    transform: scale(1.05);
+  background-color: #e1b500; /* Slightly darker golden on hover */
+  transform: scale(1.05);
 }
