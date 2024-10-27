@@ -39,7 +39,7 @@
 .expertInterface_languageSwitch {
     position: absolute;
     top: 18px;
-    right: 20px;
+    right: 50px;
 }
 
 .expertInterface_languageSwitch img {
@@ -134,5 +134,11 @@
 .resendButton:disabled {
     color: #666; /* Adjust text color for better visibility */
 	    font-size: 1.5rem; /* Smaller font for countdown */
+
+}
+.resendButton:disabled .countdown {
+    color: #ffffff; /* Active color for countdown text */
+    font-weight: bold;
+
 
 }
