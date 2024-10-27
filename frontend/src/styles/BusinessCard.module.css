@@ -63,7 +63,7 @@
 .proProfileImage {
     width: 100%;
     max-width: 300px;
-    height: auto;
+    max-height: 300px;
     border-radius: 10px;
     border: 1px solid #FFD700; /* Golden border */
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* Golden glow for a beautiful effect */
