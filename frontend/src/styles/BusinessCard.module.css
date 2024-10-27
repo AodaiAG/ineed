@@ -63,9 +63,18 @@
 .proProfileImage {
     width: 100%;
     max-width: 300px;
-    max-height: 300px;
+    height: auto;
     border-radius: 10px;
+    border: 1px solid #FFD700; /* Golden border */
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* Golden glow for a beautiful effect */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition */
 }
+
+.proProfileImage:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); /* Enhance glow on hover */
+}
+
 
 /* Icons Container: 3x2 Grid with Controlled Column Gaps */
 .proIconsContainer {
