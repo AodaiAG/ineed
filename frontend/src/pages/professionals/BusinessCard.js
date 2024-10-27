@@ -175,7 +175,7 @@ function BusinessCard() {
                     />
                     <div className={styles.proFooterText}>
                         <p>I Need</p>
-                        <p>כל המומחים במקום אחד</p>
+                        <p>{translation.subTitle}</p>
                         <a
                             href="#"
                             onClick={(e) => {
@@ -184,8 +184,7 @@ function BusinessCard() {
                             }}
                             className={styles.proExplainLink}
                         >
-                            גם אתה רוצה? לחץ כאן
-                        </a>
+{translation.wantToJoinPrompt}                        </a>
                     </div>
                 </div>
             </div>
