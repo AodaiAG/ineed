@@ -105,7 +105,7 @@
   border-radius: 14px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
-  width: 100%;
+  width: 90%;
   margin: 15px 20px;
 }
 
@@ -117,7 +117,7 @@
     padding-bottom: 20px; /* Control space below the button */
 }
 .countdown {
-    margin-right: 8px; /* Space between countdown and text */
+    margin-right: 10px; /* Space between countdown and text */
     font-size: 0.8rem; /* Smaller font for countdown */
     font-weight: bold;
     vertical-align: middle;
@@ -128,6 +128,8 @@
 }
 .resendButton {
     background-color: #4f3d09; /* Change this to your desired color */
+	    white-space: nowrap; /* Prevents text from wrapping to a new line */
+
 }
 .resendButton:disabled {
     color: #666; /* Adjust text color for better visibility */
