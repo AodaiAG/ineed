@@ -82,8 +82,8 @@
 
 /* Individual Icon Styling */
 .proIcon {
-    width: 45px; /* Specific width for each icon */
-    height: 45px;
+    width: 55px; /* Specific width for each icon */
+    height: 55px;
     background-color: #f1c40f;
     border-radius: 10px;
     display: flex;

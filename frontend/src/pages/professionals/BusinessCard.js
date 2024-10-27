@@ -133,6 +133,7 @@ function BusinessCard() {
             {/* Title Section */}
             <h1 className={styles.proBusinessName}>{professional.fname} {professional.lname}</h1>
             <h2 className={styles.proCompanyType}>{professional.businessName || 'פרילנסר'}</h2>
+            
 
             {/* Image Section */}
             <div className={styles.proImageContainer}>
