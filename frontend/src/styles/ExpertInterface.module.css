@@ -83,7 +83,7 @@
 /* Worker Image */
 .expertInterface_workerImage {
     width: 100%;
-    max-width: 250px;
+    max-width: 190px;
     margin: auto;
 }
 
@@ -96,8 +96,8 @@
 
 /* Settings Button */
 .expertInterface_settingsButton {
-  background-color: #fdbe00;
-  color: #000;
+  background-color: #1783E0;
+  color:#ffffff;
   font-size: 1.8rem;
   font-weight: 600;
   padding: 10px;
@@ -106,7 +106,7 @@
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   width: 100%;
-  margin: 29px 20px;
+  margin: 15px 20px;
 }
 
 /* Button Container to control spacing */
@@ -116,8 +116,21 @@
     justify-content: center;
     padding-bottom: 20px; /* Control space below the button */
 }
+.countdown {
+    margin-right: 8px; /* Space between countdown and text */
+    font-size: 0.8rem; /* Smaller font for countdown */
+    font-weight: bold;
+    vertical-align: middle;
+}
 
 .expertInterface_settingsButton:hover {
-  background-color: #e1b500;
   transform: scale(1.05);
+}
+.resendButton {
+    background-color: #4f3d09; /* Change this to your desired color */
+}
+.resendButton:disabled {
+    color: #666; /* Adjust text color for better visibility */
+	    font-size: 1.5rem; /* Smaller font for countdown */
+
 }

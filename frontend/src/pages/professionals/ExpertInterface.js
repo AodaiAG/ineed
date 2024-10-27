@@ -2,26 +2,57 @@ import React, { useState, useEffect } from 'react';
 import styles from '../../styles/ExpertInterface.module.css';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
+import { sendSms ,shortenUrl} from '../../utils/generalUtils';
+
 import { useLanguage } from '../../contexts/LanguageContext';
+import axios from 'axios';
 
 function ExpertInterface() {
     const navigate = useNavigate();
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
+    const [sendDisabled, setSendDisabled] = useState(false);
+    const [countdown, setCountdown] = useState('');
 
     useEffect(() => {
-        // Add a unique class to the body element for ExpertInterface
         document.body.classList.add(styles.expertInterface_body);
 
-        // Clean up by removing the unique class when the component is unmounted
+        // Check if button is already disabled from previous session
+        const lastSentTime = sessionStorage.getItem('lastSentTime');
+        if (lastSentTime) {
+            const timeDiff = 24 * 60 * 60 * 1000 - (Date.now() - lastSentTime);
+            if (timeDiff > 0) {
+                setSendDisabled(true);
+                startCountdown(timeDiff);
+            }
+        }
+
         return () => {
             document.body.classList.remove(styles.expertInterface_body);
         };
     }, []);
-
     if (!translation) {
         return <div>Loading...</div>; // Wait for translations to load
     }
+
+    // Countdown function
+    const startCountdown = (remainingTime) => {
+        const endTime = Date.now() + remainingTime;
+        const interval = setInterval(() => {
+            const timeLeft = endTime - Date.now();
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                setSendDisabled(false);
+                setCountdown('');
+                sessionStorage.removeItem('lastSentTime');
+            } else {
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                setCountdown(`${hours}:${minutes}:${seconds}`);
+            }
+        }, 1000);
+    };
 
     // Toggle the language selection popup
     const handleLanguageIconClick = () => {
@@ -31,11 +62,25 @@ function ExpertInterface() {
     const handleMySettingsClick = () => {
         const id = sessionStorage.getItem('professionalId');
         if (id) {
-            // Navigate to the settings page with the user's ID as a query parameter
             navigate('/pro/edit-settings');
         } else {
             alert(translation.errorOccurredMessage);
         }
+    };
+
+    // Resend business card link
+    const handleResendClick = async () => {
+        const id = sessionStorage.getItem('professionalId');
+        if (!id) return alert(translation.errorOccurredMessage);
+
+        setSendDisabled(true);
+        sessionStorage.setItem('lastSentTime', Date.now());
+        startCountdown(24 * 60 * 60 * 1000);
+
+        const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${id}`;
+        const shortenedLink = await shortenUrl(businessCardLink);
+        const message = translation.businessCardSMS.replace("{link}", shortenedLink);
+        sendSms(sessionStorage.getItem('professionalPhoneNumber'), message);
     };
 
     return (
@@ -60,9 +105,17 @@ function ExpertInterface() {
             {/* Message Section */}
             <p className={styles.expertInterface_messageText}>{translation.businessCardMessage}</p>
 
-            {/* Button */}
+            {/* Buttons */}
             <button className={styles.expertInterface_settingsButton} onClick={handleMySettingsClick}>
                 {translation.mySettingsButtonLabel}
+            </button>
+            <button
+                className={`${styles.expertInterface_settingsButton} ${styles.resendButton}`}
+                onClick={handleResendClick}
+                disabled={sendDisabled}
+            >
+                    {sendDisabled && <span className={styles.countdown}>{countdown}</span>}
+                    {translation.resendBusinessCardButtonLabel}
             </button>
         </div>
     );
