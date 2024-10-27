@@ -14,6 +14,23 @@ function ExpertInterface() {
     const [sendDisabled, setSendDisabled] = useState(false);
     const [countdown, setCountdown] = useState('');
 
+    const startCountdown = (remainingTime) => {
+        const endTime = Date.now() + remainingTime;
+        const interval = setInterval(() => {
+            const timeLeft = endTime - Date.now();
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                setSendDisabled(false);
+                setCountdown('');
+                sessionStorage.removeItem('lastSentTime');
+            } else {
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                setCountdown(`${hours}:${minutes}:${seconds}`);
+            }
+        }, 1000);
+    };
     useEffect(() => {
         document.body.classList.add(styles.expertInterface_body);
 
@@ -36,23 +53,7 @@ function ExpertInterface() {
     }
 
     // Countdown function
-    const startCountdown = (remainingTime) => {
-        const endTime = Date.now() + remainingTime;
-        const interval = setInterval(() => {
-            const timeLeft = endTime - Date.now();
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                setSendDisabled(false);
-                setCountdown('');
-                sessionStorage.removeItem('lastSentTime');
-            } else {
-                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                setCountdown(`${hours}:${minutes}:${seconds}`);
-            }
-        }, 1000);
-    };
+
 
     // Toggle the language selection popup
     const handleLanguageIconClick = () => {
