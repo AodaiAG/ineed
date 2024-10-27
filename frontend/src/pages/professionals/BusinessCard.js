@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../utils/constans';
+import { useLanguage } from '../../contexts/LanguageContext';
+
 import styles from '../../styles/BusinessCard.module.css';
 
 function BusinessCard() {
@@ -9,11 +11,16 @@ function BusinessCard() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const id = searchParams.get('id');
+    const { translation } = useLanguage();
+
 
     // State to hold deferred prompt for Add to Home Screen
     const [deferredPrompt, setDeferredPrompt] = useState(null);
 
     useEffect(() => {
+        // Add a unique class to the body element for BusinessCard
+        document.body.classList.add(styles.businessCard_body);
+
         const fetchProfessional = async () => {
             try {
                 const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
@@ -28,15 +35,16 @@ function BusinessCard() {
             fetchProfessional();
         }
 
-        // Listen for the "beforeinstallprompt" event
         const handleBeforeInstallPrompt = (e) => {
             e.preventDefault();
-            setDeferredPrompt(e); // Save the event to be triggered later
+            setDeferredPrompt(e);
         };
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
+        // Clean up by removing the unique class when the component is unmounted
         return () => {
+            document.body.classList.remove(styles.businessCard_body);
             window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
         };
     }, [id]);
@@ -120,6 +128,8 @@ function BusinessCard() {
     };
     return (
         <div className={styles.proContainer}>
+
+
             {/* Title Section */}
             <h1 className={styles.proBusinessName}>{professional.fname} {professional.lname}</h1>
             <h2 className={styles.proCompanyType}>{professional.businessName || 'פרילנסר'}</h2>
@@ -179,6 +189,7 @@ function BusinessCard() {
                     </div>
                 </div>
             </div>
+            
         </div>
     );
 }
