@@ -4,6 +4,8 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import styles from "../../styles/PhoneScreen.module.css";
 import "remixicon/fonts/remixicon.css";
 import { sendSms } from "../../utils/generalUtils";
+import {API_URL} from  "../../utils/constans";
+import axios from "axios";
 
 function PhoneScreen() {
   const navigate = useNavigate();
@@ -29,25 +31,26 @@ function PhoneScreen() {
 
   const handleEnterClick = async () => {
     if (phoneNumber.trim() !== "") {
-      const fullPhoneNumber = `${countryCode}${phoneNumber}`;
-      sessionStorage.setItem("professionalPhoneNumber", fullPhoneNumber);
+        const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+        sessionStorage.setItem("professionalPhoneNumber", fullPhoneNumber);
 
-      try {
-        const verificationCode = Math.floor(1000 + Math.random() * 9000);
-        const message = `${translation.verificationCodeMessage} ${verificationCode}`;
+        try {
+            const response =  axios.post(`${API_URL}/professionals/send-sms`, {
+                phoneNumber: fullPhoneNumber,
+                message: translation.verificationCodeMessage + " {code}"
+            });
 
-        sendSms(fullPhoneNumber, message);
-        sessionStorage.setItem("smsVerificationCode", verificationCode);
-
-        navigate("/pro/sms-verification");
-      } catch (error) {
-        console.error("Failed to send SMS:", error);
-        alert(translation.failedToSendSmsMessage);
-      }
+          
+                navigate("/pro/sms-verification");
+           
+        } catch (error) {
+            console.error("Failed to send SMS:", error);
+            alert(translation.failedToSendSmsMessage);
+        }
     } else {
-      alert(translation.enterPhoneNumberMessage);
+        alert(translation.enterPhoneNumberMessage);
     }
-  };
+};
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 

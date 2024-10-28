@@ -22,12 +22,8 @@ function ExpertMainPage() {
   }, []);
 
   useEffect(() => {
-    const userSession = Cookies.get("userSession");
-    if (userSession) {
-      // Set professionalId in sessionStorage if it exists
-      sessionStorage.setItem("professionalId", userSession);
-      console.log(`prof id in expertMainPage: ${userSession}`);
-      // Redirect user to the expert interface
+    const encryptedData = localStorage.getItem('userdata');
+    if (encryptedData) {
       navigate("/pro/expert-interface");
     }
   }, [navigate]);

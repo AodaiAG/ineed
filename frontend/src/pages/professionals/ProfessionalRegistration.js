@@ -15,10 +15,12 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import Cookies from 'js-cookie'; // Import js-cookie
 
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
-
+import useUserValidation from '../../hooks/useUserValidation';
+import CryptoJS from 'crypto-js';
 function ProfessionalRegistration() {
     
     const navigate = useNavigate();
+    const { isValidUserdata, decryptedUserdata } = useUserValidation(null, null); 
     const [availability24_7, setAvailability24_7] = useState(false);
     const { translation } = useLanguage(); // Use translation from context
     const [location, setLocation] = useState({
@@ -99,6 +101,12 @@ function ProfessionalRegistration() {
             },
         }));
     };
+    useEffect(() => {
+        if (decryptedUserdata && decryptedUserdata.registered) {
+            console.log("User is already registered. Redirecting to expert interface...");
+            navigate('/pro/expert-interface');
+        }
+    }, [decryptedUserdata, navigate]);
 
     useEffect(() => {
         const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
@@ -224,12 +232,11 @@ function ProfessionalRegistration() {
     // Handle form submission to save data
     const handleSubmit = async () => {
         if (!validateForm()) return;
-
-
+    
         const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
-
+    
         const professionalData = {
-        phoneNumber: formattedPhoneNumber, // Use formatted phone number without dashes
+            phoneNumber: formattedPhoneNumber, // Use formatted phone number without dashes
             fullName,
             email,
             website,
@@ -241,30 +248,50 @@ function ProfessionalRegistration() {
             workAreas: workAreaSelections, // Store only the IDs of selected work areas (cities)
             languages, // Use numeric language IDs
             location, // Add the location JSON object
-
         };
-
-       
-
+    
         try {
             const response = await axios.post(`${API_URL}/professionals/register`, professionalData);
             const registeredId = response.data.id; // Assume the API returns the newly registered user's ID.
-            // Store the ID in session storage
-            sessionStorage.setItem('professionalId', registeredId);
-            Cookies.set('userSession', registeredId, { expires: 7 });
-
+    
+            // Retrieve existing encrypted data from localStorage
+            const existingEncryptedData = localStorage.getItem('userdata');
+            let updatedProfessionalData;
+    
+            if (existingEncryptedData)
+                 {
+                try {
+                    // Decrypt the existing data
+                    const bytes = CryptoJS.AES.decrypt(existingEncryptedData, 'Server!123%#%^$#@Work');
+                    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+                    
+                    // Update the professional data with new ID
+                    updatedProfessionalData = { ...decryptedData, ...professionalData, profId: registeredId };
+                } catch (e) {
+                    console.error('Error decrypting professional data:', e);
+                    updatedProfessionalData = { ...professionalData, profId: registeredId }; // Fallback if decryption fails
+                }
+            } else {
+                updatedProfessionalData = { ...professionalData, profId: registeredId };
+            }
+    
+            // Encrypt the updated professional data and save it in localStorage
+            const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(updatedProfessionalData), 'Server!123%#%^$#@Work').toString();
+            localStorage.setItem('userdata', encryptedData);
+    
             // Redirect to Expert Interface page after successful registration
             const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${registeredId}`;
             const shortenedLink = await shortenUrl(businessCardLink);
-             console.log('shortenedLink' +shortenedLink)
+            console.log('shortenedLink' + shortenedLink);
             let message = translation.businessCardSMS.replace("{link}", shortenedLink);
             sendSms(formattedPhoneNumber, message);
-
+    
             navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error saving registration:', error);
         }
     };
+    
 
     return (
         <div className={styles['pro-body']}>

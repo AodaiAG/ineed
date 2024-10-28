@@ -1,8 +1,11 @@
 // professionalController.js
 const Professional = require('../models/professional');
+const PhoneVerification = require('../models/PhoneVerification');
 const Location = require('../models/Location'); // Import the Location model
 const multer = require('multer');
 const streamifier = require('streamifier');
+
+const axios = require('axios');
 
 const cloudinary = require('../config/cloudinaryConfig'); // Import the Cloudinary config
 const storage = multer.memoryStorage();
@@ -226,10 +229,96 @@ const updateProfessional = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+const sendSms = async (phoneNumber, message) => {
+    try {
+        const url = `https://sms.innovio.co.il/sms.php?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+        const response = await axios.get(url);
+        if (response.status === 200) {
+            console.log('SMS sent successfully');
+        } else {
+            console.error('Failed to send SMS:', response);
+        }
+    } catch (error) {
+        console.error('Error sending SMS:', error);
+        throw error;
+    }
+};
+
+// Function to generate a random verification code
+function generateVerificationCode() {
+    return Math.floor(1000 + Math.random() * 9000).toString(); // Generates a 4-digit code
+}
+
+// API Endpoint to Generate Verification Code
+const generateVerificationCodeHandler = async (req, res) => {
+    const { phoneNumber, message } = req.body;
+    const code = generateVerificationCode();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // Set expiry time to 5 minutes
+
+    try {
+        // Upsert to avoid duplicates for the same phone number
+        await PhoneVerification.upsert({
+            phoneNumber,
+            code,
+            expiresAt,
+        });
+
+        // Insert the generated code into the translated message and send via SMS
+        const translatedMessage = message.replace("{code}", code);
+        sendSms(phoneNumber, translatedMessage);
+
+        res.status(200).json({ success: true, message: 'Verification code sent successfully' });
+    } catch (error) {
+        console.error('Error storing verification code:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+// API Endpoint to Verify the Code
+const verifyCodeHandler = async (req, res) => {
+    const { phoneNumber, code } = req.body;
+
+    try {
+        const professional = await Professional.findOne({ where: { phoneNumber } });
+        const isRegistered = !!professional;
+
+        const verificationRecord = await PhoneVerification.findOne({ where: { phoneNumber } });
+
+        if (!verificationRecord) {
+            return res.status(401).json({ success: false, data: { registered: isRegistered } });
+        }
+
+        const { code: storedCode, expiresAt } = verificationRecord;
+
+        if (new Date() > expiresAt) {
+            return res.status(401).json({ success: false, data: { registered: isRegistered } });
+        }
+
+        if (storedCode !== code) {
+            return res.status(401).json({ success: false, data: { registered: isRegistered } });
+        }
+
+        // Code is valid, respond based on registration status
+        res.status(200).json({
+            success: true,
+            data: {
+                profId: professional ? professional.id : null,
+                phoneNumber,
+                registered: isRegistered
+            },
+            message: isRegistered ? 'Verification successful' : 'Verification successful, but professional not registered'
+        });
+    } catch (error) {
+        console.error('Error verifying code:', error);
+        res.status(500).json({ success: false, data: null });
+    }
+};
 
 
 module.exports = {
     checkIfRegistered,
     getAllLocations,
     registerProfessional,getProfessionalById,updateProfessional,uploadImage
+    ,generateVerificationCodeHandler
+    ,verifyCodeHandler
 };

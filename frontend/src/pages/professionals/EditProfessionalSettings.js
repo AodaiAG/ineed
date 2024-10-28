@@ -11,19 +11,21 @@ import LanguagePreferences from '../../components/professionals/LanguagePreferen
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
-
+import useUserValidation from '../../hooks/useUserValidation';
 
 
 function EditProfessionalSettings() 
 {
-
+    const navigate = useNavigate();
+    // Use the hook and pass desired routes for valid and invalid cases
+    const { isValidUserdata, decryptedUserdata } = useUserValidation(null, '/pro/enter'); 
     const { translation } = useLanguage();
     const [location, setLocation] = useState({
         address: '',
         lat: null,
         lon: null,
     });
-    const navigate = useNavigate();
+
     const [availability24_7, setAvailability24_7] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState(() => {
         return localStorage.getItem('userLanguage') || 'he';
@@ -112,50 +114,43 @@ function EditProfessionalSettings()
     };
 
     useEffect(() => {
-        // Get the user ID from session storage
-        const id = sessionStorage.getItem('professionalId');
-        console.log(`prof id: ${id}`);
-        if (id) {
-            fetchProfessionalData(id);
-        } else {
-            console.error("No user ID found in session storage");
-            navigate('/pro/expert-interface');
-        }
-    
-        // Fetch main professions with language
-        const fetchMainProfessions = async () => {
-            try {
-                console.log('selected lan :'+selectedLanguage)
-                // Pass the selected language in the API request
-                const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
-                let mainProfessionsData = response.data;
-
-                mainProfessionsData = mainProfessionsData.slice(1);
-
-                setMainProfessions(mainProfessionsData);
-            } catch (error) {
-                console.error('Error fetching main professions:', error);
-            }
-        };
-    
-        const fetchLocations = async () => {
+        if (decryptedUserdata && decryptedUserdata.profId) {
+            console.log('Fetching data for profId:', decryptedUserdata.profId);
+            fetchProfessionalData(decryptedUserdata.profId);
             
-            try {
-                const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
-                let locationsData = response.data;
-                locationsData = locationsData.slice(1);
-
-                setGroupedLocations(locationsData);
-            } catch (error) {
-                console.error('Error fetching locations:', error);
-            }
-        };
+            // Fetch main professions with language
+            const fetchMainProfessions = async () => {
+                try {
+                    console.log('Selected language:', selectedLanguage);
+                    // Pass the selected language in the API request
+                    const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
+                    let mainProfessionsData = response.data;
     
-        fetchMainProfessions();  // Fetch based on language
-        fetchLocations();        // Fetch other data
-        setIsLoading(false);
-
-    }, [navigate, selectedLanguage]);  // Add selectedLanguage to dependencies
+                    mainProfessionsData = mainProfessionsData.slice(1);
+    
+                    setMainProfessions(mainProfessionsData);
+                } catch (error) {
+                    console.error('Error fetching main professions:', error);
+                }
+            };
+    
+            const fetchLocations = async () => {
+                try {
+                    const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
+                    let locationsData = response.data;
+                    locationsData = locationsData.slice(1);
+    
+                    setGroupedLocations(locationsData);
+                } catch (error) {
+                    console.error('Error fetching locations:', error);
+                }
+            };
+    
+            fetchMainProfessions();  // Fetch based on language
+            fetchLocations();        // Fetch other data
+            setIsLoading(false);
+        }
+    }, [decryptedUserdata, selectedLanguage]);  // Add selectedLanguage to dependencies
 
     if (isLoading) 
         {
@@ -243,11 +238,13 @@ function EditProfessionalSettings()
 
         return isValid;
     };
-
+    if (isValidUserdata === null) {
+        return <div>Loading...</div>;
+    }
     const handleSubmit = async () => {
         // Get the user ID from session storage
         if (!validateForm()) return;
-        const professionalId = sessionStorage.getItem('professionalId');
+        const professionalId =  decryptedUserdata.profId;
     
         if (!professionalId) {
             console.error("No user ID found in session storage");

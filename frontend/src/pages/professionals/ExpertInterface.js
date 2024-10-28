@@ -2,40 +2,26 @@ import React, { useState, useEffect } from 'react';
 import styles from '../../styles/ExpertInterface.module.css';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
-import { sendSms ,shortenUrl} from '../../utils/generalUtils';
-
+import { sendSms, shortenUrl } from '../../utils/generalUtils';
 import { useLanguage } from '../../contexts/LanguageContext';
-import axios from 'axios';
+import useUserValidation from '../../hooks/useUserValidation';
 
 function ExpertInterface() {
     const navigate = useNavigate();
+    // Use the hook and pass desired routes for valid and invalid cases
+    const { isValidUserdata, decryptedUserdata } = useUserValidation(null, '/pro/enter'); 
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const [sendDisabled, setSendDisabled] = useState(false);
     const [countdown, setCountdown] = useState('');
 
-    const startCountdown = (remainingTime) => {
-        const endTime = Date.now() + remainingTime;
-        const interval = setInterval(() => {
-            const timeLeft = endTime - Date.now();
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                setSendDisabled(false);
-                setCountdown('');
-                sessionStorage.removeItem('lastSentTime');
-            } else {
-                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                setCountdown(`${hours}:${minutes}:${seconds}`);
-            }
-        }, 1000);
-    };
+    // Initialize styles and manage countdown if needed
     useEffect(() => {
+        // Since the component renders only if `isValidUserdata` is true, we know it's valid here
         document.body.classList.add(styles.expertInterface_body);
 
         // Check if button is already disabled from previous session
-        const lastSentTime = sessionStorage.getItem('lastSentTime');
+        const lastSentTime = localStorage.getItem('lastSentTime');
         if (lastSentTime) {
             const timeDiff = 24 * 60 * 60 * 1000 - (Date.now() - lastSentTime);
             if (timeDiff > 0) {
@@ -48,41 +34,67 @@ function ExpertInterface() {
             document.body.classList.remove(styles.expertInterface_body);
         };
     }, []);
-    if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
+
+    // Countdown timer function
+    const startCountdown = (remainingTime) => {
+        const endTime = Date.now() + remainingTime;
+        const interval = setInterval(() => {
+            const timeLeft = endTime - Date.now();
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                setSendDisabled(false);
+                setCountdown('');
+                localStorage.removeItem('lastSentTime');
+            } else {
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                setCountdown(`${hours}:${minutes}:${seconds}`);
+            }
+        }, 1000);
+    };
+
+    // Render loading screen while user data is being checked
+    if (isValidUserdata === null) {
+        return <div>Loading...</div>;
     }
-
-    // Countdown function
-
 
     // Toggle the language selection popup
     const handleLanguageIconClick = () => {
         setIsLanguagePopupOpen((prev) => !prev);
     };
 
+    // Navigate to settings page
     const handleMySettingsClick = () => {
-        const id = sessionStorage.getItem('professionalId');
-        if (id) {
-            navigate('/pro/edit-settings');
-        } else {
-            alert(translation.errorOccurredMessage);
-        }
+        navigate('/pro/edit-settings');
     };
 
     // Resend business card link
     const handleResendClick = async () => {
-        const id = sessionStorage.getItem('professionalId');
-        if (!id) return alert(translation.errorOccurredMessage);
+        try {
+            if (!decryptedUserdata) {
+                return alert(translation.errorOccurredMessage);
+            }
 
-        setSendDisabled(true);
-        sessionStorage.setItem('lastSentTime', Date.now());
-        startCountdown(24 * 60 * 60 * 1000);
+            const id = decryptedUserdata.profId;
+            if (!id) return alert(translation.errorOccurredMessage);
 
-        const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${id}`;
-        const shortenedLink = await shortenUrl(businessCardLink);
-        const message = translation.businessCardSMS.replace("{link}", shortenedLink);
-        sendSms(sessionStorage.getItem('professionalPhoneNumber'), message);
+            setSendDisabled(true);
+            localStorage.setItem('lastSentTime', Date.now());
+            startCountdown(24 * 60 * 60 * 1000);
+
+            const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${id}`;
+            const shortenedLink = await shortenUrl(businessCardLink);
+            const message = translation.businessCardSMS.replace("{link}", shortenedLink);
+            sendSms(decryptedUserdata.phoneNumber, message);
+        } catch (e) {
+            console.error('Error decrypting or handling business card data:', e);
+        }
     };
+
+    if (!translation) {
+        return <div>Loading translations...</div>; // Wait for translations to load
+    }
 
     return (
         <div className={styles.expertInterface_container}>
@@ -115,8 +127,8 @@ function ExpertInterface() {
                 onClick={handleResendClick}
                 disabled={sendDisabled}
             >
-                    {sendDisabled && <span className={styles.countdown}>{countdown}</span>}
-                    {translation.resendBusinessCardButtonLabel}
+                {sendDisabled && <span className={styles.countdown}>{countdown}</span>}
+                {translation.resendBusinessCardButtonLabel}
             </button>
         </div>
     );

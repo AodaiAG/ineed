@@ -4,9 +4,11 @@ import { useLanguage } from '../../contexts/LanguageContext'; // Import language
 import styles from '../../styles/SMSVerification.module.css'; // Import the scoped CSS module
 import axios from 'axios';
 import Cookies from 'js-cookie'; // Import js-cookie library
+const CryptoJS = require('crypto-js');
+
 
 import { API_URL } from '../../utils/constans'; // Assuming the URL is in constants
-
+const secretKey='Server!123%#%^$#@Work'
 function SMSVerification() {
     const navigate = useNavigate();
     const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
@@ -53,31 +55,40 @@ function SMSVerification() {
     const handleVerification = async () => {
         const code = verificationCode.join('');
         if (code.length === 4) {
-            const storedCode = sessionStorage.getItem('smsVerificationCode');
-            if (code === storedCode) {
-                try {
-                    const response = await axios.post(`${API_URL}/professionals/check-if-registered`, {
-                        phoneNumber,
-                    });
-                    if (response.data.registered) {
-                        sessionStorage.setItem('professionalId', response.data.id);
-                        Cookies.set('userSession', response.data.id, { expires: 7 });
+            try {
+                const response = await axios.post(`${API_URL}/professionals/verify-code`, {
+                    phoneNumber,
+                    code
+                });
+                if (response.data.success) {
+                    if (response.data.data.registered) 
+                        {
+                        const userdata = {
+                            profId: response.data.data.profId,
+                            phoneNumber: response.data.data.phoneNumber,
+                            registered: response.data.data.registered
+                        };
+                        
+                        // Encrypt the professional data
+                        const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userdata), secretKey).toString();
+                        // Save the encrypted data to localStorage
+                        localStorage.setItem('userdata', encryptedData);
+    
                         navigate('/pro/expert-interface');
                     } else {
                         navigate('/pro/register');
                     }
-                } catch (error) {
-                    console.error('Verification failed:', error);
+                } else {
                     triggerErrorAnimation();
                 }
-            } else {
+            } catch (error) {
+                console.error('Verification failed:', error);
                 triggerErrorAnimation();
             }
         } else {
             triggerErrorAnimation();
         }
     };
-
     const triggerErrorAnimation = () => {
         setIsError(true);
         setShake(true);
