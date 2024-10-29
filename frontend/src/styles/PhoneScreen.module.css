@@ -19,7 +19,6 @@
   align-items: center;
   min-height: 100vh;
   height: auto;
-      	    overflow: hidden; /* Prevent scroll if extra space appears */
 
 }
 
@@ -29,8 +28,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-    	    overflow: hidden; /* Prevent scroll if extra space appears */
-
+      justify-content: space-between;
 }
 
 /* Main Title */
