@@ -44,7 +44,6 @@ function ExpertMainPage() {
 
   return (
     <div className={styles.expertPage_mainContainer}>
-      <section>
       {/* Trigger Language Selection Popup */}
         <div
           className={styles.expertPage_languageIcon}
@@ -61,9 +60,7 @@ function ExpertMainPage() {
         <h3 className={styles.expertPage_expertInterface}>
           {translation.expertInterface}
         </h3>
-      </section>
 
-      <section>
       {/* Worker Image */}
         <div className={styles.expertPage_imageContainer}>
           <img src="/images/Prof/w4.png" alt={translation.workerImageAlt} />
@@ -76,7 +73,6 @@ function ExpertMainPage() {
         >
           {translation.letsGoButton}
         </button>
-      </section>
       {/* Language Selection Popup - only show when isLanguagePopupOpen is true */}
       {isLanguagePopupOpen && (
         <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} />

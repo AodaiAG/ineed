@@ -7,6 +7,7 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 .expertPage_body {
     background: black;
     color: #fff; /* White text color */
@@ -21,7 +22,13 @@
 /* Main Container */
 .expertPage_mainContainer {
     text-align: center;
-    padding: 20px;
+    /* padding: 20px; */
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-height: 780px;
+    justify-content: space-between;
+    padding-block: 1rem;
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
