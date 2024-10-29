@@ -13,20 +13,19 @@
 
 .proContainer {
     text-align: center;
-    max-width: 100%;
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-    background-color: #000;
-    color: #fff;
-    margin: 0;
+    /* padding: 20px; */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    direction: rtl;
+    height: 100dvh;
+
+    justify-content: space-between;
+    padding-block: 1.5rem;
+	
+    position: relative; /* Allows for absolute positioning of the icon within the container */
+    width: 100%;
+    max-width: 600px; /* Maximum width for readability */
+    margin: 0 auto; /* Center horizontally */
+		    overflow: hidden; /* Prevent scroll if extra space appears */
 }
 
 /* Title and Subtitle Styling */
