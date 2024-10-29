@@ -4,6 +4,7 @@
   "description": "A platform for experts and professionals.",
   "start_url": "/pro/expert-main",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
