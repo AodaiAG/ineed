@@ -43,7 +43,7 @@
 
 /* Validation Title */
 .smsVerification_validationTitle {
-    font-size:2.5rem;
+    font-size:3rem;
     font-weight: 100;
     margin-bottom: 30px;
     text-align: center;
@@ -95,8 +95,8 @@
 
 /* SMS Box */
 .smsVerification_smsBox {
-    width: 35px;
-    height: 35px;
+    width: 50px;
+    height: 50px;
     font-size: 1.5rem;
     text-align: center;
     border-radius: 8px;
