@@ -233,14 +233,33 @@
     color: #000; /* Dark text for contrast */
 }
 
-/* Day Input: Disabled */
 .day-input:disabled {
     background-color: #444; /* Previously enabled color */
-    color: #fff;
+    color: #fff; /* Ensure placeholder is visible with contrasting color */
     border: none;
     cursor: not-allowed;
     width: 100px; /* Maintain fixed width when disabled */
+    text-align: center;
+    padding: 7px;
+    box-sizing: border-box;
 }
+
+.day-input::placeholder {
+    color: #aaa; /* Lighter color to indicate it's a placeholder */
+}
+/* Placeholder Span for Disabled Fields */
+.day-placeholder {
+    display: inline-block;
+    width: 100px; /* Same as the input width */
+    padding: 5px;
+    background-color: #444; /* Match the disabled input background */
+    color: #aaa; /* Lighter text color for placeholder */
+    text-align: center;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin: 0 5px;
+}
+
 
 .day-checkbox {
  
@@ -272,6 +291,20 @@
     color: #999;
     cursor: not-allowed;
     border: 1px solid #ccc;
+}
+.day-input:disabled {
+    background-color: #444; /* Darker background color */
+    color: #ccc; /* Lighter text to indicate it's disabled */
+    border: 1px solid #888; /* Add a border to make it more visible */
+    cursor: not-allowed;
+    text-align: center; /* Center text, including placeholder */
+    width: 100px; /* Maintain fixed width */
+}
+
+/* Add a specific style for when there is a placeholder (optional to indicate it's disabled) */
+.disabled-input::placeholder {
+    color: #aaa; /* Placeholder text color when disabled */
+    font-style: italic; /* Make placeholder text italic */
 }
 
 /* Separator */

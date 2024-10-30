@@ -109,7 +109,9 @@
   },
     "locationLabel": "Select Your Location"  ,  
 	"locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel",
-	    "interface_language_selection": "Select interface language"
+	    "interface_language_selection": "Select interface language",
+		  "fromPlaceholder": "From",
+  "toPlaceholder": "To"
 
 
 

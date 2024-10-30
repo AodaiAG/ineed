@@ -98,7 +98,9 @@
   "noGeolocationSupport": "Su navegador no soporta la geolocalización."
   },
 
-  "locationLabel": "Selecciona tu ubicación"
+  "locationLabel": "Selecciona tu ubicación",
+  		  "fromPlaceholder": "Desde",
+          "toPlaceholder": "Hasta"
 
 
 

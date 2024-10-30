@@ -105,7 +105,9 @@
     "locationError": "يرجى إدخال الموقع الخاص بك."
   },
   "locationLabel": "اختر موقعك",
-  "locationPlaceholder": "عفورني 13، روش هاعين، إسرائيل"
+  "locationPlaceholder": "عفورني 13، روش هاعين، إسرائيل",
+  	  "fromPlaceholder": "من",
+  "toPlaceholder": "إلى"
 
 
   

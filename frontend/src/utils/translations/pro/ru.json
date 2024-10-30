@@ -99,7 +99,9 @@
   "noGeolocationSupport": "Ваш браузер не поддерживает определение местоположения."
   },
 
-  "locationLabel": "Выберите ваше местоположение"
+  "locationLabel": "Выберите ваше местоположение",
+  		  "fromPlaceholder": "С",
+  "toPlaceholder": "До"
 
 
 

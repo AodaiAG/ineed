@@ -108,7 +108,9 @@
   },
   "locationLabel": "בחר מיקום",
 "locationPlaceholder": "עפרוני 13, ראש העין, ישראל",
-    "interface_language_selection": "בחר את שפת הממשק"
+    "interface_language_selection": "בחר את שפת הממשק",
+	"fromPlaceholder": "מ",
+	  "toPlaceholder": "עד"
 
 
 
