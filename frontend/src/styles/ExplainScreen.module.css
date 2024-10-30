@@ -8,19 +8,19 @@
 
 /* Base Styles (Mobile-First Approach) */
 .explainScreen_body {
-  font-family: "Arial", sans-serif;
-  background-color: black;
-  color: #fff; /* White text color */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  height: auto;
+    background: black;
+    color: #fff; /* White text color */
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
 /* Main Container */
 .explainScreen_container {
-    text-align: center;
+
+
     /* padding: 20px; */
     display: flex;
     flex-direction: column;
@@ -28,7 +28,6 @@
     max-height: 780px;
     justify-content: space-between;
     padding-block: 1rem;
-	
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
@@ -40,6 +39,7 @@
 /* Greeting Section */
 .explainScreen_greetingSection {
   font-size: 1rem;
+  line-height: 1.7rem;
   margin-bottom: 15px;
   font-weight: 500;
 }
