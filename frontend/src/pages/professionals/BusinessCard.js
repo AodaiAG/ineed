@@ -52,6 +52,9 @@ function BusinessCard() {
     if (!professional) {
         return <div>Loading...</div>;
     }
+    if (!translation) {
+        return <div>Loading...</div>;
+    }
 
     const handleExplainClick = () => {
         navigate('/pro/explain');
