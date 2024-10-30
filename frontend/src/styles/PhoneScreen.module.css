@@ -11,14 +11,13 @@
   text-align: center;
 }
 .phoneScreen_body {
-  font-family: "Arial", sans-serif;
-  background-color: black;
-  color: #fff; /* White text color */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  height: auto;
+    background: black;
+    color: #fff; /* White text color */
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 
 }
 
