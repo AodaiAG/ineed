@@ -94,6 +94,7 @@ function EditProfessionalSettings()
             setDayAvailability(data.dayAvailability || dayAvailability);
             setWorkAreaSelections(data.workAreas || []);
             setLocation(data.location || { address: 'not found', lat: null, lon: null }); // Set the location state
+            setAvailability24_7(data.availability24_7);
 
             console.log('Fetched location from db in EditProfessionalSettings', data.location);
 
@@ -370,12 +371,14 @@ function EditProfessionalSettings()
                         <div className={styles["pro-separator"]}></div>
 
                     <AvailabilityForm
-                        dayAvailability={dayAvailability}
-                        setDayAvailability={setDayAvailability}
-                        toggleAvailability={toggleAvailability}
-                        language={selectedLanguage || 'he'} // Default to 'he' if no language selected
-                        error={errors.dayAvailability}
-                        ref={dayAvailabilityRef}
+                            availability24_7={availability24_7}
+                            setAvailability24_7={setAvailability24_7}  // Pass setAvailability24_7 here to update state properly
+                            dayAvailability={dayAvailability}
+                            setDayAvailability={setDayAvailability}
+                            toggleAvailability={toggleAvailability}
+                            language={selectedLanguage || 'he'} // Default to 'he' if no language selected
+                            error={errors.dayAvailability}
+                            ref={dayAvailabilityRef}
                     />
 
 <div className={styles["pro-separator"]}></div>

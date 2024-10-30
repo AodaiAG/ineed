@@ -101,7 +101,9 @@
 
   "locationLabel": "Выберите ваше местоположение",
   		  "fromPlaceholder": "С",
-  "toPlaceholder": "До"
+  "toPlaceholder": "До",
+    "available247Label": "Доступен 24/7"
+
 
 
 

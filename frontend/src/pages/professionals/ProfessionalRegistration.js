@@ -190,9 +190,9 @@ function ProfessionalRegistration() {
             isValid = false;
         }
 
-        const isAnyDayAvailable = Object.values(dayAvailability).some(day => day.isWorking);
+        const isAnyDayAvailable = availability24_7 || Object.values(dayAvailability).some(day => day.isWorking);
         if (!isAnyDayAvailable) {
-            newErrors.dayAvailability = translation.dayAvailabilityError || 'Please select at least one day you are available.';
+            newErrors.dayAvailability = translation.dayAvailabilityError || 'Please select at least one day you are available or choose Available 24/7.';
             if (isValid) {
                 dayAvailabilityRef.current.scrollIntoView({ behavior: 'smooth' });
             }
@@ -360,6 +360,9 @@ function ProfessionalRegistration() {
 
                     {/* Availability Times Section */}
                     <AvailabilityTimes
+                        availability24_7={availability24_7}
+                        setAvailability24_7={setAvailability24_7}  // Pass setAvailability24_7 here
+
                         dayAvailability={dayAvailability}
                         setDayAvailability={setDayAvailability}
                         toggleAvailability={toggleAvailability}

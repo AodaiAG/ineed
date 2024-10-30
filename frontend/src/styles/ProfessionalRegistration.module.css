@@ -143,6 +143,17 @@
 
 }
 
+
+.availability-24-7 {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between the checkbox and label */
+    direction: inherit; /* Ensure it follows the direction of the parent container */
+    width: auto; /* Allow the content to fit its natural width */
+    align-self: flex-start; /* Align this specific container with the rest of the items */
+}
+
+
 .pro-dropdown-toggle {
     background-color: #444;
     color: #fff;

@@ -100,7 +100,9 @@
 
   "locationLabel": "Selecciona tu ubicación",
   		  "fromPlaceholder": "Desde",
-          "toPlaceholder": "Hasta"
+          "toPlaceholder": "Hasta",
+		    "available247Label": "Disponible 24/7"
+
 
 
 
