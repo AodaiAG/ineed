@@ -38,12 +38,11 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 20px;
 }
 
 /* Validation Title */
 .smsVerification_validationTitle {
-    font-size:2.1rem;
+    font-size:3rem;
     font-weight: 100;
     margin-bottom: 30px;
     text-align: center;
