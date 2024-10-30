@@ -139,7 +139,7 @@
     box-sizing: border-box;
 }
 .pro-dropdown-toggle label span {
-	    margin-right: 3px; /* Adjust the spacing value as needed */
+	    margin: 4px; /* Adjust the spacing value as needed */
 
 }
 
