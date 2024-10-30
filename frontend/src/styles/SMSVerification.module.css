@@ -3,31 +3,31 @@
 
 /* Body */
 .smsVerification_body {
-    font-family: 'Arial', sans-serif;
     background: black;
     color: #fff; /* White text color */
-    margin: 0;
-    padding: 0;
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-attachment: fixed; /* Fix background for cool effect */
-		    overflow: hidden; /* Prevent scroll if extra space appears */
+	    height: 100vh;
+
+    box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
 /* Container */
 .smsVerification_container {
+    /* padding: 20px; */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    flex-direction: column;
+    height: 100dvh;
+
+    justify-content: space-between;
+    padding-block: 1rem;
+    position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
-    max-width: 600px; /* Increase container width for larger screens */
-    height: auto; /* Allow height to adjust based on content */
-    padding: 30px; /* Increase padding for better spacing */
-    box-sizing: border-box;
-	  	    overflow: hidden; /* Prevent scroll if extra space appears */
+    max-width: 600px; /* Maximum width for readability */
+    margin: 0 auto; /* Center horizontally */
+		    overflow: hidden; /* Prevent scroll if extra space appears */
 
   
 }
