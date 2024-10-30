@@ -138,6 +138,10 @@
     margin-bottom: 10px;
     box-sizing: border-box;
 }
+.pro-dropdown-toggle label span {
+	    margin-right: 3px; /* Adjust the spacing value as needed */
+
+}
 
 .pro-dropdown-toggle {
     background-color: #444;
