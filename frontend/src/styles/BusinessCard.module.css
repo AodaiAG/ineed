@@ -17,9 +17,9 @@
     display: flex;
     flex-direction: column;
     height: 100dvh;
-    margin-top: -14px;
+
     justify-content: flex-start;
-    padding-block: 2vh;	
+     padding-block: 2vh;	
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
