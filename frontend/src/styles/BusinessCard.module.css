@@ -19,13 +19,11 @@
     height: 100dvh;
 
     justify-content: space-between;
-    padding-block: 1.5rem;
-	
+     padding-block: 2vh;	
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
     margin: 0 auto; /* Center horizontally */
-		    overflow: hidden; /* Prevent scroll if extra space appears */
 }
 
 /* Title and Subtitle Styling */
@@ -51,7 +49,7 @@
 }
 
 .proCompanyType {
-    font-size: 1.5rem;
+    font-size: 7vw;
     margin-bottom: 20px;
 }
 
@@ -61,8 +59,8 @@
 
 .proProfileImage {
     width: 100%;
-    max-width: 300px;
-    max-height: 300px;
+    max-width: 80vw;
+    max-height: 80vw;
     border-radius: 10px;
     border: 1px solid #FFD700; /* Golden border */
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* Golden glow for a beautiful effect */
@@ -153,41 +151,4 @@
 
 .proFooterText a:hover {
     text-decoration: underline;
-}
-
-/* Responsive styles */
-@media (min-width: 600px) {
-    .proContainer {
-        max-width: 400px;
-    }
-
-    .proBusinessName {
-        font-size: 2rem;
-    }
-
-    .proCompanyType {
-        font-size: 1.2rem;
-    }
-
-    .proIcon {
-        width: 50px;
-        height: 50px;
-    }
-
-    .proIcon img {
-        width: 30px;
-        height: 30px;
-    }
-
-    .proFooter {
-        padding: 10px;
-    }
-
-    .proFooterText p {
-        font-size: 0.8rem;
-    }
-
-    .proFooterText a {
-        font-size: 0.8rem;
-    }
 }
