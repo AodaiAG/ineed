@@ -8,6 +8,7 @@ const JobFieldsSelection = forwardRef(({
     domains,
     selectedProfessionIds = [],
     setSelectedProfessionIds,
+    language ,
     error, // Error prop for displaying job fields selection error
     refs // Refs for scrolling to specific fields
 }, ref) => {
@@ -26,7 +27,7 @@ const JobFieldsSelection = forwardRef(({
         }
         setLoadingMainProfessions(prev => ({ ...prev, [domain]: true })); // Set loading state for main professions of this domain
         try {
-            const response = await axios.get(`${API_URL}/${translation.language}/main-professions?domain=${domain}`);
+            const response = await axios.get(`${API_URL}/${language }/main-professions?domain=${domain}`);
             const data = response.data;
 
             console.log("Fetched main professions data:", data);
@@ -54,7 +55,7 @@ const JobFieldsSelection = forwardRef(({
         }
         setLoadingSubProfessions(prev => ({ ...prev, [main]: true })); // Set loading state for sub-professions of this main profession
         try {
-            const response = await axios.get(`${API_URL}/${translation.language}/sub-professions/${main}`);
+            const response = await axios.get(`${API_URL}/${language }/sub-professions/${main}`);
             const data = response.data;
 
             console.log("Fetched sub-professions data:", data);
@@ -73,6 +74,8 @@ const JobFieldsSelection = forwardRef(({
 
     // Fetch all domains data on component mount
     useEffect(() => {
+
+        console.log('trans '+ language )
         const fetchAllData = async () => {
             try {
                 await Promise.all(domains.map(async (domain) => {

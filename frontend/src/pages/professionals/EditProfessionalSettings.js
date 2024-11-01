@@ -298,6 +298,8 @@ function EditProfessionalSettings()
                       setSelectedProfessionIds={setSelectedProfessionIds}
                       error={errors.jobFields}
                       refs={{ jobFieldsRef }}
+                      language={selectedLanguage} // Pass the selected language as a prop
+
                     />
 
                         <div className={styles["pro-separator"]}></div>

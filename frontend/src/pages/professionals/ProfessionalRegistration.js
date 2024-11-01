@@ -329,6 +329,7 @@ function ProfessionalRegistration() {
                       selectedProfessionIds={selectedProfessionIds}
                       setSelectedProfessionIds={setSelectedProfessionIds}
                       error={errors.jobFields}
+                      language={selectedLanguage} // Pass the selected language as a prop
                       refs={{ jobFieldsRef }}
                     />
                                             <div className={styles["pro-separator"]}></div>
