@@ -8,6 +8,10 @@ const JobType = (tableName) => sequelize.define('JobType', {
         autoIncrement: true,
         primaryKey: true
     },
+    domain: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     main: {
         type: DataTypes.STRING,
         allowNull: false

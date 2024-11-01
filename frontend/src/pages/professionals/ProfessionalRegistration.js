@@ -29,6 +29,8 @@ function ProfessionalRegistration() {
         lon: null,
       });
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [domains, setDomains] = useState([]); // Add this line to define the domains state
+
     const [mainProfessions, setMainProfessions] = useState([]);
     const [subProfessions, setSubProfessions] = useState({});
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
@@ -39,6 +41,8 @@ function ProfessionalRegistration() {
     const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [selectedDomain, setSelectedDomain] = useState(null);
+
     const [website, setWebsite] = useState('');
     const [businessName, setBusinessName] = useState('');
  
@@ -109,43 +113,71 @@ function ProfessionalRegistration() {
     }, [decryptedUserdata, navigate]);
 
     useEffect(() => {
+        // Fetch the phone number from session storage
         const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
         if (storedPhoneNumber) {
             setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
         }
-
-        const fetchMainProfessions = async () => {
+    
+        // Function to fetch domains
+        const fetchDomains = async () => {
             try {
-                // Modify the request to include the language
-                const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
-                let mainProfessionsData = response.data;
-
-                mainProfessionsData = mainProfessionsData.slice(1);
-
-                setMainProfessions(mainProfessionsData);
+                const response = await axios.get(`${API_URL}/${selectedLanguage}/domains`);
+                setDomains(response.data);
             } catch (error) {
-                console.error('Error fetching main professions:', error);
+                console.error('Error fetching domains:', error);
             }
         };
+    
 
+    
+        // Function to fetch locations
         const fetchLocations = async () => {
-            
             try {
                 const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
                 let locationsData = response.data;
-                locationsData = locationsData.slice(1);
-
                 setGroupedLocations(locationsData);
                 console.log("Fetched locations:", response.data);
             } catch (error) {
                 console.error('Error fetching locations:', error);
             }
         };
-
-        fetchMainProfessions();
+    
+        // Fetch domains and locations initially
+        fetchDomains();
         fetchLocations();
-    }, [selectedLanguage]);
+       
+    }, [selectedLanguage]); // Dependency array to re-run effect when selectedLanguage changes
+    
+    // New useEffect to fetch main professions whenever selectedDomain changes
+    useEffect(() => {
+        if (selectedDomain) {
+            fetchMainProfessions(selectedDomain); // Fetch mains when domain is selected
+        }
+    }, [selectedDomain]); // Dependency array for selectedDomain change
 
+
+    const fetchMainProfessions = async (domain) => {
+        if (!domain || mainProfessions[domain]) {
+            return; // If no domain or domain is already fetched, do nothing
+        }
+    
+        try {
+            const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions?domain=${domain}`);
+            const mainProfessionsData = response.data;
+    
+            console.log("Fetched main professions for domain:", domain, mainProfessionsData); // Debugging log for fetched main professions
+    
+            setMainProfessions((prev) => ({
+                ...prev,
+                [domain]: mainProfessionsData, // Store main professions with domain as key
+            }));
+        } catch (error) {
+            console.error('Error fetching main professions:', error);
+        }
+    };
+
+    
     const validateForm = () => {
         const newErrors = {};
         let isValid = true;
@@ -234,7 +266,7 @@ function ProfessionalRegistration() {
         if (!validateForm()) return;
     
         const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
-    
+    console.log('selected professions '+selectedProfessionIds )
         const professionalData = {
             phoneNumber: formattedPhoneNumber, // Use formatted phone number without dashes
             fullName,
@@ -326,7 +358,11 @@ function ProfessionalRegistration() {
 
                     {/* Job Fields Section */}
                     <JobFieldsSelection
+                        domains={domains}
+                        selectedDomain={selectedDomain}
+                        setSelectedDomain={setSelectedDomain}
                         mainProfessions={mainProfessions}
+                        fetchMainProfessions={fetchMainProfessions}
                         subProfessions={subProfessions}
                         fetchSubProfessions={(main) => {
                             // Modify the request to include the language

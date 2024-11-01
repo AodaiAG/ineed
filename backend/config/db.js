@@ -6,9 +6,9 @@ require('dotenv').config(); // Ensure to install dotenv by running `npm install 
 const sequelize = new Sequelize(
     process.env.DB_NAME,       // Database name
     process.env.DB_USER,       // Database username
-    process.env.DB_PASSWORD,   // Database password
+    'Server!123%#%^$#@Work',   // Database password
     {
-        host: process.env.DB_HOST || 'localhost', // Default to localhost
+        host: '92.42.44.61', // Default to localhost
         dialect: 'mysql',
         port: process.env.DB_PORT || 3306,        // Default to port 3306
         logging: console.log                      // Log SQL queries for debugging

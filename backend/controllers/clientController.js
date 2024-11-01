@@ -181,13 +181,35 @@ exports.search = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Error performing search' });
     }
 };
-exports.getMainProfessions = async (req, res) => {
+exports.getDomains = async (req, res) => {
     const lang = req.params.lang || 'he'; // Get language from params, default to Hebrew if not provided
     const tableName = getTableNameForLanguage(lang); // Get the correct table name based on the language code
 
     try {
         const JobTypeModel = JobType(tableName); // Create the model with the correct table name
+        const domains = await JobTypeModel.findAll({
+            attributes: ['domain'],  // Fetch 'domain' column
+            group: 'domain'
+        });
+        res.json(domains);
+    } catch (error) {
+        console.error('Failed to fetch domains:', error);
+        res.status(500).json({ error: 'Failed to fetch domains' });
+    }
+};
+exports.getMainProfessions = async (req, res) => {
+    const lang = req.params.lang || 'he'; // Get language from params, default to Hebrew if not provided
+    const domain = req.query.domain; // Get domain from query parameters
+    const tableName = getTableNameForLanguage(lang); // Get the correct table name based on the language code
+
+    if (!domain) {
+        return res.status(400).json({ error: 'Domain is required' }); // Return error if domain is not provided
+    }
+
+    try {
+        const JobTypeModel = JobType(tableName); // Create the model with the correct table name
         const mainProfessions = await JobTypeModel.findAll({
+            where: { domain }, // Filter by domain
             attributes: ['main'],  // Fetch 'main' column
             group: 'main'
         });
@@ -197,6 +219,7 @@ exports.getMainProfessions = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch main professions' });
     }
 };
+
 
 // Get sub professions based on main profession
 exports.getSubProfessions = async (req, res) => {

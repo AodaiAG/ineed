@@ -25,6 +25,7 @@ function EditProfessionalSettings()
         lat: null,
         lon: null,
     });
+    const [domains, setDomains] = useState([]);
 
     const [availability24_7, setAvailability24_7] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState(() => {
@@ -50,6 +51,7 @@ function EditProfessionalSettings()
     const [website, setWebsite] = useState('');
     const [businessName, setBusinessName] = useState('');
     const [languages, setLanguages] = useState([]);
+    const [selectedDomain, setSelectedDomain] = useState(null);
 
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [workAreaSelections, setWorkAreaSelections] = useState([]);
@@ -74,8 +76,47 @@ function EditProfessionalSettings()
     const languageRef = useRef(null);
     const locationRef = useRef(null); // New ref for the location input
 
-
     const [isLoading, setIsLoading] = useState(true);
+
+    const fetchMainProfessions = async (domain) => {
+        if (!domain || mainProfessions[domain]) {
+            return; // If no domain or domain is already fetched, do nothing
+        }
+    
+        try {
+            const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions?domain=${domain}`);
+            const mainProfessionsData = response.data;
+    
+            console.log("Fetched main professions for domain:", domain, mainProfessionsData); // Debugging log for fetched main professions
+    
+            setMainProfessions((prev) => ({
+                ...prev,
+                [domain]: mainProfessionsData, // Store main professions with domain as key
+            }));
+        } catch (error) {
+            console.error('Error fetching main professions:', error);
+        }
+    };
+
+    const fetchLocations = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
+            let locationsData = response.data;
+            locationsData = locationsData.slice(1);
+
+            setGroupedLocations(locationsData);
+        } catch (error) {
+            console.error('Error fetching locations:', error);
+        }
+    };
+      const fetchDomains = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/${selectedLanguage}/domains`);
+            setDomains(response.data);
+        } catch (error) {
+            console.error('Error fetching domains:', error);
+        }
+    };
     const fetchProfessionalData = async (id) => {
         try {
             const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
@@ -118,38 +159,10 @@ function EditProfessionalSettings()
         if (decryptedUserdata && decryptedUserdata.profId) {
             console.log('Fetching data for profId:', decryptedUserdata.profId);
             fetchProfessionalData(decryptedUserdata.profId);
-            
-            // Fetch main professions with language
-            const fetchMainProfessions = async () => {
-                try {
-                    console.log('Selected language:', selectedLanguage);
-                    // Pass the selected language in the API request
-                    const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions`);
-                    let mainProfessionsData = response.data;
-    
-                    mainProfessionsData = mainProfessionsData.slice(1);
-    
-                    setMainProfessions(mainProfessionsData);
-                } catch (error) {
-                    console.error('Error fetching main professions:', error);
-                }
-            };
-    
-            const fetchLocations = async () => {
-                try {
-                    const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
-                    let locationsData = response.data;
-                    locationsData = locationsData.slice(1);
-    
-                    setGroupedLocations(locationsData);
-                } catch (error) {
-                    console.error('Error fetching locations:', error);
-                }
-            };
-    
-            fetchMainProfessions();  // Fetch based on language
+            fetchDomains();
             fetchLocations();        // Fetch other data
             setIsLoading(false);
+ 
         }
     }, [decryptedUserdata, selectedLanguage]);  // Add selectedLanguage to dependencies
 
@@ -338,7 +351,11 @@ function EditProfessionalSettings()
                         <div className={styles["pro-separator"]}></div>
 
                     <JobFieldsSelection
+                        domains={domains}
+                        selectedDomain={selectedDomain}
+                        setSelectedDomain={setSelectedDomain}
                         mainProfessions={mainProfessions}
+                        fetchMainProfessions={fetchMainProfessions}
                         subProfessions={subProfessions}
                         fetchSubProfessions={(main) => {
                             // Modify the request to include the language
