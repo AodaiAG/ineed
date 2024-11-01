@@ -17,23 +17,13 @@ import useUserValidation from '../../hooks/useUserValidation';
 function EditProfessionalSettings() 
 {
     const navigate = useNavigate();
-    // Use the hook and pass desired routes for valid and invalid cases
     const { isValidUserdata, decryptedUserdata } = useUserValidation(null, '/pro/enter'); 
     const { translation } = useLanguage();
-    const [location, setLocation] = useState({
-        address: '',
-        lat: null,
-        lon: null,
-    });
+    const [location, setLocation] = useState({ address: '', lat: null, lon: null });
     const [domains, setDomains] = useState([]);
-
     const [availability24_7, setAvailability24_7] = useState(false);
-    const [selectedLanguage, setSelectedLanguage] = useState(() => {
-        return localStorage.getItem('userLanguage') || 'he';
-    });
+    const [selectedLanguage, setSelectedLanguage] = useState(() => localStorage.getItem('userLanguage') || 'he');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [mainProfessions, setMainProfessions] = useState([]);
-    const [subProfessions, setSubProfessions] = useState({});
     const [dayAvailability, setDayAvailability] = useState({
         0: { isWorking: false, start: '', end: '' },  // Sunday
         1: { isWorking: false, start: '', end: '' },  // Monday
@@ -45,25 +35,16 @@ function EditProfessionalSettings()
     });
     const [image, setImage] = useState('/images/Prof/w.png');
     const [groupedLocations, setGroupedLocations] = useState([]);
-
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [website, setWebsite] = useState('');
     const [businessName, setBusinessName] = useState('');
     const [languages, setLanguages] = useState([]);
     const [selectedDomain, setSelectedDomain] = useState(null);
-
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [workAreaSelections, setWorkAreaSelections] = useState([]);
     const [errors, setErrors] = useState({
-        fullName: '',
-        email: '',
-        website: '',
-        jobFields: '',
-        workArea: '',
-        dayAvailability: '',
-        language: '',
-        location:''
+        fullName: '', email: '', website: '', jobFields: '', workArea: '', dayAvailability: '', language: '', location: ''
     });
 
     // Refs for each field to scroll to them when needed
@@ -74,42 +55,22 @@ function EditProfessionalSettings()
     const workAreaRef = useRef(null);
     const dayAvailabilityRef = useRef(null);
     const languageRef = useRef(null);
-    const locationRef = useRef(null); // New ref for the location input
+    const locationRef = useRef(null);
 
     const [isLoading, setIsLoading] = useState(true);
-
-    const fetchMainProfessions = async (domain) => {
-        if (!domain || mainProfessions[domain]) {
-            return; // If no domain or domain is already fetched, do nothing
-        }
-    
-        try {
-            const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions?domain=${domain}`);
-            const mainProfessionsData = response.data;
-    
-            console.log("Fetched main professions for domain:", domain, mainProfessionsData); // Debugging log for fetched main professions
-    
-            setMainProfessions((prev) => ({
-                ...prev,
-                [domain]: mainProfessionsData, // Store main professions with domain as key
-            }));
-        } catch (error) {
-            console.error('Error fetching main professions:', error);
-        }
-    };
 
     const fetchLocations = async () => {
         try {
             const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
             let locationsData = response.data;
             locationsData = locationsData.slice(1);
-
             setGroupedLocations(locationsData);
         } catch (error) {
             console.error('Error fetching locations:', error);
         }
     };
-      const fetchDomains = async () => {
+
+    const fetchDomains = async () => {
         try {
             const response = await axios.get(`${API_URL}/${selectedLanguage}/domains`);
             setDomains(response.data);
@@ -117,39 +78,24 @@ function EditProfessionalSettings()
             console.error('Error fetching domains:', error);
         }
     };
+
     const fetchProfessionalData = async (id) => {
         try {
             const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
             const data = response.data;
 
-            // Log the data to inspect the response structure
-            
-
-            // Populate form with existing data
-            setFullName(data.fname + ' ' + (data.lname || '')); // Set full name from fname and lname
-            setPhoneNumber(data.phoneNumber); // Set phone number correctly
+            setFullName(data.fname + ' ' + (data.lname || ''));
+            setPhoneNumber(data.phoneNumber);
             setEmail(data.email);
             setWebsite(data.website);
             setBusinessName(data.businessName);
             setImage(data.image);
             setDayAvailability(data.dayAvailability || dayAvailability);
             setWorkAreaSelections(data.workAreas || []);
-            setLocation(data.location || { address: 'not found', lat: null, lon: null }); // Set the location state
+            setLocation(data.location || { address: 'not found', lat: null, lon: null });
             setAvailability24_7(data.availability24_7);
-
-            console.log('Fetched location from db in EditProfessionalSettings', data.location);
-
-            setLanguages(data.languages || []); // Assuming `data.languages` is an array of language IDs
-
-
-            // Check if `data.professions` is an array before setting state
-            if (Array.isArray(data.professions)) {
-                setSelectedProfessionIds(data.professions);
-            } else {
-                console.error("Expected `data.professions` to be an array, got:", data.professions);
-            }
-
-            
+            setLanguages(data.languages || []);
+            setSelectedProfessionIds(data.professions || []);
         } catch (error) {
             console.error('Error fetching professional data:', error);
         }
@@ -157,19 +103,17 @@ function EditProfessionalSettings()
 
     useEffect(() => {
         if (decryptedUserdata && decryptedUserdata.profId) {
-            console.log('Fetching data for profId:', decryptedUserdata.profId);
             fetchProfessionalData(decryptedUserdata.profId);
             fetchDomains();
-            fetchLocations();        // Fetch other data
+            fetchLocations();
             setIsLoading(false);
- 
         }
-    }, [decryptedUserdata, selectedLanguage]);  // Add selectedLanguage to dependencies
+    }, [decryptedUserdata, selectedLanguage]);
 
-    if (isLoading) 
-        {
+    if (isLoading) {
         return <div>Loading...</div>;
-      }
+    }
+
 
     const transformDayAvailabilityForBackend = (dayAvailability) => {
         return Object.entries(dayAvailability).map(([dayInt, data]) => ({
@@ -222,10 +166,9 @@ function EditProfessionalSettings()
             }
             isValid = false;
         }
-
-        const isAnyDayAvailable = Object.values(dayAvailability).some(day => day.isWorking);
+        const isAnyDayAvailable = availability24_7 || Object.values(dayAvailability).some(day => day.isWorking);
         if (!isAnyDayAvailable) {
-            newErrors.dayAvailability = translation.dayAvailabilityError || 'Please select at least one day you are available.';
+            newErrors.dayAvailability = translation.dayAvailabilityError || 'Please select at least one day you are available or choose Available 24/7.';
             if (isValid) {
                 dayAvailabilityRef.current.scrollIntoView({ behavior: 'smooth' });
             }
@@ -275,7 +218,6 @@ function EditProfessionalSettings()
             image,
             availability24_7,
             dayAvailability: transformDayAvailabilityForBackend(dayAvailability),
-            mainProfessions: mainProfessions.filter(main => selectedProfessionIds.includes(main.id)),
             subProfessions: selectedProfessionIds,
             workAreas: workAreaSelections,
             languages,
@@ -351,26 +293,11 @@ function EditProfessionalSettings()
                         <div className={styles["pro-separator"]}></div>
 
                     <JobFieldsSelection
-                        domains={domains}
-                        selectedDomain={selectedDomain}
-                        setSelectedDomain={setSelectedDomain}
-                        mainProfessions={mainProfessions}
-                        fetchMainProfessions={fetchMainProfessions}
-                        subProfessions={subProfessions}
-                        fetchSubProfessions={(main) => {
-                            // Modify the request to include the language
-                            axios.get(`${API_URL}/${selectedLanguage}/sub-professions/${main}`)
-                                .then(response => {
-                                    setSubProfessions(prev => ({ ...prev, [main]: response.data }));
-                                })
-                                .catch(error => console.error('Error fetching sub-professions:', error));
-                        }}
-                        toggleDropdown={toggleDropdown}
-                        toggleAllChildren={toggleAllChildren}
-                        setSelectedProfessionIds={setSelectedProfessionIds}
-                        selectedProfessionIds={selectedProfessionIds}
-                        error={errors.jobFields}
-                        ref={jobFieldsRef||'error'} // Attach the ref here
+                      domains={domains}
+                      selectedProfessionIds={selectedProfessionIds}
+                      setSelectedProfessionIds={setSelectedProfessionIds}
+                      error={errors.jobFields}
+                      refs={{ jobFieldsRef }}
                     />
 
                         <div className={styles["pro-separator"]}></div>

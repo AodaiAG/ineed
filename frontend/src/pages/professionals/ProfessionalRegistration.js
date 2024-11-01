@@ -30,9 +30,6 @@ function ProfessionalRegistration() {
       });
     const [phoneNumber, setPhoneNumber] = useState('');
     const [domains, setDomains] = useState([]); // Add this line to define the domains state
-
-    const [mainProfessions, setMainProfessions] = useState([]);
-    const [subProfessions, setSubProfessions] = useState({});
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState(() => {
         return localStorage.getItem('userLanguage') || 'he';
@@ -41,8 +38,6 @@ function ProfessionalRegistration() {
     const [groupedLocations, setGroupedLocations] = useState([]);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
-    const [selectedDomain, setSelectedDomain] = useState(null);
-
     const [website, setWebsite] = useState('');
     const [businessName, setBusinessName] = useState('');
  
@@ -111,6 +106,16 @@ function ProfessionalRegistration() {
             navigate('/pro/expert-interface');
         }
     }, [decryptedUserdata, navigate]);
+            
+    const fetchDomains = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/${selectedLanguage}/domains`);
+            setDomains(response.data);
+        } catch (error) {
+            console.error('Error fetching domains:', error);
+        }
+    };
+
 
     useEffect(() => {
         // Fetch the phone number from session storage
@@ -118,19 +123,7 @@ function ProfessionalRegistration() {
         if (storedPhoneNumber) {
             setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
         }
-    
-        // Function to fetch domains
-        const fetchDomains = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/${selectedLanguage}/domains`);
-                setDomains(response.data);
-            } catch (error) {
-                console.error('Error fetching domains:', error);
-            }
-        };
-    
-
-    
+        fetchDomains();
         // Function to fetch locations
         const fetchLocations = async () => {
             try {
@@ -144,38 +137,12 @@ function ProfessionalRegistration() {
         };
     
         // Fetch domains and locations initially
-        fetchDomains();
         fetchLocations();
        
     }, [selectedLanguage]); // Dependency array to re-run effect when selectedLanguage changes
     
     // New useEffect to fetch main professions whenever selectedDomain changes
-    useEffect(() => {
-        if (selectedDomain) {
-            fetchMainProfessions(selectedDomain); // Fetch mains when domain is selected
-        }
-    }, [selectedDomain]); // Dependency array for selectedDomain change
 
-
-    const fetchMainProfessions = async (domain) => {
-        if (!domain || mainProfessions[domain]) {
-            return; // If no domain or domain is already fetched, do nothing
-        }
-    
-        try {
-            const response = await axios.get(`${API_URL}/${selectedLanguage}/main-professions?domain=${domain}`);
-            const mainProfessionsData = response.data;
-    
-            console.log("Fetched main professions for domain:", domain, mainProfessionsData); // Debugging log for fetched main professions
-    
-            setMainProfessions((prev) => ({
-                ...prev,
-                [domain]: mainProfessionsData, // Store main professions with domain as key
-            }));
-        } catch (error) {
-            console.error('Error fetching main professions:', error);
-        }
-    };
 
     
     const validateForm = () => {
@@ -358,26 +325,11 @@ function ProfessionalRegistration() {
 
                     {/* Job Fields Section */}
                     <JobFieldsSelection
-                        domains={domains}
-                        selectedDomain={selectedDomain}
-                        setSelectedDomain={setSelectedDomain}
-                        mainProfessions={mainProfessions}
-                        fetchMainProfessions={fetchMainProfessions}
-                        subProfessions={subProfessions}
-                        fetchSubProfessions={(main) => {
-                            // Modify the request to include the language
-                            axios.get(`${API_URL}/${selectedLanguage}/sub-professions/${main}`)
-                                .then(response => {
-                                    setSubProfessions(prev => ({ ...prev, [main]: response.data }));
-                                })
-                                .catch(error => console.error('Error fetching sub-professions:', error));
-                        }}
-                        toggleDropdown={toggleDropdown}
-                        toggleAllChildren={toggleAllChildren}
-                        setSelectedProfessionIds={setSelectedProfessionIds}
-                        selectedProfessionIds={selectedProfessionIds}
-                        error={errors.jobFields}
-                        ref={jobFieldsRef||'error'} // Attach the ref here
+                      domains={domains}
+                      selectedProfessionIds={selectedProfessionIds}
+                      setSelectedProfessionIds={setSelectedProfessionIds}
+                      error={errors.jobFields}
+                      refs={{ jobFieldsRef }}
                     />
                                             <div className={styles["pro-separator"]}></div>
 
