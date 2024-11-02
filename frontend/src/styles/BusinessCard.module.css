@@ -9,6 +9,10 @@ body, html{
     scroll-behavior : smooth !important; 
 }
 
+#root {
+	height:100%;
+}
+
 
 .businessCard_body {
     margin: 0;
@@ -16,6 +20,7 @@ body, html{
     box-sizing: border-box;
     background-color: #000;
     color: #fff;
+	height:100%;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -23,32 +28,17 @@ body, html{
     min-height: 100vh;
 
 }
-html:focus-within{
-    scroll-behavior: smooth; 
-}
-@media (prefers-reduced-motion: reduce){
-    html:focus-within {
-        scroll-behavior: auto;
-    }
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-        transition: none;
-    }
-}
+
 
 .proContainer {
     margin: 0;
     padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
-    height: calc(100dvh - env(safe-area-inset-top)); /* Use dynamic viewport height minus safe area inset */
+     height:100%;
     box-sizing: border-box;
     text-align: center;
     /* padding: 20px; */
     display: flex;
     flex-direction: column;
-    height: 100dvh;
 
  
     position: relative; /* Allows for absolute positioning of the icon within the container */
