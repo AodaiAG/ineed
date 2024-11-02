@@ -10,6 +10,7 @@
     justify-content: space-around;
     align-items: flex-start;
 	    height: 100vh;
+  	    overflow: hidden; /* Prevent scroll if extra space appears */
 
     box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
