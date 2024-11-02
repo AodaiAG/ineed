@@ -23,7 +23,6 @@
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
-    margin: 0 auto; /* Center horizontally */
 }
 
 /* Title and Subtitle Styling */
