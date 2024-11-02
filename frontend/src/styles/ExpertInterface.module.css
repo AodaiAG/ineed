@@ -25,7 +25,6 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 30px;
   margin: 0 auto;
   background-color: transparent;
   position: relative;
@@ -36,9 +35,13 @@
 
 /* Language Switch */
 .expertInterface_languageSwitch {
+width: 50px;
     position: absolute;
-    top: 18px;
+	margin-top: 8px;
+    height: 40px;
+    cursor: pointer;
     right: 50px;
+    transition: transform 0.3s ease, opacity 0.3s;
 }
 
 .expertInterface_languageSwitch img {
@@ -57,7 +60,7 @@
 .expertInterface_mainTitle {
   font-size: 2.5rem;
   font-weight: 500;
-  margin: 10px 0;
+  margin: 22px 0;
   max-width: 100%;
   text-align: center;
 }
