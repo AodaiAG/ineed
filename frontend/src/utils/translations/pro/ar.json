@@ -108,7 +108,9 @@
   "locationPlaceholder": "عفورني 13، روش هاعين، إسرائيل",
   	  "fromPlaceholder": "من",
   "toPlaceholder": "إلى",
-    "available247Label": "متاح 24/7"
+    "available247Label": "متاح 24/7",
+	  "customerSupportMessage": "مرحبًا، هذا هو دعم العملاء لخدمة I-Need.\nكيف يمكننا مساعدتك اليوم؟"
+
 
 
 

@@ -55,6 +55,14 @@ function PersonalInfoForm({
 
         }
       };
+      const handleWhatsAppClick = () => {
+        const phoneNumber = '0504564323'; // Replace this with your number
+        const internationalPhoneNumber = `+972${phoneNumber}`;
+        const message = encodeURIComponent(translation.customerSupportMessage);
+
+        // Redirect to WhatsApp without opening a new tab
+        window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
+    };
 
     const handleUploadButtonClick = () => {
         fileInputRef.current.click();
@@ -117,8 +125,12 @@ function PersonalInfoForm({
                 disabled
                 className={`${styles['pro-input']} ${styles['pro-input-disabled']}`}
             />
-            <p className={styles['pro-note']}>{translation.phoneNote} <a href="#">{translation.contactLink}</a></p>
-
+        <p className={styles['pro-note']}>
+            {translation.phoneNote} <a href="#" onClick={(e) => {
+                e.preventDefault(); // Prevent default link behavior
+                handleWhatsAppClick(); // Open WhatsApp
+            }}>{translation.contactLink}</a>
+        </p>
             {/* Image Upload Section */}
             <label className={styles['pro-label']}>{translation.addImageLabel}</label>
             <div className={styles['pro-image-upload']}>

@@ -112,7 +112,9 @@
 	    "interface_language_selection": "Select interface language",
 		  "fromPlaceholder": "From",
   "toPlaceholder": "To",
-    "available247Label": "Available 24/7"
+    "available247Label": "Available 24/7",
+	  "customerSupportMessage": "Hi, this is I-Need customer support.\nHow can we assist you today?"
+
 
 
 
