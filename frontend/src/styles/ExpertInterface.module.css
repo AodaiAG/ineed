@@ -15,7 +15,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-sizing: border-box;
+    box-sizing: border-box
+	  	    overflow: hidden; /* Prevent scroll if extra space appears */
+
 
 }
 
