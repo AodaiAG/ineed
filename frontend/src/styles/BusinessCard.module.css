@@ -65,8 +65,10 @@ body, html{
 
 .proProfileImage {
     width: 100%;
-    max-width: 80vw;
-    max-height: 80vw;
+    width: 80vw;
+    height: 80vw;
+	max-width:300px;
+	max-height:300px;
     border-radius: 10px;
     border: 1px solid #FFD700; /* Golden border */
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* Golden glow for a beautiful effect */
@@ -94,8 +96,8 @@ body, html{
 
 /* Individual Icon Styling */
 .proIcon {
-    width: 55px; /* Specific width for each icon */
-    height: 55px;
+    width: 10svw; /* Specific width for each icon */
+    height: 10svw;
     background-color: #f1c40f;
     border-radius: 10px;
     display: flex;
