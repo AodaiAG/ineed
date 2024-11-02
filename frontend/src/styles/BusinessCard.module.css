@@ -96,6 +96,8 @@ body, html{
 .proIcon {
     width: 16svw; /* Specific width for each icon */
     height: 16svw;
+	max-width: 66px;
+    max-height: 66px;
     background-color: #f1c40f;
     border-radius: 10px;
     display: flex;
