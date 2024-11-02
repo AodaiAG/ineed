@@ -231,8 +231,8 @@
 /* Day Input: Fixed Width and Alignment */
 .day-input {
     width: 100px; /* Sets a fixed width */
-    background-color: #ccc; /* Previously disabled color */
-    color: #999; /* Darker text color */
+    background-color: #444; /* Previously disabled color */
+    color: #ffffff; /* Darker text color */
     border: 1px solid #aaa;
     padding: 5px;
     font-size: 1rem;
@@ -249,7 +249,7 @@
 }
 
 .day-input:disabled {
-    background-color: #444; /* Previously enabled color */
+    background-color: #ffffff !important; /* Previously enabled color */
     color: #fff; /* Ensure placeholder is visible with contrasting color */
     border: none;
     cursor: not-allowed;
