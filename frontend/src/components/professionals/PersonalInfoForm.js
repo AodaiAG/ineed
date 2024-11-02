@@ -56,7 +56,7 @@ function PersonalInfoForm({
         }
       };
       const handleWhatsAppClick = () => {
-        const phoneNumber = '0504564323'; // Replace this with your number
+        const phoneNumber = '0504564232'; // Replace this with your number
         const internationalPhoneNumber = `+972${phoneNumber}`;
         const message = encodeURIComponent(translation.customerSupportMessage);
 
