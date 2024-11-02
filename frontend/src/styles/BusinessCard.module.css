@@ -1,26 +1,8 @@
 /* BusinessCard.module.css */
-*{
-    margin: 0 !important; 
-    padding: 0 !important; 
-}
-
-body, html{
-    height: 100% !important; 
-    scroll-behavior : smooth !important; 
-}
-
-#root {
-	height:100%;
-}
-
 
 .businessCard_body {
-    margin: 0;
-    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
-    box-sizing: border-box;
     background-color: #000;
     color: #fff;
-	height:100%;
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -29,30 +11,26 @@ body, html{
 
 }
 
-
 .proContainer {
-    margin: 0;
-    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
-     height:100%;
-    box-sizing: border-box;
     text-align: center;
     /* padding: 20px; */
     display: flex;
     flex-direction: column;
+    height: 100dvh;
 
- 
+    justify-content: space-between;
+     padding-block: 2vh;	
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
-	overflow:hidden;
+    margin: 0 auto; /* Center horizontally */
 }
 
 /* Title and Subtitle Styling */
 .expertInterface_mainTitle {
   font-size: 2rem; /* Adjusted for smaller devices */
   font-weight: 500;
-      margin: 0 !important;
-    padding: 0 !important;
+  margin: 0px 0;
 }
 
 .expertInterface_subTitle {
@@ -63,43 +41,30 @@ body, html{
 
 
 .proBusinessName {
-    font-size:8	vw;
+    font-size: 3rem;
     font-weight: bold;
     color: #f1c40f;
-	    position: relative;
-	 margin-top: 0 !important;
-    padding-top: 0 !important;
     margin-bottom: 5px;
     word-break: break-word;
-	    margin-bottom: 5vw;
-
 }
 
 .proCompanyType {
-    font-size: 5vw;
+    font-size: 7vw;
     margin-bottom: 20px;
 }
 
 .proImageContainer {
     margin: 2px 0;
 }
-@media (max-width: 600px) {
-    .proContainer {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-}
+
 .proProfileImage {
-    width: 80vw;
-    height: 80vw;
-    max-width: 300px;
-    max-height: 300px;
+    width: 100%;
+    max-width: 80vw;
+    max-height: 80vw;
     border-radius: 10px;
     border: 1px solid #FFD700; /* Golden border */
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* Golden glow for a beautiful effect */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Smooth transition */
-	    margin-bottom: 2vh;
-
 }
 
 .proProfileImage:hover {
@@ -143,6 +108,7 @@ body, html{
 .proIcon:hover {
     transform: scale(1.1);
 }
+
 /* Footer Section */
 .proFooter {
     background-color: #007bff;
@@ -151,30 +117,25 @@ body, html{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 90%; /* Full width */
+    width: 100%; /* Full width to align with icons */
     max-width: 400px;
+
     text-align: center;
-    margin: 0 auto; /* Center horizontally */
-    box-sizing: border-box; /* Prevent padding from affecting width */
-    position: relative; /* Allows the footer to be consistently positioned */
 }
 
-/* Footer content updates to better align elements inside */
 .proFooterContent {
     display: flex;
     align-items: center;
-    justify-content: center; /* Ensure content inside footer is centered */
     gap: 8px;
-    width: 100%; /* Ensure the inner content is stretched to occupy full width */
+
+
 }
 
-/* Worker Icon inside footer */
 .proFooterWorkerIcon {
     width: 25px;
     height: auto;
 }
 
-/* Footer text styling */
 .proFooterText p {
     margin: 0;
     font-size: 0.7rem;
