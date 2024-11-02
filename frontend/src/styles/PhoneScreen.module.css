@@ -4,6 +4,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+      touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
+    -webkit-user-select: none;  /* Prevents text selection, reduces zoom triggers */
 }
 
 /* Body */
@@ -11,8 +13,8 @@
   text-align: center;
 }
 .phoneScreen_body {
-	    touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
-
+    touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
+    -webkit-user-select: none;  /* Prevents text selection, reduces zoom triggers */
     background: black;
     color: #fff; /* White text color */
     font-family: Arial, sans-serif;
