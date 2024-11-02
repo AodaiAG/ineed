@@ -4,6 +4,10 @@
     margin: 0 !important; 
     padding: 0 !important; 
 }
+body, html{
+    height: 100%; 
+    scroll-behavior: smooth; 
+}
 
 .businessCard_body {
     background-color: #000;
