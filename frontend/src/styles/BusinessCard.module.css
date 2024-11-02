@@ -3,6 +3,7 @@
 
 body, html{
     height: 100%; 
+	width:100%;
     scroll-behavior: smooth; 
 	touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
     -webkit-user-select: none;  /* Prevents text selection, reduces zoom triggers */
@@ -141,14 +142,20 @@ body, html{
 .proFooterContent {
     display: flex;
     align-items: center;
-    justify-content: center; /* Ensure content inside footer is centered */
+    justify-content: center;
     gap: 8px;
     width: 100%;
+    padding-left: 21px; /* Add padding to move content to the right */
 }
-
+.proFooterText
+{
+	
+}
 /* Worker Icon inside footer */
 .proFooterWorkerIcon {
-    width: 25px;
+width: 62px;
+    position: absolute;
+    left: 39px;
     height: auto;
 }
 
