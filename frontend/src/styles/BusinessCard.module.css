@@ -1,8 +1,17 @@
 /* BusinessCard.module.css */
 
+html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    height: 100%; /* Make sure the body takes up full height */
+}
+
+
 .businessCard_body {
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+    box-sizing: border-box;
     background-color: #000;
     color: #fff;
     font-family: Arial, sans-serif;
@@ -14,8 +23,10 @@
 }
 
 .proContainer {
-	    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+    height: calc(100dvh - env(safe-area-inset-top)); /* Use dynamic viewport height minus safe area inset */
+    box-sizing: border-box;
     text-align: center;
     /* padding: 20px; */
     display: flex;
