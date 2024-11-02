@@ -17,7 +17,7 @@
     align-items: center;
     box-sizing: border-box;
 
-
+  	    overflow: hidden; /* Prevent scroll if extra space appears */
 }
 
 /* Container */
@@ -74,7 +74,7 @@
 
 /* Image Container */
 .expertInterface_imageContainer {
-    margin: 15px 0;
+     margin-bottom: 35px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -83,7 +83,7 @@
 /* Worker Image */
 .expertInterface_workerImage {
     width: 100%;
-    max-width: 190px;
+    max-width: 213px;
     margin: auto;
 }
 
