@@ -128,7 +128,7 @@ body, html{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 90%; /* Relative width to keep it visually balanced */
+    width: 96%; /* Relative width to keep it visually balanced */
     max-width: 400px;
     text-align: center;
     margin: 0px auto 6px; /* Center it and add a small margin for separation */
