@@ -30,27 +30,28 @@ function PhoneScreen() {
   };
 
   const handleEnterClick = async () => {
-    if (phoneNumber.trim() !== "") {
-        const fullPhoneNumber = `${countryCode}${phoneNumber}`;
-        sessionStorage.setItem("professionalPhoneNumber", fullPhoneNumber);
-
-        try {
-            const response =  axios.post(`${API_URL}/professionals/send-sms`, {
-                phoneNumber: fullPhoneNumber,
-                message: translation.verificationCodeMessage + " {code}"
-            });
-
-          
-                navigate("/pro/sms-verification");
-           
-        } catch (error) {
-            console.error("Failed to send SMS:", error);
-            alert(translation.failedToSendSmsMessage);
-        }
+    if (phoneNumber.trim() !== "" && phoneNumber.length === 7) {
+      const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+      sessionStorage.setItem("professionalPhoneNumber", fullPhoneNumber);
+  
+      try {
+        const response = await axios.post(`${API_URL}/professionals/send-sms`, {
+          phoneNumber: fullPhoneNumber,
+          message: translation.verificationCodeMessage + " {code}",
+        });
+  
+        navigate("/pro/sms-verification");
+      } catch (error) {
+        console.error("Failed to send SMS:", error);
+        alert(translation.failedToSendSmsMessage);
+      }
+    } else if (phoneNumber.length !== 7) {
+      alert(translation.phoneNumberLengthMessage || "Phone number must be 7 digits.");
     } else {
-        alert(translation.enterPhoneNumberMessage);
+      alert(translation.enterPhoneNumberMessage);
     }
-};
+  };
+  
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
@@ -127,7 +128,10 @@ function PhoneScreen() {
               placeholder={translation.phoneNumberPlaceholder}
               value={phoneNumber}
               maxLength="7"
+              minLength="7"   // Enforce at least 7 characters
+
               pattern="[0-9]*"
+              required   
               onChange={handlePhoneNumberChange}
             />
           </div>

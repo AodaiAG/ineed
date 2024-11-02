@@ -136,6 +136,7 @@ function SMSVerification() {
                             type="tel"
                             id={`code-${index}`}
                             maxLength="1"
+                            
                             className={`${styles.smsVerification_smsBox} ${isError ? styles.smsVerification_error : ''}`}
                             value={digit}
                             onChange={(e) => handleInputChange(index, e.target.value)}
