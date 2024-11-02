@@ -178,8 +178,8 @@ function BusinessCard() {
                         className={styles.proFooterWorkerIcon}
                     />
                     <div className={styles.proFooterText}>
-                        <p>I Need</p>
-                        <p>{translation.subTitle}</p>
+                    <p className={styles.proFooterTextHeader}>I Need</p>
+                    <p>{translation.subTitle}</p>
                         <a
                             href="#"
                             onClick={(e) => {

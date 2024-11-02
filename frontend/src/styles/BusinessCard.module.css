@@ -153,9 +153,9 @@ body, html{
 }
 /* Worker Icon inside footer */
 .proFooterWorkerIcon {
-width: 62px;
+    width: 67px;
     position: absolute;
-    left: 39px;
+    left: 15px;
     height: auto;
 }
 
@@ -164,6 +164,11 @@ width: 62px;
     margin: 0;
     font-size: 0.9rem;
     color: #fff;
+}
+.proFooterTextHeader {
+    font-size: 1rem !important; /* Larger size for "I Need" */
+    font-weight: bold; /* Make "I Need" bold */
+    margin: 0;
 }
 
 .proFooterText a {
