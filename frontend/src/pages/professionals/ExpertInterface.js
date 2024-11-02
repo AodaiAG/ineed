@@ -17,6 +17,8 @@ function ExpertInterface() {
 
     // Initialize styles and manage countdown if needed
     useEffect(() => {
+        window.scrollTo(0, 0);
+
         // Since the component renders only if `isValidUserdata` is true, we know it's valid here
         document.body.classList.add(styles.expertInterface_body);
 
