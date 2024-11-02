@@ -17,7 +17,6 @@
     align-items: center;
     box-sizing: border-box;
 
-  	    overflow: hidden; /* Prevent scroll if extra space appears */
 }
 
 /* Container */
