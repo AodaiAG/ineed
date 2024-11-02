@@ -49,6 +49,7 @@
     font-size:8	vw;
     font-weight: bold;
     color: #f1c40f;
+	    position: relative;
 	 margin-top: 0 !important;
     padding-top: 0 !important;
     margin-bottom: 5px;
