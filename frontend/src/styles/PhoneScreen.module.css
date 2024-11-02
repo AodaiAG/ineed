@@ -11,6 +11,8 @@
   text-align: center;
 }
 .phoneScreen_body {
+	    touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
+
     background: black;
     color: #fff; /* White text color */
     font-family: Arial, sans-serif;

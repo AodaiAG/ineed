@@ -250,7 +250,7 @@
 
 .day-input:disabled {
     background-color: #ffffff !important; /* Previously enabled color */
-    color: #fff; /* Ensure placeholder is visible with contrasting color */
+    color: #fff !important; /* Ensure placeholder is visible with contrasting color */
     border: none;
     cursor: not-allowed;
     width: 100px; /* Maintain fixed width when disabled */
