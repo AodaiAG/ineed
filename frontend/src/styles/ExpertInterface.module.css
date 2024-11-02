@@ -27,7 +27,7 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin: 0 auto;
+  margin: 10px auto;
   background-color: transparent;
   position: relative;
   min-height: 100vh; /* Ensure it takes the full viewport height */
