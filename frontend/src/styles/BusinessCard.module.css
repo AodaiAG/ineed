@@ -25,8 +25,7 @@ body, html{
     flex-direction: column;
     height: 100dvh;
 
-    justify-content: flex-start;
-
+    justify-content: space-between;
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
@@ -50,7 +49,7 @@ body, html{
     font-size: 3rem;
     font-weight: bold;
     color: #f1c40f;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     word-break: break-word;
 }
 
@@ -96,8 +95,8 @@ body, html{
 
 /* Individual Icon Styling */
 .proIcon {
-    width: 10svw; /* Specific width for each icon */
-    height: 10svw;
+    width: 16svw; /* Specific width for each icon */
+    height: 16svw;
     background-color: #f1c40f;
     border-radius: 10px;
     display: flex;
@@ -109,8 +108,8 @@ body, html{
 
 
 .proIcon img {
-    width: 25px;
-    height: 25px;
+    width: 100%;
+    height: 100%;
 }
 
 .proIcon:hover {
