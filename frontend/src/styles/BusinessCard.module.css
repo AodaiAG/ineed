@@ -25,7 +25,6 @@ body, html{
     flex-direction: column;
     height: 100dvh;
 
-    justify-content: space-between;
     position: relative; /* Allows for absolute positioning of the icon within the container */
     width: 100%;
     max-width: 600px; /* Maximum width for readability */
@@ -54,7 +53,7 @@ body, html{
 }
 
 .proCompanyType {
-    font-size: 7vw;
+    font-size: 1.5rem;
     margin-bottom: 20px;
 }
 
@@ -117,6 +116,7 @@ body, html{
 }
 
 /* Footer Section */
+/* Footer Section */
 .proFooter {
     background-color: #007bff;
     padding: 10px;
@@ -124,25 +124,29 @@ body, html{
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%; /* Full width to align with icons */
+    width: 90%; /* Relative width to keep it visually balanced */
     max-width: 400px;
-
     text-align: center;
+    margin: 0px auto 6px; /* Center it and add a small margin for separation */
+    box-sizing: border-box; /* Ensure padding does not affect width */
 }
 
+/* Footer content updates to better align elements inside */
 .proFooterContent {
     display: flex;
     align-items: center;
+    justify-content: center; /* Ensure content inside footer is centered */
     gap: 8px;
-
-
+    width: 100%;
 }
 
+/* Worker Icon inside footer */
 .proFooterWorkerIcon {
     width: 25px;
     height: auto;
 }
 
+/* Footer text styling */
 .proFooterText p {
     margin: 0;
     font-size: 0.7rem;
