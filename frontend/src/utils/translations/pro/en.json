@@ -125,7 +125,9 @@
   "back": "Back",
   "selectDomainFirst": "Select a domain first",
     "notFoundButton": "I didn't find",
-  "searchPlaceholder": "Search for a profession..."
+  "searchPlaceholder": "Search for a profession...",
+    "searchAreaOrCity": "Search for an area or city..."
+
 
 
 

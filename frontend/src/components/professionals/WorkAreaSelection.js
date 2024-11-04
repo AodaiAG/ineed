@@ -66,7 +66,7 @@ const WorkAreas = forwardRef(({
             <div className={styles['search-bar-container']}>
                 <input
                     type="text"
-                    placeholder="Search for an area or city..."
+                    placeholder={translation.searchAreaOrCity}
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     className={styles['search-bar']}

@@ -121,7 +121,9 @@
   "back": "رجوع",
   "selectDomainFirst": "اختر المجال أولاً",
     "notFoundButton": "لم أجد",
-  "searchPlaceholder": "ابحث عن مهنة..."
+  "searchPlaceholder": "ابحث عن مهنة...",
+    "searchAreaOrCity": "ابحث عن منطقة أو مدينة..."
+
 
 
 

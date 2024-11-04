@@ -125,7 +125,9 @@
   "back": "חזור",
   "selectDomainFirst": "בחר תחום קודם",
     "notFoundButton": "לא מצאתי",
-  "searchPlaceholder": "חפש מקצוע..."
+  "searchPlaceholder": "חפש מקצוע...",
+    "searchAreaOrCity": "חפש אזור או עיר..."
+
 
 
 

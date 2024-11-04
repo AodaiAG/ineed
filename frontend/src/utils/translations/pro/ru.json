@@ -114,7 +114,9 @@
   "back": "Назад",
   "selectDomainFirst": "Сначала выберите область",
     "notFoundButton": "Я не нашел",
-  "searchPlaceholder": "Поиск профессии..."
+  "searchPlaceholder": "Поиск профессии...",
+    "searchAreaOrCity": "Поиск по району или городу..."
+
 
 
 

@@ -113,7 +113,9 @@
   "back": "Atrás",
   "selectDomainFirst": "Seleccione un área primero",
     "notFoundButton": "No encontré",
-  "searchPlaceholder": "Buscar una profesión..."
+  "searchPlaceholder": "Buscar una profesión...",
+    "searchAreaOrCity": "Busca una área o ciudad..."
+
 
 
 
