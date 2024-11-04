@@ -3,6 +3,8 @@ import axios from 'axios';
 import { API_URL } from '../../utils/constans';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
+import ReportPopup from './ReportPopup'; // Updated import
+
 
 const JobFieldsSelection = forwardRef(({
     domains,
@@ -21,6 +23,10 @@ const JobFieldsSelection = forwardRef(({
     const [loadingSubProfessions, setLoadingSubProfessions] = useState({});
     const [searchText, setSearchText] = useState('');
     const [showPopup, setShowPopup] = useState(false);
+    const [showReportPopup, setShowReportPopup] = useState(false);
+    const handleOpenPopup = () => setShowReportPopup(true);
+    const handleClosePopup = () => setShowReportPopup(false);
+
 
     const fetchMainProfessions = async (domain) => {
         if (!domain || mainProfessions[domain]) return;
@@ -170,19 +176,20 @@ const JobFieldsSelection = forwardRef(({
                 />
                 <button
                     className={styles['not-found-button']}
-                    onClick={() => setShowPopup(true)}
+                    onClick={() => handleOpenPopup()}
                 >
                     I didn’t find
                 </button>
             </div>
 
-            {showPopup && (
-                <div className={styles['popup-container']}>
-                    <div className={styles['popup-content']}>
-                        <p>Report your issue here</p>
-                        <button onClick={() => setShowPopup(false)}>Close</button>
-                    </div>
-                </div>
+            {showReportPopup && (
+                <ReportPopup
+                    onClose={handleClosePopup}
+                    onSubmit={(data) => console.log("Report Submitted:", data)}
+                    domains={domains.map(domain => domain.domain)} // Ensure this is an array of domain names
+                    getMainProfessions={fetchMainProfessions}
+                    language={language}
+                />
             )}
 
             {filteredDomains.map((domain) => (

@@ -113,7 +113,17 @@
 		  "fromPlaceholder": "From",
   "toPlaceholder": "To",
     "available247Label": "Available 24/7",
-	  "customerSupportMessage": "Hi, this is I-Need customer support.\nHow can we assist you today?"
+	  "customerSupportMessage": "Hi, this is I-Need customer support.\nHow can we assist you today?",
+	    "popupTitle": "I Need",
+  "popupSubtitle": "I couldn't find a profession",
+  "selectDomain": "Select a domain",
+  "selectProfession": "Select a profession",
+  "missingCheckbox": "Missing",
+  "enterMissingProfession": "Enter missing profession",
+  "enterAdditionalSubProfession": "Enter additional sub-profession",
+  "send": "Send",
+  "back": "Back",
+  "selectDomainFirst": "Select a domain first"
 
 
 

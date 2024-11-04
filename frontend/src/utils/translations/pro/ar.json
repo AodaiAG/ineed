@@ -109,7 +109,17 @@
   	  "fromPlaceholder": "من",
   "toPlaceholder": "إلى",
     "available247Label": "متاح 24/7",
-	  "customerSupportMessage": "مرحبًا، هذا هو دعم العملاء لخدمة I-Need.\nكيف يمكننا مساعدتك اليوم؟"
+	  "customerSupportMessage": "مرحبًا، هذا هو دعم العملاء لخدمة I-Need.\nكيف يمكننا مساعدتك اليوم؟",
+	    "popupTitle": "I Need",
+  "popupSubtitle": "لم أتمكن من العثور على مهنة",
+  "selectDomain": "اختر مجال",
+  "selectProfession": "اختر مهنة",
+  "missingCheckbox": "مفقود",
+  "enterMissingProfession": "أدخل مهنة مفقودة",
+  "enterAdditionalSubProfession": "أدخل تخصص فرعي مفقود",
+  "send": "إرسال",
+  "back": "رجوع",
+  "selectDomainFirst": "اختر المجال أولاً"
 
 
 

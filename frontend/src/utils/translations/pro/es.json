@@ -101,7 +101,17 @@
   "locationLabel": "Selecciona tu ubicación",
   		  "fromPlaceholder": "Desde",
           "toPlaceholder": "Hasta",
-		    "available247Label": "Disponible 24/7"
+		    "available247Label": "Disponible 24/7",
+			  "popupTitle": "I Need",
+  "popupSubtitle": "No pude encontrar una profesión",
+  "selectDomain": "Seleccione un área",
+  "selectProfession": "Seleccione una profesión",
+  "missingCheckbox": "Falta",
+  "enterMissingProfession": "Ingrese una profesión faltante",
+  "enterAdditionalSubProfession": "Ingrese una sub-profesión faltante",
+  "send": "Enviar",
+  "back": "Atrás",
+  "selectDomainFirst": "Seleccione un área primero"
 
 
 

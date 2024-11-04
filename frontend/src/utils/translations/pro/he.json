@@ -113,7 +113,17 @@
 	"fromPlaceholder": "מ",
 	  "toPlaceholder": "עד",
 	    "available247Label": "זמין 24/7",
-		  "customerSupportMessage": "שלום, זהו שירות תמיכת הלקוחות של I-Need.\nכיצד נוכל לסייע לך היום?"
+		  "customerSupportMessage": "שלום, זהו שירות תמיכת הלקוחות של I-Need.\nכיצד נוכל לסייע לך היום?",
+		    "popupTitle": "I Need",
+  "popupSubtitle": "לא מצאתי מקצוע",
+  "selectDomain": "בחר תחום",
+  "selectProfession": "בחר מקצוע",
+  "missingCheckbox": "חסר",
+  "enterMissingProfession": "הקלד מקצוע חסר",
+  "enterAdditionalSubProfession": "הקלד תת מקצוע חסר",
+  "send": "שלח",
+  "back": "חזור",
+  "selectDomainFirst": "בחר תחום קודם"
 
 
 

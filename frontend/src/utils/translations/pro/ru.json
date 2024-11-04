@@ -102,7 +102,17 @@
   "locationLabel": "Выберите ваше местоположение",
   		  "fromPlaceholder": "С",
   "toPlaceholder": "До",
-    "available247Label": "Доступен 24/7"
+    "available247Label": "Доступен 24/7",
+	  "popupTitle": "I Need",
+  "popupSubtitle": "Я не смог найти профессию",
+  "selectDomain": "Выберите область",
+  "selectProfession": "Выберите профессию",
+  "missingCheckbox": "Отсутствует",
+  "enterMissingProfession": "Введите отсутствующую профессию",
+  "enterAdditionalSubProfession": "Введите отсутствующую подкатегорию",
+  "send": "Отправить",
+  "back": "Назад",
+  "selectDomainFirst": "Сначала выберите область"
 
 
 
