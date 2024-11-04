@@ -452,9 +452,6 @@ body, html{
     transition: background-color 0.3s ease;
 }
 
-.not-found-button:hover {
-    background-color: #d4503f;
-}
 
 /* Popup Container */
 .popup-container {
