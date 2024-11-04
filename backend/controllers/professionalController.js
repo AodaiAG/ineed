@@ -2,6 +2,8 @@
 const Professional = require('../models/professional');
 const PhoneVerification = require('../models/PhoneVerification');
 const Location = require('../models/Location'); // Import the Location model
+const ReportMissingProfession = require('../models/ReportMissingProfession');
+
 const multer = require('multer');
 const streamifier = require('streamifier');
 
@@ -38,7 +40,23 @@ const uploadImage = async (req, res) => {
   };
 
 
-
+  const createReportMissingProfession = async (req, res) => {
+    const { domain, isMissing, mainProfession, additionalSubProfession } = req.body;
+  
+    try {
+      const report = await ReportMissingProfession.create({
+        domain,
+        isMissing,
+        mainProfession,
+        additionalSubProfession,
+      });
+  
+      res.status(201).json({ success: true, message: 'Report created successfully', report });
+    } catch (error) {
+      console.error('Error creating report:', error);
+      res.status(500).json({ success: false, message: 'Error creating report', error });
+    }
+  };
 
 const checkIfRegistered = async (req, res) => {
     const { phoneNumber } = req.body;
@@ -320,5 +338,5 @@ module.exports = {
     getAllLocations,
     registerProfessional,getProfessionalById,updateProfessional,uploadImage
     ,generateVerificationCodeHandler
-    ,verifyCodeHandler
+    ,verifyCodeHandler,createReportMissingProfession
 };

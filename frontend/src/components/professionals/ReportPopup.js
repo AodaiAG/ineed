@@ -45,16 +45,28 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
         }
     }, [selectedDomain]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const reportData = {
             domain: selectedDomain,
             isMissing: isMissingChecked,
             mainProfession: isMissingChecked ? missingProfession : selectedMainProfession,
             additionalSubProfession,
         };
-        onSubmit(reportData);
-        onClose();
+    
+        try {
+            const response = await axios.post(`${API_URL}/professionals/report-missing-profession`, reportData);
+            
+            if (response.data.success) {
+                console.log("Report submitted successfully");
+                onClose();
+            } else {
+                console.error("Failed to submit report:", response.data.message);
+            }
+        } catch (error) {
+            console.error("Error submitting report:", error);
+        }
     };
+    
     if (!translation) {
         return <div>Loading...</div>; // Wait for translations to load
     }
