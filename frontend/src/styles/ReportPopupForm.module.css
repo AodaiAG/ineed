@@ -53,6 +53,7 @@ background-color: #000;
     display: flex;
     align-items: center;
     justify-content: center;
+	flex-direction: row-reverse;
 }
 
 .reportSelectWrapper {
@@ -95,7 +96,9 @@ background-color: #000;
 
 
 .reportCheckboxContainer {
-
+    display: flex;
+    align-items: center;
+		margin:5px;
     font-size: 1rem;
 }
 
@@ -103,6 +106,7 @@ background-color: #000;
     display: flex;
     justify-content: space-between;
     margin-top: 4px;
+
 }
 
 .reportBtnSend {
