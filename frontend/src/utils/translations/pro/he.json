@@ -123,7 +123,9 @@
   "enterAdditionalSubProfession": "הקלד תת מקצוע חסר",
   "send": "שלח",
   "back": "חזור",
-  "selectDomainFirst": "בחר תחום קודם"
+  "selectDomainFirst": "בחר תחום קודם",
+    "notFoundButton": "לא מצאתי",
+  "searchPlaceholder": "חפש מקצוע..."
 
 
 

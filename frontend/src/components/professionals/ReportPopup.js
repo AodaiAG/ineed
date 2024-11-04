@@ -55,7 +55,9 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
         onSubmit(reportData);
         onClose();
     };
-
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
     return (
         <div className={styles.overlay}>
             <div className={styles.reportPopupContainer}>

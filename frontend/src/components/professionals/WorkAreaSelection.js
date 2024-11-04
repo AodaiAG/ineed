@@ -46,10 +46,10 @@ const WorkAreas = forwardRef(({
     const filteredLocations = groupedLocations.map(area => ({
         ...area,
         cities: area.cities.filter(city =>
-            city.cityName.toLowerCase().includes(searchText.toLowerCase())
+            city.cityName?.toLowerCase().includes(searchText.toLowerCase())
         )
     })).filter(area => 
-        area.areaName.toLowerCase().includes(searchText.toLowerCase()) || 
+        area.areaName?.toLowerCase().includes(searchText.toLowerCase()) || 
         area.cities.length > 0
     );
 

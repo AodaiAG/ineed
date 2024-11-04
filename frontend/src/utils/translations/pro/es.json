@@ -111,7 +111,9 @@
   "enterAdditionalSubProfession": "Ingrese una sub-profesión faltante",
   "send": "Enviar",
   "back": "Atrás",
-  "selectDomainFirst": "Seleccione un área primero"
+  "selectDomainFirst": "Seleccione un área primero",
+    "notFoundButton": "No encontré",
+  "searchPlaceholder": "Buscar una profesión..."
 
 
 

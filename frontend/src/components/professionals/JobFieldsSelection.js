@@ -169,7 +169,7 @@ const JobFieldsSelection = forwardRef(({
             <div className={styles['search-bar-container']}>
                 <input
                     type="text"
-                    placeholder="Search for a profession..."
+                    placeholder={translation.searchPlaceholder}
                     value={searchText}
                     onChange={(e) => setSearchText(e.target.value)}
                     className={styles['search-bar']}
@@ -178,8 +178,8 @@ const JobFieldsSelection = forwardRef(({
                     className={styles['not-found-button']}
                     onClick={() => handleOpenPopup()}
                 >
-                    I didn’t find
-                </button>
+                    {translation.notFoundButton}
+                    </button>
             </div>
 
             {showReportPopup && (

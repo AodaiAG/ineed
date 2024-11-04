@@ -112,7 +112,9 @@
   "enterAdditionalSubProfession": "Введите отсутствующую подкатегорию",
   "send": "Отправить",
   "back": "Назад",
-  "selectDomainFirst": "Сначала выберите область"
+  "selectDomainFirst": "Сначала выберите область",
+    "notFoundButton": "Я не нашел",
+  "searchPlaceholder": "Поиск профессии..."
 
 
 

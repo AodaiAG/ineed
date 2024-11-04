@@ -119,7 +119,9 @@
   "enterAdditionalSubProfession": "أدخل تخصص فرعي مفقود",
   "send": "إرسال",
   "back": "رجوع",
-  "selectDomainFirst": "اختر المجال أولاً"
+  "selectDomainFirst": "اختر المجال أولاً",
+    "notFoundButton": "لم أجد",
+  "searchPlaceholder": "ابحث عن مهنة..."
 
 
 
