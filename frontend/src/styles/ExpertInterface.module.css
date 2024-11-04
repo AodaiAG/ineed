@@ -93,9 +93,11 @@ width: 50px;
 
 /* Message Text */
 .expertInterface_messageText {
-  font-size: 1.2rem;
-  margin: 10px 30px;
-  text-align: center;
+   
+    white-space: nowrap; /* Prevent wrapping onto a new line */
+    overflow: hidden; /* Hide overflowing text */
+    text-overflow: ellipsis; /* Show ellipsis (...) if the text is too long */
+    font-size: 1.1rem; /* Make sure the font size is manageable */
 }
 
 /* Settings Button */
@@ -144,5 +146,11 @@ width: 50px;
     color: #ffffff; /* Active color for countdown text */
     font-weight: bold;
 
-
+}
+.expertInterface_settingsButton,
+.resendButton {
+    width: 350px; /* Set a fixed width */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow if the text is too long */
+    text-overflow: ellipsis; /* Add an ellipsis (...) if the text is too long */
 }
