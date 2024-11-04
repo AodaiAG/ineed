@@ -126,7 +126,8 @@
   "selectDomainFirst": "בחר תחום קודם",
     "notFoundButton": "לא מצאתי",
   "searchPlaceholder": "חפש מקצוע...",
-    "searchAreaOrCity": "חפש אזור או עיר..."
+    "searchAreaOrCity": "חפש אזור או עיר...",
+	"editImageButton" : "ערוך"
 
 
 

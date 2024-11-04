@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import Cropper from 'react-easy-crop';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import LocationComponentPopup from './LocationComponentPopup';
@@ -11,20 +12,20 @@ function PersonalInfoForm({
     email, setEmail,
     website, setWebsite,
     businessName, setBusinessName,
-    location, setLocation, // Add location and setLocation props here
+    location, setLocation,
     image, setImage,
-    errors, // Error messages passed from parent component
-    refs // Refs passed from parent component to scroll to each field
+    errors,
+    refs
 }) {
     const { translation } = useLanguage();
-    const { fullNameRef, emailRef, websiteRef,locationRef } = refs; // Destructure refs
+    const { fullNameRef, emailRef, websiteRef, locationRef } = refs;
     const [isPictureLoading, setIsPictureLoading] = useState(false);
-
-
-    const fileInputRef = useRef(null);
     const [showLocationPopup, setShowLocationPopup] = useState(false);
+    const [showImageEditPopup, setShowImageEditPopup] = useState(false);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const fileInputRef = useRef(null);
 
-    // Initialize hooks at the top level to ensure they always run in the same order
     useEffect(() => {
         console.log('Location received in PersonalInfoForm:', location);
     }, [location]);
@@ -32,35 +33,30 @@ function PersonalInfoForm({
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            setIsPictureLoading(true); // Start loading indicator
+            setIsPictureLoading(true);
 
-          const formData = new FormData();
-          formData.append('image', file);
-      
-          try {
-            // Upload to the backend which will handle Cloudinary
-            const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            });
-      
-            // Use the URL returned by Cloudinary
-            setImage(response.data.imageUrl);
-          } catch (error) {
-            console.error('Error uploading image:', error);
-          }finally {
-            setIsPictureLoading(false); // Stop loading indicator
-        }
+            const formData = new FormData();
+            formData.append('image', file);
 
+            try {
+                const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setImage(response.data.imageUrl);
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            } finally {
+                setIsPictureLoading(false);
+            }
         }
-      };
-      const handleWhatsAppClick = () => {
-        const phoneNumber = '0504564232'; // Replace this with your number
+    };
+
+    const handleWhatsAppClick = () => {
+        const phoneNumber = '0504564232';
         const internationalPhoneNumber = `+972${phoneNumber}`;
         const message = encodeURIComponent(translation.customerSupportMessage);
-
-        // Redirect to WhatsApp without opening a new tab
         window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
     };
 
@@ -68,56 +64,56 @@ function PersonalInfoForm({
         fileInputRef.current.click();
     };
 
+    const handleEditButtonClick = () => {
+        setShowImageEditPopup(true);
+    };
+
+    const handleCloseImageEditPopup = () => {
+        setShowImageEditPopup(false);
+    };
+
+    const handleLocationInputClick = () => {
+        setShowLocationPopup(true);
+    };
+
     const handleFullNameChange = (e) => {
         const value = e.target.value;
-        // Allow only alphabetic characters from any language and spaces
         if (/^[\p{L}\s]*$/u.test(value)) {
             setFullName(value);
         }
     };
 
-    const handleLocationInputClick = () => {
-        setShowLocationPopup(true); // Show the location popup when the input is clicked
-    };
-
     const handleLocationSelect = (selectedLocation) => {
-        console.log('Location selected in PersonalInfoForm:', selectedLocation);
         setLocation({
             address: selectedLocation.address,
             lat: selectedLocation.lat,
             lon: selectedLocation.lon,
-        }); // Use setLocation from props to update the location in the main component
-
-        setShowLocationPopup(false); // Hide the popup after selecting a location
-    };
-
-    const handleLocationPopupClose = () => {
-        setShowLocationPopup(false); // Close the popup without selecting a location
+        });
+        setShowLocationPopup(false);
     };
 
     if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
+        return <div>Loading...</div>;
     }
 
     return (
         <div className={styles['pro-form-group']}>
             {/* Full Name Input */}
             <label htmlFor="fullName" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
-    {translation.fullNameLabel}
-</label>
-            {errors.fullName && <p className={styles['pro-error']}>{errors.fullName}</p>} {/* Error Message Above */}
+                {translation.fullNameLabel}
+            </label>
+            {errors.fullName && <p className={styles['pro-error']}>{errors.fullName}</p>}
             <input
                 type="text"
                 id="fullName"
-                ref={fullNameRef} // Attach the ref to this input
+                ref={fullNameRef}
                 value={fullName}
-                inputMode="text" // Guide mobile devices to show the alphabetic keyboard
+                inputMode="text"
                 onChange={handleFullNameChange}
                 className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.fullName ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.fullNamePlaceholder}
             />
 
-            {/* Phone Number (Read-Only) */}
             <label htmlFor="phone" className={styles['pro-label']}>{translation.phoneLabel}</label>
             <input
                 type="text"
@@ -127,20 +123,24 @@ function PersonalInfoForm({
                 disabled
                 className={`${styles['pro-input']} ${styles['pro-input-disabled']}`}
             />
-        <p className={styles['pro-note']}>
-            {translation.phoneNote} <a href="#" onClick={(e) => {
-                e.preventDefault(); // Prevent default link behavior
-                handleWhatsAppClick(); // Open WhatsApp
-            }}>{translation.contactLink}</a>
-        </p>
-            {/* Image Upload Section */}
+            <p className={styles['pro-note']}>
+                {translation.phoneNote} <a href="#" onClick={(e) => {
+                    e.preventDefault();
+                    handleWhatsAppClick();
+                }}>{translation.contactLink}</a>
+            </p>
+
             <label className={styles['pro-label']}>{translation.addImageLabel}</label>
             <div className={styles['pro-image-upload']}>
-            {isPictureLoading ? (
-        <div className={styles['loading-indicator']}>Uploading...</div> // Show loading indicator
-    ) : (
-        <img src={image} alt={translation.imageAlt} className={styles['pro-image-preview']} />
-    )}
+                {isPictureLoading ? (
+                    <div className={styles['loading-indicator']}>Uploading...</div>
+                ) : (
+                    <img
+                        src={image}
+                        alt={translation.imageAlt}
+                        className={styles['pro-image-preview']}
+                    />
+                )}
                 <input
                     type="file"
                     accept="image/*"
@@ -148,40 +148,65 @@ function PersonalInfoForm({
                     onChange={handleImageUpload}
                     style={{ display: 'none' }}
                 />
-                <button type="button" className={styles['pro-upload-button']} onClick={handleUploadButtonClick}>
-                    {translation.addImageButton}
-                </button>
+                <div className={styles['button-group']}>
+                    <button type="button" className={styles['pro-upload-button']} onClick={handleUploadButtonClick}>
+                        {translation.addImageButton}
+                    </button>
+                    <button type="button" className={styles['pro-edit-button']} onClick={handleEditButtonClick}>
+                        {translation.editImageButton}
+                    </button>
+                </div>
             </div>
             <p className={styles['pro-note']}>{translation.addImageNote}</p>
 
-            {/* Email Input */}
+            {showImageEditPopup && (
+                <div className={styles['popup-container']}>
+                    <div className={styles['popup-content']}>
+                        <h2>{translation.editImagePopupTitle}</h2>
+                        <div className={styles['crop-container']}>
+                            <Cropper
+                                image={image}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={1}
+                                onCropChange={setCrop}
+                                onZoomChange={setZoom}
+                                onCropComplete={(croppedArea, croppedAreaPixels) => console.log(croppedArea, croppedAreaPixels)}
+                            />
+                        </div>
+                        <button className={styles['save-button']} onClick={handleCloseImageEditPopup}>
+                            Save
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <label htmlFor="email" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
-    {translation.emailLabel}
-</label>            {errors.email && <p className={styles['pro-error']}>{errors.email}</p>} {/* Error Message Above */}
+                {translation.emailLabel}
+            </label>
+            {errors.email && <p className={styles['pro-error']}>{errors.email}</p>}
             <input
                 type="email"
                 id="email"
-                ref={emailRef} // Attach the ref to this input
+                ref={emailRef}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.email ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.emailPlaceholder}
             />
 
-            {/* Website Input */}
             <label htmlFor="website" className={styles['pro-label']}>{translation.websiteLabel}</label>
-            {errors.website && <p className={styles['pro-error']}>{errors.website}</p>} {/* Error Message Above */}
+            {errors.website && <p className={styles['pro-error']}>{errors.website}</p>}
             <input
                 type="text"
                 id="website"
-                ref={websiteRef} // Attach the ref to this input
+                ref={websiteRef}
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
                 className={`${styles['pro-input']} ${styles['pro-input-white']} ${errors.website ? styles['pro-input-error'] : ''}`}
                 placeholder={translation.websitePlaceholder}
             />
 
-            {/* Business Name Input */}
             <label htmlFor="businessName" className={styles['pro-label']}>{translation.businessNameLabel}</label>
             <input
                 type="text"
@@ -192,14 +217,11 @@ function PersonalInfoForm({
                 placeholder={translation.businessNamePlaceholder}
             />
 
-            {/* Location Input */}
             <div ref={locationRef}>
-            <label htmlFor="location" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
-    {translation.location.selectLocation}
-</label>
-                {errors.location && (
-                    <p className={styles['pro-error']}>{errors.location}</p>
-                )}
+                <label htmlFor="location" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+                    {translation.location.selectLocation}
+                </label>
+                {errors.location && <p className={styles['pro-error']}>{errors.location}</p>}
                 <input
                     type="text"
                     id="location"

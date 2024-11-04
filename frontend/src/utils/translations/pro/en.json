@@ -126,7 +126,8 @@
   "selectDomainFirst": "Select a domain first",
     "notFoundButton": "I didn't find",
   "searchPlaceholder": "Search for a profession...",
-    "searchAreaOrCity": "Search for an area or city..."
+    "searchAreaOrCity": "Search for an area or city...",
+		"editImageButton" : "edit"
 
 
 
