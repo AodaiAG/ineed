@@ -21,8 +21,9 @@ const LanguagePreferences = forwardRef(({ languages, setLanguages, error }, ref)
 
     return (
         <div ref={ref} className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>{translation.languagePreferencesLabel}</label>
-            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above language selection */}
+<label className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+    {translation.languagePreferencesLabel}
+</label>            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above language selection */}
             <div className={styles['language-options']}>
                 {Object.keys(translation.languages).map((languageKey) => (
                     <label key={languageKey} className={styles['language-label']}>

@@ -486,3 +486,9 @@ body, html{
     background-color: #ff6347;
     color: #fff;
 }
+.pro-label-required::before {
+    content: "*"; /* Red asterisk before required field */
+    color: red;
+    margin-right: 4px; /* Space between the asterisk and the label text */
+    font-weight: bold;
+}

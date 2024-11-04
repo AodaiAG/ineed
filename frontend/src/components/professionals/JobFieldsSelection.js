@@ -163,8 +163,9 @@ const JobFieldsSelection = forwardRef(({
 
     return (
         <div ref={ref} className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>{translation.selectJobFieldsLabel}</label>
-            {error && <p className={styles['pro-error']}>{error}</p>}
+<label className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+    {translation.selectJobFieldsLabel}
+</label>            {error && <p className={styles['pro-error']}>{error}</p>}
 
             <div className={styles['search-bar-container']}>
                 <input

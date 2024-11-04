@@ -64,8 +64,9 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
 
     return (
         <div ref={ref} className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>{translation.availabilityLabel}</label>
-            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above availability selection */}
+<label className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+    {translation.availabilityLabel}
+</label>            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above availability selection */}
             <div className={styles['pro-availability-group']}>
                 <div className={styles['availability-24-7']}>
                     <input

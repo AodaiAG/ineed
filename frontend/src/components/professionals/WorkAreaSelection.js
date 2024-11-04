@@ -59,8 +59,9 @@ const WorkAreas = forwardRef(({
 
     return (
         <div ref={ref} className={styles['pro-form-group']}>
-            <label className={styles['pro-label']}>{translation.workAreasLabel}</label>
-            {error && <p className={styles['pro-error']}>{error}</p>}
+<label className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+    {translation.workAreasLabel}
+</label>            {error && <p className={styles['pro-error']}>{error}</p>}
 
             {/* Search Bar */}
             <div className={styles['search-bar-container']}>

@@ -102,7 +102,9 @@ function PersonalInfoForm({
     return (
         <div className={styles['pro-form-group']}>
             {/* Full Name Input */}
-            <label htmlFor="fullName" className={styles['pro-label']}>{translation.fullNameLabel}</label>
+            <label htmlFor="fullName" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+    {translation.fullNameLabel}
+</label>
             {errors.fullName && <p className={styles['pro-error']}>{errors.fullName}</p>} {/* Error Message Above */}
             <input
                 type="text"
@@ -153,8 +155,9 @@ function PersonalInfoForm({
             <p className={styles['pro-note']}>{translation.addImageNote}</p>
 
             {/* Email Input */}
-            <label htmlFor="email" className={styles['pro-label']}>{translation.emailLabel}</label>
-            {errors.email && <p className={styles['pro-error']}>{errors.email}</p>} {/* Error Message Above */}
+            <label htmlFor="email" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+    {translation.emailLabel}
+</label>            {errors.email && <p className={styles['pro-error']}>{errors.email}</p>} {/* Error Message Above */}
             <input
                 type="email"
                 id="email"
@@ -191,9 +194,9 @@ function PersonalInfoForm({
 
             {/* Location Input */}
             <div ref={locationRef}>
-                <label htmlFor="location" className={styles['pro-label']}>
-                    {translation.location.selectLocation}
-                </label>
+            <label htmlFor="location" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+    {translation.location.selectLocation}
+</label>
                 {errors.location && (
                     <p className={styles['pro-error']}>{errors.location}</p>
                 )}
