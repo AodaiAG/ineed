@@ -96,6 +96,7 @@ width: 50px;
    
     white-space: nowrap; /* Prevent wrapping onto a new line */
     overflow: hidden; /* Hide overflowing text */
+	    direction: rtl;
     text-overflow: ellipsis; /* Show ellipsis (...) if the text is too long */
     font-size: 1.1rem; /* Make sure the font size is manageable */
 }

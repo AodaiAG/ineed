@@ -8,9 +8,9 @@ const JobFieldsSelection = forwardRef(({
     domains,
     selectedProfessionIds = [],
     setSelectedProfessionIds,
-    language ,
-    error, // Error prop for displaying job fields selection error
-    refs // Refs for scrolling to specific fields
+    language,
+    error,
+    refs
 }, ref) => {
     const { translation } = useLanguage();
     const [expandedDomains, setExpandedDomains] = useState(new Set());
@@ -19,47 +19,34 @@ const JobFieldsSelection = forwardRef(({
     const [subProfessions, setSubProfessions] = useState({});
     const [loadingMainProfessions, setLoadingMainProfessions] = useState({});
     const [loadingSubProfessions, setLoadingSubProfessions] = useState({});
+    const [searchText, setSearchText] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
 
-    // Fetch main professions for a given domain
     const fetchMainProfessions = async (domain) => {
-        if (!domain || mainProfessions[domain]) {
-            return;
-        }
-        setLoadingMainProfessions(prev => ({ ...prev, [domain]: true })); // Set loading state for main professions of this domain
+        if (!domain || mainProfessions[domain]) return;
+        setLoadingMainProfessions(prev => ({ ...prev, [domain]: true }));
         try {
-            const response = await axios.get(`${API_URL}/${language }/main-professions?domain=${domain}`);
+            const response = await axios.get(`${API_URL}/${language}/main-professions?domain=${domain}`);
             const data = response.data;
-
-            console.log("Fetched main professions data:", data);
-
             if (Array.isArray(data)) {
                 setMainProfessions(prev => ({ ...prev, [domain]: data }));
-                // Fetch sub-professions for each main profession in this domain
-                data.forEach(main => {
-                    fetchSubProfessions(main.main);
-                });
+                data.forEach(main => fetchSubProfessions(main.main));
             } else {
                 console.error('Expected an array but received:', data);
             }
         } catch (error) {
             console.error('Error fetching main professions:', error);
         } finally {
-            setLoadingMainProfessions(prev => ({ ...prev, [domain]: false })); // Clear loading state for this domain
+            setLoadingMainProfessions(prev => ({ ...prev, [domain]: false }));
         }
     };
 
-    // Fetch sub-professions for a given main profession
     const fetchSubProfessions = async (main) => {
-        if (!main || subProfessions[main]) {
-            return;
-        }
-        setLoadingSubProfessions(prev => ({ ...prev, [main]: true })); // Set loading state for sub-professions of this main profession
+        if (!main || subProfessions[main]) return;
+        setLoadingSubProfessions(prev => ({ ...prev, [main]: true }));
         try {
-            const response = await axios.get(`${API_URL}/${language }/sub-professions/${main}`);
+            const response = await axios.get(`${API_URL}/${language}/sub-professions/${main}`);
             const data = response.data;
-
-            console.log("Fetched sub-professions data:", data);
-
             if (Array.isArray(data)) {
                 setSubProfessions(prev => ({ ...prev, [main]: data }));
             } else {
@@ -68,19 +55,14 @@ const JobFieldsSelection = forwardRef(({
         } catch (error) {
             console.error('Error fetching sub-professions:', error);
         } finally {
-            setLoadingSubProfessions(prev => ({ ...prev, [main]: false })); // Clear loading state for this main profession
+            setLoadingSubProfessions(prev => ({ ...prev, [main]: false }));
         }
     };
 
-    // Fetch all domains data on component mount
     useEffect(() => {
-
-        console.log('trans '+ language )
         const fetchAllData = async () => {
             try {
-                await Promise.all(domains.map(async (domain) => {
-                    await fetchMainProfessions(domain.domain);
-                }));
+                await Promise.all(domains.map(domain => fetchMainProfessions(domain.domain)));
             } catch (error) {
                 console.error('Error fetching all data:', error);
             }
@@ -88,7 +70,6 @@ const JobFieldsSelection = forwardRef(({
         fetchAllData();
     }, [domains]);
 
-    // Function to toggle the visibility of the main professions under a domain
     const handleToggleDomain = (domain) => {
         setExpandedDomains(prev => {
             const updated = new Set(prev);
@@ -102,7 +83,6 @@ const JobFieldsSelection = forwardRef(({
         });
     };
 
-    // Function to toggle the visibility of sub-professions under a main profession
     const handleToggleMain = (mainProfession) => {
         setExpandedMains(prev => {
             const updated = new Set(prev);
@@ -116,52 +96,97 @@ const JobFieldsSelection = forwardRef(({
         });
     };
 
-    // Function to toggle selection of a sub-profession by ID
     const handleSubProfessionToggle = (subProfessionId) => {
-        setSelectedProfessionIds(prevIds => {
-            if (prevIds.includes(subProfessionId)) {
-                return prevIds.filter(id => id !== subProfessionId);
-            } else {
-                return [...prevIds, subProfessionId];
-            }
-        });
+        setSelectedProfessionIds(prevIds => (
+            prevIds.includes(subProfessionId)
+                ? prevIds.filter(id => id !== subProfessionId)
+                : [...prevIds, subProfessionId]
+        ));
     };
 
-    // Calculate the badge count for a domain (number of main professions with at least one selected sub-profession)
     const getDomainBadgeCount = (domain) => {
-        if (!mainProfessions[domain]) {
-            return 0;
-        }
-
-        return mainProfessions[domain].reduce((count, main) => {
-            if (Array.isArray(subProfessions[main.main]) && subProfessions[main.main].some(sub => selectedProfessionIds.includes(sub.id))) {
-                return count + 1;
-            }
-            return count;
-        }, 0);
+        if (!mainProfessions[domain]) return 0;
+        return mainProfessions[domain].reduce((count, main) => (
+            Array.isArray(subProfessions[main.main]) &&
+            subProfessions[main.main].some(sub => selectedProfessionIds.includes(sub.id))
+                ? count + 1
+                : count
+        ), 0);
     };
 
-    // Calculate the badge count for a main profession (number of selected sub-professions under this main)
-    const getMainBadgeCount = (mainProfession) => {
-        if (!Array.isArray(subProfessions[mainProfession])) {
-            return 0;
+    const getMainBadgeCount = (mainProfession) => (
+        Array.isArray(subProfessions[mainProfession])
+            ? subProfessions[mainProfession].filter(sub => selectedProfessionIds.includes(sub.id)).length
+            : 0
+    );
+
+    // Update expandedDomains whenever searchText changes
+    useEffect(() => {
+        if (searchText) {
+            const matchingDomains = new Set();
+            const matchingMains = new Set();
+
+            domains.forEach(domain => {
+                const domainMatches = domain.domain.toLowerCase().includes(searchText.toLowerCase());
+                const mainMatches = mainProfessions[domain.domain]?.some(main => {
+                    const isMatch = main.main.toLowerCase().includes(searchText.toLowerCase());
+                    if (isMatch) matchingMains.add(main.main);
+                    return isMatch;
+                });
+
+                if (domainMatches || mainMatches) {
+                    matchingDomains.add(domain.domain);
+                }
+            });
+
+            setExpandedDomains(matchingDomains);
+            setExpandedMains(matchingMains);
+        } else {
+            // Reset expanded domains and mains when search text is cleared
+            setExpandedDomains(new Set());
+            setExpandedMains(new Set());
         }
+    }, [searchText, domains, mainProfessions]);
 
-        return subProfessions[mainProfession].filter(sub => selectedProfessionIds.includes(sub.id)).length;
-    };
-
-    if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
-    }
+    const filteredDomains = domains.filter(domain => 
+        domain.domain.toLowerCase().includes(searchText.toLowerCase()) ||
+        (mainProfessions[domain.domain] && mainProfessions[domain.domain].some(main =>
+            main.main.toLowerCase().includes(searchText.toLowerCase())
+        ))
+    );
 
     return (
         <div ref={ref} className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>{translation.selectJobFieldsLabel}</label>
-            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above job fields selection */}
+            {error && <p className={styles['pro-error']}>{error}</p>}
 
-            {domains.map((domain) => (
+            <div className={styles['search-bar-container']}>
+                <input
+                    type="text"
+                    placeholder="Search for a profession..."
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className={styles['search-bar']}
+                />
+                <button
+                    className={styles['not-found-button']}
+                    onClick={() => setShowPopup(true)}
+                >
+                    I didn’t find
+                </button>
+            </div>
+
+            {showPopup && (
+                <div className={styles['popup-container']}>
+                    <div className={styles['popup-content']}>
+                        <p>Report your issue here</p>
+                        <button onClick={() => setShowPopup(false)}>Close</button>
+                    </div>
+                </div>
+            )}
+
+            {filteredDomains.map((domain) => (
                 <div key={domain.domain} className={styles['pro-dropdown']}>
-                    {/* Domain Level */}
                     <div
                         className={styles['pro-dropdown-toggle']}
                         onClick={() => handleToggleDomain(domain.domain)}
@@ -177,13 +202,15 @@ const JobFieldsSelection = forwardRef(({
                     </div>
 
                     <div className={styles['pro-dropdown-content']} style={{ display: expandedDomains.has(domain.domain) ? 'block' : 'none' }} id={domain.domain}>
-                        {(loadingMainProfessions[domain.domain] || !(Array.isArray(mainProfessions[domain.domain]) && mainProfessions[domain.domain].length > 0)) ? (
-                            <p>Loading main professions...</p> // Loading state if mainProfessions is not yet available
+                        {loadingMainProfessions[domain.domain] ? (
+                            <p>Loading main professions...</p>
                         ) : (
-                            mainProfessions[domain.domain].map((mainProfession, index) => {
-                                return (
+                            mainProfessions[domain.domain]
+                                ?.filter(mainProfession => // Filter only matching main professions
+                                    mainProfession.main.toLowerCase().includes(searchText.toLowerCase())
+                                )
+                                .map((mainProfession, index) => (
                                     <div key={`${mainProfession.main}-${index}`} className={styles['pro-dropdown']}>
-                                        {/* Main Profession Level */}
                                         <div
                                             className={styles['pro-dropdown-toggle']}
                                             onClick={(e) => {
@@ -204,14 +231,14 @@ const JobFieldsSelection = forwardRef(({
                                                     onChange={(e) => {
                                                         e.stopPropagation();
                                                         const isChecked = e.target.checked;
-                                                        const subProfessionIds = Array.isArray(subProfessions[mainProfession.main]) ? subProfessions[mainProfession.main].map(sub => sub.id) : [];
-                                                        setSelectedProfessionIds(prevIds => {
-                                                            if (isChecked) {
-                                                                return [...new Set([...prevIds, ...subProfessionIds])];
-                                                            } else {
-                                                                return prevIds.filter(id => !subProfessionIds.includes(id));
-                                                            }
-                                                        });
+                                                        const subProfessionIds = Array.isArray(subProfessions[mainProfession.main])
+                                                            ? subProfessions[mainProfession.main].map(sub => sub.id)
+                                                            : [];
+                                                        setSelectedProfessionIds(prevIds => (
+                                                            isChecked
+                                                                ? [...new Set([...prevIds, ...subProfessionIds])]
+                                                                : prevIds.filter(id => !subProfessionIds.includes(id))
+                                                        ));
                                                     }}
                                                 />
                                                 <span>{mainProfession.main}</span>
@@ -226,18 +253,15 @@ const JobFieldsSelection = forwardRef(({
 
                                         <div className={styles['pro-dropdown-content']} style={{ display: expandedMains.has(mainProfession.main) ? 'block' : 'none' }} id={mainProfession.main}>
                                             {loadingSubProfessions[mainProfession.main] ? (
-                                                <p>Loading sub-professions...</p> // Loading state for sub-professions
+                                                <p>Loading sub-professions...</p>
                                             ) : (
-                                                Array.isArray(subProfessions[mainProfession.main]) && subProfessions[mainProfession.main]?.map((subProfession) => (
+                                                Array.isArray(subProfessions[mainProfession.main]) && subProfessions[mainProfession.main].map((subProfession) => (
                                                     <label key={subProfession.id} className={styles['pro-sub-label']}>
                                                         <input
                                                             type="checkbox"
                                                             className={`${mainProfession.main}-child`}
                                                             checked={selectedProfessionIds.includes(subProfession.id) || false}
-                                                            onChange={(e) => {
-                                                                e.stopPropagation();
-                                                                handleSubProfessionToggle(subProfession.id);
-                                                            }}
+                                                            onChange={() => handleSubProfessionToggle(subProfession.id)}
                                                         />
                                                         {subProfession.sub}
                                                     </label>
@@ -245,8 +269,7 @@ const JobFieldsSelection = forwardRef(({
                                             )}
                                         </div>
                                     </div>
-                                );
-                            })
+                                ))
                         )}
                     </div>
                 </div>
