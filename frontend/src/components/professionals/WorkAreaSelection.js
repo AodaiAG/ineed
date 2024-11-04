@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
@@ -11,6 +11,7 @@ const WorkAreas = forwardRef(({
     error
 }, ref) => {
     const { translation } = useLanguage();
+    const [searchText, setSearchText] = useState('');
 
     // Function to toggle work area selection
     const handleLocationToggle = (cityId) => {
@@ -22,10 +23,6 @@ const WorkAreas = forwardRef(({
             }
         });
     };
-
-    if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
-    }
 
     // Function to count selected cities for a given area
     const countSelectedCities = (area) => {
@@ -45,13 +42,39 @@ const WorkAreas = forwardRef(({
         });
     };
 
+    // Filter areas and cities based on search text
+    const filteredLocations = groupedLocations.map(area => ({
+        ...area,
+        cities: area.cities.filter(city =>
+            city.cityName.toLowerCase().includes(searchText.toLowerCase())
+        )
+    })).filter(area => 
+        area.areaName.toLowerCase().includes(searchText.toLowerCase()) || 
+        area.cities.length > 0
+    );
+
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
+
     return (
         <div ref={ref} className={styles['pro-form-group']}>
             <label className={styles['pro-label']}>{translation.workAreasLabel}</label>
-            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above the work area selection */}
+            {error && <p className={styles['pro-error']}>{error}</p>}
 
-            {Array.isArray(groupedLocations) && groupedLocations.length > 0 ? (
-                groupedLocations.map((area) => {
+            {/* Search Bar */}
+            <div className={styles['search-bar-container']}>
+                <input
+                    type="text"
+                    placeholder="Search for an area or city..."
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className={styles['search-bar']}
+                />
+            </div>
+
+            {Array.isArray(filteredLocations) && filteredLocations.length > 0 ? (
+                filteredLocations.map((area) => {
                     const selectedCount = countSelectedCities(area);
                     return (
                         <div key={area.areaId} className={styles['pro-dropdown']}>
@@ -92,7 +115,7 @@ const WorkAreas = forwardRef(({
                     );
                 })
             ) : (
-                <p>{translation.noWorkAreasFound}</p> // Display message if groupedLocations is empty or not defined
+                <p>{translation.noWorkAreasFound}</p>
             )}
         </div>
     );
