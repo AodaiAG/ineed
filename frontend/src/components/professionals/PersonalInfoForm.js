@@ -24,6 +24,9 @@ function PersonalInfoForm({
     useEffect(() => {
         console.log('Location received in PersonalInfoForm:', location);
     }, [location]);
+    useEffect(() => {
+        console.log('Image received from parent:', image);
+    }, [image]);
 
     const handleWhatsAppClick = () => {
         const phoneNumber = '0504564232';

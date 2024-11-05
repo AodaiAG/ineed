@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import Cropper from 'react-easy-crop';
 import { API_URL } from '../../utils/constans';
 import axios from 'axios';
@@ -16,9 +16,17 @@ function UploadImage({ initialImage, onImageUpload }) {
     const fileInputRef = useRef(null);
     const { translation } = useLanguage();
 
+    useEffect(() => {
+        console.log('Initial image received in UploadImage:', initialImage);
+        setOriginalImage(initialImage); // Ensure state is updated with new prop if it changes
+        setImage(initialImage);
+    }, [initialImage]);
+
     const handleUploadButtonClick = () => {
         fileInputRef.current.click();
     };
+
+
 
     const handleImageUpload = async (event) => {
         const file = event.target.files[0];
