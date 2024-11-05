@@ -92,8 +92,8 @@ function PersonalInfoForm({
 
             {/* Upload Image Component */}
             <UploadImage
-                initialImage={image}
-                onImageUpload={setImage}
+                    initialImage={image}
+                    onImageUpload={(uploadedImageUrl) => setImage(uploadedImageUrl)}
             />
 
             <label htmlFor="email" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>

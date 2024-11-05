@@ -65,31 +65,33 @@ function UploadImage({ initialImage, onImageUpload }) {
     };
 
     const saveCroppedImage = async () => {
-        const croppedImageFile = await getCroppedImage();
         setShowCropper(false); // Close cropper immediately
         setIsPictureLoading(true);  // Start loading spinner
-
+    
+        const croppedImageFile = await getCroppedImage();
         const formData = new FormData();
         formData.append('image', croppedImageFile);
-
+    
         try {
             const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
+    
             const serverImageUrl = response.data.imageUrl;
-            setImage(serverImageUrl);
-            setOriginalImage(serverImageUrl);
+            setImage(serverImageUrl);  // Update local image state
+            setOriginalImage(serverImageUrl);  // Update original image state
             setIsPictureLoading(false);  // Stop loading spinner
-
+    
+            // Pass the URL back to the parent
             if (onImageUpload) onImageUpload(serverImageUrl);
         } catch (error) {
             console.error('Error uploading image:', error);
             setIsPictureLoading(false);  // Stop loading spinner in case of error
         }
     };
+    
 
     const createImage = (url) =>
         new Promise((resolve, reject) => {
