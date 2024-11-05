@@ -1,10 +1,18 @@
-import React, { forwardRef, useState, useEffect } from 'react';
+import React, { forwardRef, useState, useEffect, useRef } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import styles from '../../styles/AvailabilityForm.module.css';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, toggleAvailability, error, availability24_7, setAvailability24_7 }, ref) => {
+const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, error, availability24_7, setAvailability24_7 }, ref) => {
     const { translation } = useLanguage();
     const [localAvailability247, setLocalAvailability247] = useState(availability24_7);
+    const [firstSelection, setFirstSelection] = useState(true);
+    const [lastSelectedTime, setLastSelectedTime] = useState({ start: new Date().setHours(8, 0), end: new Date().setHours(17, 0) });
+    const [shouldOpenEndTime, setShouldOpenEndTime] = useState(false); // New state for managing "to" open
+
+    const startInputRefs = useRef({});
+    const toInputRefs = useRef({});
 
     useEffect(() => {
         setLocalAvailability247(availability24_7);
@@ -12,14 +20,29 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
 
     const handleToggleAvailability = (dayInt) => {
         const isCurrentlyWorking = dayAvailability[dayInt].isWorking;
+
         setDayAvailability((prev) => ({
             ...prev,
             [dayInt]: {
                 isWorking: !isCurrentlyWorking,
-                start: isCurrentlyWorking ? '' : '00:00',
-                end: isCurrentlyWorking ? '' : '23:59',
+                start: isCurrentlyWorking ? '' : lastSelectedTime.start,
+                end: isCurrentlyWorking ? '' : lastSelectedTime.end,
             }
         }));
+
+        if (!isCurrentlyWorking) {
+            if (firstSelection) {
+                setFirstSelection(false);
+                setTimeout(() => {
+                    startInputRefs.current[dayInt]?.setFocus();
+                }, 0);
+            }
+        } else {
+            const remainingWorkingDays = Object.values(dayAvailability).filter(day => day.isWorking);
+            if (remainingWorkingDays.length <= 1) {
+                setFirstSelection(true);
+            }
+        }
     };
 
     const handleAvailability247Change = (checked) => {
@@ -30,18 +53,19 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
     const handleStartTimeChange = (dayInt, value) => {
         setDayAvailability((prev) => ({
             ...prev,
-            [dayInt]: { ...prev[dayInt], start: value, end: value > prev[dayInt].end ? '23:59' : prev[dayInt].end }
+            [dayInt]: { ...prev[dayInt], start: value }
         }));
+        setLastSelectedTime((prev) => ({ ...prev, start: value }));
+        setShouldOpenEndTime(true); // Set flag to open "to" after "from"
     };
 
     const handleEndTimeChange = (dayInt, value) => {
-        const startValue = dayAvailability[dayInt].start;
-        if (value > startValue) {
-            setDayAvailability((prev) => ({
-                ...prev,
-                [dayInt]: { ...prev[dayInt], end: value }
-            }));
-        }
+        setDayAvailability((prev) => ({
+            ...prev,
+            [dayInt]: { ...prev[dayInt], end: value }
+        }));
+        setLastSelectedTime((prev) => ({ ...prev, end: value }));
+        setShouldOpenEndTime(false); // Reset after selection
     };
 
     if (!translation) {
@@ -70,39 +94,53 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
 
                 {!localAvailability247 && Object.keys(dayAvailability).map((dayInt) => {
                     const dayName = translation.days[dayInt];
+                    const isWorking = dayAvailability[dayInt].isWorking;
+
                     return (
                         <div key={dayInt} className={styles['day']}>
                             <div className={styles['day-checkbox-label-container']}>
                                 <input
                                     type="checkbox"
                                     id={`${dayInt}-checkbox`}
-                                    checked={dayAvailability[dayInt].isWorking}
+                                    checked={isWorking}
                                     onChange={() => handleToggleAvailability(parseInt(dayInt))}
                                     className={styles['day-checkbox']}
                                 />
                                 <label htmlFor={`${dayInt}`} className={styles['day-label']}>{dayName}:</label>
                             </div>
                             <div className={styles['day-time-inputs-container']}>
-                                <input
-                                    type={dayAvailability[dayInt].isWorking ? "time" : "text"}
-                                    id={`${dayInt}-start`}
-                                    className={`${styles['day-input']} ${!dayAvailability[dayInt].isWorking ? styles['disabled-input'] : ''}`}
-                                    value={dayAvailability[dayInt].isWorking ? dayAvailability[dayInt].start : ""}
-                                    placeholder={!dayAvailability[dayInt].isWorking ? translation.fromPlaceholder : ""}
-                                    onChange={(e) => handleStartTimeChange(parseInt(dayInt), e.target.value)}
-                                    disabled={!dayAvailability[dayInt].isWorking}
+                                {/* Start Time Picker */}
+                                <DatePicker
+                                    selected={dayAvailability[dayInt].start ? new Date(dayAvailability[dayInt].start) : null}
+                                    onChange={(value) => handleStartTimeChange(parseInt(dayInt), value)}
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    timeCaption="From"
+                                    dateFormat="h:mm aa"
+                                    placeholderText={translation.fromPlaceholder}
+                                    className={styles['day-input']}
+                                    disabled={!isWorking}
+                                    ref={(el) => (startInputRefs.current[dayInt] = el)}
                                 />
                                 <span className={styles['time-separator']}>-</span>
-                                <input
-                                    type={dayAvailability[dayInt].isWorking ? "time" : "text"}
-                                    id={`${dayInt}-end`}
-                                    className={`${styles['day-input']} ${!dayAvailability[dayInt].isWorking ? styles['disabled-input'] : ''}`}
-                                    value={dayAvailability[dayInt].isWorking ? dayAvailability[dayInt].end : ""}
-                                    placeholder={!dayAvailability[dayInt].isWorking ? translation.toPlaceholder : ""}
-                                    onChange={(e) => handleEndTimeChange(parseInt(dayInt), e.target.value)}
-                                    min={dayAvailability[dayInt].start}
-                                    max="23:59"
-                                    disabled={!dayAvailability[dayInt].isWorking}
+                                {/* End Time Picker */}
+                                <DatePicker
+                                    selected={dayAvailability[dayInt].end ? new Date(dayAvailability[dayInt].end) : null}
+                                    onChange={(value) => handleEndTimeChange(parseInt(dayInt), value)}
+                                    showTimeSelect
+                                    showTimeSelectOnly
+                                    timeIntervals={15}
+                                    timeCaption="To"
+                                    dateFormat="h:mm aa"
+                                    placeholderText={translation.toPlaceholder}
+                                    className={styles['day-input']}
+                                    minTime={dayAvailability[dayInt].start || lastSelectedTime.start}
+                                    maxTime={new Date().setHours(23, 59)}
+                                    disabled={!isWorking}
+                                    open={shouldOpenEndTime && isWorking && dayAvailability[dayInt].start} // Conditionally open
+                                    onClickOutside={() => setShouldOpenEndTime(false)} // Close if clicked outside
+                                    ref={(el) => (toInputRefs.current[dayInt] = el)}
                                 />
                             </div>
                         </div>
