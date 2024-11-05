@@ -101,3 +101,8 @@ button:hover {
     100% { transform: rotate(360deg); }
 }
 
+.edit-button {
+    background-color: #1783e0; /* Replace with desired color */
+    transition: background-color 0.3s ease;
+}
+

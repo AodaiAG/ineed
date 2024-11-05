@@ -117,14 +117,14 @@ function UploadImage({ initialImage, onImageUpload }) {
                         onChange={handleImageUpload}
                         style={{ display: 'none' }}
                     />
-                    <div className={styles['button-group']}>
-                        <button onClick={handleUploadButtonClick}>
-                            {image === "/images/Prof/w.png" ? 'Add Picture' : 'Replace Picture'}
-                        </button>
-                        {image !== "/images/Prof/w.png" && (
-                            <button onClick={() => setShowCropper(true)}>Edit</button>
-                        )}
-                    </div>
+                        <div className={styles['button-group']}>
+                            <button onClick={handleUploadButtonClick} className={styles['replace-button']}>
+                                {image === "/images/Prof/w.png" ? 'Add Picture' : 'Replace Picture'}
+                            </button>
+                            {image !== "/images/Prof/w.png" && (
+                                <button onClick={() => setShowCropper(true)} className={styles['edit-button']}>Edit</button>
+                            )}
+                        </div>
                 </>
             )}
             {showCropper && (
