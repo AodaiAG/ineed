@@ -23,7 +23,7 @@ function UploadImage({ initialImage, onImageUpload }) {
         if (file) {
             setIsPictureLoading(true);
             const fileUrl = URL.createObjectURL(file);
-            setOriginalImage(fileUrl);  // Set as the base image
+            setOriginalImage(fileUrl);
             setImage(fileUrl);
             setShowCropper(true);
             setIsPictureLoading(false);
@@ -35,7 +35,7 @@ function UploadImage({ initialImage, onImageUpload }) {
     };
 
     const getCroppedImage = async () => {
-        const imageFile = await createImage(originalImage);  // Use originalImage
+        const imageFile = await createImage(originalImage);
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
 
@@ -56,31 +56,33 @@ function UploadImage({ initialImage, onImageUpload }) {
 
         return new Promise((resolve) => {
             canvas.toBlob((blob) => {
-                const croppedUrl = URL.createObjectURL(blob);
-                resolve({ blob, url: croppedUrl });
+                const file = new File([blob], "cropped-image.jpg", { type: 'image/jpeg' });
+                resolve(file);
             }, 'image/jpeg');
         });
     };
 
     const saveCroppedImage = async () => {
-        const { blob, url } = await getCroppedImage();
-        setImage(url);  // Update the preview image only
-        setShowCropper(false);
+        const croppedImageFile = await getCroppedImage();
+        const formData = new FormData();
+        formData.append('image', croppedImageFile);
 
-        if (originalImage === image) {  // Upload only once
-            const formData = new FormData();
-            formData.append('image', blob);
+        try {
+            const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
-            try {
-                const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                onImageUpload(response.data.imageUrl);
-            } catch (error) {
-                console.error('Error uploading image:', error);
-            }
+            const serverImageUrl = response.data.imageUrl;
+            setImage(serverImageUrl);  // Set image to server URL to persist changes
+            setOriginalImage(serverImageUrl);  // Update original image as the server URL
+            setShowCropper(false);
+
+            // Notify parent component of the new image URL if needed
+            if (onImageUpload) onImageUpload(serverImageUrl);
+        } catch (error) {
+            console.error('Error uploading image:', error);
         }
     };
 
@@ -127,7 +129,7 @@ function UploadImage({ initialImage, onImageUpload }) {
                     <div className={styles['cropper-controls']}>
                         <div className={styles['crop-container']}>
                             <Cropper
-                                image={originalImage}  // Always use originalImage for cropping
+                                image={originalImage}
                                 crop={crop}
                                 zoom={zoom}
                                 aspect={1}
