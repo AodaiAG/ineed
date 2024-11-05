@@ -127,7 +127,11 @@
     "notFoundButton": "I didn't find",
   "searchPlaceholder": "Search for a profession...",
     "searchAreaOrCity": "Search for an area or city...",
-		"editImageButton" : "edit"
+		"editImageButton" : "edit",
+		    "addPicture": "Add Picture",
+    "replacePicture": "Replace Picture",
+    "edit": "Edit",
+    "save": "Save"
 
 
 

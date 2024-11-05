@@ -114,7 +114,11 @@
   "selectDomainFirst": "Seleccione un área primero",
     "notFoundButton": "No encontré",
   "searchPlaceholder": "Buscar una profesión...",
-    "searchAreaOrCity": "Busca una área o ciudad..."
+    "searchAreaOrCity": "Busca una área o ciudad...",
+	    "addPicture": "Agregar imagen",
+    "replacePicture": "Reemplazar imagen",
+    "edit": "Editar",
+    "save": "Guardar"
 
 
 

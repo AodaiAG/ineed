@@ -3,6 +3,7 @@ import Cropper from 'react-easy-crop';
 import { API_URL } from '../../utils/constans';
 import axios from 'axios';
 import styles from '../../styles/UploadImage.module.css';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 function UploadImage({ initialImage, onImageUpload }) {
     const [originalImage, setOriginalImage] = useState(initialImage || "/images/Prof/w.png");
@@ -13,6 +14,7 @@ function UploadImage({ initialImage, onImageUpload }) {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
     const [isPictureLoading, setIsPictureLoading] = useState(false);
     const fileInputRef = useRef(null);
+    const { translation } = useLanguage();
 
     const handleUploadButtonClick = () => {
         fileInputRef.current.click();
@@ -119,10 +121,10 @@ function UploadImage({ initialImage, onImageUpload }) {
                     />
                         <div className={styles['button-group']}>
                             <button onClick={handleUploadButtonClick} className={styles['replace-button']}>
-                                {image === "/images/Prof/w.png" ? 'Add Picture' : 'Replace Picture'}
+                                {image === "/images/Prof/w.png" ? translation.addPicture : translation.replacePicture}
                             </button>
                             {image !== "/images/Prof/w.png" && (
-                                <button onClick={() => setShowCropper(true)} className={styles['edit-button']}>Edit</button>
+                                <button onClick={() => setShowCropper(true)} className={styles['edit-button']}>{translation.edit}</button>
                             )}
                         </div>
                 </>
@@ -142,7 +144,7 @@ function UploadImage({ initialImage, onImageUpload }) {
                             />
                         </div>
                         <button className={styles['save-button']} onClick={saveCroppedImage}>
-                            Save
+                            {translation.save}
                         </button>
                     </div>
                 </div>

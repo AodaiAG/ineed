@@ -122,7 +122,11 @@
   "selectDomainFirst": "اختر المجال أولاً",
     "notFoundButton": "لم أجد",
   "searchPlaceholder": "ابحث عن مهنة...",
-    "searchAreaOrCity": "ابحث عن منطقة أو مدينة..."
+    "searchAreaOrCity": "ابحث عن منطقة أو مدينة...",
+	    "addPicture": "إضافة صورة",
+    "replacePicture": "استبدال الصورة",
+    "edit": "تعديل",
+    "save": "حفظ"
 
 
 
