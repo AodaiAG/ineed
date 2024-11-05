@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-import Cropper from 'react-easy-crop';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import LocationComponentPopup from './LocationComponentPopup';
+import UploadImage from './UploadImage'; // Import the UploadImage component
 import { API_URL } from '../../utils/constans';
 import axios from 'axios';
 
@@ -19,60 +19,17 @@ function PersonalInfoForm({
 }) {
     const { translation } = useLanguage();
     const { fullNameRef, emailRef, websiteRef, locationRef } = refs;
-    const [isPictureLoading, setIsPictureLoading] = useState(false);
     const [showLocationPopup, setShowLocationPopup] = useState(false);
-    const [showImageEditPopup, setShowImageEditPopup] = useState(false);
-    const [crop, setCrop] = useState({ x: 0, y: 0 });
-    const [zoom, setZoom] = useState(1);
-    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-    const fileInputRef = useRef(null);
 
     useEffect(() => {
         console.log('Location received in PersonalInfoForm:', location);
     }, [location]);
-
-    const handleImageUpload = async (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setIsPictureLoading(true);
-
-            const formData = new FormData();
-            formData.append('image', file);
-
-            try {
-                const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                setImage(response.data.imageUrl);
-            } catch (error) {
-                console.error('Error uploading image:', error);
-            } finally {
-                setIsPictureLoading(false);
-            }
-        }
-    };
 
     const handleWhatsAppClick = () => {
         const phoneNumber = '0504564232';
         const internationalPhoneNumber = `+972${phoneNumber}`;
         const message = encodeURIComponent(translation.customerSupportMessage);
         window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
-    };
-
-    const handleUploadButtonClick = () => {
-        fileInputRef.current.click();
-    };
-
-    const handleEditButtonClick = () => {
-        setShowImageEditPopup(true);
-    };
-
-    const handleCloseImageEditPopup = async () => {
-        const croppedImage = await getCroppedImage(image, croppedAreaPixels);
-        setImage(croppedImage);
-        setShowImageEditPopup(false);
     };
 
     const handleLocationInputClick = () => {
@@ -94,47 +51,6 @@ function PersonalInfoForm({
         });
         setShowLocationPopup(false);
     };
-
-    const onCropComplete = (croppedArea, croppedAreaPixels) => {
-        setCroppedAreaPixels(croppedAreaPixels);
-    };
-
-    const getCroppedImage = async (imageSrc, crop) => {
-        const image = await createImage(imageSrc);
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = crop.width;
-        canvas.height = crop.height;
-
-        ctx.drawImage(
-            image,
-            crop.x,
-            crop.y,
-            crop.width,
-            crop.height,
-            0,
-            0,
-            crop.width,
-            crop.height
-        );
-
-        return new Promise((resolve) => {
-            canvas.toBlob((blob) => {
-                const fileUrl = URL.createObjectURL(blob);
-                resolve(fileUrl);
-            }, 'image/jpeg');
-        });
-    };
-
-    const createImage = (url) =>
-        new Promise((resolve, reject) => {
-            const image = new Image();
-            image.crossOrigin = 'anonymous';
-            image.src = url;
-            image.onload = () => resolve(image);
-            image.onerror = (error) => reject(error);
-        });
 
     if (!translation) {
         return <div>Loading...</div>;
@@ -174,56 +90,11 @@ function PersonalInfoForm({
                 }}>{translation.contactLink}</a>
             </p>
 
-            <label className={styles['pro-label']}>{translation.addImageLabel}</label>
-            <div className={styles['pro-image-upload']}>
-                {isPictureLoading ? (
-                    <div className={styles['loading-indicator']}>Uploading...</div>
-                ) : (
-                    <img
-                        src={image}
-                        alt={translation.imageAlt}
-                        className={styles['pro-image-preview']}
-                    />
-                )}
-                <input
-                    type="file"
-                    accept="image/*"
-                    ref={fileInputRef}
-                    onChange={handleImageUpload}
-                    style={{ display: 'none' }}
-                />
-                <div className={styles['button-group']}>
-                    <button type="button" className={styles['pro-upload-button']} onClick={handleUploadButtonClick}>
-                        {translation.addImageButton}
-                    </button>
-                    <button type="button" className={styles['pro-edit-button']} onClick={handleEditButtonClick}>
-                        {translation.editImageButton}
-                    </button>
-                </div>
-            </div>
-            <p className={styles['pro-note']}>{translation.addImageNote}</p>
-
-            {showImageEditPopup && (
-                <div className={styles['popup-container']}>
-                    <div className={styles['popup-content']}>
-                        <h2>{translation.editImagePopupTitle}</h2>
-                        <div className={styles['crop-container']}>
-                            <Cropper
-                                image={image}
-                                crop={crop}
-                                zoom={zoom}
-                                aspect={1}
-                                onCropChange={setCrop}
-                                onZoomChange={setZoom}
-                                onCropComplete={onCropComplete}
-                            />
-                        </div>
-                        <button className={styles['save-button']} onClick={handleCloseImageEditPopup}>
-                            Save
-                        </button>
-                    </div>
-                </div>
-            )}
+            {/* Upload Image Component */}
+            <UploadImage
+                initialImage={image}
+                onImageUpload={setImage}
+            />
 
             <label htmlFor="email" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
                 {translation.emailLabel}

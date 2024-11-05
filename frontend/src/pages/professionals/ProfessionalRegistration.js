@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import { API_URL } from '../../utils/constans';
 import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
-import ImageUpload from '../../components/professionals/ImageUpload';
 import JobFieldsSelection from '../../components/professionals/JobFieldsSelection';
 import { sendSms ,shortenUrl} from '../../utils/generalUtils';
 import WorkAreas from '../../components/professionals/WorkAreaSelection';

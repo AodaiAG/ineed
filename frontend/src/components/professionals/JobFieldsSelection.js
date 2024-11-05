@@ -125,6 +125,7 @@ const JobFieldsSelection = forwardRef(({
             ? subProfessions[mainProfession].filter(sub => selectedProfessionIds.includes(sub.id)).length
             : 0
     );
+    
 
     // Update expandedDomains whenever searchText changes
     useEffect(() => {
@@ -160,6 +161,10 @@ const JobFieldsSelection = forwardRef(({
             main.main.toLowerCase().includes(searchText.toLowerCase())
         ))
     );
+
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
 
     return (
         <div ref={ref} className={styles['pro-form-group']}>

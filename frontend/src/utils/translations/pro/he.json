@@ -45,6 +45,7 @@
     "addImageLabel": "הוסף תמונה",
     "imageAlt": "תמונה מקצועית",
     "addImageButton": "הוסף תמונה",
+	"replaceImageButton": "החלף תמונה",
     "addImageNote": "*בעלי תמונה מקבלים יותר פניות",
     "emailLabel": "אימייל שלי:",
     "emailPlaceholder": "example@gmail.com",

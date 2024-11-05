@@ -1,0 +1,89 @@
+.upload-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.preview-image {
+width: 300px;
+    height: 300px;
+    /* border-radius: 50%; */
+    object-fit: cover;
+    margin-top: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+button {
+    background-color: #fdbe00;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #d4a30e;
+}
+
+.cropper-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark overlay for popup effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.cropper-controls {
+    background-color: #000; /* Match your popup container style */
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #FFCC00;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+}
+
+.crop-container {
+    width: 100%;
+    height: 300px;
+    position: relative;
+}
+
+.save-button {
+    margin-top: 20px;
+    background-color: #FFCC00;
+    color: #000;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.save-button:hover {
+    background-color: #d4a30e;
+}
+.button-group {
+    display: flex;
+    gap: 10px; /* Adds space between the buttons */
+    margin-top: 10px;
+}
+
