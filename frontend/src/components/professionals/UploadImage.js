@@ -64,6 +64,9 @@ function UploadImage({ initialImage, onImageUpload }) {
 
     const saveCroppedImage = async () => {
         const croppedImageFile = await getCroppedImage();
+        setShowCropper(false); // Close cropper immediately
+        setIsPictureLoading(true);  // Start loading spinner
+
         const formData = new FormData();
         formData.append('image', croppedImageFile);
 
@@ -75,14 +78,14 @@ function UploadImage({ initialImage, onImageUpload }) {
             });
 
             const serverImageUrl = response.data.imageUrl;
-            setImage(serverImageUrl);  // Set image to server URL to persist changes
-            setOriginalImage(serverImageUrl);  // Update original image as the server URL
-            setShowCropper(false);
+            setImage(serverImageUrl);
+            setOriginalImage(serverImageUrl);
+            setIsPictureLoading(false);  // Stop loading spinner
 
-            // Notify parent component of the new image URL if needed
             if (onImageUpload) onImageUpload(serverImageUrl);
         } catch (error) {
             console.error('Error uploading image:', error);
+            setIsPictureLoading(false);  // Stop loading spinner in case of error
         }
     };
 
@@ -98,7 +101,7 @@ function UploadImage({ initialImage, onImageUpload }) {
     return (
         <div className={styles['upload-image-container']}>
             {isPictureLoading ? (
-                <div>Loading...</div>
+                <div className={styles['loading-spinner']}></div>  // Display spinner when loading
             ) : (
                 <>
                     <img
