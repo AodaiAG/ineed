@@ -24,6 +24,7 @@ function PersonalInfoForm({
     const [showImageEditPopup, setShowImageEditPopup] = useState(false);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
     const fileInputRef = useRef(null);
 
     useEffect(() => {
@@ -68,7 +69,9 @@ function PersonalInfoForm({
         setShowImageEditPopup(true);
     };
 
-    const handleCloseImageEditPopup = () => {
+    const handleCloseImageEditPopup = async () => {
+        const croppedImage = await getCroppedImage(image, croppedAreaPixels);
+        setImage(croppedImage);
         setShowImageEditPopup(false);
     };
 
@@ -91,6 +94,47 @@ function PersonalInfoForm({
         });
         setShowLocationPopup(false);
     };
+
+    const onCropComplete = (croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+    };
+
+    const getCroppedImage = async (imageSrc, crop) => {
+        const image = await createImage(imageSrc);
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+
+        ctx.drawImage(
+            image,
+            crop.x,
+            crop.y,
+            crop.width,
+            crop.height,
+            0,
+            0,
+            crop.width,
+            crop.height
+        );
+
+        return new Promise((resolve) => {
+            canvas.toBlob((blob) => {
+                const fileUrl = URL.createObjectURL(blob);
+                resolve(fileUrl);
+            }, 'image/jpeg');
+        });
+    };
+
+    const createImage = (url) =>
+        new Promise((resolve, reject) => {
+            const image = new Image();
+            image.crossOrigin = 'anonymous';
+            image.src = url;
+            image.onload = () => resolve(image);
+            image.onerror = (error) => reject(error);
+        });
 
     if (!translation) {
         return <div>Loading...</div>;
@@ -171,7 +215,7 @@ function PersonalInfoForm({
                                 aspect={1}
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
-                                onCropComplete={(croppedArea, croppedAreaPixels) => console.log(croppedArea, croppedAreaPixels)}
+                                onCropComplete={onCropComplete}
                             />
                         </div>
                         <button className={styles['save-button']} onClick={handleCloseImageEditPopup}>
