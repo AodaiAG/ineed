@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useEffect } from 'react';
-import styles from '../../styles/ProfessionalRegistration.module.css';
+import styles from '../../styles/AvailabilityForm.module.css';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, toggleAvailability, error, availability24_7, setAvailability24_7 }, ref) => {
@@ -7,37 +7,24 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
     const [localAvailability247, setLocalAvailability247] = useState(availability24_7);
 
     useEffect(() => {
-        // Synchronize local state with the prop
         setLocalAvailability247(availability24_7);
     }, [availability24_7]);
 
     const handleToggleAvailability = (dayInt) => {
         const isCurrentlyWorking = dayAvailability[dayInt].isWorking;
-
-        if (!isCurrentlyWorking) {
-            setDayAvailability((prev) => ({
-                ...prev,
-                [dayInt]: {
-                    isWorking: true,
-                    start: '00:00',
-                    end: '23:59',
-                }
-            }));
-        } else {
-            setDayAvailability((prev) => ({
-                ...prev,
-                [dayInt]: {
-                    isWorking: false,
-                    start: '',
-                    end: '',
-                }
-            }));
-        }
+        setDayAvailability((prev) => ({
+            ...prev,
+            [dayInt]: {
+                isWorking: !isCurrentlyWorking,
+                start: isCurrentlyWorking ? '' : '00:00',
+                end: isCurrentlyWorking ? '' : '23:59',
+            }
+        }));
     };
 
     const handleAvailability247Change = (checked) => {
         setLocalAvailability247(checked);
-        setAvailability24_7(checked);  // Update the prop in the parent component
+        setAvailability24_7(checked);
     };
 
     const handleStartTimeChange = (dayInt, value) => {
@@ -49,7 +36,6 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
 
     const handleEndTimeChange = (dayInt, value) => {
         const startValue = dayAvailability[dayInt].start;
-
         if (value > startValue) {
             setDayAvailability((prev) => ({
                 ...prev,
@@ -59,15 +45,16 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
     };
 
     if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
+        return <div>Loading...</div>;
     }
 
     return (
-        <div ref={ref} className={styles['pro-form-group']}>
-<label className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
-    {translation.availabilityLabel}
-</label>            {error && <p className={styles['pro-error']}>{error}</p>} {/* Display error message above availability selection */}
-            <div className={styles['pro-availability-group']}>
+        <div ref={ref} className={styles['availability-form-container']}>
+            <label className={`${styles['availability-label']} ${styles['availability-label-required']}`}>
+                {translation.availabilityLabel}
+            </label>
+            {error && <p className={styles['error-message']}>{error}</p>}
+            <div className={styles['availability-group']}>
                 <div className={styles['availability-24-7']}>
                     <input
                         type="checkbox"
@@ -82,43 +69,42 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, togg
                 </div>
 
                 {!localAvailability247 && Object.keys(dayAvailability).map((dayInt) => {
-                    const dayName = translation.days[dayInt]; // Get the translated day name
-
+                    const dayName = translation.days[dayInt];
                     return (
                         <div key={dayInt} className={styles['day']}>
-                            <input
-                                type="checkbox"
-                                id={`${dayInt}-checkbox`}
-                                checked={dayAvailability[dayInt].isWorking}
-                                onChange={() => handleToggleAvailability(parseInt(dayInt))}
-                                className={styles['day-checkbox']}
-                            />
-                            <label htmlFor={`${dayInt}`} className={styles['day-label']}>{dayName}:</label>
-
-                            {/* Start Time Input */}
-                            <input
-                                type={dayAvailability[dayInt].isWorking ? "time" : "text"}
-                                id={`${dayInt}-start`}
-                                className={`${styles['day-input']} ${!dayAvailability[dayInt].isWorking ? styles['disabled-input'] : ''}`}
-                                value={dayAvailability[dayInt].isWorking ? dayAvailability[dayInt].start : ""}
-                                placeholder={!dayAvailability[dayInt].isWorking ? translation.fromPlaceholder : ""}
-                                onChange={(e) => handleStartTimeChange(parseInt(dayInt), e.target.value)}
-                                disabled={!dayAvailability[dayInt].isWorking}
-                            />
-                            -
-
-                            {/* End Time Input */}
-                            <input
-                                type={dayAvailability[dayInt].isWorking ? "time" : "text"}
-                                id={`${dayInt}-end`}
-                                className={`${styles['day-input']} ${!dayAvailability[dayInt].isWorking ? styles['disabled-input'] : ''}`}
-                                value={dayAvailability[dayInt].isWorking ? dayAvailability[dayInt].end : ""}
-                                placeholder={!dayAvailability[dayInt].isWorking ? translation.toPlaceholder : ""}
-                                onChange={(e) => handleEndTimeChange(parseInt(dayInt), e.target.value)}
-                                min={dayAvailability[dayInt].start}
-                                max="23:59"
-                                disabled={!dayAvailability[dayInt].isWorking}
-                            />
+                            <div className={styles['day-checkbox-label-container']}>
+                                <input
+                                    type="checkbox"
+                                    id={`${dayInt}-checkbox`}
+                                    checked={dayAvailability[dayInt].isWorking}
+                                    onChange={() => handleToggleAvailability(parseInt(dayInt))}
+                                    className={styles['day-checkbox']}
+                                />
+                                <label htmlFor={`${dayInt}`} className={styles['day-label']}>{dayName}:</label>
+                            </div>
+                            <div className={styles['day-time-inputs-container']}>
+                                <input
+                                    type={dayAvailability[dayInt].isWorking ? "time" : "text"}
+                                    id={`${dayInt}-start`}
+                                    className={`${styles['day-input']} ${!dayAvailability[dayInt].isWorking ? styles['disabled-input'] : ''}`}
+                                    value={dayAvailability[dayInt].isWorking ? dayAvailability[dayInt].start : ""}
+                                    placeholder={!dayAvailability[dayInt].isWorking ? translation.fromPlaceholder : ""}
+                                    onChange={(e) => handleStartTimeChange(parseInt(dayInt), e.target.value)}
+                                    disabled={!dayAvailability[dayInt].isWorking}
+                                />
+                                <span className={styles['time-separator']}>-</span>
+                                <input
+                                    type={dayAvailability[dayInt].isWorking ? "time" : "text"}
+                                    id={`${dayInt}-end`}
+                                    className={`${styles['day-input']} ${!dayAvailability[dayInt].isWorking ? styles['disabled-input'] : ''}`}
+                                    value={dayAvailability[dayInt].isWorking ? dayAvailability[dayInt].end : ""}
+                                    placeholder={!dayAvailability[dayInt].isWorking ? translation.toPlaceholder : ""}
+                                    onChange={(e) => handleEndTimeChange(parseInt(dayInt), e.target.value)}
+                                    min={dayAvailability[dayInt].start}
+                                    max="23:59"
+                                    disabled={!dayAvailability[dayInt].isWorking}
+                                />
+                            </div>
                         </div>
                     );
                 })}
