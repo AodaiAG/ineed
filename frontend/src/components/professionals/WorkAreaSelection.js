@@ -59,9 +59,10 @@ const WorkAreas = forwardRef(({
 
     return (
         <div ref={ref} className={styles['pro-form-group']}>
-<label className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
-    {translation.workAreasLabel}
-</label>            {error && <p className={styles['pro-error']}>{error}</p>}
+            <label className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
+                {translation.workAreasLabel}
+            </label>
+            {error && <p className={styles['pro-error']}>{error}</p>}
 
             {/* Search Bar */}
             <div className={styles['search-bar-container']}>
@@ -77,6 +78,8 @@ const WorkAreas = forwardRef(({
             {Array.isArray(filteredLocations) && filteredLocations.length > 0 ? (
                 filteredLocations.map((area) => {
                     const selectedCount = countSelectedCities(area);
+                    const isExpanded = searchText && (area.areaName.toLowerCase().includes(searchText.toLowerCase()) || area.cities.length > 0);
+
                     return (
                         <div key={area.areaId} className={styles['pro-dropdown']}>
                             <div
@@ -99,7 +102,11 @@ const WorkAreas = forwardRef(({
                                 )}
                                 <i className={styles['pro-arrow']}>⌄</i>
                             </div>
-                            <div className={styles['pro-dropdown-content']} id={area.areaId}>
+                            <div 
+                                className={styles['pro-dropdown-content']} 
+                                id={area.areaId}
+                                style={{ display: isExpanded ? 'block' : 'none' }} // Show only if matched and searchText is not empty
+                            >
                                 {area.cities.map((city) => (
                                     <label key={city.cityId} className={styles['pro-sub-label']}>
                                         <input 
