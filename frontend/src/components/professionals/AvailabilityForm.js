@@ -126,6 +126,8 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     onChange={(value) => handleStartTimeChange(parseInt(dayInt), value)}
                                     showTimeSelect
                                     showTimeSelectOnly
+                                    onKeyDown={(e) => e.preventDefault()} // Prevent typing
+
                                     timeIntervals={15}
                                     timeCaption=""
                                     dateFormat="h:mm aa"
@@ -146,6 +148,8 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     showTimeSelectOnly
                                     timeIntervals={15}
                                     timeCaption=""
+                                    onKeyDown={(e) => e.preventDefault()} // Prevent typing
+
                                     dateFormat="h:mm aa"
                                     placeholderText={translation.toPlaceholder}
                                     className={styles['day-input']}
