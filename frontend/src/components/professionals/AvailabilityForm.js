@@ -9,7 +9,7 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
     const [localAvailability247, setLocalAvailability247] = useState(availability24_7);
     const [firstSelection, setFirstSelection] = useState(true);
     const [lastSelectedTime, setLastSelectedTime] = useState({ start: new Date().setHours(8, 0), end: new Date().setHours(17, 0) });
-    const [openEndTimePicker, setOpenEndTimePicker] = useState({}); // State to track open state of each "To" picker
+    const [openTimePicker, setOpenTimePicker] = useState({}); // Tracks open states for both pickers
 
     const startInputRefs = useRef({});
     const toInputRefs = useRef({});
@@ -31,16 +31,18 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
         }));
 
         if (!isCurrentlyWorking) {
+            // * Initial selection behavior
             if (firstSelection) {
                 setFirstSelection(false);
                 setTimeout(() => {
-                    startInputRefs.current[dayInt]?.setFocus();
+                    toggleStartPicker(dayInt, true); // Automatically open "From"
                 }, 0);
             }
         } else {
+            // Reset if all days are deselected
             const remainingWorkingDays = Object.values(dayAvailability).filter(day => day.isWorking);
             if (remainingWorkingDays.length <= 1) {
-                setFirstSelection(true);
+                setFirstSelection(true); // Reset behavior for next selection
             }
         }
     };
@@ -56,7 +58,8 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
             [dayInt]: { ...prev[dayInt], start: value }
         }));
         setLastSelectedTime((prev) => ({ ...prev, start: value }));
-        setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: true })); // Open only this day's "To" picker
+        toggleStartPicker(dayInt, false); // Close "From" and open "To"
+        toggleEndPicker(dayInt, true);
     };
 
     const handleEndTimeChange = (dayInt, value) => {
@@ -65,7 +68,15 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
             [dayInt]: { ...prev[dayInt], end: value }
         }));
         setLastSelectedTime((prev) => ({ ...prev, end: value }));
-        setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: false })); // Close only this day's "To" picker
+        toggleEndPicker(dayInt, false); // Close "To"
+    };
+
+    const toggleStartPicker = (dayInt, isOpen) => {
+        setOpenTimePicker((prev) => ({ ...prev, [`start-${dayInt}`]: isOpen }));
+    };
+
+    const toggleEndPicker = (dayInt, isOpen) => {
+        setOpenTimePicker((prev) => ({ ...prev, [`end-${dayInt}`]: isOpen }));
     };
 
     if (!translation) {
@@ -121,6 +132,9 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     placeholderText={translation.fromPlaceholder}
                                     className={styles['day-input']}
                                     disabled={!isWorking}
+                                    open={openTimePicker[`start-${dayInt}`] || false}
+                                    onFocus={() => toggleStartPicker(dayInt, true)} // Open on focus for "From"
+                                    onClickOutside={() => toggleStartPicker(dayInt, false)} // Close if clicked outside
                                     ref={(el) => (startInputRefs.current[dayInt] = el)}
                                 />
                                 <span className={styles['time-separator']}>-</span>
@@ -138,9 +152,9 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     minTime={dayAvailability[dayInt].start || lastSelectedTime.start}
                                     maxTime={new Date().setHours(23, 59)}
                                     disabled={!isWorking}
-                                    open={openEndTimePicker[dayInt] || false} // Open only if this day's "To" picker is set to true
-                                    onFocus={() => setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: true }))} // Open on focus for "To"
-                                    onClickOutside={() => setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: false }))} // Close if clicked outside
+                                    open={openTimePicker[`end-${dayInt}`] || false}
+                                    onFocus={() => toggleEndPicker(dayInt, true)} // Open on focus for "To"
+                                    onClickOutside={() => toggleEndPicker(dayInt, false)} // Close if clicked outside
                                     ref={(el) => (toInputRefs.current[dayInt] = el)}
                                 />
                             </div>

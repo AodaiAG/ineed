@@ -93,6 +93,27 @@
 .day-input::placeholder {
     color: #3c3535;
 }
+.day-input input {
+    pointer-events: none;
+}
+
+/* General scaling for the entire DatePicker component */
+.react-datepicker {
+    font-size: 1.2rem; /* Scale up text across the DatePicker */
+    transform: scale(1.2); /* Scale entire DatePicker */
+    transform-origin: top left; /* Anchor scaling to top-left */
+}
+
+/* Adjustments specifically for time container within DatePicker */
+.react-datepicker__time-container {
+    width: 100px; /* Adjust width if needed */
+}
+
+/* Optional: Style individual time list items for spacing and readability */
+.react-datepicker__time-list-item {
+    padding: 0.5rem 1rem; /* Increase padding for each time item */
+    font-size: inherit; /* Inherit font size from parent scaling */
+}
 
 
 /* Error message styling */
