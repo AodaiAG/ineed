@@ -9,7 +9,7 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
     const [localAvailability247, setLocalAvailability247] = useState(availability24_7);
     const [firstSelection, setFirstSelection] = useState(true);
     const [lastSelectedTime, setLastSelectedTime] = useState({ start: new Date().setHours(8, 0), end: new Date().setHours(17, 0) });
-    const [shouldOpenEndTime, setShouldOpenEndTime] = useState(false); // New state for managing "to" open
+    const [openEndTimePicker, setOpenEndTimePicker] = useState({}); // State to track open state of each "To" picker
 
     const startInputRefs = useRef({});
     const toInputRefs = useRef({});
@@ -56,7 +56,7 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
             [dayInt]: { ...prev[dayInt], start: value }
         }));
         setLastSelectedTime((prev) => ({ ...prev, start: value }));
-        setShouldOpenEndTime(true); // Set flag to open "to" after "from"
+        setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: true })); // Open only this day's "To" picker
     };
 
     const handleEndTimeChange = (dayInt, value) => {
@@ -65,7 +65,7 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
             [dayInt]: { ...prev[dayInt], end: value }
         }));
         setLastSelectedTime((prev) => ({ ...prev, end: value }));
-        setShouldOpenEndTime(false); // Reset after selection
+        setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: false })); // Close only this day's "To" picker
     };
 
     if (!translation) {
@@ -116,7 +116,7 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     showTimeSelect
                                     showTimeSelectOnly
                                     timeIntervals={15}
-                                    timeCaption="From"
+                                    timeCaption=""
                                     dateFormat="h:mm aa"
                                     placeholderText={translation.fromPlaceholder}
                                     className={styles['day-input']}
@@ -131,15 +131,16 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     showTimeSelect
                                     showTimeSelectOnly
                                     timeIntervals={15}
-                                    timeCaption="To"
+                                    timeCaption=""
                                     dateFormat="h:mm aa"
                                     placeholderText={translation.toPlaceholder}
                                     className={styles['day-input']}
                                     minTime={dayAvailability[dayInt].start || lastSelectedTime.start}
                                     maxTime={new Date().setHours(23, 59)}
                                     disabled={!isWorking}
-                                    open={shouldOpenEndTime && isWorking && dayAvailability[dayInt].start} // Conditionally open
-                                    onClickOutside={() => setShouldOpenEndTime(false)} // Close if clicked outside
+                                    open={openEndTimePicker[dayInt] || false} // Open only if this day's "To" picker is set to true
+                                    onFocus={() => setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: true }))} // Open on focus for "To"
+                                    onClickOutside={() => setOpenEndTimePicker((prev) => ({ ...prev, [dayInt]: false }))} // Close if clicked outside
                                     ref={(el) => (toInputRefs.current[dayInt] = el)}
                                 />
                             </div>
