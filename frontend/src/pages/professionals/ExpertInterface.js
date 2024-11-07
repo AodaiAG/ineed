@@ -104,18 +104,18 @@ function ExpertInterface() {
 
     return (
         <div className={styles.expertInterface_container}>
-            {/* Language Switch Component */}
-            <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
-                <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
+            {/* Language Switch Component, Title, and Subtitle in Flex Container */}
+            <div className={styles.headerContainer}>
+                <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
+                    <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
+                </div>
+                <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
+                <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
             </div>
-
+    
             {/* Language Selection Popup */}
             {isLanguagePopupOpen && <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} />}
-
-            {/* Title */}
-            <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
-            <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
-
+    
             {/* Image Section */}
             <div className={styles.expertInterface_imageContainer}>
                 <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.expertInterface_workerImage} />
@@ -125,27 +125,27 @@ function ExpertInterface() {
                     <span className={styles.clickableText} onClick={handleWhatsAppClick}> כאן</span>
                 </p>
             </div>
-
-            {/* New Card Resend Section */}
-             <div className={styles.expertInterface_resendSection}>
-                <span className={styles.cardRequestText}>
-                    {translation.resendBusinessCardText || "שלח לי את הכרטיס שוב"}
-                </span>
-                <span
-                    className={sendDisabled ? styles.disabledLink : styles.resendLink}
-                    onClick={!sendDisabled ? handleResendClick : null}
-                >
-                    {sendDisabled ? countdown : translation.clickHereText || "כאן"}
-                </span>
+    
+            {/* Resend Section and Settings Button in Flex Container */}
+            <div className={styles.footerContainer}>
+                <div className={styles.expertInterface_resendSection}>
+                    <span className={styles.cardRequestText}>
+                        {translation.resendBusinessCardText || "שלח לי את הכרטיס שוב"}
+                    </span>
+                    <span
+                        className={sendDisabled ? styles.disabledLink : styles.resendLink}
+                        onClick={!sendDisabled ? handleResendClick : null}
+                    >
+                        {sendDisabled ? countdown : translation.clickHereText || "כאן"}
+                    </span>
+                </div>
+                <button className={styles.expertInterface_settingsButton} onClick={handleMySettingsClick}>
+                    {translation.mySettingsButtonLabel}
+                </button>
             </div>
-
-
-            {/* Settings Button at the Bottom */}
-            <button className={styles.expertInterface_settingsButton} onClick={handleMySettingsClick}>
-                {translation.mySettingsButtonLabel}
-            </button>
         </div>
     );
+    
 }
 
 export default ExpertInterface;

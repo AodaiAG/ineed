@@ -32,6 +32,7 @@
   position: relative;
   min-height: 100vh; /* Ensure it takes the full viewport height */
   	    overflow: hidden; /* Prevent scroll if extra space appears */
+		justify-content: space-between;
 
 }
 
@@ -160,7 +161,7 @@ width: 50px;
 }
 .expertInterface_contactPrompt {
 	font-size: 1.1rem;
-    color: #ffd600;
+    color: #FDBE00;
     text-align: center;
 	margin-top: 0.5rem;
 }
@@ -175,9 +176,10 @@ width: 50px;
 }
 
 .resendLink {
-    color: blue;
+    color: #FDBE00;
     cursor: pointer;
-	    margin: auto;
+margin: auto 0;
+
     text-decoration: underline;
 }
 
@@ -186,9 +188,9 @@ width: 50px;
     cursor: default;
 }
 .clickableText {
-    color: blue;
+    color: #1783E0;
     cursor: pointer;
-    text-decoration: underline;
+
 	margin: 0.20rem;
 }
 .cardRequestText {
@@ -201,4 +203,6 @@ width: 50px;
     text-transform: uppercase;
     color: #FFFFFF;
 }
+
+
 
