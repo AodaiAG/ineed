@@ -20,7 +20,7 @@ export const LanguageProvider = ({ children }) => {
     const savedLanguage = localStorage.getItem('userLanguage');
 
     // Initial state for the language
-    const [language, setLanguage] = useState(savedLanguage || detectBrowserLanguage() || 'he');
+    const [language, setLanguage] = useState(savedLanguage ||  'he');
     const [translation, setTranslation] = useState(null);
 
     // Load translations when the language or location changes
