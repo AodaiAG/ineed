@@ -115,7 +115,7 @@ function ExpertInterface() {
     
             {/* Language Selection Popup */}
             {isLanguagePopupOpen && <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} />}
-    
+            <div className={styles.spacer}></div>
             {/* Image Section */}
             <div className={styles.expertInterface_imageContainer}>
                 <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.expertInterface_workerImage} />
