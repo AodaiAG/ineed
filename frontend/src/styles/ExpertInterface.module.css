@@ -216,7 +216,7 @@ margin: auto 0;
     background-color: transparent;
     position: relative;
     overflow: hidden; /* Prevent scroll if extra space appears */
-    padding: 20px; /* Add some padding */
+    padding: 10px; /* Add some padding */
     height: 100%; /* Set to fill available space */
 }
 
