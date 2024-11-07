@@ -130,7 +130,10 @@
 	    "thankYouMessage": "شكرًا لتسجيلك!",
     "businessCardSent": "تم إرسال بطاقة العمل الخاصة بك الآن.",
     "startReceivingWork": "ستبدأ في تلقي العمل قريبًا.",
-    "close": "إغلاق"
+    "close": "إغلاق",
+	    "inquiryMessage": "للاستفسار أو اقتراح، اضغط",
+    "clickHere": "هنا",
+    "resendCardMessage": "أرسل لي البطاقة مرة أخرى"
 
 
 

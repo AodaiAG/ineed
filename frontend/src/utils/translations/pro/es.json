@@ -122,7 +122,10 @@
 	    "thankYouMessage": "¡Gracias por registrarte!",
     "businessCardSent": "Tu tarjeta de presentación ha sido enviada.",
     "startReceivingWork": "Pronto comenzarás a recibir trabajo.",
-    "close": "Cerrar"
+    "close": "Cerrar",
+	    "inquiryMessage": "Para consultas o sugerencias, haga clic",
+    "clickHere": "aquí",
+    "resendCardMessage": "Envíame la tarjeta de nuevo"
 
 
 

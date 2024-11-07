@@ -135,7 +135,10 @@
 	    "thankYouMessage": "Thank you for registering!",
     "businessCardSent": "Your business card has just been sent.",
     "startReceivingWork": "You will start receiving work soon.",
-    "close": "Close"
+    "close": "Close",
+	    "inquiryMessage": "For inquiry or suggestion, click",
+    "clickHere": "here",
+    "resendCardMessage": "Send me the card again"
 
 
 

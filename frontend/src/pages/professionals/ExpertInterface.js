@@ -133,8 +133,8 @@ function ExpertInterface() {
                 <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.expertInterface_workerImage} />
                 {/* New Text Under Worker Image with clickable "כאן" */}
                 <p className={styles.expertInterface_contactPrompt}>
-                    לפניה או הצעה לחץ 
-                    <span className={styles.clickableText} onClick={handleWhatsAppClick}> כאן</span>
+                    {translation.inquiryMessage}
+                    <span className={styles.clickableText} onClick={handleWhatsAppClick}> {translation.clickHere}</span>
                 </p>
             </div>
             {/* Spacer to push footer to the bottom */}
@@ -143,13 +143,13 @@ function ExpertInterface() {
             <div className={styles.footerContainer}>
                 <div className={styles.expertInterface_resendSection}>
                     <span className={styles.cardRequestText}>
-                        {translation.resendBusinessCardText || "שלח לי את הכרטיס שוב"}
+                        {translation.resendCardMessage}
                     </span>
                     <span
                         className={sendDisabled ? styles.disabledLink : styles.resendLink}
                         onClick={!sendDisabled ? handleResendClick : null}
                     >
-                        {sendDisabled ? countdown : translation.clickHereText || "כאן"}
+                        {sendDisabled ? countdown : translation.clickHere}
                     </span>
                 </div>
                 <button className={styles.expertInterface_settingsButton} onClick={handleMySettingsClick}>

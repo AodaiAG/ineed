@@ -136,7 +136,10 @@
     "thankYouMessage": "!תודה שנרשמת",
     "businessCardSent": "ממש עכשיו נשלח לך כרטיס ביקור.",
     "startReceivingWork": ".בקרוב תתחיל לקבל עבודה",
-    "close": "סגור"
+    "close": "סגור",
+	    "inquiryMessage": "לפניה או הצעה לחץ",
+    "clickHere": "כאן",
+    "resendCardMessage": "שלח לי את הכרטיס שוב"
 
 
 
