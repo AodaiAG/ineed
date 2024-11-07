@@ -79,7 +79,7 @@ width: 50px;
 
 /* Image Container */
 .expertInterface_imageContainer {
-         margin-bottom: 60px;
+
 
     width: 100%;
     display: flex;
@@ -184,8 +184,10 @@ margin: auto 0;
 }
 
 .disabledLink {
-    color: gray;
+    color: #FDBE00;
     cursor: default;
+	margin: auto 0;
+	
 }
 .clickableText {
     color: #1783E0;
