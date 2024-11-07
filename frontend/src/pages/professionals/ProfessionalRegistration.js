@@ -283,7 +283,7 @@ function ProfessionalRegistration() {
             console.log('shortenedLink' + shortenedLink);
             let message = translation.businessCardSMS.replace("{link}", shortenedLink);
             sendSms(formattedPhoneNumber, message);
-    
+            localStorage.setItem('isNewUser', 'true'); // Set flag to indicate a new registration
             navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error saving registration:', error);

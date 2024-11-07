@@ -132,7 +132,11 @@
 	    "addPicture": "הוסף תמונה",
     "replacePicture": "החלף תמונה",
     "edit": "ערוך",
-    "save": "שמור"
+    "save": "שמור",
+    "thankYouMessage": "!תודה שנרשמת",
+    "businessCardSent": "ממש עכשיו נשלח לך כרטיס ביקור.",
+    "startReceivingWork": ".בקרוב תתחיל לקבל עבודה",
+    "close": "סגור"
 
 
 

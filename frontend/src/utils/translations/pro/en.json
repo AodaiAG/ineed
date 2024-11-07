@@ -131,7 +131,11 @@
 		    "addPicture": "Add Picture",
     "replacePicture": "Replace Picture",
     "edit": "Edit",
-    "save": "Save"
+    "save": "Save",
+	    "thankYouMessage": "Thank you for registering!",
+    "businessCardSent": "Your business card has just been sent.",
+    "startReceivingWork": "You will start receiving work soon.",
+    "close": "Close"
 
 
 

@@ -5,6 +5,8 @@ import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
 import { sendSms, shortenUrl } from '../../utils/generalUtils';
 import { useLanguage } from '../../contexts/LanguageContext';
 import useUserValidation from '../../hooks/useUserValidation';
+// Assuming Popup component will be created later
+import NewUserPopup from '../../components/professionals/NewUserPopup'; 
 
 function ExpertInterface() {
     const navigate = useNavigate();
@@ -13,11 +15,18 @@ function ExpertInterface() {
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const [sendDisabled, setSendDisabled] = useState(false);
     const [countdown, setCountdown] = useState('');
+    const [showNewUserPopup, setShowNewUserPopup] = useState(false); // State to control new user popup
 
     // Initialize styles and manage countdown if needed
     useEffect(() => {
         window.scrollTo(0, 0);
         document.body.classList.add(styles.expertInterface_body);
+
+        // Check if user is newly registered
+        if (localStorage.getItem('isNewUser') === 'true') {
+            setShowNewUserPopup(true); // Show popup if user is new
+            localStorage.removeItem('isNewUser'); // Clear flag so popup only shows once
+        }
 
         // Check if button is already disabled from previous session
         const lastSentTime = localStorage.getItem('lastSentTime');
@@ -104,6 +113,9 @@ function ExpertInterface() {
 
     return (
         <div className={styles.expertInterface_container}>
+            {/* Display New User Popup if necessary */}
+            {showNewUserPopup && <NewUserPopup onClose={() => setShowNewUserPopup(false)} />}
+
             {/* Language Switch Component, Title, and Subtitle in Flex Container */}
             <div className={styles.headerContainer}>
                 <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
@@ -146,7 +158,6 @@ function ExpertInterface() {
             </div>
         </div>
     );
-    
 }
 
 export default ExpertInterface;

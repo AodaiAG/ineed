@@ -126,7 +126,11 @@
 	    "addPicture": "إضافة صورة",
     "replacePicture": "استبدال الصورة",
     "edit": "تعديل",
-    "save": "حفظ"
+    "save": "حفظ",
+	    "thankYouMessage": "شكرًا لتسجيلك!",
+    "businessCardSent": "تم إرسال بطاقة العمل الخاصة بك الآن.",
+    "startReceivingWork": "ستبدأ في تلقي العمل قريبًا.",
+    "close": "إغلاق"
 
 
 

@@ -118,7 +118,11 @@
 	    "addPicture": "Agregar imagen",
     "replacePicture": "Reemplazar imagen",
     "edit": "Editar",
-    "save": "Guardar"
+    "save": "Guardar",
+	    "thankYouMessage": "¡Gracias por registrarte!",
+    "businessCardSent": "Tu tarjeta de presentación ha sido enviada.",
+    "startReceivingWork": "Pronto comenzarás a recibir trabajo.",
+    "close": "Cerrar"
 
 
 
