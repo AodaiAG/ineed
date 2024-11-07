@@ -78,10 +78,13 @@ width: 50px;
 
 /* Image Container */
 .expertInterface_imageContainer {
-     margin-bottom: 35px;
+         margin-bottom: 60px;
+
     width: 100%;
     display: flex;
     justify-content: center;
+	    flex-direction: column;
+
 }
 
 /* Worker Image */
@@ -155,3 +158,47 @@ width: 50px;
     overflow: hidden; /* Hide overflow if the text is too long */
     text-overflow: ellipsis; /* Add an ellipsis (...) if the text is too long */
 }
+.expertInterface_contactPrompt {
+	font-size: 1.1rem;
+    color: #ffd600;
+    text-align: center;
+	margin-top: 0.5rem;
+}
+
+.expertInterface_resendSection {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+	flex-direction: row-reverse;
+}
+
+.resendLink {
+    color: blue;
+    cursor: pointer;
+	    margin: auto;
+    text-decoration: underline;
+}
+
+.disabledLink {
+    color: gray;
+    cursor: default;
+}
+.clickableText {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+	margin: 0.20rem;
+}
+.cardRequestText {
+    font-family: 'Saira';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 31px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+}
+

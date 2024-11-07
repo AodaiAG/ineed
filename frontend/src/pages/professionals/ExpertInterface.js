@@ -8,7 +8,6 @@ import useUserValidation from '../../hooks/useUserValidation';
 
 function ExpertInterface() {
     const navigate = useNavigate();
-    // Use the hook and pass desired routes for valid and invalid cases
     const { isValidUserdata, decryptedUserdata } = useUserValidation(null, '/pro/enter'); 
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
@@ -18,14 +17,12 @@ function ExpertInterface() {
     // Initialize styles and manage countdown if needed
     useEffect(() => {
         window.scrollTo(0, 0);
-
-        // Since the component renders only if `isValidUserdata` is true, we know it's valid here
         document.body.classList.add(styles.expertInterface_body);
 
         // Check if button is already disabled from previous session
         const lastSentTime = localStorage.getItem('lastSentTime');
         if (lastSentTime) {
-            const timeDiff = 24 * 60 * 60 * 1000 - (Date.now() - lastSentTime);
+            const timeDiff = 12 * 60 * 60 * 1000 - (Date.now() - lastSentTime); // 12-hour countdown
             if (timeDiff > 0) {
                 setSendDisabled(true);
                 startCountdown(timeDiff);
@@ -48,12 +45,19 @@ function ExpertInterface() {
                 setCountdown('');
                 localStorage.removeItem('lastSentTime');
             } else {
-                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                setCountdown(`${hours}:${minutes}:${seconds}`);
+                const hours = String(Math.floor(timeLeft / (1000 * 60 * 60))).padStart(2, '0');
+                const minutes = String(Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                setCountdown(`${hours}:${minutes}`);
             }
         }, 1000);
+    };
+
+    // Function to open WhatsApp with a predefined message
+    const handleWhatsAppClick = () => {
+        const phoneNumber = '0504564232';
+        const internationalPhoneNumber = `+972${phoneNumber}`;
+        const message = encodeURIComponent(translation.customerSupportMessage || "Hello, I'm reaching out regarding your services.");
+        window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
     };
 
     // Render loading screen while user data is being checked
@@ -83,7 +87,7 @@ function ExpertInterface() {
 
             setSendDisabled(true);
             localStorage.setItem('lastSentTime', Date.now());
-            startCountdown(24 * 60 * 60 * 1000);
+            startCountdown(12 * 60 * 60 * 1000); // 12-hour countdown
 
             const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${id}`;
             const shortenedLink = await shortenUrl(businessCardLink);
@@ -115,22 +119,30 @@ function ExpertInterface() {
             {/* Image Section */}
             <div className={styles.expertInterface_imageContainer}>
                 <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.expertInterface_workerImage} />
+                {/* New Text Under Worker Image with clickable "כאן" */}
+                <p className={styles.expertInterface_contactPrompt}>
+                    לפניה או הצעה לחץ 
+                    <span className={styles.clickableText} onClick={handleWhatsAppClick}> כאן</span>
+                </p>
             </div>
 
-            {/* Message Section */}
-            <p className={styles.expertInterface_messageText}>{translation.businessCardMessage}</p>
+            {/* New Card Resend Section */}
+             <div className={styles.expertInterface_resendSection}>
+                <span className={styles.cardRequestText}>
+                    {translation.resendBusinessCardText || "שלח לי את הכרטיס שוב"}
+                </span>
+                <span
+                    className={sendDisabled ? styles.disabledLink : styles.resendLink}
+                    onClick={!sendDisabled ? handleResendClick : null}
+                >
+                    {sendDisabled ? countdown : translation.clickHereText || "כאן"}
+                </span>
+            </div>
 
-            {/* Buttons */}
+
+            {/* Settings Button at the Bottom */}
             <button className={styles.expertInterface_settingsButton} onClick={handleMySettingsClick}>
                 {translation.mySettingsButtonLabel}
-            </button>
-            <button
-                className={`${styles.expertInterface_settingsButton} ${styles.resendButton}`}
-                onClick={handleResendClick}
-                disabled={sendDisabled}
-            >
-                {sendDisabled && <span className={styles.countdown}>{countdown}</span>}
-                {translation.resendBusinessCardButtonLabel}
             </button>
         </div>
     );
