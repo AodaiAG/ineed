@@ -125,7 +125,8 @@ function ExpertInterface() {
                     <span className={styles.clickableText} onClick={handleWhatsAppClick}> כאן</span>
                 </p>
             </div>
-    
+            {/* Spacer to push footer to the bottom */}
+            <div className={styles.spacer}></div>
             {/* Resend Section and Settings Button in Flex Container */}
             <div className={styles.footerContainer}>
                 <div className={styles.expertInterface_resendSection}>

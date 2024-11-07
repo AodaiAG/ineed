@@ -205,5 +205,43 @@ margin: auto 0;
     color: #FFFFFF;
 }
 
+/* Main container */
+.expertInterface_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 10px auto;
+    background-color: transparent;
+    position: relative;
+    overflow: hidden; /* Prevent scroll if extra space appears */
+    padding: 20px; /* Add some padding */
+    height: 100%; /* Set to fill available space */
+}
+
+/* Header container for language switch, title, and subtitle */
+.headerContainer {
+    display: flex;
+    align-items: center;
+	flex-direction: column;
+    gap: 1rem;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Flex container for resend section and settings button */
+.footerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 20px;
+    margin-top: auto; /* Push to the bottom */
+}
+
+/* Spacer to take up remaining space between header and footer */
+.spacer {
+    flex-grow: 1;
+}
 
 
