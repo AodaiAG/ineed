@@ -136,6 +136,8 @@ function BusinessCard() {
             {/* Title Section */}
             <h1 className={styles.proBusinessName}>{professional.fname} {professional.lname}</h1>
             <h2 className={styles.proCompanyType}>{professional.businessName || 'פרילנסר'}</h2>
+            {/* Spacer to push footer to the bottom */}
+            <div className={styles.spacer}></div>
             
 
             {/* Image Section */}
@@ -146,7 +148,7 @@ function BusinessCard() {
                     className={styles.proProfileImage}
                 />
             </div>
-
+            <div className={styles.spacer}></div>
             {/* Contact Icons Section */}
             <div className={styles.proIconsContainer}>
                 <div className={styles.proIcon} onClick={handlePhoneClick}>
@@ -168,7 +170,7 @@ function BusinessCard() {
                     <img src="/images/Prof/waze.png" alt="Navigate Icon" />
                 </div>
             </div>
-
+            <div className={styles.spacer}></div>
             {/* Footer Section */}
             <div className={styles.proFooter}>
                 <div className={styles.proFooterContent}>

@@ -10,27 +10,25 @@ body, html{
 }
 
 .businessCard_body {
-    background-color: #000;
+background: black;
     color: #fff;
     font-family: Arial, sans-serif;
-    display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    max-height: 100dvh; 
-	overflow:hidden;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .proContainer {
-    text-align: center;
-
-    /* padding: 20px; */
     display: flex;
     flex-direction: column;
-     height: 100dvh; 
-    position: relative; /* Allows for absolute positioning of the icon within the container */
+    align-items: center;
     width: 100%;
-    max-width: 600px; /* Maximum width for readability */
+    margin: 10px auto;
+    background-color: transparent;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
 
 }
 
@@ -63,7 +61,12 @@ body, html{
 }
 
 .proImageContainer {
-    margin:auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+	align-items: center;
 }
 
 .proProfileImage {
@@ -130,6 +133,7 @@ body, html{
     border-radius: 15px;
     display: flex;
     justify-content: center;
+	position: relative;
     align-items: center;
     width: 96%; /* Relative width to keep it visually balanced */
     max-width: 400px;
@@ -180,4 +184,8 @@ body, html{
 
 .proFooterText a:hover {
     text-decoration: underline;
+}
+
+.spacer {
+    flex-grow: 1;
 }
