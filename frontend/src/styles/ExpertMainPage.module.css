@@ -2,48 +2,69 @@
 
 /* Body */
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+:root {
+    font-size: 16px;
+}
+
+.ExpertMainPage_expertPage_mainTitle {
+    font-size: clamp(1.5rem, 3vw + 1rem, 2.5rem); /* Main title */
+}
+
+.ExpertMainPage_expertPage_subTitle__Gi2CQ {
+    font-size: clamp(1rem, 2vw + 0.5rem, 2rem); /* Subtitle */
+}
+
+.ExpertMainPage_expertPage_expertInterface {
+    font-size: clamp(0.9rem, 1.5vw + 0.3rem, 1.5rem); /* Smaller text */
 }
 
 .expertPage_body {
     background: black;
-    color: #fff; /* White text color */
+    color: #fff;
     font-family: Arial, sans-serif;
-    display: flex;
+  
     justify-content: center;
     align-items: center;
-    box-sizing: border-box; /* Ensure padding is included in total width/height */
+    box-sizing: border-box;
+	 overflow: hidden; /* Prevent scroll if extra space appears */
 
 }
+
+
 
 /* Main Container */
 .expertPage_mainContainer {
-    text-align: center;
-    /* padding: 20px; */
-    display: flex;
+display: flex;
     flex-direction: column;
-    height: 100dvh;
-    max-height: 780px;
-    justify-content: space-between;
-    padding-block: 1rem;
-    position: relative; /* Allows for absolute positioning of the icon within the container */
+    align-items: center;
     width: 100%;
-    max-width: 600px; /* Maximum width for readability */
-    margin: 0 auto; /* Center horizontally */
-		    overflow: hidden; /* Prevent scroll if extra space appears */
+    margin: 10px auto;
+    background-color: transparent;
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+    height: 100%;
 
-    /* Remove container background to merge better with body */
-    /* background-color: transparent; */
-    
-    /* Add a border with slight transparency to blend with background */
-    /* border: 2px solid rgba(241, 196, 15, 0.3); More vibrant golden border */
-    
-    /* Add box shadow for blending effect */
-    /* box-shadow: 0 0 20px rgba(241, 196, 15, 0.3); Stronger golden shadow to merge edges with body */
+
 }
+.expertPage_headerContainer {
+display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 5px;
+    /* gap: 1rem; */
+    /* justify-content: space-between; */
+    width: 100%;
+}
+
 
 /* Language Icon */
 .expertPage_languageIcon {
@@ -54,7 +75,7 @@
 
 
 .expertPage_languageIcon img {
-    width: 50px;
+width: 50px;
     height: 40px;
     cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s;
@@ -67,37 +88,46 @@
 
 /* Main Title */
 .expertPage_mainTitle {
-    font-size: 3rem; /* Adjusted for smaller devices */
-    font-weight: 100;  
-    margin-top: 40px; /* Ensure enough spacing below the language icon */
-    color: #FDBE00;
+font-size: 4.0rem;
+    font-weight: 500;
+    margin-top: 22px;
+    max-width: 100%;
+    text-align: center;
 }
 
 /* Subtitle */
 .expertPage_subTitle {
-    font-size: 2rem;
+    font-size: 6vw;
     margin-bottom: 20px;
     margin-top: 4px;
     font-weight: 500;
+
 }
 
 /* Expert Interface Text */
 .expertPage_expertInterface {
-    font-size: 2.3rem;
-    font-weight:400;
-    margin: 40px 0px;
+    font-size: 8vw;
+margin-top: 6px;
+    font-weight:500;
+
 }
 
 /* Image Container */
 .expertPage_imageContainer {
-    margin: 20px 0;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+   
 }
 
 .expertPage_imageContainer img {
     width: 100%;
-    max-width: 250px;
-    margin-left: 50px;
+    max-width: 260px;
+    /* margin: 0px 125px; */
+    position: absolute;
+    left: 25%;
 }
 
 /* CTA Button */
@@ -112,9 +142,14 @@ width: 337px;
     cursor: pointer;
     border-radius: 14px;
     transition: background-color 0.3s, transform 0.2s;
+	margin-bottom: 20px;
 }
 
 .expertPage_ctaButton:hover {
     transform: scale(1.05);
 }
+.spacer {
+    flex-grow: 1;
+}
+
 

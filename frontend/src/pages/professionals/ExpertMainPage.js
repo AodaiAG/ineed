@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styles from "../../styles/ExpertMainPage.module.css";
 import LanguageSelectionPopup from "../../components/LanguageSelectionPopup";
 import Cookies from "js-cookie"; // Import js-cookie library
-
 import { useLanguage } from "../../contexts/LanguageContext";
 
 function ExpertMainPage() {
@@ -21,12 +20,12 @@ function ExpertMainPage() {
     };
   }, []);
 
-  useEffect(() => {
+ // useEffect(() => {
     const encryptedData = localStorage.getItem('userdata');
     if (encryptedData) {
       navigate("/pro/expert-interface");
     }
-  }, [navigate]);
+  //}, [navigate]);
 
   // Toggle the language selection popup
   const handleLanguageIconClick = () => {
@@ -44,7 +43,9 @@ function ExpertMainPage() {
 
   return (
     <div className={styles.expertPage_mainContainer}>
-      {/* Trigger Language Selection Popup */}
+      {/* Header container for Language Icon, Titles, and Expert Interface */}
+      <div className={styles.expertPage_headerContainer}>
+        {/* Trigger Language Selection Popup */}
         <div
           className={styles.expertPage_languageIcon}
           onClick={handleLanguageIconClick}
@@ -55,24 +56,34 @@ function ExpertMainPage() {
           />
         </div>
 
+        {/* Main and Sub Titles */}
         <h1 className={styles.expertPage_mainTitle}>I Need</h1>
         <h2 className={styles.expertPage_subTitle}>{translation.subTitle}</h2>
+        
+        {/* Expert Interface Text */}
         <h3 className={styles.expertPage_expertInterface}>
           {translation.expertInterface}
         </h3>
+      </div>
+
+                  {/* Spacer to push footer to the bottom */}
+                  <div className={styles.spacer}></div>
 
       {/* Worker Image */}
-        <div className={styles.expertPage_imageContainer}>
-          <img src="/images/Prof/w4.png" alt={translation.workerImageAlt} />
-        </div>
+      <div className={styles.expertPage_imageContainer}>
+        <img src="/images/Prof/w4.png" alt={translation.workerImageAlt} />
+      </div>
 
-        {/* "Let's Go" Button */}
-        <button
-          className={styles.expertPage_ctaButton}
-          onClick={handleCTAClick}
-        >
-          {translation.letsGoButton}
-        </button>
+                  {/* Spacer to push footer to the bottom */}
+                  <div className={styles.spacer}></div>
+      {/* "Let's Go" Button */}
+      <button
+        className={styles.expertPage_ctaButton}
+        onClick={handleCTAClick}
+      >
+        {translation.letsGoButton}
+      </button>
+
       {/* Language Selection Popup - only show when isLanguagePopupOpen is true */}
       {isLanguagePopupOpen && (
         <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} />
