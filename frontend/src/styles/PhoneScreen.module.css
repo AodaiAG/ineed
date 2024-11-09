@@ -76,7 +76,7 @@ body, html{
 .phoneScreen_customDropdown {
   position: relative;
   display: inline-block;
-  width: 100px;
+  width: 64px;
 }
 
 /* Country Code */
