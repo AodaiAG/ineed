@@ -20,12 +20,12 @@ function ExpertMainPage() {
     };
   }, []);
 
- // useEffect(() => {
+  useEffect(() => {
     const encryptedData = localStorage.getItem('userdata');
     if (encryptedData) {
       navigate("/pro/expert-interface");
     }
-  //}, [navigate]);
+  }, [navigate]);
 
   // Toggle the language selection popup
   const handleLanguageIconClick = () => {

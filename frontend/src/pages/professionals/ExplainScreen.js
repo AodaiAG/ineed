@@ -1,12 +1,12 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import styles from "../../styles/ExplainScreen.module.css";
-import { getDirection } from "../../utils/generalUtils"; // Import getDirection
+import { getDirection } from "../../utils/generalUtils";
 
 function ExplainScreen() {
   const navigate = useNavigate();
-  const { translation,language } = useLanguage();
+  const { translation, language } = useLanguage();
 
   useEffect(() => {
     // Add a unique class to the body element for ExplainScreen
@@ -28,14 +28,20 @@ function ExplainScreen() {
   }
 
   return (
-    <div className={styles.explainScreen_container}
-    style={{ direction: getDirection(language) }}
+    <div
+      className={styles.explainScreen_container}
+      style={{ direction: getDirection(language) }}
     >
-      <div>
+      <div className={styles.contentWrapper}>
         {/* Greeting Text */}
         <div className={styles.explainScreen_greetingSection}>
-          <p>{translation.greetingLine1}</p>
-          <p>{translation.greetingLine2}</p>
+          {Array.isArray(translation.greetingLine2) ? (
+            translation.greetingLine2.map((line, index) => (
+              <p key={index}>{line}</p>
+            ))
+          ) : (
+            <p>{translation.greetingLine2}</p>
+          )}
         </div>
 
         {/* Why Choose Us Section */}
@@ -44,16 +50,12 @@ function ExplainScreen() {
           <ul className={styles.explainScreen_whyUsList}>
             <li>{translation.whyPoint1}</li>
             <li>{translation.whyPoint2}</li>
-            <li>{translation.whyPoint3}</li>
-            <li>{translation.whyPoint4}</li>
           </ul>
         </div>
 
         {/* Footer Note */}
-        <div className={styles.explainScreen_footerNoteSection}>
-          <p>{translation.footerNote}</p>
-        </div>
       </div>
+      <div className={styles.spacer}></div>
       <div className={styles.explainScreen_characterSection}>
         <div className={styles.explainScreen_characterImageContainer}>
           <img
@@ -70,8 +72,7 @@ function ExplainScreen() {
         >
           {translation.continueButton}
         </button>
-      </div>{" "}
-      {/* Image */}
+      </div>
     </div>
   );
 }

@@ -7,9 +7,16 @@
     "letsGoButton": "Let's Go",
 "resendBusinessCardButtonLabel": "Resend Business Card",
 
-	"greetingLine1": "Hey,",
-    "greetingLine2": "You have arrived at the platform that will connect you directly to clients who are looking exactly for you! Thanks to a user-friendly interface tailored to your needs, you'll be able to enjoy quality referrals in your area.",
-    "whyChooseUs": "Why is this worth it for you?",
+
+  "greetingLine2": [
+    "Hi,",
+    "You've arrived at a platform that connects you",
+    "directly with clients who are looking specifically for you!",
+    "With a user-friendly interface tailored to your needs,",
+    "you'll have the opportunity to receive quality referrals",
+    "in your area."
+  ],   
+  "whyChooseUs": "Why is this worth it for you?",
     "whyPoint1": "Exposure to clients who need your service",
     "whyPoint2": "A digital card ready at the end of registration",
     "whyPoint3": "Half a year without extra cost for referrals",

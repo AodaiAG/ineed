@@ -11,7 +11,7 @@
     background: black;
     color: #fff; /* White text color */
     font-family: Arial, sans-serif;
-    display: flex;
+
     justify-content: center;
     align-items: center;
     box-sizing: border-box; /* Ensure padding is included in total width/height */
@@ -21,18 +21,16 @@
 .explainScreen_container {
 
 
-    /* padding: 20px; */
     display: flex;
     flex-direction: column;
-    height: 100dvh;
-
-    justify-content: space-between;
-    padding-block: 1rem;
-    position: relative; /* Allows for absolute positioning of the icon within the container */
+    align-items: center;
     width: 100%;
-    max-width: 600px; /* Maximum width for readability */
-    margin: 0 auto; /* Center horizontally */
-		    overflow: hidden; /* Prevent scroll if extra space appears */
+    margin: 10px auto;
+    background-color: transparent;
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+    height: 100%;
 
 }
 
@@ -59,15 +57,18 @@
 .explainScreen_whyUsList li {
   margin: 8px 0;
   position: relative;
-  padding-right: 24px;
+
 }
 
 .explainScreen_whyUsList li::before {
   content: "•";
-  position: absolute;
+margin:5px;
   right: 8px;
   color: #fdbe00; /* More vibrant golden color to match theme */
 }
+
+/* For left-to-right (LTR) text direction */
+
 
 /* Footer Note */
 .explainScreen_footerNoteSection {
@@ -79,12 +80,13 @@
 .explainScreen_characterSection {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
   width: 100%;
 }
 
 .explainScreen_characterImage {
   width: 165px;
+  margin-bottom: 10px;
 }
 
 /* Continue Button */
@@ -105,4 +107,13 @@
 
 .explainScreen_continueButton:hover {
   transform: scale(1.05);
+}
+.spacer {
+    flex-grow: 0.9;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }

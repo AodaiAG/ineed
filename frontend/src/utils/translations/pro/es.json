@@ -7,8 +7,15 @@
     "letsGoButton": "Vamos",
 	    "greetingLine1": "Hola,",
 		"resendBusinessCardButtonLabel": "Reenviar tarjeta de visita",
-    "greetingLine2": "Has llegado a la plataforma que te conectará directamente con los clientes que te buscan a ti! Gracias a una interfaz amigable y adaptada a tus necesidades, podrás disfrutar de solicitudes de calidad en tu área.",
-    "whyChooseUs": "¿Por qué vale la pena?",
+  "greetingLine2": [
+    "Hola,",
+    "Has llegado a una plataforma que te conecta",
+    "directamente con clientes que buscan exactamente lo que ofreces!",
+    "Con una interfaz fácil de usar y adaptada a tus necesidades,",
+    "tendrás la oportunidad de recibir referencias de calidad",
+    "en tu área."
+  ] ,
+  "whyChooseUs": "¿Por qué vale la pena?",
     "whyPoint1": "Exposición a clientes que necesitan tu servicio",
     "whyPoint2": "Tarjeta digital lista al final del registro",
     "whyPoint3": "Medio año sin costo adicional por solicitudes",
