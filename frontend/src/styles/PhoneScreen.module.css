@@ -220,7 +220,7 @@ body, html{
   padding: 10px; /* Make the button wider */
   cursor: pointer;
   border-radius: 14px;
-  margin: 25px auto;
+margin-top: 20px;
   width: 100%;
   transition: background-color 0.3s;
   max-width: 300px;
