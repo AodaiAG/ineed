@@ -42,7 +42,7 @@ width: 50px;
 	
     height: 40px;
     cursor: pointer;
-    right: 40px;
+    right: 30px;
     transition: transform 0.3s ease, opacity 0.3s;
 }
 
@@ -193,7 +193,7 @@ margin: 0 3px;
 .disabledLink {
     color: #FDBE00;
     cursor: default;
-	margin: auto 0;
+	margin: auto 3px;
 	
 }
 .clickableText {
