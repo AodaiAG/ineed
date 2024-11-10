@@ -154,23 +154,32 @@ width: 50px;
 .expertInterface_settingsButton,
 .resendButton {
     width: 350px; /* Set a fixed width */
+	margin-top:10px;
     white-space: nowrap; /* Prevent text from wrapping */
     overflow: hidden; /* Hide overflow if the text is too long */
     text-overflow: ellipsis; /* Add an ellipsis (...) if the text is too long */
 }
 .expertInterface_contactPrompt {
-	font-size: 1.0rem;
+    font-size: clamp(1.14rem, 2vw + 0.5rem, 1.2rem); /* Responsive font size */
     color: #FDBE00;
     text-align: center;
-	margin-top: 0.5rem;
+    margin-top: 1rem;
+    white-space: nowrap; /* Prevents wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Adds ellipsis if text is too long */
+    max-width: 100%; /* Ensures text stays within container */
 }
 
 .expertInterface_resendSection {
 
-    font-size: 1rem;
-    justify-content: center;
-    margin-top: 1rem;
-
+    font-size: clamp(1.1rem, 2vw + 0.5rem, 1.2rem); /* Responsive font size */
+    color: #FDBE00;
+    text-align: center;
+    margin-top: 0.5rem;
+    white-space: nowrap; /* Prevents wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Adds ellipsis if text is too long */
+    max-width: 100%; /* Ensures text stays within container */
 }
 
 .resendLink {
@@ -234,7 +243,7 @@ margin: 0 3px;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     margin-top: auto; /* Push to the bottom */
 }
 
