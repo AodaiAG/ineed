@@ -37,17 +37,20 @@
 
 /* Greeting Section */
 .explainScreen_greetingSection {
-  font-size: 1rem;
-  line-height: 1.7rem;
-  margin-bottom: 15px;
-  font-weight: 500;
+font-size: clamp(1rem, 2vw + 1.1rem, 5rem);
+    line-height: 5vh;
+    margin-bottom: 15px;
+    font-weight: 500;
+	flex-grow:1;
 }
 
 /* Why Us Section */
 .explainScreen_whyUsSection {
-  font-size: 1rem;
-  line-height: 1.7rem;
-  margin-bottom: 15px;
+font-size: clamp(1rem, 2vw + 1.1rem, 5rem);
+    line-height: 3vh;
+    margin-bottom: 15px;
+    font-weight: 500;
+	flex-grow:1;
 }
 
 .explainScreen_whyUsList {
