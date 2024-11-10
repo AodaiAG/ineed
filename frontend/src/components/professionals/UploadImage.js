@@ -110,25 +110,25 @@ function UploadImage({ initialImage, onImageUpload }) {
             image.onerror = (error) => reject(error);
         });
 
-    return (
-        <div className={styles['upload-image-container']}>
-            {isPictureLoading ? (
-                <div className={styles['loading-spinner']}></div>  // Display spinner when loading
-            ) : (
-                <>
-                    <img
-                        src={image}
-                        alt="Uploaded"
-                        className={styles['preview-image']}
-                        style={{ objectFit: 'cover' }}
-                    />
-                    <input
-                        type="file"
-                        accept="image/*"
-                        ref={fileInputRef}
-                        onChange={handleImageUpload}
-                        style={{ display: 'none' }}
-                    />
+        return (
+            <div className={styles['upload-image-container']}>
+                {isPictureLoading ? (
+                    <div className={styles['loading-spinner']}></div>
+                ) : (
+                    <>
+                        <img
+                            src={image}
+                            alt="Uploaded"
+                            className={styles['preview-image']}
+                            style={{ objectFit: 'cover' }}
+                        />
+                        <input
+                            type="file"
+                            accept="image/*"
+                            ref={fileInputRef}
+                            onChange={handleImageUpload}
+                            style={{ display: 'none' }}
+                        />
                         <div className={styles['button-group']}>
                             <button onClick={handleUploadButtonClick} className={styles['replace-button']}>
                                 {image === "/images/Prof/w.png" ? translation.addPicture : translation.replacePicture}
@@ -137,30 +137,30 @@ function UploadImage({ initialImage, onImageUpload }) {
                                 <button onClick={() => setShowCropper(true)} className={styles['edit-button']}>{translation.edit}</button>
                             )}
                         </div>
-                </>
-            )}
-            {showCropper && (
-                <div className={styles['cropper-popup']}>
-                    <div className={styles['cropper-controls']}>
-                        <div className={styles['crop-container']}>
-                            <Cropper
-                                image={originalImage}
-                                crop={crop}
-                                zoom={zoom}
-                                aspect={1}
-                                onCropChange={setCrop}
-                                onZoomChange={setZoom}
-                                onCropComplete={handleCropComplete}
-                            />
+                    </>
+                )}
+                {showCropper && (
+                    <div className={styles['cropper-popup']}>
+                        <div className={styles['cropper-controls']}>
+                            <div className={styles['crop-container']}>
+                                <Cropper
+                                    image={originalImage}
+                                    crop={crop}
+                                    zoom={zoom}
+                                    aspect={1}
+                                    onCropChange={setCrop}
+                                    onZoomChange={setZoom}
+                                    onCropComplete={handleCropComplete}
+                                />
+                            </div>
+                            <button className={styles['save-button']} onClick={saveCroppedImage}>
+                                {translation.save}
+                            </button>
                         </div>
-                        <button className={styles['save-button']} onClick={saveCroppedImage}>
-                            {translation.save}
-                        </button>
                     </div>
-                </div>
-            )}
-        </div>
-    );
+                )}
+            </div>
+        );
 }
 
 export default UploadImage;
