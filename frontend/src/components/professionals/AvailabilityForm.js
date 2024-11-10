@@ -127,7 +127,8 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     showTimeSelect
                                     showTimeSelectOnly
                                     onKeyDown={(e) => e.preventDefault()} // Prevent typing
-
+                                    autoComplete="off"
+                                    readOnly 
                                     timeIntervals={15}
                                     timeCaption=""
                                     dateFormat="h:mm aa"
@@ -145,11 +146,12 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     selected={dayAvailability[dayInt].end ? new Date(dayAvailability[dayInt].end) : null}
                                     onChange={(value) => handleEndTimeChange(parseInt(dayInt), value)}
                                     showTimeSelect
+                                    readOnly 
                                     showTimeSelectOnly
                                     timeIntervals={15}
                                     timeCaption=""
                                     onKeyDown={(e) => e.preventDefault()} // Prevent typing
-
+                                    autoComplete="off"
                                     dateFormat="h:mm aa"
                                     placeholderText={translation.toPlaceholder}
                                     className={styles['day-input']}
