@@ -97,7 +97,7 @@ font-size: 4.0rem;
 
 /* Subtitle */
 .expertPage_subTitle {
-    font-size: 6vw;
+    font-size: clamp(1rem, 6vw, 2rem);
     margin-bottom: 20px;
     margin-top: 4px;
     font-weight: 500;
@@ -106,7 +106,7 @@ font-size: 4.0rem;
 
 /* Expert Interface Text */
 .expertPage_expertInterface {
-    font-size: 8vw;
+    font-size: clamp(1rem, 8vw, 2rem);
 margin-top: 6px;
     font-weight:500;
 
