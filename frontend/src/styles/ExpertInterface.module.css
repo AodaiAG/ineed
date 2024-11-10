@@ -42,7 +42,7 @@ width: 50px;
 	
     height: 40px;
     cursor: pointer;
-    right: 50px;
+    right: 40px;
     transition: transform 0.3s ease, opacity 0.3s;
 }
 
