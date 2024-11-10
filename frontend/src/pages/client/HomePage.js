@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState  } from 'react';
 import PC from '../../components/client/PC';
 import { Link } from 'react-router-dom';
 import translations from '../../utils/translations.json';
 import { useLanguage } from '../../contexts/LanguageContext'; // Import the useLanguage hook
+import { useNavigate } from 'react-router-dom'; // Correct import
+
 
 function HomePage() {
+
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        // Redirect to "/pro/expert-main" when the app loads
+        navigate('/pro/expert-main');
+    }, [navigate]);
+
     const { translation, language } = useLanguage(); // Access translation and language from the context
     const getDirection = () => {
         if (language === 'ar' || language === 'he') return 'rtl';
