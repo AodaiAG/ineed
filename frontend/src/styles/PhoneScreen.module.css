@@ -44,20 +44,20 @@ text-align: center;
 
 /* Main Title */
 .phoneScreen_mainTitle {
-  font-size: 3.5rem; /* Adjusted for smaller devices */
-  font-weight: 500;
+font-size: clamp(1rem, 17vw, 4.0rem);
+ font-weight: 500;
   margin: 10px 0;
 }
 
 /* Subtitle */
 .phoneScreen_subtitle {
-  font-size: 2rem;
+font-size: clamp(1rem, 6vw, 2rem);
   font-weight: 500;
 }
 
 /* Enter Title */
 .phoneScreen_enterTitle {
-  font-size: 2.5rem;
+font-size: clamp(1rem, 10vw, 2.5rem);
   margin: 40px 0px;
   font-weight: bold;
 }
