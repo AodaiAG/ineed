@@ -18,7 +18,7 @@ function PersonalInfoForm({
     refs
 }) {
     const { translation } = useLanguage();
-    const { fullNameRef, emailRef, websiteRef, locationRef } = refs;
+    const { fullNameRef, emailRef, websiteRef, locationRef,jobFieldsRef } = refs;
     const [showLocationPopup, setShowLocationPopup] = useState(false);
 
     useEffect(() => {
@@ -27,6 +27,9 @@ function PersonalInfoForm({
     useEffect(() => {
         console.log('Image received from parent:', image);
     }, [image]);
+    useEffect(() => {
+        console.log("locationRef in PersonalInfoForm:", locationRef.current);
+    }, [locationRef]);
 
     const handleWhatsAppClick = () => {
         const phoneNumber = '0504564232';
@@ -135,7 +138,7 @@ function PersonalInfoForm({
                 placeholder={translation.businessNamePlaceholder}
             />
 
-            <div ref={locationRef}>
+            <div id="location-section" ref={locationRef}>
                 <label htmlFor="location" className={`${styles['pro-label']} ${styles['pro-label-required']}`}>
                     {translation.location.selectLocation}
                 </label>
@@ -157,6 +160,7 @@ function PersonalInfoForm({
                     />
                 )}
             </div>
+
         </div>
     );
 }

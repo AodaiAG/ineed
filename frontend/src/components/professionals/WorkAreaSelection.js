@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useRef } from 'react';
+import React, { forwardRef, useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
@@ -13,64 +13,61 @@ const WorkAreas = forwardRef(({
     const { translation } = useLanguage();
     const [searchText, setSearchText] = useState('');
     const [expandedArea, setExpandedArea] = useState(null);
-    
-    // Ref object to store DOM elements for each area name (toggle section)
     const areaToggleRefs = useRef({});
 
-    // Function to toggle work area selection
+    // Effect to load initial data only once
+    useEffect(() => {
+        console.log("Initial workAreaSelections from server:", workAreaSelections);
+    }, [workAreaSelections]);
+
+    // Ensure selections are logged on update
+    useEffect(() => {
+        console.log("Updated workAreaSelections:", workAreaSelections);
+    }, [workAreaSelections]);
+
     const handleLocationToggle = (cityId) => {
         setWorkAreaSelections(prevSelections => {
-            if (prevSelections.includes(cityId)) {
-                return prevSelections.filter(id => id !== cityId);
-            } else {
-                return [...prevSelections, cityId];
-            }
+            const updatedSelections = prevSelections.includes(cityId)
+                ? prevSelections.filter(id => id !== cityId)
+                : [...prevSelections, cityId];
+            console.log("Updated workAreaSelections after city toggle:", updatedSelections);
+            return updatedSelections;
         });
     };
 
-    // Function to count selected cities for a given area
     const countSelectedCities = (area) => {
         return area.cities.filter(city => workAreaSelections.includes(city.cityId)).length;
     };
 
-    // Function to handle the selection of all children for an area
     const handleToggleAllChildren = (areaId, isChecked) => {
         setWorkAreaSelections(prevSelections => {
             const areaCities = groupedLocations.find(area => area.areaId === areaId)?.cities || [];
             const areaCityIds = areaCities.map(city => city.cityId);
-            if (isChecked) {
-                return [...new Set([...prevSelections, ...areaCityIds])];
-            } else {
-                return prevSelections.filter(id => !areaCityIds.includes(id));
-            }
+            const updatedSelections = isChecked
+                ? [...new Set([...prevSelections, ...areaCityIds])]
+                : prevSelections.filter(id => !areaCityIds.includes(id));
+            console.log("Updated workAreaSelections after toggle all in area:", updatedSelections);
+            return updatedSelections;
         });
     };
 
-    // Toggle function to ensure only one area can be expanded at a time
     const handleToggleDropdown = (areaId) => {
         if (expandedArea === areaId) {
-            // If clicking the already expanded area, simply close it
             setExpandedArea(null);
         } else {
-            // Close any open area first
             setExpandedArea(null);
-
-            // Expand the new area after a brief delay to avoid layout shift
             setTimeout(() => {
                 setExpandedArea(areaId);
-
-                // Scroll to the start of the new area toggle section (area name)
                 if (areaToggleRefs.current[areaId]) {
                     areaToggleRefs.current[areaId].scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'
                     });
                 }
-            }, 100); // Adjust this delay if needed
+            }, 100);
         }
     };
 
-    // Filter areas and cities based on search text
     const filteredLocations = groupedLocations.map(area => ({
         ...area,
         cities: area.cities.filter(city =>
@@ -82,7 +79,7 @@ const WorkAreas = forwardRef(({
     );
 
     if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
+        return <div>Loading...</div>;
     }
 
     return (
@@ -92,7 +89,6 @@ const WorkAreas = forwardRef(({
             </label>
             {error && <p className={styles['pro-error']}>{error}</p>}
 
-            {/* Search Bar */}
             <div className={styles['search-bar-container']}>
                 <input
                     type="text"
@@ -109,12 +105,9 @@ const WorkAreas = forwardRef(({
                     const isExpanded = expandedArea === area.areaId;
 
                     return (
-                        <div
-                            key={area.areaId}
-                            className={styles['pro-dropdown']}
-                        >
+                        <div key={area.areaId} className={styles['pro-dropdown']}>
                             <div
-                                ref={(el) => (areaToggleRefs.current[area.areaId] = el)} // Assign DOM element of area name to ref
+                                ref={(el) => (areaToggleRefs.current[area.areaId] = el)}
                                 className={styles['pro-dropdown-toggle']}
                                 onClick={() => handleToggleDropdown(area.areaId)}
                             >
@@ -126,6 +119,7 @@ const WorkAreas = forwardRef(({
                                             e.stopPropagation();
                                             handleToggleAllChildren(area.areaId, e.target.checked);
                                         }}
+                                        checked={countSelectedCities(area) === area.cities.length && area.cities.length > 0}
                                     />
                                     <span>{area.areaName}</span>
                                 </label>
@@ -137,7 +131,7 @@ const WorkAreas = forwardRef(({
                             <div 
                                 className={styles['pro-dropdown-content']} 
                                 id={area.areaId}
-                                style={{ display: isExpanded ? 'block' : 'none' }} // Show only if this area is expanded
+                                style={{ display: isExpanded ? 'block' : 'none' }}
                             >
                                 {area.cities.map((city) => (
                                     <label key={city.cityId} className={styles['pro-sub-label']}>
