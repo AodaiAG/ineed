@@ -12,11 +12,10 @@
     background: black;
     color: #fff;
     font-family: Arial, sans-serif;
-    display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-	  	    overflow: hidden; /* Prevent scroll if extra space appears */
+    overflow: hidden;
 
 
 }
@@ -37,13 +36,9 @@
 
 /* Language Switch */
 .expertInterface_languageSwitch {
-width: 50px;
     position: absolute;
-	
-    height: 40px;
-    cursor: pointer;
-    right: 30px;
-    transition: transform 0.3s ease, opacity 0.3s;
+    top: 10px;
+    right: 20px;
 }
 
 .expertInterface_languageSwitch img {
@@ -60,7 +55,7 @@ width: 50px;
 
 /* Main Title */
 .expertInterface_mainTitle {
-    font-size: 4.0rem;
+font-size: clamp(1rem, 17vw, 4.0rem);
     font-weight: 500;
     margin-top: 22px;
 	
@@ -70,7 +65,7 @@ width: 50px;
 
 /* Subtitle */
 .expertInterface_subTitle {
-  font-size: 2.0rem;
+  font-size: clamp(1rem, 8vw, 2rem);
   font-weight: 500;
   margin: 5px 0 20px;
   max-width: 100%;
@@ -153,7 +148,7 @@ width: 50px;
 }
 .expertInterface_settingsButton,
 .resendButton {
-    width: 350px; /* Set a fixed width */
+    width: 300px; /* Set a fixed width */
 	margin-top:10px;
     white-space: nowrap; /* Prevent text from wrapping */
     overflow: hidden; /* Hide overflow if the text is too long */
@@ -250,6 +245,15 @@ margin: 0 3px;
 /* Spacer to take up remaining space between header and footer */
 .spacer {
     flex-grow: 1;
+}
+.headerContainer {
+display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 5px;
+    /* gap: 1rem; */
+    /* justify-content: space-between; */
+    width: 100%;
 }
 
 

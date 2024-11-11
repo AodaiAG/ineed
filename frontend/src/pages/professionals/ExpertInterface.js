@@ -115,19 +115,23 @@ function ExpertInterface() {
         <div className={styles.expertInterface_container}>
             {/* Display New User Popup if necessary */}
             {showNewUserPopup && <NewUserPopup onClose={() => setShowNewUserPopup(false)} />}
-
-            {/* Language Switch Component, Title, and Subtitle in Flex Container */}
+    
+            {/* Header Container for Language Switch, Title, and Subtitle */}
             <div className={styles.headerContainer}>
                 <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
                     <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
                 </div>
-                <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
-                <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
+                <div className={styles.titleContainer}>
+                    <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
+                    <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
+                </div>
             </div>
     
             {/* Language Selection Popup */}
             {isLanguagePopupOpen && <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} />}
+            
             <div className={styles.spacer}></div>
+            
             {/* Image Section */}
             <div className={styles.expertInterface_imageContainer}>
                 <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.expertInterface_workerImage} />
@@ -137,9 +141,10 @@ function ExpertInterface() {
                     <span className={styles.clickableText} onClick={handleWhatsAppClick}> {translation.clickHere}</span>
                 </p>
             </div>
-            {/* Spacer to push footer to the bottom */}
+    
             <div className={styles.spacer}></div>
-            {/* Resend Section and Settings Button in Flex Container */}
+            
+            {/* Resend Section and Settings Button */}
             <div className={styles.footerContainer}>
                 <div className={styles.expertInterface_resendSection}>
                     <span className={styles.cardRequestText}>
@@ -158,6 +163,7 @@ function ExpertInterface() {
             </div>
         </div>
     );
+    
 }
 
 export default ExpertInterface;
