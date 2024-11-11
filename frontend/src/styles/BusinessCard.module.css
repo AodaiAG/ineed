@@ -75,7 +75,7 @@ background: black;
     width: 80vw;
 
 	max-width:300px;
-	max-height:300px;
+	max-height:259px;
     border-radius: 10px;
     border: 1px solid #FFD700; /* Golden border */
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); /* Golden glow for a beautiful effect */
@@ -94,7 +94,7 @@ background: black;
     grid-template-columns: repeat(3, auto);
     grid-template-rows: repeat(2, auto);
     gap: 15px 27px;
-    margin: 20px 0;
+   
     width: 100%;
     justify-items: center;
     align-items: stretch;
