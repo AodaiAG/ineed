@@ -143,7 +143,7 @@ function PhoneScreen() {
             </a>
           </p>
         </section>
-
+        <div className={styles.spacer}></div>
         <section className={styles.phoneScreen_illustrationSection}>
           <div className={styles.phoneScreen_illustration}>
             <img

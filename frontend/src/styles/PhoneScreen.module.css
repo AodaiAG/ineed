@@ -27,20 +27,19 @@ body, html{
 
 /* Content */
 .phoneScreen_container {
-    text-align: center;
-    /* padding: 20px; */
+text-align: center;
+
     display: flex;
     flex-direction: column;
-    height: 100dvh;
+
     max-height: 780px;
-    justify-content: space-between;
-    padding-block: 1rem;
-	
-    position: relative; /* Allows for absolute positioning of the icon within the container */
+    height: 100%;
+
+    position: relative;
     width: 100%;
-    max-width: 600px; /* Maximum width for readability */
-    margin: 0 auto; /* Center horizontally */
-		    overflow: hidden; /* Prevent scroll if extra space appears */
+    max-width: 600px;
+    margin: 0 auto;
+    overflow: hidden;
 }
 
 /* Main Title */
@@ -229,5 +228,9 @@ margin-top: 20px;
 .phoneScreen_enterButton:hover {
   transform: scale(1.05);
 }
+.spacer {
+    flex-grow: 0.9;
+}
+
 
 /* Responsive Styles */
