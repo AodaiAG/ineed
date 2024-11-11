@@ -147,7 +147,12 @@
     "clickHere": "כאן",
     "resendCardMessage": "שלח לי את הכרטיס שוב",
 	 "enterPhoneNumberMessage": "אנא הכנס מספר טלפון.",
-  "phoneNumberLengthMessage": "מספר הטלפון חייב להיות בן 7 ספרות."
+  "phoneNumberLengthMessage": "מספר הטלפון חייב להיות בן 7 ספרות.",
+      "domainError": "אנא בחר תחום.",
+    "missingProfessionError": "אנא הזן את המקצוע החסר.",
+    "mainProfessionError": "אנא בחר מקצוע ראשי.",
+    "subProfessionError": "אנא הזן תת-מקצוע.",
+    "submissionFailedError": "השליחה נכשלה. אנא נסה שוב."
 
 
 

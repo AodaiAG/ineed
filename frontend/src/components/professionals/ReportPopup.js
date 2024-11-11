@@ -11,17 +11,14 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
     const [selectedMainProfession, setSelectedMainProfession] = useState('');
     const [missingProfession, setMissingProfession] = useState('');
     const [additionalSubProfession, setAdditionalSubProfession] = useState('');
-    const [showDomainPlaceholder, setShowDomainPlaceholder] = useState(true);
-    const [showMainProfessionPlaceholder, setShowMainProfessionPlaceholder] = useState(true);
     const { translation } = useLanguage();
 
-    // New fetchMainProfessionsPopup function
     const fetchMainProfessionsPopup = async (domain) => {
         try {
             const response = await axios.get(`${API_URL}/${language}/main-professions?domain=${domain}`);
             const data = response.data;
             if (Array.isArray(data)) {
-                return data.map(profession => profession.main); // Assuming each profession object has a "main" field
+                return data.map(profession => profession.main);
             } else {
                 console.error('Expected array response for main professions, received:', data);
                 return [];
@@ -32,7 +29,6 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
         }
     };
 
-    // Fetch main professions whenever the selected domain changes
     useEffect(() => {
         if (selectedDomain) {
             const fetchProfessions = async () => {
@@ -46,6 +42,29 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
     }, [selectedDomain]);
 
     const handleSend = async () => {
+        const missingFields = [];
+    
+        // Check for required fields
+        if (!selectedDomain) {
+            missingFields.push(translation.domainError || 'Please select a domain.');
+        }
+        if (isMissingChecked && !missingProfession) {
+            missingFields.push(translation.missingProfessionError || 'Please enter the missing profession.');
+        } else if (!isMissingChecked && !selectedMainProfession) {
+            missingFields.push(translation.mainProfessionError || 'Please select a main profession.');
+        }
+    
+        // Check for additional sub-profession if a main profession is selected
+        if (!isMissingChecked && selectedMainProfession && !additionalSubProfession) {
+            missingFields.push(translation.subProfessionError || 'Please enter a sub-profession.');
+        }
+    
+        // Show alert if any required fields are missing
+        if (missingFields.length > 0) {
+            alert(missingFields.join('\n'));
+            return;
+        }
+    
         const reportData = {
             domain: selectedDomain,
             isMissing: isMissingChecked,
@@ -67,9 +86,11 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
         }
     };
     
+
     if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
+        return <div>Loading...</div>;
     }
+    
     return (
         <div className={styles.overlay}>
             <div className={styles.reportPopupContainer}>
@@ -84,11 +105,8 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
                         className={styles.reportSelectField}
                         value={selectedDomain}
                         onChange={(e) => setSelectedDomain(e.target.value)}
-                        onFocus={() => setShowDomainPlaceholder(false)} // Remove placeholder on focus
                     >
-                        {showDomainPlaceholder && (
-                            <option value="" disabled>{translation.selectDomain}</option>
-                        )}
+                        <option value="" disabled>{translation.selectDomain}</option>
                         {domains.map((domain) => (
                             <option key={domain} value={domain}>{domain}</option>
                         ))}
@@ -120,7 +138,7 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
                                 className={`${styles.reportSelectField} ${!selectedDomain ? styles.reportPlaceholder : ''}`}
                                 value={selectedMainProfession}
                                 onChange={(e) => setSelectedMainProfession(e.target.value)}
-                                disabled={!selectedDomain || isMissingChecked} // Disable if no domain or checkbox is checked
+                                disabled={!selectedDomain || isMissingChecked}
                             >
                                 <option value="" disabled>
                                     {selectedDomain ? translation.selectProfession : translation.selectDomainFirst}

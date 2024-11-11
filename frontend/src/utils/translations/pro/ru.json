@@ -134,7 +134,17 @@
     "clickHere": "здесь",
     "resendCardMessage": "Отправьте мне карточку снова",
 	 "enterPhoneNumberMessage": "Пожалуйста, введите номер телефона.",
-  "phoneNumberLengthMessage": "Номер телефона должен состоять из 7 цифр."
+  "phoneNumberLengthMessage": "Номер телефона должен состоять из 7 цифр.",
+      "domainError": "Пожалуйста, выберите домен.",
+    "missingProfessionError": "Пожалуйста, введите отсутствующую профессию.",
+    "mainProfessionError": "Пожалуйста, выберите основную профессию.",
+    "subProfessionError": "Пожалуйста, введите под-профессию.",
+    "submissionFailedError": "Не удалось отправить отчет. Попробуйте еще раз.",
+	    "domainError": "Пожалуйста, выберите домен.",
+    "missingProfessionError": "Пожалуйста, введите отсутствующую профессию.",
+    "mainProfessionError": "Пожалуйста, выберите основную профессию.",
+    "subProfessionError": "Пожалуйста, введите под-профессию.",
+    "submissionFailedError": "Не удалось отправить отчет. Попробуйте еще раз."
 
 
 
