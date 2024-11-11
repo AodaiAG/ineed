@@ -33,6 +33,7 @@ text-align: center;
     flex-direction: column;
 
     max-height: 780px;
+	min-width: 325px;
     height: 100%;
 
     position: relative;
