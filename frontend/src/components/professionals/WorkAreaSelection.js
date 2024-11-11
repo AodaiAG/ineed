@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, useRef } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 
@@ -12,6 +12,10 @@ const WorkAreas = forwardRef(({
 }, ref) => {
     const { translation } = useLanguage();
     const [searchText, setSearchText] = useState('');
+    const [expandedArea, setExpandedArea] = useState(null);
+    
+    // Ref object to store DOM elements for each area name (toggle section)
+    const areaToggleRefs = useRef({});
 
     // Function to toggle work area selection
     const handleLocationToggle = (cityId) => {
@@ -40,6 +44,30 @@ const WorkAreas = forwardRef(({
                 return prevSelections.filter(id => !areaCityIds.includes(id));
             }
         });
+    };
+
+    // Toggle function to ensure only one area can be expanded at a time
+    const handleToggleDropdown = (areaId) => {
+        if (expandedArea === areaId) {
+            // If clicking the already expanded area, simply close it
+            setExpandedArea(null);
+        } else {
+            // Close any open area first
+            setExpandedArea(null);
+
+            // Expand the new area after a brief delay to avoid layout shift
+            setTimeout(() => {
+                setExpandedArea(areaId);
+
+                // Scroll to the start of the new area toggle section (area name)
+                if (areaToggleRefs.current[areaId]) {
+                    areaToggleRefs.current[areaId].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 100); // Adjust this delay if needed
+        }
     };
 
     // Filter areas and cities based on search text
@@ -78,13 +106,17 @@ const WorkAreas = forwardRef(({
             {Array.isArray(filteredLocations) && filteredLocations.length > 0 ? (
                 filteredLocations.map((area) => {
                     const selectedCount = countSelectedCities(area);
-                    const isExpanded = searchText && (area.areaName.toLowerCase().includes(searchText.toLowerCase()) || area.cities.length > 0);
+                    const isExpanded = expandedArea === area.areaId;
 
                     return (
-                        <div key={area.areaId} className={styles['pro-dropdown']}>
+                        <div
+                            key={area.areaId}
+                            className={styles['pro-dropdown']}
+                        >
                             <div
+                                ref={(el) => (areaToggleRefs.current[area.areaId] = el)} // Assign DOM element of area name to ref
                                 className={styles['pro-dropdown-toggle']}
-                                onClick={() => toggleDropdown(area.areaId)}
+                                onClick={() => handleToggleDropdown(area.areaId)}
                             >
                                 <label>
                                     <input 
@@ -105,7 +137,7 @@ const WorkAreas = forwardRef(({
                             <div 
                                 className={styles['pro-dropdown-content']} 
                                 id={area.areaId}
-                                style={{ display: isExpanded ? 'block' : 'none' }} // Show only if matched and searchText is not empty
+                                style={{ display: isExpanded ? 'block' : 'none' }} // Show only if this area is expanded
                             >
                                 {area.cities.map((city) => (
                                     <label key={city.cityId} className={styles['pro-sub-label']}>
