@@ -28,6 +28,8 @@ function ProfessionalRegistration() {
         lon: null,
       });
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [domains, setDomains] = useState([]); // Add this line to define the domains state
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState(() => {
@@ -247,8 +249,11 @@ function ProfessionalRegistration() {
     const handleSubmit = async () => {
         if (!validateForm()) return;
     
+        // Show the spinner when submission starts
+        setIsSubmitting(true);
+    
         const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
-    console.log('selected professions '+selectedProfessionIds )
+        console.log('selected professions ' + selectedProfessionIds);
         const professionalData = {
             phoneNumber: formattedPhoneNumber, // Use formatted phone number without dashes
             fullName,
@@ -272,8 +277,7 @@ function ProfessionalRegistration() {
             const existingEncryptedData = localStorage.getItem('userdata');
             let updatedProfessionalData;
     
-            if (existingEncryptedData)
-                 {
+            if (existingEncryptedData) {
                 try {
                     // Decrypt the existing data
                     const bytes = CryptoJS.AES.decrypt(existingEncryptedData, 'Server!123%#%^$#@Work');
@@ -303,6 +307,9 @@ function ProfessionalRegistration() {
             navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error saving registration:', error);
+        } finally {
+            // Hide the spinner when the submission is done
+            setIsSubmitting(false);
         }
     };
     
@@ -394,6 +401,11 @@ function ProfessionalRegistration() {
 
                     {/* Continue Button */}
                     <button className={styles['pro-continue-button']} onClick={handleSubmit}>{translation?.continueLabel || 'המשך'}</button>
+                    {isSubmitting && (
+                    <div className={styles['spinner-overlay']}>
+                        <div className={styles['spinner']}></div>
+                    </div>
+                )}
                 </div>
             </div>
         </div>

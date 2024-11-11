@@ -24,6 +24,8 @@ function EditProfessionalSettings()
     const [availability24_7, setAvailability24_7] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState(() => localStorage.getItem('userLanguage') || 'he');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [dayAvailability, setDayAvailability] = useState({
         0: { isWorking: false, start: '', end: '' },  // Sunday
         1: { isWorking: false, start: '', end: '' },  // Monday
@@ -214,9 +216,8 @@ function EditProfessionalSettings()
         return <div>Loading...</div>;
     }
     const handleSubmit = async () => {
-        // Get the user ID from session storage
         if (!validateForm()) return;
-        const professionalId =  decryptedUserdata.profId;
+        const professionalId = decryptedUserdata.profId;
     
         if (!professionalId) {
             console.error("No user ID found in session storage");
@@ -224,7 +225,7 @@ function EditProfessionalSettings()
         }
     
         const professionalData = {
-            professionalId,  // Include the professional ID to know which user to update
+            professionalId,
             phoneNumber,
             fullName,
             email,
@@ -236,17 +237,23 @@ function EditProfessionalSettings()
             subProfessions: selectedProfessionIds,
             workAreas: workAreaSelections,
             languages,
-            location, // Add the location JSON object
-
+            location,
         };
+    
+        // Show the spinner
+        setIsSubmitting(true);
     
         try {
             await axios.put(`${API_URL}/professionals/update`, professionalData);
-            navigate('/pro/expert-interface'); // Redirect to the interface after successful update
+            navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error updating professional settings:', error);
+        } finally {
+            // Hide the spinner
+            setIsSubmitting(false);
         }
     };
+    
 
     // Helper functions for toggling dropdowns and handling selections
     const toggleDropdown = (id) => {
@@ -357,6 +364,12 @@ function EditProfessionalSettings()
                     <button className={styles['pro-continue-button']} onClick={handleSubmit}>
                         {translation.saveChangesButton}
                     </button>
+                    {/* Show the spinner while submitting */}
+                {isSubmitting && (
+                    <div className={styles['spinner-overlay']}>
+                        <div className={styles['spinner']}></div>
+                    </div>
+                )}
                 </div>
             </div>
         </div>
