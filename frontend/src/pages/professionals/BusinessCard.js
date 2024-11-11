@@ -192,7 +192,7 @@ function BusinessCard() {
                             href="#"
                             onClick={(e) => {
                                 e.preventDefault(); // Prevent default link behavior
-                                handleExplainClick(); // Use navigate for redirection
+                               
                             }}
                             className={styles.proExplainLink}
                         >
