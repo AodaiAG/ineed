@@ -139,7 +139,10 @@
     "close": "إغلاق",
 	    "inquiryMessage": "للاستفسار أو اقتراح، اضغط",
     "clickHere": "هنا",
-    "resendCardMessage": "أرسل لي البطاقة مرة أخرى"
+    "resendCardMessage": "أرسل لي البطاقة مرة أخرى",
+	 "enterPhoneNumberMessage": "يرجى إدخال رقم هاتف.",
+  "phoneNumberLengthMessage": "يجب أن يتكون رقم الهاتف من 7 أرقام."
+	
 
 
 

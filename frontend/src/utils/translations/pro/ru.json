@@ -132,7 +132,9 @@
     "close": "Закрыть",
 	    "inquiryMessage": "Для запроса или предложения нажмите",
     "clickHere": "здесь",
-    "resendCardMessage": "Отправьте мне карточку снова"
+    "resendCardMessage": "Отправьте мне карточку снова",
+	 "enterPhoneNumberMessage": "Пожалуйста, введите номер телефона.",
+  "phoneNumberLengthMessage": "Номер телефона должен состоять из 7 цифр."
 
 
 

@@ -132,7 +132,9 @@
     "close": "Cerrar",
 	    "inquiryMessage": "Para consultas o sugerencias, haga clic",
     "clickHere": "aquí",
-    "resendCardMessage": "Envíame la tarjeta de nuevo"
+    "resendCardMessage": "Envíame la tarjeta de nuevo",
+	  "enterPhoneNumberMessage": "Por favor, ingrese un número de teléfono.",
+  "phoneNumberLengthMessage": "El número de teléfono debe tener 7 dígitos."
 
 
 
