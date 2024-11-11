@@ -23,8 +23,9 @@ const JobFieldsSelection = forwardRef(({
     const [searchText, setSearchText] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [showReportPopup, setShowReportPopup] = useState(false);
-    
+
     const domainRefs = useRef({});
+    const mainRefs = useRef({});
 
     const handleOpenPopup = () => setShowReportPopup(true);
     const handleClosePopup = () => setShowReportPopup(false);
@@ -110,14 +111,32 @@ const JobFieldsSelection = forwardRef(({
 
     const handleToggleMain = (mainProfession) => {
         setExpandedMains((prev) => {
-            const updated = new Set(prev);
-            if (updated.has(mainProfession)) {
-                updated.delete(mainProfession);
-            } else {
-                updated.add(mainProfession);
-                fetchSubProfessions(mainProfession);
+            const updated = new Set();
+
+            if (prev.has(mainProfession)) {
+                // Close the main profession if it's already open
+                return updated;
             }
-            return updated;
+
+            // Close any other open main profession first
+            setExpandedMains(new Set());
+
+            // Add the new main profession after a short delay to avoid layout shift
+            setTimeout(() => {
+                updated.add(mainProfession);
+                setExpandedMains(updated);
+
+                // Scroll to the main profession name after expanding
+                if (mainRefs.current[mainProfession]) {
+                    mainRefs.current[mainProfession].scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start',
+                    });
+                }
+            }, 100);
+
+            fetchSubProfessions(mainProfession);
+            return prev;
         });
     };
 
@@ -243,6 +262,7 @@ const JobFieldsSelection = forwardRef(({
                                 .map((mainProfession, index) => (
                                     <div key={`${mainProfession.main}-${index}`} className={styles['pro-dropdown']}>
                                         <div
+                                            ref={(el) => (mainRefs.current[mainProfession.main] = el)}
                                             className={styles['pro-dropdown-toggle']}
                                             onClick={(e) => {
                                                 if (e.target.tagName !== "INPUT") {
