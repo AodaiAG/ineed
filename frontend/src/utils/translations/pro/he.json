@@ -152,7 +152,9 @@
     "missingProfessionError": "אנא הזן את המקצוע החסר.",
     "mainProfessionError": "אנא בחר מקצוע ראשי.",
     "subProfessionError": "אנא הזן תת-מקצוע.",
-    "submissionFailedError": "השליחה נכשלה. אנא נסה שוב."
+    "submissionFailedError": "השליחה נכשלה. אנא נסה שוב.",
+	    "wantCardText": "גם אתה רוצה כרטיס?",
+    "clickHereText": "לחץ כאן"
 
 
 

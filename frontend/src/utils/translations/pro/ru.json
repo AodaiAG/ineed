@@ -153,7 +153,9 @@
   "thankYouMessage": "Спасибо за регистрацию!",
   "errorOccurredMessage": "Произошла ошибка, попробуйте позже -.-",
   "phoneNumberLengthMessage": "Номер телефона должен состоять из 7 цифр.",
-  "languageError": "Пожалуйста, выберите хотя бы один язык."
+  "languageError": "Пожалуйста, выберите хотя бы один язык.",
+      "wantCardText": "Тоже хотите карточку?",
+    "clickHereText": "Нажмите здесь"
 
 
 

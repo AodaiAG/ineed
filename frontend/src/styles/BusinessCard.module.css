@@ -73,7 +73,7 @@ background: black;
 .proProfileImage {
     width: 100%;
     width: 80vw;
-    height: 80vw;
+
 	max-width:300px;
 	max-height:300px;
     border-radius: 10px;
@@ -129,28 +129,29 @@ background: black;
 /* Footer Section */
 /* Footer Section */
 .proFooter {
-    background-color: #007bff;
+background-color: #000000;
     padding: 10px;
     border-radius: 15px;
     display: flex;
     justify-content: center;
-	position: relative;
+    position: relative;
     align-items: center;
-    width: 96%; /* Relative width to keep it visually balanced */
+    width: 96%;
     max-width: 400px;
     text-align: center;
-    margin: 0px auto 6px; /* Center it and add a small margin for separation */
-    box-sizing: border-box; /* Ensure padding does not affect width */
+    margin: 0px auto 13px;
+    box-sizing: border-box;
 }
 
 /* Footer content updates to better align elements inside */
 .proFooterContent {
-    display: flex;
+display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     width: 100%;
-    padding-left: 21px; /* Add padding to move content to the right */
+    position: relative;
+    padding-left: 21px;
 }
 .proFooterText
 {
@@ -158,9 +159,10 @@ background: black;
 }
 /* Worker Icon inside footer */
 .proFooterWorkerIcon {
-    width: 67px;
+width: 67px;
     position: absolute;
-    left: 15px;
+    left: 54px;
+    bottom: 1px;
     height: auto;
 }
 
@@ -189,4 +191,23 @@ background: black;
 
 .spacer {
     flex-grow: 1;
+}
+
+.proClickableText {
+cursor: pointer;
+    text-align: center;
+    color: #FDBE00;
+    font-size: 1rem;
+    margin-bottom: 10px;
+
+}
+
+.clickHereText {
+    font-weight: bold;
+    color: #1783E0;
+
+}
+
+.proClickableText:hover .clickHereText {
+    color: #FDBE00;
 }

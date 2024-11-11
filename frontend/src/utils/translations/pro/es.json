@@ -139,7 +139,9 @@
     "missingProfessionError": "Por favor, ingrese la profesión faltante.",
     "mainProfessionError": "Por favor, seleccione una profesión principal.",
     "subProfessionError": "Por favor, ingrese una sub-profesión.",
-    "submissionFailedError": "No se pudo enviar el informe. Por favor, inténtelo de nuevo."
+    "submissionFailedError": "No se pudo enviar el informe. Por favor, inténtelo de nuevo.",
+	    "wantCardText": "¿También quieres una tarjeta?",
+    "clickHereText": "Haz clic aquí"
 
 
 

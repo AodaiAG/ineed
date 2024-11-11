@@ -89,7 +89,7 @@ function BusinessCard() {
         const message = encodeURIComponent('hi ya prof , ma neshmaaaaaaaaa');
     
         // Redirect to WhatsApp without opening a new tab
-        window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
+        window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${''}`;
     };
     const handleEmailClick = () => {
         window.open(`mailto:${professional.email}`);
@@ -131,15 +131,13 @@ function BusinessCard() {
     };
     return (
         <div className={styles.proContainer}>
-
-
+    
             {/* Title Section */}
             <h1 className={styles.proBusinessName}>{professional.fname} {professional.lname}</h1>
             <h2 className={styles.proCompanyType}>{professional.businessName || 'פרילנסר'}</h2>
             {/* Spacer to push footer to the bottom */}
             <div className={styles.spacer}></div>
-            
-
+    
             {/* Image Section */}
             <div className={styles.proImageContainer}>
                 <img
@@ -149,6 +147,7 @@ function BusinessCard() {
                 />
             </div>
             <div className={styles.spacer}></div>
+            
             {/* Contact Icons Section */}
             <div className={styles.proIconsContainer}>
                 <div className={styles.proIcon} onClick={handlePhoneClick}>
@@ -170,6 +169,13 @@ function BusinessCard() {
                     <img src="/images/Prof/waze.png" alt="Navigate Icon" />
                 </div>
             </div>
+            
+            <div className={styles.spacer}></div>
+    
+            {/* New Clickable Text Section */}
+            <p className={styles.proClickableText} onClick={handleExplainClick}>
+                {translation.wantCardText} <span className={styles.clickHereText}>{translation.clickHereText}</span>
+            </p>
             <div className={styles.spacer}></div>
             {/* Footer Section */}
             <div className={styles.proFooter}>
@@ -180,8 +186,8 @@ function BusinessCard() {
                         className={styles.proFooterWorkerIcon}
                     />
                     <div className={styles.proFooterText}>
-                    <p className={styles.proFooterTextHeader}>I Need</p>
-                    <p>{translation.subTitle}</p>
+                        <p className={styles.proFooterTextHeader}>I Need</p>
+                        <p>{translation.subTitle}</p>
                         <a
                             href="#"
                             onClick={(e) => {
@@ -190,13 +196,14 @@ function BusinessCard() {
                             }}
                             className={styles.proExplainLink}
                         >
-{translation.wantToJoinPrompt}                        </a>
+                           
+                        </a>
                     </div>
                 </div>
             </div>
-            
         </div>
     );
+    
 }
 
 export default BusinessCard;

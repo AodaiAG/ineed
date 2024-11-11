@@ -146,7 +146,9 @@
     "missingProfessionError": "يرجى إدخال المهنة المفقودة.",
     "mainProfessionError": "يرجى اختيار مهنة رئيسية.",
     "subProfessionError": "يرجى إدخال مهنة فرعية.",
-    "submissionFailedError": "فشل في إرسال التقرير. يرجى المحاولة مرة أخرى."
+    "submissionFailedError": "فشل في إرسال التقرير. يرجى المحاولة مرة أخرى.",
+	    "wantCardText": "هل تريد بطاقة أيضًا؟",
+    "clickHereText": "انقر هنا"
 	
 
 
