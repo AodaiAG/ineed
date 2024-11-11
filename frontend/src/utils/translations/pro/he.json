@@ -44,7 +44,7 @@
     "backButton": "חזור",
     "okButton": "אישור",
 	    "fullNameLabel": "שם פרטי ומשפחה:",
-    "fullNamePlaceholder": "דני שובבני",
+    "fullNamePlaceholder": "שם מלא",
     "phoneLabel": "טלפון:",
     "phoneNote": "*להחלפת מספר צור קשר עם השירות",
     "contactLink": "כאן",
@@ -101,7 +101,7 @@
     "location": {
     "selectLocation": "בחירת מקום לשירות",
     "enterLocation": "הקלד מיקום:",
-    "locationPlaceholder": "עפרוני 13, ראש העין, ישראל",
+    "locationPlaceholder": "כתובת של העסק",
     "locationIconAlt": "סמל מיקום",
 	"enterButton": "כניסה",
     "findMe": "מצא אותי",
@@ -115,7 +115,7 @@
   "locationError": "אנא הזן את המיקום שלך."
   },
   "locationLabel": "בחר מיקום",
-"locationPlaceholder": "עפרוני 13, ראש העין, ישראל",
+"locationPlaceholder": "כתובת של העסק",
     "interface_language_selection": "בחר את שפת הממשק",
 	"fromPlaceholder": "מ",
 	  "toPlaceholder": "עד",
