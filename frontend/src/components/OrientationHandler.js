@@ -3,26 +3,29 @@ import React, { useState, useEffect } from 'react';
 import styles from '../styles/OrientationHandler.module.css';
 
 const OrientationHandler = ({ children }) => {
-    const [isPortrait, setIsPortrait] = useState(
-        window.matchMedia("(orientation: portrait) and (max-width: 768px)").matches
-    );
+    const [isPortrait, setIsPortrait] = useState(true);
+    const isMobileDevice = /iPhone|Android/i.test(navigator.userAgent);
 
-    const handleOrientationChange = () => {
-        setIsPortrait(window.matchMedia("(orientation: portrait) and (max-width: 768px)").matches);
+    const checkOrientation = () => {
+        const portrait = window.matchMedia("(orientation: portrait)").matches || window.innerHeight > window.innerWidth;
+        setIsPortrait(portrait);
     };
 
     useEffect(() => {
-        const mediaQuery = window.matchMedia("(orientation: portrait) and (max-width: 768px)");
-        mediaQuery.addEventListener("change", handleOrientationChange);
-        
-        // Initial check
-        handleOrientationChange();
+        if (isMobileDevice) {
+            checkOrientation(); // Initial check
+            window.addEventListener("resize", checkOrientation);
+            window.addEventListener("orientationchange", checkOrientation);
 
-        return () => mediaQuery.removeEventListener("change", handleOrientationChange);
-    }, []);
+            return () => {
+                window.removeEventListener("resize", checkOrientation);
+                window.removeEventListener("orientationchange", checkOrientation);
+            };
+        }
+    }, [isMobileDevice]);
 
-    // Show the message only if the device is in landscape and has a width of 768px or less
-    if (!isPortrait && window.innerWidth <= 768) {
+    // Show the warning only on mobile devices and in landscape mode
+    if (!isPortrait && isMobileDevice) {
         return (
             <div className={styles.orientationWarning}>
                 Please rotate your device to portrait mode for the best experience.
