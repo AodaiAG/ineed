@@ -1,0 +1,13 @@
+/* src/styles/OrientationHandler.module.css */
+.orientationWarning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text */
+    font-size: 1.5rem;
+    padding: 20px;
+    box-sizing: border-box;
+}
