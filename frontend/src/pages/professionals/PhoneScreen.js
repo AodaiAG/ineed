@@ -45,7 +45,7 @@ function PhoneScreen() {
         console.error("Failed to send SMS:", error);
         alert(translation.failedToSendSmsMessage);
       }
-    } else if (phoneNumber.length !== 7) {
+    } else if (phoneNumber.length !== 7 &&phoneNumber.length!==0 ) {
       alert(translation.phoneNumberLengthMessage || "Phone number must be 7 digits.");
     } else {
       alert(translation.enterPhoneNumberMessage);
