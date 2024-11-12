@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_URL } from '../../utils/constans';
 import { useLanguage } from '../../contexts/LanguageContext';
 
+
 import styles from '../../styles/BusinessCard.module.css';
 
 function BusinessCard() {

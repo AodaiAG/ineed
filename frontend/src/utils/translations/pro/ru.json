@@ -155,7 +155,10 @@
   "phoneNumberLengthMessage": "Номер телефона должен состоять из 7 цифр.",
   "languageError": "Пожалуйста, выберите хотя бы один язык.",
       "wantCardText": "Тоже хотите карточку?",
-    "clickHereText": "Нажмите здесь"
+    "clickHereText": "Нажмите здесь",
+	    "rotateToUseMessage": "Пожалуйста, поверните устройство в портретный режим для использования!",
+    "orientationTitle": "I Need",
+    "orientationSubtitle": "Все эксперты в одном месте"
 
 
 

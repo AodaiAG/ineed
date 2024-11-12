@@ -141,7 +141,10 @@
     "subProfessionError": "Por favor, ingrese una sub-profesión.",
     "submissionFailedError": "No se pudo enviar el informe. Por favor, inténtelo de nuevo.",
 	    "wantCardText": "¿También quieres una tarjeta?",
-    "clickHereText": "Haz clic aquí"
+    "clickHereText": "Haz clic aquí",
+	    "rotateToUseMessage": "Por favor, gira tu dispositivo al modo retrato para usarlo!",
+    "orientationTitle": "I Need",
+    "orientationSubtitle": "Todos los expertos en un solo lugar"
 
 
 

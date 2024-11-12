@@ -148,7 +148,10 @@
     "subProfessionError": "يرجى إدخال مهنة فرعية.",
     "submissionFailedError": "فشل في إرسال التقرير. يرجى المحاولة مرة أخرى.",
 	    "wantCardText": "هل تريد بطاقة أيضًا؟",
-    "clickHereText": "انقر هنا"
+    "clickHereText": "انقر هنا",
+	    "rotateToUseMessage": "!يرجى تدوير جهازك إلى الوضع الرأسي لاستخدامه",
+    "orientationTitle": "I Need",
+    "orientationSubtitle": "جميع الخبراء في مكان واحد"
 	
 
 
