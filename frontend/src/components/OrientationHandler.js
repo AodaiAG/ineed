@@ -25,6 +25,10 @@ const OrientationHandler = ({ children }) => {
         }
     }, [isMobileDevice]);
 
+    if (!translation) {
+        return <div>Loading...</div>; // Wait for translations to load
+    }
+
     if (!isPortrait && isMobileDevice) {
         return (
             <div className={styles.orientationWarning}>
