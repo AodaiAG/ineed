@@ -11,7 +11,8 @@ const sequelize = new Sequelize(
         host: '92.42.44.61', // Default to localhost
         dialect: 'mysql',
         port: process.env.DB_PORT || 3306,        // Default to port 3306
-        logging: console.log                      // Log SQL queries for debugging
+        logging: false, // Disable SQL logging
+
     }
 );
 

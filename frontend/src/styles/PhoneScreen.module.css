@@ -6,14 +6,7 @@ body, html{
     scroll-behavior: smooth; 
 	touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
     -webkit-user-select: none;  /* Prevents text selection, reduces zoom triggers */
-}
-
-/* Body */
-.phoneScreen_mainSection {
-  text-align: center;
-}
-.phoneScreen_body {
-    touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
+	    touch-action: manipulation; /* Disables gestures like pinch-to-zoom */
     -webkit-user-select: none;  /* Prevents text selection, reduces zoom triggers */
     background: black;
     color: #fff; /* White text color */
@@ -22,8 +15,13 @@ body, html{
     justify-content: center;
     align-items: center;
     box-sizing: border-box; /* Ensure padding is included in total width/height */
-
 }
+
+/* Body */
+.phoneScreen_mainSection {
+  text-align: center;
+}
+
 
 /* Content */
 .phoneScreen_container {

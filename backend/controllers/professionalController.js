@@ -8,9 +8,22 @@ const multer = require('multer');
 const streamifier = require('streamifier');
 
 const axios = require('axios');
+const jwt = require('jsonwebtoken');
+const RefreshToken = require('../models/RefreshToken'); // Import RefreshToken model
+
+// Functions to generate tokens
+const generateAccessToken = (payload) => {
+    return jwt.sign(payload, 'your_access_token_secret', { expiresIn: '15m' });
+};
+
+const generateRefreshToken = (payload) => {
+    return jwt.sign(payload, 'your_refresh_token_secret', { expiresIn: '7d' });
+};
 
 const cloudinary = require('../config/cloudinaryConfig'); // Import the Cloudinary config
 const storage = multer.memoryStorage();
+
+
 
 const uploadImage = async (req, res) => {
     try {
@@ -139,14 +152,14 @@ const registerProfessional = async (req, res) => {
         image,
         availability24_7,
         dayAvailability,
-        professions, // Array of profession IDs (includes both main and sub professions)
-        workAreas, // Array of city IDs directly from the frontend
+        professions,
+        workAreas,
         languages,
-        location, // New JSON field for location
+        location,
     } = req.body;
 
     try {
-        // Split the full name into first name and last name (assuming space separates them)
+        // Split the full name into first and last names
         const [fname, ...lnameParts] = fullName.split(' ');
         const lname = lnameParts.join(' ');
 
@@ -161,13 +174,36 @@ const registerProfessional = async (req, res) => {
             image,
             availability24_7,
             dayAvailability,
-            professions, // Save the array of selected profession IDs
-            workAreas,   // Save the array of city IDs directly
+            professions,
+            workAreas,
             languages,
-            location, // Save location as a JSON object
+            location,
         });
 
-        res.status(201).json({ message: 'Professional registered successfully', data: newProfessional, id: newProfessional.id });
+        // Generate tokens
+        const accessToken = generateAccessToken({ profId: newProfessional.id, phoneNumber });
+        const refreshToken = generateRefreshToken({ profId: newProfessional.id, phoneNumber });
+
+        // Store the refresh token in the database
+        await RefreshToken.create({
+            token: refreshToken,
+            professionalId: newProfessional.id,
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+        });
+
+        // Set tokens as HTTP-only cookies
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 15 * 60 * 1000, // 15 minutes
+        });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        res.status(201).json({ message: 'Professional registered successfully', data: newProfessional });
     } catch (error) {
         console.error('Error registering professional:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -308,27 +344,56 @@ const verifyCodeHandler = async (req, res) => {
 
         const { code: storedCode, expiresAt } = verificationRecord;
 
-        if (new Date() > expiresAt) {
+        if (new Date() > expiresAt || storedCode !== code) {
             return res.status(401).json({ success: false, data: { registered: isRegistered } });
         }
 
-        if (storedCode !== code) {
-            return res.status(401).json({ success: false, data: { registered: isRegistered } });
+        // Code is valid
+        if (isRegistered) {
+            // Generate tokens
+            const accessToken = generateAccessToken({ profId: professional.id });
+            const refreshToken = generateRefreshToken({ profId: professional.id });
+
+            // Store refresh token in the database
+            await RefreshToken.create({
+                token: refreshToken,
+                professionalId: professional.id,
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+            });
+
+            // Set tokens in HTTP-only cookies
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                secure: false, // Must be false for HTTP in development
+
+                maxAge: 15 * 60 * 1000,
+            });
+            res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: false, // Must be false for HTTP in development
+
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+            });
+
+            return res.status(200).json({
+                success: true,
+                data: {
+                    profId: professional.id,
+                    registered: true,
+                },
+                message: 'Verification successful',
+            });
         }
 
-        // Code is valid, respond based on registration status
+        // If not registered, send to registration page
         res.status(200).json({
             success: true,
-            data: {
-                profId: professional ? professional.id : null,
-                phoneNumber,
-                registered: isRegistered
-            },
-            message: isRegistered ? 'Verification successful' : 'Verification successful, but professional not registered'
+            data: { phoneNumber, registered: false },
+            message: 'Verification successful, but professional not registered',
         });
     } catch (error) {
         console.error('Error verifying code:', error);
-        res.status(500).json({ success: false, data: null });
+        res.status(500).json({ success: false });
     }
 };
 

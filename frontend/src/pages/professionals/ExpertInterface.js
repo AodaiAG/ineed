@@ -4,18 +4,51 @@ import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
 import { sendSms, shortenUrl } from '../../utils/generalUtils';
 import { useLanguage } from '../../contexts/LanguageContext';
-import useUserValidation from '../../hooks/useUserValidation';
+import api from '../../utils/api'
+
 // Assuming Popup component will be created later
 import NewUserPopup from '../../components/professionals/NewUserPopup'; 
 
 function ExpertInterface() {
     const navigate = useNavigate();
-    const { isValidUserdata, decryptedUserdata } = useUserValidation(null, '/pro/enter'); 
+
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const [sendDisabled, setSendDisabled] = useState(false);
     const [countdown, setCountdown] = useState('');
     const [showNewUserPopup, setShowNewUserPopup] = useState(false); // State to control new user popup
+
+    const [authData, setAuthData] = useState({
+        isValidUserdata: false, // Initially false, set to true once authenticated
+        decryptedUserdata: {},  // To store the full payload data
+    });
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await api.get('/auth/verify-auth');
+                const { decryptedUserdata } = response.data;
+                
+                // Update authData state with user data and mark as authenticated
+                setAuthData(prevData => ({
+                    ...prevData,
+                    isValidUserdata: true,
+                    decryptedUserdata: response.data.decryptedUserdata,
+                }));
+                console.log('User authenticated:', decryptedUserdata);
+            } catch (error) {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    console.log('User not authenticated, redirecting to login');
+                    navigate('/pro/enter'); // Redirect to login if not authenticated
+                } else {
+                    console.error('Error verifying authentication:', error);
+                }
+            }
+        };
+
+        checkAuth();
+    }, [navigate]);
+
 
     // Initialize styles and manage countdown if needed
     useEffect(() => {
@@ -69,8 +102,8 @@ function ExpertInterface() {
         window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
     };
 
-    // Render loading screen while user data is being checked
-    if (isValidUserdata === null) {
+    // If authentication hasn’t been verified, display a loading message
+    if (!authData.isValidUserdata) {
         return <div>Loading...</div>;
     }
 
@@ -87,11 +120,10 @@ function ExpertInterface() {
     // Resend business card link
     const handleResendClick = async () => {
         try {
-            if (!decryptedUserdata) {
-                return alert(translation.errorOccurredMessage);
-            }
+            
 
-            const id = decryptedUserdata.profId;
+            const id = authData.decryptedUserdata.profId
+            const phoneNumber = authData.decryptedUserdata.phoneNumber
             if (!id) return alert(translation.errorOccurredMessage);
 
             setSendDisabled(true);
@@ -101,7 +133,7 @@ function ExpertInterface() {
             const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${id}`;
             const shortenedLink = await shortenUrl(businessCardLink);
             const message = translation.businessCardSMS.replace("{link}", shortenedLink);
-            sendSms(decryptedUserdata.phoneNumber, message);
+            sendSms(phoneNumber, message);
         } catch (e) {
             console.error('Error decrypting or handling business card data:', e);
         }

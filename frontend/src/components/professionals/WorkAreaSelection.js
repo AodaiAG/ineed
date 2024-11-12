@@ -4,8 +4,7 @@ import styles from '../../styles/ProfessionalRegistration.module.css';
 
 const WorkAreas = forwardRef(({
     groupedLocations,
-    toggleDropdown,
-    toggleAllChildren,
+
     workAreaSelections,
     setWorkAreaSelections,
     error

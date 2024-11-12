@@ -25,7 +25,7 @@ function App() {
     return (
         <Router>
             <LanguageProvider>
-                <BodyClassHandler />
+                
                 {/* Wrap all routes with OrientationHandler */}
                 <OrientationHandler>
                     <Routes>
@@ -56,22 +56,5 @@ function App() {
 }
 
 // Component to dynamically set body classes based on current route
-function BodyClassHandler() {
-    const location = useLocation();
-
-    useEffect(() => {
-        // Remove all existing body classes to avoid conflicts
-        document.body.className = '';
-
-        // Apply specific class based on the current path
-        if (location.pathname.startsWith('/pro')) {
-            document.body.classList.add('professional-body');
-        } else {
-            document.body.classList.add('client-body');
-        }
-    }, [location]);
-
-    return null;
-}
 
 export default App;

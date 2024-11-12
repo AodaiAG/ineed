@@ -12,14 +12,13 @@ import AvailabilityTimes from '../../components/professionals/AvailabilityForm';
 import LanguagePreferences from '../../components/professionals/LanguagePreferences';
 import { useLanguage } from '../../contexts/LanguageContext';
 import Cookies from 'js-cookie'; // Import js-cookie
-
+import api from '../../utils/api'
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
-import useUserValidation from '../../hooks/useUserValidation';
 import CryptoJS from 'crypto-js';
 function ProfessionalRegistration() {
+
     
     const navigate = useNavigate();
-    const { isValidUserdata, decryptedUserdata } = useUserValidation(null, null); 
     const [availability24_7, setAvailability24_7] = useState(false);
     const { translation } = useLanguage(); // Use translation from context
     const [location, setLocation] = useState({
@@ -52,6 +51,7 @@ function ProfessionalRegistration() {
         language: '',
         location:''
     });
+    
 
     // Refs for each field to scroll to them when needed
     const fullNameRef = useRef(null);
@@ -77,6 +77,35 @@ function ProfessionalRegistration() {
         6: { isWorking: false, start: '', end: '' }   // Saturday
     });
     const [workAreaSelections, setWorkAreaSelections] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    
+    useEffect(() => {
+        const checkAuth = async () => {
+            setIsLoading(true); // Start loading
+            try {
+                const response = await api.get('/auth/verify-auth');
+                // If authenticated, proceed with navigation or actions
+                navigate('/pro/expert-interface');
+            } catch (error) {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
+                    if (storedPhoneNumber) {
+                        setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
+                    }
+                } else {
+                    
+                }
+            } finally {
+                setIsLoading(false); // Stop loading after check completes
+            }
+        };
+    
+        checkAuth();
+    }, [navigate]);
+
+
+    
 
     const toggleDropdown = (id) => {
         const dropdown = document.getElementById(id);
@@ -101,12 +130,7 @@ function ProfessionalRegistration() {
             },
         }));
     };
-    useEffect(() => {
-        if (decryptedUserdata && decryptedUserdata.registered) {
-            console.log("User is already registered. Redirecting to expert interface...");
-            navigate('/pro/expert-interface');
-        }
-    }, [decryptedUserdata, navigate]);
+
             
     const fetchDomains = async () => {
         try {
@@ -116,36 +140,25 @@ function ProfessionalRegistration() {
             console.error('Error fetching domains:', error);
         }
     };
-
-
-    useEffect(() => {
-        // Fetch the phone number from session storage
-        const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
-        if (storedPhoneNumber) {
-            setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
+    const fetchLocations = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
+            let locationsData = response.data;
+            setGroupedLocations(locationsData);
+            console.log("Fetched locations:", response.data);
+        } catch (error) {
+            console.error('Error fetching locations:', error);
         }
-        fetchDomains();
-        // Function to fetch locations
-        const fetchLocations = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/professionals/locations?lang=${selectedLanguage}`);
-                let locationsData = response.data;
-                setGroupedLocations(locationsData);
-                console.log("Fetched locations:", response.data);
-            } catch (error) {
-                console.error('Error fetching locations:', error);
-            }
-        };
+    };
+
     
-        // Fetch domains and locations initially
+    useEffect(() => {
+        
+        fetchDomains();
+ 
         fetchLocations();
        
     }, [selectedLanguage]); // Dependency array to re-run effect when selectedLanguage changes
-    
-    // New useEffect to fetch main professions whenever selectedDomain changes
-    useEffect(() => {
-        console.log("locationRef in ProfessionalRegistration:", locationRef.current);
-    }, [locationRef]);
 
     
     const validateForm = () => {
@@ -234,6 +247,16 @@ function ProfessionalRegistration() {
     };
     
     
+
+    
+    // New useEffect to fetch main professions whenever selectedDomain changes
+    if (isLoading) {
+        return (
+            <div className={styles['spinner-overlay']}>
+                <div className={styles['spinner']}></div>
+            </div>
+        );
+    }
     
     const transformDayAvailabilityForBackend = (dayAvailability) => {
         return Object.entries(dayAvailability).map(([dayInt, data]) => ({
@@ -270,34 +293,15 @@ function ProfessionalRegistration() {
         };
     
         try {
-            const response = await axios.post(`${API_URL}/professionals/register`, professionalData);
-            const registeredId = response.data.id; // Assume the API returns the newly registered user's ID.
-    
-            // Retrieve existing encrypted data from localStorage
-            const existingEncryptedData = localStorage.getItem('userdata');
-            let updatedProfessionalData;
-    
-            if (existingEncryptedData) {
-                try {
-                    // Decrypt the existing data
-                    const bytes = CryptoJS.AES.decrypt(existingEncryptedData, 'Server!123%#%^$#@Work');
-                    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-                    
-                    // Update the professional data with new ID
-                    updatedProfessionalData = { ...decryptedData, ...professionalData, profId: registeredId };
-                } catch (e) {
-                    console.error('Error decrypting professional data:', e);
-                    updatedProfessionalData = { ...professionalData, profId: registeredId }; // Fallback if decryption fails
+            const response = await axios.post(
+                `${API_URL}/professionals/register`,
+                professionalData,
+                {
+                    withCredentials: true // Ensures cookies (like the access token) are sent with the request
                 }
-            } else {
-                updatedProfessionalData = { ...professionalData, profId: registeredId };
-            }
+            );
+           const registeredId = response.data.id; // Assume the API returns the newly registered user's ID.
     
-            // Encrypt the updated professional data and save it in localStorage
-            const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(updatedProfessionalData), 'Server!123%#%^$#@Work').toString();
-            localStorage.setItem('userdata', encryptedData);
-    
-            // Redirect to Expert Interface page after successful registration
             const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${registeredId}`;
             const shortenedLink = await shortenUrl(businessCardLink);
             console.log('shortenedLink' + shortenedLink);
@@ -306,7 +310,7 @@ function ProfessionalRegistration() {
             localStorage.setItem('isNewUser', 'true'); // Set flag to indicate a new registration
             navigate('/pro/expert-interface');
         } catch (error) {
-            console.error('Error saving registration:', error);
+            alert('how did you get here bro ?');
         } finally {
             // Hide the spinner when the submission is done
             setIsSubmitting(false);

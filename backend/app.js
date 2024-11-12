@@ -3,15 +3,27 @@
     const path = require('path');  // Added path for serving static files
     const sequelize = require('./config/db'); // Import Sequelize instance
     const professionalRoutes = require('./routes/professionalRoutes');
+    const authRoutes = require('./routes/authRoutes');
     const cors = require('cors');
     const clientRoutes = require('./routes/clientRoutes'); // Adjust the path
     const app = express();
     const PORT = 3001; // Fixed port
+    const cookieParser = require('cookie-parser');
+
+    app.use(cookieParser());
 
     app.use(bodyParser.json());
-    app.use(cors());
+    app.use(cors({
+        origin: [
+            "http://localhost:3000",
+            "https://i-need.co.il",
+            "https://sms.innovio.co.il"
+        ],
+        credentials: true
+    }));
     app.use('/api/professionals', professionalRoutes);
-    app.use('/api', clientRoutes);
+    app.use('/auth', authRoutes);
+    app.use('/api', clientRoutes);  
     // Serve static files from the React app's build directory
     app.use(express.static(path.join(__dirname, '../frontend/build')));
     // Handle any other routes and send the React frontend

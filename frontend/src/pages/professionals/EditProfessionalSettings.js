@@ -2,6 +2,7 @@
 import React, { useEffect, useState ,useRef} from 'react';
 import axios from 'axios';
 import { API_URL } from '../../utils/constans';
+import api from '../../utils/api'
 import { useNavigate } from 'react-router-dom';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
@@ -11,13 +12,11 @@ import LanguagePreferences from '../../components/professionals/LanguagePreferen
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
-import useUserValidation from '../../hooks/useUserValidation';
 
 
 function EditProfessionalSettings() 
 {
     const navigate = useNavigate();
-    const { isValidUserdata, decryptedUserdata } = useUserValidation(null, '/pro/enter'); 
     const { translation } = useLanguage();
     const [location, setLocation] = useState({ address: '', lat: null, lon: null });
     const [domains, setDomains] = useState([]);
@@ -25,7 +24,7 @@ function EditProfessionalSettings()
     const [selectedLanguage, setSelectedLanguage] = useState(() => localStorage.getItem('userLanguage') || 'he');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+   
     const [dayAvailability, setDayAvailability] = useState({
         0: { isWorking: false, start: '', end: '' },  // Sunday
         1: { isWorking: false, start: '', end: '' },  // Monday
@@ -59,7 +58,49 @@ function EditProfessionalSettings()
     const languageRef = useRef(null);
     const locationRef = useRef(null);
 
+    const [authData, setAuthData] = useState({
+        isValidUserdata: false,
+        decryptedUserdata: {}
+    });
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Authentication check
+                const response = await api.get('/auth/verify-auth');
+                const { decryptedUserdata } = response.data;
+
+                setAuthData({
+                    isValidUserdata: true,
+                    decryptedUserdata
+                });
+
+                // Fetch additional data based on authentication
+                await Promise.all([
+                    fetchProfessionalData(decryptedUserdata.profId),
+                    fetchDomains(),
+                    fetchLocations()
+                ]);
+
+            } catch (error) {
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    navigate('/pro/enter'); // Redirect to login if not authenticated
+                } else {
+                    console.error('Error verifying authentication:', error);
+                }
+            } finally {
+                setIsLoading(false); // Mark loading as complete after all data is fetched
+            }
+        };
+
+        fetchData();
+    }, [navigate]);
+
+    // If authentication hasn’t been verified, display a loading message
+
+
+
 
     const fetchLocations = async () => {
         try {
@@ -81,9 +122,11 @@ function EditProfessionalSettings()
         }
     };
 
-    const fetchProfessionalData = async (id) => {
+    const fetchProfessionalData = async (profId) => {
         try {
-            const response = await axios.get(`${API_URL}/professionals/prof-info/${id}`);
+            const response = await axios.get(`${API_URL}/professionals/prof-info/${profId}`, {
+            });
+            
             const data = response.data;
 
             setFullName(data.fname + ' ' + (data.lname || ''));
@@ -103,20 +146,17 @@ function EditProfessionalSettings()
         }
     };
 
-    useEffect(() => {
-        if (decryptedUserdata && decryptedUserdata.profId) {
-            fetchProfessionalData(decryptedUserdata.profId);
-            fetchDomains();
-            fetchLocations();
-            setIsLoading(false);
-        }
-    }, [decryptedUserdata, selectedLanguage]);
-
+  
+   
     if (isLoading) {
-        return <div>Loading...</div>;
+        return (
+            <div className={styles['spinner-overlay']}>
+                <div className={styles['spinner']}></div>
+            </div>
+        );
     }
 
-
+   
     const transformDayAvailabilityForBackend = (dayAvailability) => {
         return Object.entries(dayAvailability).map(([dayInt, data]) => ({
             day: parseInt(dayInt), // Numeric day value (0-6)
@@ -212,12 +252,10 @@ function EditProfessionalSettings()
     
         return isValid;
     };
-    if (isValidUserdata === null) {
-        return <div>Loading...</div>;
-    }
+
     const handleSubmit = async () => {
         if (!validateForm()) return;
-        const professionalId = decryptedUserdata.profId;
+        const professionalId = authData.decryptedUserdata.profId;
     
         if (!professionalId) {
             console.error("No user ID found in session storage");
@@ -244,8 +282,10 @@ function EditProfessionalSettings()
         setIsSubmitting(true);
     
         try {
-            await axios.put(`${API_URL}/professionals/update`, professionalData);
-            navigate('/pro/expert-interface');
+            await axios.put(`${API_URL}/professionals/update`, professionalData, {
+                withCredentials: true, // Ensures cookies (like the access token) are sent with the request
+            });     
+                   navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error updating professional settings:', error);
         } finally {
@@ -255,31 +295,6 @@ function EditProfessionalSettings()
     };
     
 
-    // Helper functions for toggling dropdowns and handling selections
-    const toggleDropdown = (id) => {
-        const dropdown = document.getElementById(id);
-        if (dropdown) {
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-    };
-
-    const toggleAllChildren = (region) => {
-        const masterCheckbox = document.getElementById(`${region}-checkbox`);
-        const children = document.querySelectorAll(`.${region}-child`);
-        children.forEach(child => {
-            child.checked = masterCheckbox.checked;
-        });
-    };
-
-    const toggleAvailability = (day) => {
-        setDayAvailability((prevAvailability) => ({
-            ...prevAvailability,
-            [day]: {
-                ...prevAvailability[day],
-                isWorking: !prevAvailability[day].isWorking,
-            },
-        }));
-    };
     if (!translation) {
         return <div>Loading...</div>; // Wait for translations to load
     }
@@ -328,8 +343,7 @@ function EditProfessionalSettings()
 
                     <WorkAreas
                         groupedLocations={groupedLocations}
-                        toggleDropdown={toggleDropdown}
-                        toggleAllChildren={toggleAllChildren} // <-- Pass toggleAllChildren here
+
 
                         setWorkAreaSelections={setWorkAreaSelections}
                         workAreaSelections={workAreaSelections}
@@ -343,7 +357,6 @@ function EditProfessionalSettings()
                             setAvailability24_7={setAvailability24_7}  // Pass setAvailability24_7 here to update state properly
                             dayAvailability={dayAvailability}
                             setDayAvailability={setDayAvailability}
-                            toggleAvailability={toggleAvailability}
                             language={selectedLanguage || 'he'} // Default to 'he' if no language selected
                             error={errors.dayAvailability}
                             ref={dayAvailabilityRef}

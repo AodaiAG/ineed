@@ -8,7 +8,6 @@ const CryptoJS = require('crypto-js');
 
 
 import { API_URL } from '../../utils/constans'; // Assuming the URL is in constants
-const secretKey='Server!123%#%^$#@Work'
 function SMSVerification() {
     const navigate = useNavigate();
     const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
@@ -59,21 +58,13 @@ function SMSVerification() {
                 const response = await axios.post(`${API_URL}/professionals/verify-code`, {
                     phoneNumber,
                     code
+                }, {
+                    withCredentials: true // Ensures cookies are included in the request
                 });
-                if (response.data.success) {
+                if (response.data.success) 
+                    {
                     if (response.data.data.registered) 
                         {
-                        const userdata = {
-                            profId: response.data.data.profId,
-                            phoneNumber: response.data.data.phoneNumber,
-                            registered: response.data.data.registered
-                        };
-                        
-                        // Encrypt the professional data
-                        const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userdata), secretKey).toString();
-                        // Save the encrypted data to localStorage
-                        localStorage.setItem('userdata', encryptedData);
-    
                         navigate('/pro/expert-interface');
                     } else {
                         navigate('/pro/register');
