@@ -57,7 +57,7 @@ const refreshAccessToken = async (req, res) => {
 const verifyAuth = async (req, res) => {
     // Access all decoded token data from `req.professional` set by `authenticateToken`
     const decodedData = req.professional;
-
+   console.log(decodedData)
     res.status(200).json({
         isValidUserdata: true,
         decryptedUserdata: { ...decodedData }, // Spread all properties of the decoded payload

@@ -2,25 +2,18 @@ import React, { useState, useEffect } from 'react';
 import styles from '../../styles/ExpertInterface.module.css';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
-import { sendSms, shortenUrl } from '../../utils/generalUtils';
 import { useLanguage } from '../../contexts/LanguageContext';
-import api from '../../utils/api'
-
-// Assuming Popup component will be created later
-import NewUserPopup from '../../components/professionals/NewUserPopup'; 
+import api from '../../utils/api';
 
 function ExpertInterface() {
     const navigate = useNavigate();
-
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const [sendDisabled, setSendDisabled] = useState(false);
-    const [countdown, setCountdown] = useState('');
-    const [showNewUserPopup, setShowNewUserPopup] = useState(false); // State to control new user popup
 
     const [authData, setAuthData] = useState({
-        isValidUserdata: false, // Initially false, set to true once authenticated
-        decryptedUserdata: {},  // To store the full payload data
+        isValidUserdata: false,
+        decryptedUserdata: {},
     });
 
     useEffect(() => {
@@ -29,16 +22,14 @@ function ExpertInterface() {
                 const response = await api.get('/auth/verify-auth');
                 const { decryptedUserdata } = response.data;
                 
-                // Update authData state with user data and mark as authenticated
-                setAuthData(prevData => ({
-                    ...prevData,
+                setAuthData({
                     isValidUserdata: true,
-                    decryptedUserdata: response.data.decryptedUserdata,
-                }));
+                    decryptedUserdata: decryptedUserdata,
+                });
             } catch (error) {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                     console.log('User not authenticated, redirecting to login');
-                    navigate('/pro/enter'); // Redirect to login if not authenticated
+                    navigate('/pro/enter');
                 } else {
                     console.error('Error verifying authentication:', error);
                 }
@@ -48,50 +39,15 @@ function ExpertInterface() {
         checkAuth();
     }, [navigate]);
 
-
-    // Initialize styles and manage countdown if needed
+    // Initialize styles
     useEffect(() => {
         window.scrollTo(0, 0);
         document.body.classList.add(styles.expertInterface_body);
-
-        // Check if user is newly registered
-        if (localStorage.getItem('isNewUser') === 'true') {
-            setShowNewUserPopup(true); // Show popup if user is new
-            localStorage.removeItem('isNewUser'); // Clear flag so popup only shows once
-        }
-
-        // Check if button is already disabled from previous session
-        const lastSentTime = localStorage.getItem('lastSentTime');
-        if (lastSentTime) {
-            const timeDiff = 12 * 60 * 60 * 1000 - (Date.now() - lastSentTime); // 12-hour countdown
-            if (timeDiff > 0) {
-                setSendDisabled(true);
-                startCountdown(timeDiff);
-            }
-        }
 
         return () => {
             document.body.classList.remove(styles.expertInterface_body);
         };
     }, []);
-
-    // Countdown timer function
-    const startCountdown = (remainingTime) => {
-        const endTime = Date.now() + remainingTime;
-        const interval = setInterval(() => {
-            const timeLeft = endTime - Date.now();
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                setSendDisabled(false);
-                setCountdown('');
-                localStorage.removeItem('lastSentTime');
-            } else {
-                const hours = String(Math.floor(timeLeft / (1000 * 60 * 60))).padStart(2, '0');
-                const minutes = String(Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-                setCountdown(`${hours}:${minutes}`);
-            }
-        }, 1000);
-    };
 
     // Function to open WhatsApp with a predefined message
     const handleWhatsAppClick = () => {
@@ -100,11 +56,6 @@ function ExpertInterface() {
         const message = encodeURIComponent(translation.customerSupportMessage || "Hello, I'm reaching out regarding your services.");
         window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
     };
-
-    // If authentication hasn’t been verified, display a loading message
-    if (!authData.isValidUserdata) {
-        return <div>Loading...</div>;
-    }
 
     // Toggle the language selection popup
     const handleLanguageIconClick = () => {
@@ -116,38 +67,27 @@ function ExpertInterface() {
         navigate('/pro/edit-settings');
     };
 
-    // Resend business card link
-    const handleResendClick = async () => {
-        try {
-            
-
-            const id = authData.decryptedUserdata.profId
-            const phoneNumber = authData.decryptedUserdata.phoneNumber
-            const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
-            if (!id) return alert(translation.errorOccurredMessage);
-
-            setSendDisabled(true);
-            localStorage.setItem('lastSentTime', Date.now());
-            startCountdown(12 * 60 * 60 * 1000); // 12-hour countdown
-
-            const businessCardLink = `${window.location.origin}/pro/bs-card?id=${id}`;
-            const shortenedLink = await shortenUrl(businessCardLink);
-            const message = translation.businessCardSMS.replace("{link}", shortenedLink);
-            sendSms(formattedPhoneNumber, message);
-        } catch (e) {
-            console.error('Error decrypting or handling business card data:', e);
+    // Redirect to the business card page
+    const handleBusinessCardClick = () => {
+        const id = authData.decryptedUserdata.profId;
+        if (!id) {
+            alert(translation.errorOccurredMessage);
+            return;
         }
+        // Navigate to the business card page with the professional's ID
+        navigate(`/pro/bs-card?id=${id}`);
     };
 
+    if (!authData.isValidUserdata) {
+        return <div>Loading...</div>;
+    }
+
     if (!translation) {
-        return <div>Loading translations...</div>; // Wait for translations to load
+        return <div>Loading translations...</div>;
     }
 
     return (
         <div className={styles.expertInterface_container}>
-            {/* Display New User Popup if necessary */}
-            {showNewUserPopup && <NewUserPopup onClose={() => setShowNewUserPopup(false)} />}
-    
             {/* Header Container for Language Switch, Title, and Subtitle */}
             <div className={styles.headerContainer}>
                 <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
@@ -176,26 +116,26 @@ function ExpertInterface() {
     
             <div className={styles.spacer}></div>
             
-            {/* Resend Section and Settings Button */}
+            {/* Business Card Button */}
             <div className={styles.footerContainer}>
-                <div className={styles.expertInterface_resendSection}>
-                    <span className={styles.cardRequestText}>
-                        {translation.resendCardMessage}
-                    </span>
-                    <span
-                        className={sendDisabled ? styles.disabledLink : styles.resendLink}
-                        onClick={!sendDisabled ? handleResendClick : null}
-                    >
-                        {sendDisabled ? countdown : translation.clickHere}
-                    </span>
-                </div>
-                <button className={styles.expertInterface_settingsButton} onClick={handleMySettingsClick}>
+                <button
+                    className={styles.expertInterface_businessCardButton}
+                    onClick={handleBusinessCardClick}
+                    disabled={sendDisabled}
+                >
+                    כרטיס הביקור שלי
+                </button>
+                
+                {/* Settings Button */}
+                <button
+                    className={styles.expertInterface_settingsButton}
+                    onClick={handleMySettingsClick}
+                >
                     {translation.mySettingsButtonLabel}
                 </button>
             </div>
         </div>
     );
-    
 }
 
 export default ExpertInterface;
