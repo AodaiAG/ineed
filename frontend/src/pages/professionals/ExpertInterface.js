@@ -123,7 +123,8 @@ function ExpertInterface() {
                     onClick={handleBusinessCardClick}
                     disabled={sendDisabled}
                 >
-                    כרטיס הביקור שלי
+                        {translation.myBusinessCard}
+
                 </button>
                 
                 {/* Settings Button */}
