@@ -409,28 +409,38 @@ const downloadVCardHandler = async (req, res) => {
             return res.status(404).json({ error: 'Professional not found' });
         }
 
-        // Generate the vCard data
+        // Construct the vCard with CHARSET=UTF-8 directly in each line
         const vCardData = `
 BEGIN:VCARD
 VERSION:3.0
-FN:${professional.fname} ${professional.lname}
-ORG:${professional.businessName || 'פרילנסר'}
-TEL;TYPE=WORK,VOICE:${professional.phoneNumber}
-EMAIL:${professional.email}
+N;CHARSET=UTF-8:${professional.lname || ''};${professional.fname || ''}
+FN;CHARSET=UTF-8:${professional.fname || ''} ${professional.lname || ''}
+ORG;CHARSET=UTF-8:${professional.businessName || 'פרילנסר'}
+TEL;TYPE=WORK,VOICE:${professional.phoneNumber || ''}
+EMAIL:${professional.email || ''}
 URL:${professional.website || ''}
-ADR;TYPE=WORK:;;${professional.location?.address || ''}
+ADR;TYPE=WORK;CHARSET=UTF-8:;;${professional.location?.address || ''}
 END:VCARD
         `;
 
-        // Set headers to prompt download in the browser
-        res.setHeader('Content-Disposition', `attachment; filename="${professional.fname}_${professional.lname}.vcf"`);
-        res.setHeader('Content-Type', 'text/vcard;charset=utf-8');
-        res.status(200).send(vCardData);
+        // Encode filename for Content-Disposition
+        const filename = `${professional.fname || 'contact'}_${professional.lname || ''}.vcf`;
+        const encodedFilename = encodeURIComponent(filename);
+
+        // Set headers to prompt download in the browser with UTF-8 encoding
+        res.setHeader('Content-Disposition', `attachment; filename="${encodedFilename}"; filename*=UTF-8''${encodedFilename}`);
+        res.setHeader('Content-Type', 'text/vcard; charset=utf-8');
+
+        // Send the vCard data as a UTF-8 buffer
+        res.status(200).send(Buffer.from(vCardData, 'utf-8'));
     } catch (error) {
         console.error('Error generating vCard:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+
 
 
 
