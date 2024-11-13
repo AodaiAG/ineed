@@ -130,20 +130,22 @@ function BusinessCard() {
     END:VCARD
         `;
     
-        // Encode the vCard data as a Data URI
-        const encodedVCardData = encodeURIComponent(vCardData);
-        const dataUri = `data:text/vcard;charset=utf-8,${encodedVCardData}`;
+        // Create a Blob from the vCard data
+        const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
     
         // Create a temporary link to trigger the download
         const link = document.createElement('a');
-        link.href = dataUri;
+        link.href = url;
         link.download = `${professional.fname}_${professional.lname}.vcf`;
         document.body.appendChild(link);
         link.click();
     
-        // Cleanup
+        // Cleanup: remove the link and revoke the object URL
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
+    
     
     const handleDownloadQrCode = () => {
         const canvas = qrRef.current.querySelector('canvas');
