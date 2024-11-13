@@ -53,6 +53,7 @@ background: black;
     font-weight: bold;
     color: #f1c40f;
     margin-bottom: 10px;
+	    max-width: 70vw;
     margin-top: 3px;
     word-break: break-word;
 }
@@ -211,16 +212,16 @@ cursor: pointer;
 }
 .shareIcon {
     position: absolute;
-    top: 10px;
+    top: 15px;
     left: 19px;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     cursor: pointer;
 }
 
 .qrIcon {
     position: absolute;
-    top: 10px;
+    top: 15px;
     right: 19px;
     width: 29px;
     height: 29px;
