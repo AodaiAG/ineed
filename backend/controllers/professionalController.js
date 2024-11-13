@@ -399,11 +399,45 @@ const verifyCodeHandler = async (req, res) => {
         res.status(500).json({ success: false });
     }
 };
+const downloadVCardHandler = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Find professional data by ID
+        const professional = await Professional.findByPk(id);
+        if (!professional) {
+            return res.status(404).json({ error: 'Professional not found' });
+        }
+
+        // Generate the vCard data
+        const vCardData = `
+BEGIN:VCARD
+VERSION:3.0
+FN:${professional.fname} ${professional.lname}
+ORG:${professional.businessName || 'פרילנסר'}
+TEL;TYPE=WORK,VOICE:${professional.phoneNumber}
+EMAIL:${professional.email}
+URL:${professional.website || ''}
+ADR;TYPE=WORK:;;${professional.location?.address || ''}
+END:VCARD
+        `;
+
+        // Set headers to prompt download in the browser
+        res.setHeader('Content-Disposition', `attachment; filename="${professional.fname}_${professional.lname}.vcf"`);
+        res.setHeader('Content-Type', 'text/vcard;charset=utf-8');
+        res.status(200).send(vCardData);
+    } catch (error) {
+        console.error('Error generating vCard:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 
 
 module.exports = {
     checkIfRegistered,
     getAllLocations,
+    downloadVCardHandler,
     registerProfessional,getProfessionalById,updateProfessional,uploadImage
     ,generateVerificationCodeHandler
     ,verifyCodeHandler,createReportMissingProfession

@@ -13,7 +13,7 @@ const { checkIfRegistered,
     getAllLocations,
     registerProfessional,
     getProfessionalById,updateProfessional ,uploadImage,generateVerificationCodeHandler
-    ,verifyCodeHandler,createReportMissingProfession
+    ,verifyCodeHandler,createReportMissingProfession,downloadVCardHandler
  } = require('../controllers/professionalController');
 
 router.post('/check-if-registered', checkIfRegistered); // check if the user registerd or not
@@ -25,6 +25,7 @@ router.post('/send-sms', generateVerificationCodeHandler); // Generate and send 
 router.post('/verify-code', verifyCodeHandler); // Verify the SMS verification code
 router.post('/upload-image', upload.single('image'), uploadImage);
 router.post('/report-missing-profession', createReportMissingProfession);
+router.get('/vcard/:id', downloadVCardHandler);
 
 
 

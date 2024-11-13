@@ -118,32 +118,8 @@ function BusinessCard() {
     };
 
     const handleAddToHomeClick = () => {
-        const vCardData = `
-    BEGIN:VCARD
-    VERSION:3.0
-    FN:${professional.fname} ${professional.lname}
-    ORG:${professional.businessName || 'פרילנסר'}
-    TEL;TYPE=WORK,VOICE:${professional.phoneNumber}
-    EMAIL:${professional.email}
-    URL:${professional.website ? professional.website : ''}
-    ADR;TYPE=WORK:;;${professional.location.address || ''}
-    END:VCARD
-        `;
-    
-        // Create a Blob from the vCard data
-        const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-    
-        // Create a temporary link to trigger the download
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${professional.fname}_${professional.lname}.vcf`;
-        document.body.appendChild(link);
-        link.click();
-    
-        // Cleanup: remove the link and revoke the object URL
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        const vCardUrl = `${API_URL}/professionals/vcard/${professional.id}`;
+        window.open(vCardUrl, '_blank');
     };
     
     
