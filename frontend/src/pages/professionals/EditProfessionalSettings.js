@@ -172,7 +172,7 @@ function EditProfessionalSettings()
     
         if (!fullName) {
             newErrors.fullName = translation.fullNameError || 'Please enter your full name.';
-            console.log("Full name error:", newErrors.fullName);
+       
             if (fullNameRef && fullNameRef.current) errorRefs.push(fullNameRef);
             isValid = false;
         }
@@ -180,7 +180,6 @@ function EditProfessionalSettings()
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!email || !emailRegex.test(email)) {
             newErrors.email = translation.emailError || 'Please enter a valid email address.';
-            console.log("Email error:", newErrors.email);
             if (emailRef && emailRef.current) errorRefs.push(emailRef);
             isValid = false;
         }
@@ -189,31 +188,25 @@ function EditProfessionalSettings()
         const websiteRegex = /^$|^[^\s]+\.[^\s]+$/;
         if (website && !websiteRegex.test(website)) {
             newErrors.website = translation.websiteError || 'Please enter a valid website (e.g., example.com) or leave it empty.';
-            console.log("Website error:", newErrors.website);
             if (websiteRef && websiteRef.current) errorRefs.push(websiteRef);
             isValid = false;
         }
         if (!location.address) {
             newErrors.location = translation.location.locationError || 'Please enter your location.';
-            console.log("Location error:", newErrors.location);
-            console.log("Location ref before push:", locationRef.current); // Confirm ref existence
             if (locationRef && locationRef.current) errorRefs.push(locationRef);
             isValid = false;
         }
     
         if (selectedProfessionIds.length === 0) {
             newErrors.jobFields = translation.jobFieldsError || 'Please select at least one job field.';
-            console.log("Job fields error:", newErrors.jobFields);
             if (jobFieldsRef && jobFieldsRef.current) errorRefs.push(jobFieldsRef);
             isValid = false;
         }
 
-        console.log("Work area selections:", workAreaSelections); // Check the current state of workAreaSelections
 
     
         if (workAreaSelections.length === 0) {
             newErrors.workArea = translation.workAreaError || 'Please select at least one work area.';
-            console.log("Work area error:", newErrors.workArea);
             if (workAreaRef && workAreaRef.current) errorRefs.push(workAreaRef);
             isValid = false;
         }
@@ -221,7 +214,6 @@ function EditProfessionalSettings()
         const isAnyDayAvailable = availability24_7 || Object.values(dayAvailability).some(day => day.isWorking);
         if (!isAnyDayAvailable) {
             newErrors.dayAvailability = translation.dayAvailabilityError || 'Please select at least one day you are available or choose Available 24/7.';
-            console.log("Day availability error:", newErrors.dayAvailability);
             if (dayAvailabilityRef && dayAvailabilityRef.current) errorRefs.push(dayAvailabilityRef);
             isValid = false;
         }
@@ -229,22 +221,18 @@ function EditProfessionalSettings()
         const isAnyLanguageSelected = Object.values(languages).some(lang => lang);
         if (!isAnyLanguageSelected) {
             newErrors.language = translation.languageError || 'Please select at least one language.';
-            console.log("Language error:", newErrors.language);
             if (languageRef && languageRef.current) errorRefs.push(languageRef);
             isValid = false;
         }
     
 
     
-        // Log the errors and refs collected
-        console.log("New errors object:", newErrors);
-        console.log("Error refs array:", errorRefs);
+      
     
         setErrors(newErrors);
     
         // Scroll to the first field with an error
         if (errorRefs.length > 0 && errorRefs[0].current) {
-            console.log("Scrolling to:", errorRefs[0].current);
             errorRefs[0].current.scrollIntoView({ behavior: 'smooth' });
         } else {
             console.error("No valid ref found for scrolling");

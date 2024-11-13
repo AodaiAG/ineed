@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken');
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
 
 // Function to generate an access token
-const generateAccessToken = (payload) => {
-    return jwt.sign(payload, 'your_access_token_secret', { expiresIn: '15m' });
-};
+
 
 // Refresh Access Token Controller
 const refreshAccessToken = async (req, res) => {
@@ -24,7 +23,7 @@ const refreshAccessToken = async (req, res) => {
         }
 
         // Verify the token is valid
-        jwt.verify(refreshToken, 'your_refresh_token_secret', (err, decoded) => {
+        jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(403).json({ message: 'Invalid refresh token' });
             }
@@ -34,7 +33,7 @@ const refreshAccessToken = async (req, res) => {
             }
 
             // Generate a new access token directly
-            const accessToken = jwt.sign({ profId: decoded.profId }, 'your_access_token_secret', { expiresIn: '15m' });
+            const accessToken = jwt.sign({ profId: decoded.profId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 
             if (!accessToken) {
                 console.log('Access token generation failed'); // Log if token generation failed
@@ -56,12 +55,12 @@ const refreshAccessToken = async (req, res) => {
 };
 
 const verifyAuth = async (req, res) => {
-    // Access the decoded token data from `req.professional` set by `authenticateToken`
-    const { profId, email, role } = req.professional; // Adjust fields as needed
+    // Access all decoded token data from `req.professional` set by `authenticateToken`
+    const decodedData = req.professional;
 
     res.status(200).json({
         isValidUserdata: true,
-        decryptedUserdata: { profId, email, role },
+        decryptedUserdata: { ...decodedData }, // Spread all properties of the decoded payload
     });
 };
 

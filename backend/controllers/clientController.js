@@ -35,7 +35,6 @@ exports.getGeocode = async (req, res) => {
 exports.verifyCode = async (req, res) => {
     const { requestId, phone, code } = req.body;
 
-    console.log('Received data:', { requestId, phone, code }); // Log the incoming data
 
     try {
         // Fetch the request from the database based on provided jobId, phone, and code
@@ -43,14 +42,12 @@ exports.verifyCode = async (req, res) => {
             where: { id: requestId, client_phone: phone, sms_verification: code }
         });
 
-        console.log('Database query result:', request); // Log the result of the query
 
         if (request) {
             // Update the request to mark SMS verification as complete
             request.sms_verification = 'active';
             await request.save();
 
-            console.log('SMS verification updated successfully:', request); // Log successful update
 
             res.status(200).json({ success: true, message: 'Phone number verified successfully.' });
         } else {

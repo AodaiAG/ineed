@@ -15,21 +15,13 @@ const WorkAreas = forwardRef(({
     const areaToggleRefs = useRef({});
 
     // Effect to load initial data only once
-    useEffect(() => {
-        console.log("Initial workAreaSelections from server:", workAreaSelections);
-    }, [workAreaSelections]);
 
-    // Ensure selections are logged on update
-    useEffect(() => {
-        console.log("Updated workAreaSelections:", workAreaSelections);
-    }, [workAreaSelections]);
 
     const handleLocationToggle = (cityId) => {
         setWorkAreaSelections(prevSelections => {
             const updatedSelections = prevSelections.includes(cityId)
                 ? prevSelections.filter(id => id !== cityId)
                 : [...prevSelections, cityId];
-            console.log("Updated workAreaSelections after city toggle:", updatedSelections);
             return updatedSelections;
         });
     };
@@ -45,7 +37,6 @@ const WorkAreas = forwardRef(({
             const updatedSelections = isChecked
                 ? [...new Set([...prevSelections, ...areaCityIds])]
                 : prevSelections.filter(id => !areaCityIds.includes(id));
-            console.log("Updated workAreaSelections after toggle all in area:", updatedSelections);
             return updatedSelections;
         });
     };

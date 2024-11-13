@@ -21,15 +21,7 @@ function PersonalInfoForm({
     const { fullNameRef, emailRef, websiteRef, locationRef,jobFieldsRef } = refs;
     const [showLocationPopup, setShowLocationPopup] = useState(false);
 
-    useEffect(() => {
-        console.log('Location received in PersonalInfoForm:', location);
-    }, [location]);
-    useEffect(() => {
-        console.log('Image received from parent:', image);
-    }, [image]);
-    useEffect(() => {
-        console.log("locationRef in PersonalInfoForm:", locationRef.current);
-    }, [locationRef]);
+    
 
     const handleWhatsAppClick = () => {
         const phoneNumber = '0504564232';

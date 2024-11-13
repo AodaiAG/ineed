@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState ,useRef} from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../utils/constans';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { QRCodeCanvas } from 'qrcode.react';
 
 
 import styles from '../../styles/BusinessCard.module.css';
@@ -13,10 +14,11 @@ function BusinessCard() {
     const navigate = useNavigate();
     const id = searchParams.get('id');
     const { translation } = useLanguage();
+    const [showQrModal, setShowQrModal] = useState(false);
+    const qrRef = useRef(); // Reference for QRCodeCanvas
 
 
-    // State to hold deferred prompt for Add to Home Screen
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
+
 
     useEffect(() => {
         // Add a unique class to the body element for BusinessCard
@@ -36,17 +38,11 @@ function BusinessCard() {
             fetchProfessional();
         }
 
-        const handleBeforeInstallPrompt = (e) => {
-            e.preventDefault();
-            setDeferredPrompt(e);
-        };
-
-        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+       
 
         // Clean up by removing the unique class when the component is unmounted
         return () => {
             document.body.classList.remove(styles.businessCard_body);
-            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
         };
     }, [id]);
 
@@ -56,6 +52,13 @@ function BusinessCard() {
     if (!translation) {
         return <div>Loading...</div>;
     }
+    const handleQrClick = () => {
+        setShowQrModal(true); // Show QR code modal
+    };
+
+    const handleCloseQrModal = () => {
+        setShowQrModal(false); // Hide QR code modal
+    };
 
     const handleExplainClick = () => {
         navigate('/pro/explain');
@@ -76,7 +79,25 @@ function BusinessCard() {
         // Use window.location.href to directly prompt the dialer without opening a new tab
         window.location.href = `tel:${professional.phoneNumber}`;
     };
-
+    const handleShareClick = () => {
+        const shareData = {
+            title: `${professional.fname} ${professional.lname}'s Business Card`,
+            text: `Check out ${professional.fname} ${professional.lname}'s business card on I Need.`,
+            url: window.location.href // Get the current page URL
+        };
+    
+        if (navigator.share) {
+            navigator.share(shareData)
+                .then(() => console.log('Successfully shared'))
+                .catch((error) => console.error('Error sharing:', error));
+        } else {
+            // Fallback: copy link to clipboard if Web Share API isn't supported
+            navigator.clipboard.writeText(shareData.url)
+                .then(() => alert('Link copied to clipboard!'))
+                .catch((error) => console.error('Error copying link:', error));
+        }
+    };
+    
     const handleWhatsAppClick = () => {
         // Remove non-digit characters and add the country code if needed
         const cleanedPhoneNumber = professional.phoneNumber.replace(/\D/g, '');
@@ -97,27 +118,41 @@ function BusinessCard() {
     };
 
     const handleAddToHomeClick = () => {
-        if (deferredPrompt) {
-            // Show the install prompt if available
-            deferredPrompt.prompt(); 
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
-                } else {
-                    console.log('User dismissed the install prompt');
-                }
-                setDeferredPrompt(null); // Reset the deferred prompt
-            });
-        } else {
-            // Provide manual instructions for different environments
-            if (navigator.userAgent.toLowerCase().includes('iphone') || navigator.userAgent.toLowerCase().includes('ipad')) {
-                alert('To add to your home screen, please tap the share button and select "Add to Home Screen".');
-            } else if (navigator.userAgent.toLowerCase().includes('android')) {
-                alert('To add to your home screen, please open your browser’s menu and select "Add to Home Screen".');
-            } else {
-                alert('To add to your home screen, please use the appropriate browser options to create a shortcut.');
-            }
-        }
+        const vCardData = `
+    BEGIN:VCARD
+    VERSION:3.0
+    FN:${professional.fname} ${professional.lname}
+    ORG:${professional.businessName || 'פרילנסר'}
+    TEL;TYPE=WORK,VOICE:${professional.phoneNumber}
+    EMAIL:${professional.email}
+    URL:${professional.website ? professional.website : ''}
+    ADR;TYPE=WORK:;;${professional.location.address || ''}
+    END:VCARD
+        `;
+    
+        const blob = new Blob([vCardData], { type: 'text/vcard' });
+        const url = window.URL.createObjectURL(blob);
+    
+        // Create a temporary link to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${professional.fname}_${professional.lname}.vcf`;
+        document.body.appendChild(link);
+        link.click();
+    
+        // Cleanup
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    };
+    const handleDownloadQrCode = () => {
+        const canvas = qrRef.current.querySelector('canvas');
+        const qrImageUrl = canvas.toDataURL('image/png');
+        
+        // Create a link to download the image
+        const link = document.createElement('a');
+        link.href = qrImageUrl;
+        link.download = `business_card_qr.png`;
+        link.click();
     };
 
     const handleNavigateClick = () => {
@@ -133,12 +168,44 @@ function BusinessCard() {
     return (
         <div className={styles.proContainer}>
     
+            {/* Share Icon at the Top Left */}
+            <img
+                src="/images/Prof/share.png"
+                alt="Share Icon"
+                onClick={handleShareClick}
+                className={styles.shareIcon}
+            />
+    
+           {/* QR Icon at the Top Right */}
+           <img
+                src="/images/Prof/qr.png"
+                alt="QR Icon"
+                onClick={handleQrClick}
+                className={styles.qrIcon}
+            />
+
+            {/* QR Code Modal */}
+            {showQrModal && (
+                <div className={styles.qrModalOverlay} onClick={handleCloseQrModal}>
+                    <div className={styles.qrModalContent} onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => setShowQrModal(false)} className={styles.closeButton}>
+                        &times;
+                        </button>
+                        <div ref={qrRef}>
+                            <QRCodeCanvas value={window.location.href} size={220} />
+                        </div>                    
+                        <button onClick={handleDownloadQrCode} className={styles.downloadButton}>Download</button>
+                        </div>
+                </div>
+            )}
+    
             {/* Title Section */}
             <h1 className={styles.proBusinessName}>{professional.fname} {professional.lname}</h1>
             <h2 className={styles.proCompanyType}>{professional.businessName || 'פרילנסר'}</h2>
+            
             {/* Spacer to push footer to the bottom */}
             <div className={styles.spacer}></div>
-    
+        
             {/* Image Section */}
             <div className={styles.proImageContainer}>
                 <img
@@ -172,12 +239,13 @@ function BusinessCard() {
             </div>
             
             <div className={styles.spacer}></div>
-    
+        
             {/* New Clickable Text Section */}
             <p className={styles.proClickableText} onClick={handleExplainClick}>
                 {translation.wantCardText} <span className={styles.clickHereText}>{translation.clickHereText}</span>
             </p>
             <div className={styles.spacer}></div>
+    
             {/* Footer Section */}
             <div className={styles.proFooter}>
                 <div className={styles.proFooterContent}>
@@ -204,6 +272,7 @@ function BusinessCard() {
             </div>
         </div>
     );
+    
     
 }
 

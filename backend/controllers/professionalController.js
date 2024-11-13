@@ -3,6 +3,7 @@ const Professional = require('../models/professional');
 const PhoneVerification = require('../models/PhoneVerification');
 const Location = require('../models/Location'); // Import the Location model
 const ReportMissingProfession = require('../models/ReportMissingProfession');
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
 
 const multer = require('multer');
 const streamifier = require('streamifier');
@@ -11,13 +12,14 @@ const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken'); // Import RefreshToken model
 
+
 // Functions to generate tokens
 const generateAccessToken = (payload) => {
-    return jwt.sign(payload, 'your_access_token_secret', { expiresIn: '15m' });
+    return jwt.sign(payload, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 };
 
 const generateRefreshToken = (payload) => {
-    return jwt.sign(payload, 'your_refresh_token_secret', { expiresIn: '7d' });
+    return jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 };
 
 const cloudinary = require('../config/cloudinaryConfig'); // Import the Cloudinary config
@@ -181,8 +183,9 @@ const registerProfessional = async (req, res) => {
         });
 
         // Generate tokens
-        const accessToken = generateAccessToken({ profId: newProfessional.id, phoneNumber });
-        const refreshToken = generateRefreshToken({ profId: newProfessional.id, phoneNumber });
+        const accessToken = generateAccessToken({ profId: newProfessional.id, phoneNumber: phoneNumber });
+        const refreshToken = generateRefreshToken({ profId: newProfessional.id, phoneNumber: phoneNumber });
+
 
         // Store the refresh token in the database
         await RefreshToken.create({

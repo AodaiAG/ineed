@@ -31,7 +31,6 @@ function SearchPage() {
         try {
             const response = await axios.get(`${API_URL}/search?query=${query}`);
             if (response.data.success) {
-                console.log('sub response: ' + response.data.jobType.sub);
                 setMain(response.data.jobType.main);
                 setSub(response.data.jobType.sub);
             } else {
@@ -55,7 +54,6 @@ function SearchPage() {
     // Handle form submission to confirm the selected main and sub categories
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Submitting:', { main, subP }); // Log values before navigating
         if (main && subP) {
             navigate('/main', { state: { main, subP } });
         }

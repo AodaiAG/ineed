@@ -76,7 +76,6 @@ const ReportPopupForm = ({ onClose, onSubmit, domains, language }) => {
             const response = await axios.post(`${API_URL}/professionals/report-missing-profession`, reportData);
             
             if (response.data.success) {
-                console.log("Report submitted successfully");
                 onClose();
             } else {
                 console.error("Failed to submit report:", response.data.message);

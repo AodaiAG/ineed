@@ -17,7 +17,6 @@ function UploadImage({ initialImage, onImageUpload }) {
     const { translation } = useLanguage();
 
     useEffect(() => {
-        console.log('Initial image received in UploadImage:', initialImage);
         setOriginalImage(initialImage); // Ensure state is updated with new prop if it changes
         setImage(initialImage);
     }, [initialImage]);

@@ -13,14 +13,11 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
   useEffect(() => {
     const loadGoogleMaps = () => {
       if (window.google && window.google.maps) {
-        console.log('Google Maps API is ready');
         initMap();
       } else {
-        console.log('Waiting for Google Maps API to load');
         const interval = setInterval(() => {
           if (window.google && window.google.maps) {
             clearInterval(interval);
-            console.log('Google Maps API has loaded');
             initMap();
           }
         }, 100);
@@ -39,7 +36,6 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
   }, [initialLocation]);
 
   const initMap = () => {
-    console.log('Initializing map');
     const initialLocationLatLng = { lat: lat, lng: lon };
     const map = new window.google.maps.Map(document.getElementById('popupMap'), {
       center: initialLocationLatLng,
@@ -53,7 +49,6 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
 
     const input = document.getElementById('popupLocationInput');
     if (input) {
-      console.log('Initializing Autocomplete on the input field');
       const autocomplete = new window.google.maps.places.Autocomplete(input);
       autocomplete.bindTo('bounds', map);
 
@@ -64,7 +59,6 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
           return;
         }
 
-        console.log('Place selected:', place);
         map.setCenter(place.geometry.location);
         map.setZoom(13);
         marker.setPosition(place.geometry.location);
@@ -80,7 +74,6 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
         const service = new window.google.maps.places.AutocompleteService();
         service.getPlacePredictions({ input: input.value }, (predictions, status) => {
           if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
-            console.log('Predictions:', predictions);
           } else {
             console.log('No predictions available');
           }

@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 const API_URL =  'http://localhost:3001';
+const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
+
 
 const authenticateToken = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
@@ -25,7 +27,7 @@ const authenticateToken = async (req, res, next) => {
                     secure: false,
                     maxAge: 15 * 60 * 1000,
                 });
-                req.professional = jwt.verify(newAccessToken, 'your_access_token_secret');
+                req.professional = jwt.verify(newAccessToken,ACCESS_TOKEN_SECRET);
                 next();
             } else {
                 return res.status(401).json({ message: 'Failed to refresh token' });
@@ -39,7 +41,7 @@ const authenticateToken = async (req, res, next) => {
         }
     } else {
         // Verify the access token if it exists
-        jwt.verify(accessToken, 'your_access_token_secret', (err, decoded) => {
+        jwt.verify(accessToken, ACCESS_TOKEN_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(401).json({ message: 'Invalid access token' });
             } else {

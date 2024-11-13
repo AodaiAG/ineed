@@ -35,7 +35,6 @@ function ExpertInterface() {
                     isValidUserdata: true,
                     decryptedUserdata: response.data.decryptedUserdata,
                 }));
-                console.log('User authenticated:', decryptedUserdata);
             } catch (error) {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                     console.log('User not authenticated, redirecting to login');
@@ -124,16 +123,17 @@ function ExpertInterface() {
 
             const id = authData.decryptedUserdata.profId
             const phoneNumber = authData.decryptedUserdata.phoneNumber
+            const formattedPhoneNumber = phoneNumber.replace(/-/g, '');
             if (!id) return alert(translation.errorOccurredMessage);
 
             setSendDisabled(true);
             localStorage.setItem('lastSentTime', Date.now());
             startCountdown(12 * 60 * 60 * 1000); // 12-hour countdown
 
-            const businessCardLink = `https://ineed.vercel.app/pro/bs-card?id=${id}`;
+            const businessCardLink = `${window.location.origin}/pro/bs-card?id=${id}`;
             const shortenedLink = await shortenUrl(businessCardLink);
             const message = translation.businessCardSMS.replace("{link}", shortenedLink);
-            sendSms(phoneNumber, message);
+            sendSms(formattedPhoneNumber, message);
         } catch (e) {
             console.error('Error decrypting or handling business card data:', e);
         }
