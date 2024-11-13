@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const API_URL = 'https://i-need.co.il:3001';
-
+import {API_URLL} from './constans';
 const api = axios.create({
-    baseURL: API_URL,
+    baseURL: API_URLL,
     withCredentials: true, // Enable cookies
 });
 
