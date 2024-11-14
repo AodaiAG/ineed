@@ -380,7 +380,7 @@ BEGIN:VCARD
 VERSION:3.0
 N;CHARSET=UTF-8:${professional.lname || ''};${professional.fname || ''}
 FN;CHARSET=UTF-8:${professional.fname || ''} ${professional.lname || ''}
-ORG;CHARSET=UTF-8:${professional.businessName || 'פרילנסר'}
+ORG;CHARSET=UTF-8:${professional.businessName || ''}
 TEL;TYPE=WORK,VOICE:${professional.phoneNumber || ''}
 EMAIL:${professional.email || ''}
 URL:${professional.website || ''}

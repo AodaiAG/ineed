@@ -135,8 +135,8 @@ function PhoneScreen() {
 
           <p className={styles.phoneScreen_termsText}>
             {translation.termsText}{" "}
-            <a href="#" className={styles.phoneScreen_termsLink}>
-              {translation.termsLink}
+            <a href="https://i-need.co.il/lic/eula.pdf" target="_blank" rel="noopener noreferrer" className={styles.phoneScreen_termsLink}>
+            {translation.termsLink}
             </a>
           </p>
         </section>
