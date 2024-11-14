@@ -1,44 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import styles from '../../styles/ExpertInterface.module.css';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
 import { useLanguage } from '../../contexts/LanguageContext';
 import api from '../../utils/api';
+import { useAuth } from '../../contexts/AuthContext';  // Import useAuth hook
+
 
 function ExpertInterface() {
     const navigate = useNavigate();
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const [sendDisabled, setSendDisabled] = useState(false);
-
-    const [authData, setAuthData] = useState({
-        isValidUserdata: false,
-        decryptedUserdata: {},
-    });
+    const { isAuthenticated, loading,user, verifyAuth } = useAuth();
+    
 
     useEffect(() => {
         const checkAuth = async () => {
-            try {
-                const response = await api.get('/auth/verify-auth');
-                const { decryptedUserdata } = response.data;
-                
-                setAuthData({
-                    isValidUserdata: true,
-                    decryptedUserdata: decryptedUserdata,
-                });
-            } catch (error) {
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    console.log('User not authenticated, redirecting to login');
-                    navigate('/pro/enter');
-                } else {
-                    console.error('Error verifying authentication:', error);
-                }
-            }
+            await verifyAuth(); // Ensure verifyAuth is called to update isAuthenticated
         };
 
-        checkAuth();
-    }, [navigate]);
+        if (loading) {
+            checkAuth(); // Call only if loading is true initially
+        }
+    }, [loading, verifyAuth]);
 
+    useEffect(() => {
+        if (!loading) { // Proceed only after loading is complete
+            if (isAuthenticated) {
+                console.log("User is authenticated.");
+            } else {
+                console.log("User is not authenticated. Redirecting to login...");
+                navigate('/pro/enter');
+            }
+        }
+    }, [isAuthenticated, loading, navigate]);
+
+   
+    
+
+   
+ 
     // Initialize styles
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -48,6 +50,10 @@ function ExpertInterface() {
             document.body.classList.remove(styles.expertInterface_body);
         };
     }, []);
+     // Optional: Show a loading indicator while verifying
+     if (loading) {
+        return <div>Loading...</div>;
+    }
 
     // Function to open WhatsApp with a predefined message
     const handleWhatsAppClick = () => {
@@ -78,9 +84,7 @@ function ExpertInterface() {
         navigate(`/pro/bs-card?id=${id}`);
     };
 
-    if (!authData.isValidUserdata) {
-        return <div>Loading...</div>;
-    }
+    
 
     if (!translation) {
         return <div>Loading translations...</div>;

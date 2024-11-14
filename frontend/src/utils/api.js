@@ -1,21 +1,59 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { API_URLL } from './constans';
 
-import {API_URLL} from './constans';
 const api = axios.create({
     baseURL: API_URLL,
-    withCredentials: true, // Enable cookies
+    withCredentials: true, // Ensures cross-origin cookies if needed
 });
 
-// Response interceptor to handle token expiration or missing token
+// Request interceptor to attach tokens from localStorage
+api.interceptors.request.use(
+    (config) => {
+        const accessToken = localStorage.getItem('accessToken');
+        const refreshToken = localStorage.getItem('refreshToken');
+        
+        console.log('Request Interceptor: Access Token:', accessToken);
+        console.log('Request Interceptor: Refresh Token:', refreshToken);
+
+        if (accessToken) {
+            config.headers['x-access-token'] = accessToken;
+        }
+        if (refreshToken) {
+            config.headers['x-refresh-token'] = refreshToken;
+        }
+        
+        console.log('Request Config Headers:', config.headers);
+        return config;
+    },
+    (error) => {
+        console.error('Request Interceptor Error:', error);
+        return Promise.reject(error);
+    }
+);
+
+// Response interceptor to store tokens if they're returned in headers
 api.interceptors.response.use(
-    response => response, // Allow successful responses through
-    error => {
-        // Pass the error response so the component can handle navigation
+    (response) => {
+        console.log('Response Interceptor:', response);
+
+        if (response.headers['x-access-token']) {
+            console.log('Response Interceptor: New Access Token received');
+            localStorage.setItem('accessToken', response.headers['x-access-token']);
+        }
+        if (response.headers['x-refresh-token']) {
+            console.log('Response Interceptor: New Refresh Token received');
+            localStorage.setItem('refreshToken', response.headers['x-refresh-token']);
+        }
+        return response;
+    },
+    (error) => {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-            console.log('User unauthorized or refresh token expired');
+            console.warn('User unauthorized or refresh token expired:', error.response.status);
+        } else {
+            console.error('Response Interceptor Error:', error);
         }
         return Promise.reject(error);
     }
 );
+
 export default api;

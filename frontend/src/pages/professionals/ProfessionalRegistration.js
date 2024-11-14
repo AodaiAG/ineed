@@ -77,61 +77,8 @@ function ProfessionalRegistration() {
         6: { isWorking: false, start: '', end: '' }   // Saturday
     });
     const [workAreaSelections, setWorkAreaSelections] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingg, setIsLoadingg] = useState(true);
 
-    
-    useEffect(() => {
-        const checkAuth = async () => {
-            setIsLoading(true); // Start loading
-            try {
-                const response = await api.get('/auth/verify-auth');
-                // If authenticated, proceed with navigation or actions
-                navigate('/pro/expert-interface');
-            } catch (error) {
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
-                    if (storedPhoneNumber) {
-                        setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
-                    }
-                } else {
-                    
-                }
-            } finally {
-                setIsLoading(false); // Stop loading after check completes
-            }
-        };
-    
-        checkAuth();
-    }, [navigate]);
-
-
-    
-
-    const toggleDropdown = (id) => {
-        const dropdown = document.getElementById(id);
-        if (dropdown) {
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-    };
-    const toggleAllChildren = (region) => {
-        const masterCheckbox = document.getElementById(`${region}-checkbox`);
-        const children = document.querySelectorAll(`.${region}-child`);
-        children.forEach(child => {
-            child.checked = masterCheckbox.checked;
-        });
-    };
-
-    const toggleAvailability = (day) => {
-        setDayAvailability((prevAvailability) => ({
-            ...prevAvailability,
-            [day]: {
-                ...prevAvailability[day],
-                isWorking: !prevAvailability[day].isWorking,
-            },
-        }));
-    };
-
-            
     const fetchDomains = async () => {
         try {
             const response = await axios.get(`${API_URL}/${selectedLanguage}/domains`);
@@ -150,7 +97,27 @@ function ProfessionalRegistration() {
         }
     };
 
-    
+    useEffect(() => {
+        const initializeData = async () => {
+            setIsLoadingg(true);
+            
+            // Check session storage for phone number
+            const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
+            if (storedPhoneNumber) {
+                setPhoneNumber(storedPhoneNumber.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'));
+            }
+
+            // Fetch domains and locations
+            await Promise.all([fetchDomains(), fetchLocations()]);
+
+            setIsLoadingg(false); // Loading complete
+        };
+
+        initializeData();
+    }, []);
+
+
+
     useEffect(() => {
         
         fetchDomains();
@@ -236,7 +203,7 @@ function ProfessionalRegistration() {
 
     
     // New useEffect to fetch main professions whenever selectedDomain changes
-    if (isLoading) {
+    if (isLoadingg) {
         return (
             <div className={styles['spinner-overlay']}>
                 <div className={styles['spinner']}></div>
@@ -278,20 +245,10 @@ function ProfessionalRegistration() {
         };
     
         try {
-            const response = await axios.post(
-                `${API_URL}/professionals/register`,
-                professionalData,
-                {
-                    withCredentials: true // Ensures cookies (like the access token) are sent with the request
-                }
-            );
-           const registeredId = response.data.id; // Assume the API returns the newly registered user's ID.
-    
-           const businessCardLink = `${window.location.origin}/pro/bs-card?id=${registeredId}`;
-           const shortenedLink = await shortenUrl(businessCardLink);
-            let message = translation.businessCardSMS.replace("{link}", shortenedLink);
-            sendSms(formattedPhoneNumber, message);
-            localStorage.setItem('isNewUser', 'true'); // Set flag to indicate a new registration
+            console.log('Calling the register api')
+            await api.post('/api/professionals/register', professionalData);
+            console.log('got back from calling the register api')
+
             navigate('/pro/expert-interface');
         } catch (error) {
             alert('how did you get here bro ?');
@@ -355,8 +312,6 @@ function ProfessionalRegistration() {
                     {/* Work Areas Section */}
                     <WorkAreas
                         groupedLocations={groupedLocations}
-                        toggleDropdown={toggleDropdown}
-                        toggleAllChildren={toggleAllChildren}
                         setWorkAreaSelections={setWorkAreaSelections}
                         workAreaSelections={workAreaSelections}
                         error={errors.workArea} // Pass the work area error message
@@ -369,10 +324,8 @@ function ProfessionalRegistration() {
                     <AvailabilityTimes
                         availability24_7={availability24_7}
                         setAvailability24_7={setAvailability24_7}  // Pass setAvailability24_7 here
-
                         dayAvailability={dayAvailability}
                         setDayAvailability={setDayAvailability}
-                        toggleAvailability={toggleAvailability}
                         language={selectedLanguage || 'he'} // Default to 'he' if no language selected
                         error={errors.dayAvailability}
                         ref={dayAvailabilityRef}

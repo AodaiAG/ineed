@@ -1,57 +1,59 @@
 const jwt = require('jsonwebtoken');
-const axios = require('axios');
-const API_URL =  'http://localhost:3001';
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
-
+const refreshAccessToken = require('../controllers/authController').refreshAccessToken;
 
 const authenticateToken = async (req, res, next) => {
-    const accessToken = req.cookies.accessToken;
-    const refreshToken = req.cookies.refreshToken;
+    let accessToken = req.headers['x-access-token'];
+    const refreshToken = req.headers['x-refresh-token'];
+
+    console.log("Received Access Token:", accessToken);
+    console.log("Received Refresh Token:", refreshToken);
 
     if (!accessToken) {
-        if (!refreshToken) {
-            return res.status(401).json({ message: 'Access token and refresh token required' });
-        }
+        console.log("No access token provided. Checking refresh token...");
 
-        // Attempt to refresh the access token
-        try {
-            const refreshResponse = await axios.get(`${API_URL}/auth/refresh-token`, {
-                headers: { Cookie: `refreshToken=${refreshToken}` },
-                withCredentials: true,
-            });
+        // No access token, try to refresh
+        if (refreshToken) {
+            try {
+                console.log("Attempting to refresh access token using refresh token...");
 
-            if (refreshResponse.status === 200) {
-                const newAccessToken = refreshResponse.data.accessToken;
-                res.cookie('accessToken', newAccessToken, {
-                    httpOnly: true,
-                    secure: false,
-                    maxAge: 15 * 60 * 1000,
-                });
-                req.professional = jwt.verify(newAccessToken,ACCESS_TOKEN_SECRET);
-                next();
-            } else {
-                return res.status(401).json({ message: 'Failed to refresh token' });
+                // Call the refreshAccessToken function directly
+                const newAccessToken = await refreshAccessToken(refreshToken);
+
+                if (newAccessToken) {
+                    console.log("New Access Token generated:", newAccessToken);
+
+                    // Set the refreshed access token in headers for further checks
+                    req.headers['x-access-token'] = newAccessToken; 
+                    accessToken = newAccessToken;
+                } else {
+                    console.warn("Refresh token found but unable to generate new access token.");
+                    return res.status(403).json({ message: 'Could not refresh token, please log in again' });
+                }
+            } catch (error) {
+                console.error("Error while refreshing access token:", error);
+                return res.status(403).json({ message: 'Could not refresh token, please log in again' });
             }
-        } catch (error) {
-            // Send 403 if the refresh token is expired
-            if (error.response && error.response.status === 403) {
-                return res.status(403).json({ message: 'Refresh token expired' });
-            }
-            return res.status(401).json({ message: 'Unable to refresh token, please log in again' });
+        } else {
+            console.warn("No access or refresh token provided.");
+            return res.status(401).json({ message: 'Access token required' });
         }
-    } else {
-        // Verify the access token if it exists
-        jwt.verify(accessToken, ACCESS_TOKEN_SECRET, (err, decoded) => {
-            if (err) {
-                return res.status(401).json({ message: 'Invalid access token' });
-            } else {
-                req.professional = decoded;
-                next();
-            }
-        });
     }
-};
 
+    console.log("Verifying access token...");
+
+    // Verify the (new) access token if present
+    jwt.verify(accessToken, ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (err) {
+            console.error("Access token verification failed:", err);
+            return res.status(403).json({ message: 'Invalid or expired access token' });
+        }
+        console.log("Access token verified. Decoded data:", decoded);
+
+        req.professional = decoded; // Attach user data to the request object
+        next();
+    });
+};
 
 
 module.exports = authenticateToken;

@@ -8,6 +8,7 @@ const CryptoJS = require('crypto-js');
 
 
 import { API_URL } from '../../utils/constans'; // Assuming the URL is in constants
+import api from '../../utils/api';
 function SMSVerification() {
     const navigate = useNavigate();
     const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
@@ -31,7 +32,7 @@ function SMSVerification() {
         const storedPhoneNumber = sessionStorage.getItem('professionalPhoneNumber');
         if (!storedPhoneNumber) {
             // Redirect back if no phone number found
-            navigate('/pro');
+            navigate('/pro/enter');
         } else {
             setPhoneNumber(storedPhoneNumber);
         }
@@ -53,18 +54,23 @@ function SMSVerification() {
 
     const handleVerification = async () => {
         const code = verificationCode.join('');
-        if (code.length === 4) {
+        if (code.length === 4) 
+            {
             try {
-                const response = await axios.post(`${API_URL}/professionals/verify-code`, {
+                const response = await api.post(`${API_URL}/professionals/verify-code`, {
                     phoneNumber,
                     code
-                }, {
-                    withCredentials: true // Ensures cookies are included in the request
                 });
                 if (response.data.success) 
                     {
                     if (response.data.data.registered) 
                         {
+                            const accessToken = localStorage.getItem('accessToken');
+                            const refreshToken = localStorage.getItem('refreshToken');
+                            
+                            console.log(' Access Token:', accessToken);
+                            console.log(' Refresh Token:', refreshToken);
+                            
                         navigate('/pro/expert-interface');
                     } else {
                         navigate('/pro/register');

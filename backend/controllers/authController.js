@@ -4,55 +4,40 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constant
 
 // Function to generate an access token
 
-
-// Refresh Access Token Controller
 const refreshAccessToken = async (req, res) => {
-
-    const refreshToken = req.cookies.refreshToken;
+    const refreshToken =  req.headers['x-refresh-token']; // Check cookie or header
 
     if (!refreshToken) {
         return res.status(403).json({ message: 'Refresh token required' });
     }
 
     try {
-        // Verify the refresh token exists in the database
+        // Verify the refresh token is stored in the database
         const storedToken = await RefreshToken.findOne({ where: { token: refreshToken } });
-
         if (!storedToken) {
             return res.status(403).json({ message: 'Invalid refresh token' });
         }
 
-        // Verify the token is valid
+        // Verify the refresh token itself
         jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(403).json({ message: 'Invalid refresh token' });
             }
 
-            if (!decoded || !decoded.profId) {
-                return res.status(403).json({ message: 'Invalid decoded payload in refresh token' });
-            }
+            const { profId } = decoded;
+            const newAccessToken = jwt.sign({ profId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 
-            // Generate a new access token directly
-            const accessToken = jwt.sign({ profId: decoded.profId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+            res.setHeader('x-access-token', newAccessToken);
 
-            if (!accessToken) {
-                console.log('Access token generation failed'); // Log if token generation failed
-            }
-
-            // Set the new access token as an HTTP-only cookie
-            res.cookie('accessToken', accessToken, {
-                httpOnly: true,
-                secure: false,
-                maxAge: 15 * 60 * 1000, // 15 minutes
-            });
-
-            // Include the new access token in the JSON response for the middleware
-            res.status(200).json({ accessToken, message: 'Access token refreshed' });
+            return res.status(200).json({  message: 'Access token refreshed' });
         });
     } catch (error) {
+        console.error('Error refreshing access token:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+
 
 const verifyAuth = async (req, res) => {
     // Access all decoded token data from `req.professional` set by `authenticateToken`
@@ -63,7 +48,22 @@ const verifyAuth = async (req, res) => {
         decryptedUserdata: { ...decodedData }, // Spread all properties of the decoded payload
     });
 };
+const grantProfAuth = async (professional, res) => {
+    const accessToken = jwt.sign({ profId: professional.id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({ profId: professional.id }, REFRESH_TOKEN_SECRET, { expiresIn: '90d' });
 
+    await RefreshToken.create({
+        token: refreshToken,
+        professionalId: professional.id,
+        expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    });
+
+
+    res.setHeader('x-access-token', accessToken);
+    res.setHeader('x-refresh-token', refreshToken);
+
+    return { accessToken, refreshToken };
+};
 // Logout Controller to Clear Cookies and Remove Refresh Token
 const logout = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
@@ -85,5 +85,5 @@ const logout = async (req, res) => {
 
 module.exports = {
     refreshAccessToken,
-    logout,verifyAuth
+    logout,verifyAuth,grantProfAuth
 };

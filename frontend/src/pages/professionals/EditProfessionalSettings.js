@@ -62,40 +62,7 @@ function EditProfessionalSettings()
         isValidUserdata: false,
         decryptedUserdata: {}
     });
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Authentication check
-                const response = await api.get('/auth/verify-auth');
-                const { decryptedUserdata } = response.data;
-
-                setAuthData({
-                    isValidUserdata: true,
-                    decryptedUserdata
-                });
-
-                // Fetch additional data based on authentication
-                await Promise.all([
-                    fetchProfessionalData(decryptedUserdata.profId),
-                    fetchDomains(),
-                    fetchLocations()
-                ]);
-
-            } catch (error) {
-                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                    navigate('/pro/enter'); // Redirect to login if not authenticated
-                } else {
-                    console.error('Error verifying authentication:', error);
-                }
-            } finally {
-                setIsLoading(false); // Mark loading as complete after all data is fetched
-            }
-        };
-
-        fetchData();
-    }, [navigate]);
+    
 
     // If authentication hasn’t been verified, display a loading message
 

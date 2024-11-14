@@ -32,7 +32,7 @@ function PhoneScreen() {
       sessionStorage.setItem("professionalPhoneNumber", fullPhoneNumber);
   
       try {
-        const response = await axios.post(`${API_URL}/professionals/send-sms`, {
+        axios.post(`${API_URL}/professionals/send-sms`, {
           phoneNumber: fullPhoneNumber,
           message: translation.verificationCodeMessage + " {code}",
         });

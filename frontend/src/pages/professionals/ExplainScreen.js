@@ -7,6 +7,7 @@ import { getDirection } from "../../utils/generalUtils";
 function ExplainScreen() {
   const navigate = useNavigate();
   const { translation, language } = useLanguage();
+  
 
   useEffect(() => {
     // Add a unique class to the body element for ExplainScreen

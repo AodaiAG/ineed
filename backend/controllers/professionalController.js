@@ -4,6 +4,8 @@ const PhoneVerification = require('../models/PhoneVerification');
 const Location = require('../models/Location'); // Import the Location model
 const ReportMissingProfession = require('../models/ReportMissingProfession');
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
+const {grantProfAuth} = require('./authController');
+
 
 const multer = require('multer');
 const streamifier = require('streamifier');
@@ -144,6 +146,7 @@ const getAllLocations = async (req, res) => {
     }
 };
 //before changing the backend
+
 const registerProfessional = async (req, res) => {
     const {
         phoneNumber,
@@ -161,11 +164,9 @@ const registerProfessional = async (req, res) => {
     } = req.body;
 
     try {
-        // Split the full name into first and last names
         const [fname, ...lnameParts] = fullName.split(' ');
         const lname = lnameParts.join(' ');
 
-        // Create a new professional record in the database
         const newProfessional = await Professional.create({
             phoneNumber,
             fname,
@@ -182,36 +183,20 @@ const registerProfessional = async (req, res) => {
             location,
         });
 
-        // Generate tokens
-        const accessToken = generateAccessToken({ profId: newProfessional.id, phoneNumber: phoneNumber });
-        const refreshToken = generateRefreshToken({ profId: newProfessional.id, phoneNumber: phoneNumber });
+        // Grant auth tokens for the new professional
+        await grantProfAuth(newProfessional, res);
 
-
-        // Store the refresh token in the database
-        await RefreshToken.create({
-            token: refreshToken,
-            professionalId: newProfessional.id,
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
+        res.status(201).json({
+            message: 'Professional registered successfully',
+            data: newProfessional, // Professional info only, no tokens here
         });
 
-        // Set tokens as HTTP-only cookies
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: false,
-            maxAge: 15 * 60 * 1000, // 15 minutes
-        });
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: false,
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        });
-
-        res.status(201).json({ message: 'Professional registered successfully', data: newProfessional });
     } catch (error) {
         console.error('Error registering professional:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 const getProfessionalById = async (req, res) => {
     const { id } = req.params;
 
@@ -332,6 +317,7 @@ const generateVerificationCodeHandler = async (req, res) => {
 };
 
 // API Endpoint to Verify the Code
+
 const verifyCodeHandler = async (req, res) => {
     const { phoneNumber, code } = req.body;
 
@@ -351,32 +337,9 @@ const verifyCodeHandler = async (req, res) => {
             return res.status(401).json({ success: false, data: { registered: isRegistered } });
         }
 
-        // Code is valid
+        // If the professional is registered, grant auth tokens
         if (isRegistered) {
-            // Generate tokens
-            const accessToken = generateAccessToken({ profId: professional.id });
-            const refreshToken = generateRefreshToken({ profId: professional.id });
-
-            // Store refresh token in the database
-            await RefreshToken.create({
-                token: refreshToken,
-                professionalId: professional.id,
-                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            });
-
-            // Set tokens in HTTP-only cookies
-            res.cookie('accessToken', accessToken, {
-                httpOnly: true,
-                secure: false, // Must be false for HTTP in development
-
-                maxAge: 15 * 60 * 1000,
-            });
-            res.cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                secure: false, // Must be false for HTTP in development
-
-                maxAge: 7 * 24 * 60 * 60 * 1000,
-            });
+           await grantProfAuth(professional, res);
 
             return res.status(200).json({
                 success: true,
@@ -388,7 +351,7 @@ const verifyCodeHandler = async (req, res) => {
             });
         }
 
-        // If not registered, send to registration page
+        // Send to registration if not registered
         res.status(200).json({
             success: true,
             data: { phoneNumber, registered: false },
@@ -399,6 +362,8 @@ const verifyCodeHandler = async (req, res) => {
         res.status(500).json({ success: false });
     }
 };
+
+
 const downloadVCardHandler = async (req, res) => {
     const { id } = req.params;
 

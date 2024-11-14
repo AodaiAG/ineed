@@ -19,7 +19,8 @@
             "https://i-need.co.il",
             "https://sms.innovio.co.il"
         ],
-        credentials: true
+        credentials: true,
+        exposedHeaders: ['x-access-token', 'x-refresh-token'], // Expose these headers
     }));
     app.use('/api/professionals', professionalRoutes);
     app.use('/auth', authRoutes);

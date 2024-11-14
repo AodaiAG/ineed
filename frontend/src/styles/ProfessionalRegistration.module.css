@@ -94,10 +94,11 @@ body, html{
 
 }
 .language-options {
-    display: flex;
+display: flex;
     flex-wrap: wrap;
-    gap: 8px; /* Space between checkboxes */
+    gap: 11px;
     justify-content: flex-start;
+    flex-direction: column;
 }
 
 .language-label {

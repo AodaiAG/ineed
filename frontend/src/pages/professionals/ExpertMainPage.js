@@ -11,34 +11,11 @@ function ExpertMainPage() {
   const navigate = useNavigate();
   const [isLanguagePopupOpen, setIsLanguagePopupOpen] = React.useState(false);
   const { translation } = useLanguage();
-  const [authData, setAuthData] = useState({
-    isValidUserdata: false, // Initially false, set to true once authenticated
-    decryptedUserdata: {},  // To store the full payload data
-});
 
-const [isLoading, setIsLoading] = useState(true); // Initialize loading state
 
-useEffect(() => {
-    const checkAuth = async () => {
-        try {
-            const response = await api.get('/auth/verify-auth');
-            
-            // Redirect if authenticated
-            navigate('/pro/expert-interface');
-        } catch (error) {
-            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                // User not authenticated; show the appropriate content
-                console.log('User not authenticated');
-            } else {
-                console.error('Error verifying authentication:', error);
-            }
-        } finally {
-            setIsLoading(false); // Stop loading after the check completes
-        }
-    };
+const [isLoading, setIsLoading] = useState(false); // Initialize loading state
 
-    checkAuth();
-}, [navigate]);
+
 
 // Show loading spinner while authentication is being verified
 if (isLoading) {
