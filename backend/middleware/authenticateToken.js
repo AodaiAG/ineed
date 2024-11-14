@@ -9,51 +9,57 @@ const authenticateToken = async (req, res, next) => {
     console.log("Received Access Token:", accessToken);
     console.log("Received Refresh Token:", refreshToken);
 
-    if (!accessToken) {
-        console.log("No access token provided. Checking refresh token...");
+    // Helper function to verify the access token or attempt refresh if invalid/missing
+    const verifyOrRefreshAccessToken = async (token) => {
+        try {
+            // Attempt to verify the current access token
+            const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
+            console.log("Access token verified. Decoded data:", decoded);
+            req.professional = decoded; // Attach decoded data to request
+            next(); // Proceed to the next middleware
+        } catch (error) {
+            if (error.name === 'TokenExpiredError' || !token) {
+                console.log("Access token missing or expired. Checking for refresh token...");
 
-        if (refreshToken) {
-            try {
-                console.log("Attempting to refresh access token using refresh token...");
+                if (refreshToken) {
+                    try {
+                        console.log("Attempting to refresh access token using refresh token...");
 
-                const newAccessToken = await refreshAccessToken(refreshToken);
+                        // Generate a new access token using the refresh token
+                        const newAccessToken = await refreshAccessToken(refreshToken);
 
-                if (newAccessToken) {
-                    console.log("New Access Token generated:", newAccessToken);
+                        if (newAccessToken) {
+                            console.log("New Access Token generated:", newAccessToken);
 
-                    // Add the new access token to the response header
-                    res.setHeader('x-access-token', newAccessToken);
-                    
-                    // Update the token in req.headers for verification within this request
-                    req.headers['x-access-token'] = newAccessToken;
-                    accessToken = newAccessToken;
+                            // Send the new access token to the client in response headers
+                            res.setHeader('x-access-token', newAccessToken);
+                            req.headers['x-access-token'] = newAccessToken; // Update for this request
+                            
+                            // Re-attempt verification with the new access token
+                            const decoded = jwt.verify(newAccessToken, ACCESS_TOKEN_SECRET);
+                            req.professional = decoded; // Attach decoded data to req
+                            next(); // Proceed to the next middleware
+                        } else {
+                            console.warn("Refresh token found but unable to generate new access token.");
+                            return res.status(403).json({ message: 'Could not refresh token, please log in again' });
+                        }
+                    } catch (refreshError) {
+                        console.error("Error while refreshing access token:", refreshError.message);
+                        return res.status(403).json({ message: 'Could not refresh token, please log in again' });
+                    }
                 } else {
-                    console.warn("Refresh token found but unable to generate new access token.");
-                    return res.status(403).json({ message: 'Could not refresh token, please log in again' });
+                    console.warn("No refresh token provided.");
+                    return res.status(401).json({ message: 'Access token required' });
                 }
-            } catch (error) {
-                console.error("Error while refreshing access token:", error.message);
-                return res.status(403).json({ message: error.message });
+            } else {
+                console.error("Access token verification failed:", error.message);
+                return res.status(403).json({ message: 'Invalid or expired access token' });
             }
-        } else {
-            console.warn("No access or refresh token provided.");
-            return res.status(401).json({ message: 'Access token required' });
         }
-    }
+    };
 
-    console.log("Verifying access token...");
-
-    // Verify the (new) access token if present
-    jwt.verify(accessToken, ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if (err) {
-            console.error("Access token verification failed:", err);
-            return res.status(403).json({ message: 'Invalid or expired access token' });
-        }
-        console.log("Access token verified. Decoded data:", decoded);
-
-        req.professional = decoded; // Attach user data to the request object
-        next();
-    });
+    // Call the helper function to verify or refresh the token as needed
+    await verifyOrRefreshAccessToken(accessToken);
 };
-module.exports = authenticateToken;
 
+module.exports = authenticateToken;

@@ -18,10 +18,8 @@ function ExpertInterface() {
     useEffect(() => {
         if (!loading && !isAuthenticated)
              {
-            console.log("User not authenticated. Redirecting to login...");
             navigate('/pro/enter'); // Redirect to login if not authenticated
-            
-        }
+            }
         
     }, [loading, isAuthenticated, navigate]);
 
@@ -39,8 +37,7 @@ function ExpertInterface() {
      // Optional: Show a loading indicator while verifying
    
      
-     if (loading) return <div>Loading...</div>; // Show loading while verifying
-
+     
     // Function to open WhatsApp with a predefined message
     const handleWhatsAppClick = () => {
         const phoneNumber = '0504564232';
@@ -61,7 +58,7 @@ function ExpertInterface() {
 
     // Redirect to the business card page
     const handleBusinessCardClick = () => {
-        const id = authData.decryptedUserdata.profId;
+        const id = user.profId;
         if (!id) {
             alert(translation.errorOccurredMessage);
             return;
@@ -71,10 +68,14 @@ function ExpertInterface() {
     };
 
     
-
-    if (!translation) {
-        return <div>Loading translations...</div>;
+    if (loading || !translation) {
+        return (
+            <div className={styles['spinner-overlay']}>
+                <div className={styles['spinner']}></div>
+            </div>
+        );
     }
+    
 
     return (
         <div className={styles.expertInterface_container}>

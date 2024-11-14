@@ -12,6 +12,7 @@ import LanguagePreferences from '../../components/professionals/LanguagePreferen
 import WorkAreas from '../../components/professionals/WorkAreaSelection';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
+import useAuthCheck from '../../hooks/useAuthCheck';
 
 
 function EditProfessionalSettings() 
@@ -58,13 +59,9 @@ function EditProfessionalSettings()
     const languageRef = useRef(null);
     const locationRef = useRef(null);
 
-    const [authData, setAuthData] = useState({
-        isValidUserdata: false,
-        decryptedUserdata: {}
-    });
-    
+    const { isAuthenticated, loading ,user} = useAuthCheck();
 
-    // If authentication hasn’t been verified, display a loading message
+  
 
 
 
@@ -113,9 +110,26 @@ function EditProfessionalSettings()
         }
     };
 
-  
+    useEffect(() => {
+        if (!loading) {
+            if (isAuthenticated) {
+                // Call all data-fetching functions once authentication is confirmed
+                const fetchData = async () => {
+                    await fetchProfessionalData(user.profId); // Pass profId if required
+                    await fetchDomains();
+                    await fetchLocations();
+                };
+                
+                fetchData(); // Trigger the async function to fetch data
+            } else {
+                // If not authenticated, navigate to login or other appropriate route
+                navigate('/pro/enter');
+            }
+        }
+    }, [loading, isAuthenticated, navigate]);
    
-    if (isLoading) {
+    if (loading || !translation) 
+        {
         return (
             <div className={styles['spinner-overlay']}>
                 <div className={styles['spinner']}></div>
@@ -210,7 +224,7 @@ function EditProfessionalSettings()
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
-        const professionalId = authData.decryptedUserdata.profId;
+        const professionalId = user.profId;
     
         if (!professionalId) {
             console.error("No user ID found in session storage");
@@ -237,9 +251,7 @@ function EditProfessionalSettings()
         setIsSubmitting(true);
     
         try {
-            await axios.put(`${API_URL}/professionals/update`, professionalData, {
-                withCredentials: true, // Ensures cookies (like the access token) are sent with the request
-            });     
+            await api.put(`${API_URL}/professionals/update`, professionalData);     
                    navigate('/pro/expert-interface');
         } catch (error) {
             console.error('Error updating professional settings:', error);
@@ -250,9 +262,7 @@ function EditProfessionalSettings()
     };
     
 
-    if (!translation) {
-        return <div>Loading...</div>; // Wait for translations to load
-    }
+  
 
     return (
         <div className={styles['pro-body']}>

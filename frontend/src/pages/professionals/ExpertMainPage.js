@@ -5,25 +5,37 @@ import LanguageSelectionPopup from "../../components/LanguageSelectionPopup";
 import Cookies from "js-cookie"; // Import js-cookie library
 import { useLanguage } from "../../contexts/LanguageContext";
 import api from '../../utils/api'
+import useAuthCheck from '../../hooks/useAuthCheck';
+
 
 
 function ExpertMainPage() {
   const navigate = useNavigate();
   const [isLanguagePopupOpen, setIsLanguagePopupOpen] = React.useState(false);
   const { translation } = useLanguage();
+  const { isAuthenticated, loading ,user} = useAuthCheck();
 
-
-const [isLoading, setIsLoading] = useState(false); // Initialize loading state
+  useEffect(() => {
+      if (!loading && !isAuthenticated)
+           {
+          
+          }
+          else
+          {
+            navigate('/pro/expert-interface'); // Redirect to login if not authenticated
+          }
+      
+  }, [loading, isAuthenticated, navigate]);
 
 
 
 // Show loading spinner while authentication is being verified
-if (isLoading) {
-    return (
-        <div className={styles['spinner-overlay']}>
-            <div className={styles['spinner']}></div>
-        </div>
-    );
+if (loading || !translation) {
+  return (
+      <div className={styles['spinner-overlay']}>
+          <div className={styles['spinner']}></div>
+      </div>
+  );
 }
 
  
@@ -38,9 +50,7 @@ if (isLoading) {
     navigate("/pro/explain");
   };
 
-  if (!translation) {
-    return <div>Loading...</div>; // Add a fallback to prevent accessing `null` properties
-  }
+  
 
   return (
     <div className={styles.expertPage_mainContainer}>
