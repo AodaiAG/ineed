@@ -142,6 +142,10 @@ font-size: clamp(1rem, 17vw, 4.0rem);
     vertical-align: middle;
 }
 
+.expertInterface_businessCardButton:hover {
+  transform: scale(1.05);
+}
+
 .expertInterface_settingsButton:hover {
   transform: scale(1.05);
 }

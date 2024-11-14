@@ -39,9 +39,9 @@ function LanguageSelectionPopup({ onClose }) {
                     {[
                         { id: 'he', label: 'עברית' },
                         { id: 'en', label: 'English' },
-                        { id: 'es', label: 'Español' },
+                        //{ id: 'es', label: 'Español' },
                         { id: 'ar', label: 'عربي' },
-                        { id: 'ru', label: 'Русский' },
+                        //{ id: 'ru', label: 'Русский' },
                     ].map((lang) => (
                         <li key={lang.id}>
                             <label>
