@@ -5,6 +5,7 @@ import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
 import { useLanguage } from '../../contexts/LanguageContext';
 import api from '../../utils/api';
 import { useAuth } from '../../contexts/AuthContext';  // Import useAuth hook
+import useAuthCheck from '../../hooks/useAuthCheck';
 
 
 function ExpertInterface() {
@@ -12,34 +13,19 @@ function ExpertInterface() {
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const [sendDisabled, setSendDisabled] = useState(false);
-    const { isAuthenticated, loading,user, verifyAuth } = useAuth();
-    
+    const { isAuthenticated, loading ,user} = useAuthCheck();
 
     useEffect(() => {
-        const checkAuth = async () => {
-            await verifyAuth(); // Ensure verifyAuth is called to update isAuthenticated
-        };
-
-        if (loading) {
-            checkAuth(); // Call only if loading is true initially
+        if (!loading && !isAuthenticated)
+             {
+            console.log("User not authenticated. Redirecting to login...");
+            navigate('/pro/enter'); // Redirect to login if not authenticated
+            
         }
-    }, [loading, verifyAuth]);
+        
+    }, [loading, isAuthenticated, navigate]);
 
-    useEffect(() => {
-        if (!loading) { // Proceed only after loading is complete
-            if (isAuthenticated) {
-                console.log("User is authenticated.");
-            } else {
-                console.log("User is not authenticated. Redirecting to login...");
-                navigate('/pro/enter');
-            }
-        }
-    }, [isAuthenticated, loading, navigate]);
 
-   
-    
-
-   
  
     // Initialize styles
     useEffect(() => {
@@ -51,9 +37,9 @@ function ExpertInterface() {
         };
     }, []);
      // Optional: Show a loading indicator while verifying
-     if (loading) {
-        return <div>Loading...</div>;
-    }
+   
+     
+     if (loading) return <div>Loading...</div>; // Show loading while verifying
 
     // Function to open WhatsApp with a predefined message
     const handleWhatsAppClick = () => {

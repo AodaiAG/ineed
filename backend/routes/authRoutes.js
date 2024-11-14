@@ -3,7 +3,7 @@ const authController = require('../controllers/authController');
 const router = express.Router();
 const authenticateToken = require('../middleware/authenticateToken');
 // Route to refresh the access token
-router.get('/refresh-token', authController.refreshAccessToken);
+
 router.get('/verify-auth', authenticateToken, authController.verifyAuth);
 
 

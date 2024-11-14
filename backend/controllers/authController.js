@@ -2,40 +2,34 @@ const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken');
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
 
-// Function to generate an access token
-
-const refreshAccessToken = async (req, res) => {
-    const refreshToken =  req.headers['x-refresh-token']; // Check cookie or header
+const refreshAccessToken = async (refreshToken) => {
+    console.log('Received request to refresh access token');
 
     if (!refreshToken) {
-        return res.status(403).json({ message: 'Refresh token required' });
+        throw new Error('Refresh token required'); // Explicitly throw an error if no refresh token is provided
     }
 
     try {
-        // Verify the refresh token is stored in the database
+        // Verify if the refresh token is stored in the database
         const storedToken = await RefreshToken.findOne({ where: { token: refreshToken } });
         if (!storedToken) {
-            return res.status(403).json({ message: 'Invalid refresh token' });
+            throw new Error('Invalid refresh token'); // Throw an error if token is not found in the database
         }
 
         // Verify the refresh token itself
-        jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (err, decoded) => {
-            if (err) {
-                return res.status(403).json({ message: 'Invalid refresh token' });
-            }
-
-            const { profId } = decoded;
-            const newAccessToken = jwt.sign({ profId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-
-            res.setHeader('x-access-token', newAccessToken);
-
-            return res.status(200).json({  message: 'Access token refreshed' });
-        });
+        const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
+        
+        const { profId } = decoded;
+        const newAccessToken = jwt.sign({ profId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        
+        console.log("New access token generated:", newAccessToken);
+        return newAccessToken; // Return the new access token
     } catch (error) {
-        console.error('Error refreshing access token:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        console.error('Error in refreshAccessToken function:', error.message);
+        throw error; // Propagate the error to be handled in authenticateToken
     }
 };
+
 
 
 

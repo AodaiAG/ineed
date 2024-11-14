@@ -12,27 +12,28 @@ const authenticateToken = async (req, res, next) => {
     if (!accessToken) {
         console.log("No access token provided. Checking refresh token...");
 
-        // No access token, try to refresh
         if (refreshToken) {
             try {
                 console.log("Attempting to refresh access token using refresh token...");
 
-                // Call the refreshAccessToken function directly
                 const newAccessToken = await refreshAccessToken(refreshToken);
 
                 if (newAccessToken) {
                     console.log("New Access Token generated:", newAccessToken);
 
-                    // Set the refreshed access token in headers for further checks
-                    req.headers['x-access-token'] = newAccessToken; 
+                    // Add the new access token to the response header
+                    res.setHeader('x-access-token', newAccessToken);
+                    
+                    // Update the token in req.headers for verification within this request
+                    req.headers['x-access-token'] = newAccessToken;
                     accessToken = newAccessToken;
                 } else {
                     console.warn("Refresh token found but unable to generate new access token.");
                     return res.status(403).json({ message: 'Could not refresh token, please log in again' });
                 }
             } catch (error) {
-                console.error("Error while refreshing access token:", error);
-                return res.status(403).json({ message: 'Could not refresh token, please log in again' });
+                console.error("Error while refreshing access token:", error.message);
+                return res.status(403).json({ message: error.message });
             }
         } else {
             console.warn("No access or refresh token provided.");
@@ -54,6 +55,5 @@ const authenticateToken = async (req, res, next) => {
         next();
     });
 };
-
-
 module.exports = authenticateToken;
+

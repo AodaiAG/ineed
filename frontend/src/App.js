@@ -26,7 +26,6 @@ function App() {
     return (
         <Router>
             {/* Wrap entire app with AuthProvider */}
-            <AuthProvider>
                 <LanguageProvider>
                     <OrientationHandler>
                         <Routes>
@@ -52,7 +51,6 @@ function App() {
                         </Routes>
                     </OrientationHandler>
                 </LanguageProvider>
-            </AuthProvider>
         </Router>
     );
 }
