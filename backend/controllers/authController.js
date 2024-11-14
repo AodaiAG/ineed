@@ -22,7 +22,6 @@ const refreshAccessToken = async (refreshToken) => {
         const { profId } = decoded;
         const newAccessToken = jwt.sign({ profId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
         
-        console.log("New access token generated:", newAccessToken);
         return newAccessToken; // Return the new access token
     } catch (error) {
         console.error('Error in refreshAccessToken function:', error.message);

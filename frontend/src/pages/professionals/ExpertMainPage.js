@@ -21,7 +21,6 @@ function ExpertMainPage() {
     if (isAuthenticated) {
         navigate('/pro/expert-interface');
     } else {
-        console.log("User is not authenticated. Redirecting to login...");
         
     }
 }, [loading, isAuthenticated, navigate]);

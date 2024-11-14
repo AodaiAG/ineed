@@ -116,7 +116,6 @@ function EditProfessionalSettings()
         if (loading) return;
         if (isAuthenticated) 
             {
-
                     const fetchData = async () => {
                     await fetchProfessionalData(user.profId); // Pass profId if required
                     await fetchDomains();
