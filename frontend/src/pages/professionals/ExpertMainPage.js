@@ -16,16 +16,15 @@ function ExpertMainPage() {
   const { isAuthenticated, loading ,user} = useAuthCheck();
 
   useEffect(() => {
-      if (!loading && !isAuthenticated)
-           {
-          
-          }
-          else
-          {
-            navigate('/pro/expert-interface'); // Redirect to login if not authenticated
-          }
-      
-  }, [loading, isAuthenticated, navigate]);
+    if (loading) return;
+
+    if (isAuthenticated) {
+        navigate('/pro/expert-interface');
+    } else {
+        console.log("User is not authenticated. Redirecting to login...");
+        
+    }
+}, [loading, isAuthenticated, navigate]);
 
 
 

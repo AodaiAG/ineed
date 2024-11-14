@@ -110,23 +110,26 @@ function EditProfessionalSettings()
         }
     };
 
+   
+
     useEffect(() => {
-        if (!loading) {
-            if (isAuthenticated) {
-                // Call all data-fetching functions once authentication is confirmed
-                const fetchData = async () => {
+        if (loading) return;
+        if (isAuthenticated) 
+            {
+
+                    const fetchData = async () => {
                     await fetchProfessionalData(user.profId); // Pass profId if required
                     await fetchDomains();
                     await fetchLocations();
                 };
-                
                 fetchData(); // Trigger the async function to fetch data
-            } else {
-                // If not authenticated, navigate to login or other appropriate route
-                navigate('/pro/enter');
-            }
+          } 
+
+        else {
+            navigate('/pro/enter');  
         }
     }, [loading, isAuthenticated, navigate]);
+    
    
     if (loading || !translation) 
         {
