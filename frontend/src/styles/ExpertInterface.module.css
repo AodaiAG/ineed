@@ -31,6 +31,8 @@
   position: relative;
   	    overflow: hidden; /* Prevent scroll if extra space appears */
 		justify-content: space-between;
+max-width: 400px;
+	max-height: 780px;
 
 }
 
