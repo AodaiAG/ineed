@@ -21,6 +21,18 @@ body, html{
 .phoneScreen_mainSection {
   text-align: center;
 }
+.phoneScreen_body {
+    background: black;
+    color: #fff;
+    font-family: Arial, sans-serif;
+  
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+	 overflow: hidden ; /* Prevent scroll if extra space appears */
+
+}
+
 
 
 /* Content */

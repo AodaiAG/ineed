@@ -14,6 +14,14 @@ function PhoneScreen() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { translation } = useLanguage();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.body.classList.add(styles.phoneScreen_body);
+
+    return () => {
+        document.body.classList.remove(styles.phoneScreen_body);
+    };
+}, []);
   
 
   const handlePhoneNumberChange = (e) => {

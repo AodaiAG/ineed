@@ -25,7 +25,14 @@ function ExpertMainPage() {
     }
 }, [loading, isAuthenticated, navigate]);
 
+useEffect(() => {
+  window.scrollTo(0, 0);
+  document.body.classList.add(styles.expertPage_body);
 
+  return () => {
+      document.body.classList.remove(styles.expertPage_body);
+  };
+}, []);
 
 // Show loading spinner while authentication is being verified
 if (loading || !translation) {
