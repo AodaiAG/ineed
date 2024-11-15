@@ -13,6 +13,7 @@ body, html{
     font-family: Arial, sans-serif;
     justify-content: center;
     align-items: center;
+
     box-sizing: border-box; /* Ensure padding is included in total width/height */
 }
 
