@@ -254,6 +254,7 @@ cursor: pointer;
 .downloadButton {
     margin-top: 10px;
     padding: 8px 16px;
+	font-size: 18px;
     border: none;
     background-color: #FDBE00;
     color: white;

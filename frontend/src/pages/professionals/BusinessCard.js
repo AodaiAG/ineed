@@ -173,7 +173,7 @@ function BusinessCard() {
                         <div ref={qrRef}>
                             <QRCodeCanvas value={window.location.href} size={220} />
                         </div>                    
-                        <button onClick={handleDownloadQrCode} className={styles.downloadButton}>Download</button>
+                        <button onClick={handleDownloadQrCode} className={styles.downloadButton}>{translation.downloadButtonbs}</button>
                         </div>
                 </div>
             )}
