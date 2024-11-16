@@ -28,7 +28,10 @@
   width: auto; /* Adjust icon size */
   height: auto;
   cursor: pointer;
-  
+
+}
+body.no-scroll {
+  overflow: hidden; /* Disable scrolling */
 }
 .appstart-icon:hover {
   transform: rotate(15deg); /* Rotate the icon slightly */
