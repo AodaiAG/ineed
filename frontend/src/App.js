@@ -4,6 +4,7 @@ import { LanguageProvider } from './contexts/LanguageContext'; // Import the pro
 import { AuthProvider } from './contexts/AuthContext'; // Import AuthProvider
 import OrientationHandler from './components/OrientationHandler'; // Import the OrientationHandler
 import HomePage from './pages/client/HomePage';
+import AppStart from './pages/client/AppStart';
 import IntroPage from './pages/client/IntroPage';
 import MainPage from './pages/client/MainPage';
 import LocationPage from './pages/client/LocationPage';
@@ -30,7 +31,8 @@ function App() {
                     <OrientationHandler>
                         <Routes>
                             {/* Client Side Routes */}
-                            <Route path="/" element={<HomePage />} />
+                            <Route path="/" element={<AppStart />} />
+                            <Route path="/home" element={<HomePage />} />
                             <Route path="/intro" element={<IntroPage />} />
                             <Route path="/main" element={<MainPage />} />
                             <Route path="/phone_verify" element={<PhoneVerifyPage />} />

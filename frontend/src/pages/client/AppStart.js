@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, ButtonBase } from "@mui/material";
-import "../../styles/client/HomePage.css"; // Import your custom CSS file
+import "../../styles/client/AppStart.css"; // Import your custom CSS file
 
 const AppStart = () => {
   return (
@@ -28,7 +28,7 @@ const AppStart = () => {
       {/* Main Content */}
       <Box className="appstart-main">
         <img
-          src="/images/ct/worker1.png" // Replace with your actual path
+          src="/images/ct/worker2.png" // Replace with your actual path
           alt="Worker"
           className="appstart-image"
         />
