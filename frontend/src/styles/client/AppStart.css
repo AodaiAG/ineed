@@ -56,7 +56,7 @@ font-size: clamp(1rem, 17vw, 4.0rem);
 .appstart-image {
     width: clamp(200px, 78vw, 313px);
     height: auto;
-margin-left: 84px;
+margin-left: 16px;
 }
 
 /* Footer Styles */

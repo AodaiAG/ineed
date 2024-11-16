@@ -28,7 +28,7 @@ const AppStart = () => {
       {/* Main Content */}
       <Box className="appstart-main">
         <img
-          src="/images/ct/worker2.png" // Replace with your actual path
+          src="/images/ct/worker3.png" // Replace with your actual path
           alt="Worker"
           className="appstart-image"
         />
