@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, ButtonBase } from "@mui/material";
 import "../../styles/client/HomePage.css"; // Import your custom CSS file
+import LanguageSelectionPopup from "../../components/LanguageSelectionPopup"; // Import the popup component
 
 const HomePage = () => {
+  const [showPopup, setShowPopup] = useState(false); // State to toggle the popup
+
   return (
     <Box className="home-container">
       {/* Header */}
       <Box className="home-header">
         {/* Translate Image */}
         <div className="header-icon-button">
-        <ButtonBase>
-        <img
-            src="/images/ct/language-icon.png" // Replace with your actual image path
-            alt="Language Icon"
-            className="header-icon"
-          />
-        </ButtonBase>
-          
+          <ButtonBase onClick={() => setShowPopup(true)}>
+            <img
+              src="/images/ct/language-icon.png" // Replace with your actual image path
+              alt="Language Icon"
+              className="appstart-icon"
+            />
+          </ButtonBase>
         </div>
 
         {/* Title and Description */}
@@ -37,13 +39,26 @@ const HomePage = () => {
 
       {/* Footer */}
       <Box className="home-footer">
-        <Button variant="contained" color="secondary" sx={{
-      borderRadius: "14px", // Apply border-radius
-      fontSize: "1.6rem",          // Medium font size (default for "medium")
-    }} className="footer-button ">
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            borderRadius: "14px", // Apply border-radius
+            fontSize: "1.6rem", // Medium font size
+          }}
+          className="footer-button"
+        >
           קדימה
         </Button>
       </Box>
+
+      {/* Language Selection Popup */}
+      {showPopup && (
+        <LanguageSelectionPopup
+          onClose={() => setShowPopup(false)} // Close popup on action
+          backgroundColor="#1783E0" // Blue background for this instance
+        />
+      )}
     </Box>
   );
 };

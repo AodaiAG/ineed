@@ -45,11 +45,18 @@ font-size: clamp(1rem, 17vw, 4.0rem);
     font-weight: 500;
     margin: 10px 0;
 }
+.header-icon:hover {
+  transform: rotate(15deg); /* Rotate the icon slightly */
+  opacity: 0.8; /* Reduce the opacity */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+}
+
 
 .home-description {
 font-size: clamp(1rem, 6vw, 2rem);
     font-weight: 500;
 }
+
 
 /* Main Content Styles */
 .home-main {

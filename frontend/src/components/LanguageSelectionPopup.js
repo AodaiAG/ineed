@@ -2,8 +2,8 @@ import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import styles from '../styles/LanguageSelectionPopup.module.css';
 
-function LanguageSelectionPopup({ onClose }) {
-    const { language, setLanguage,translation } = useLanguage();
+function LanguageSelectionPopup({ onClose, backgroundColor = "#000" }) {
+    const { language, setLanguage, translation } = useLanguage();
 
     // Handle language change
     const handleLanguageChange = (event) => {
@@ -16,7 +16,10 @@ function LanguageSelectionPopup({ onClose }) {
 
     return (
         <div className={styles.overlay}>
-            <div className={styles.popupContainer}>
+            <div
+                className={styles.popupContainer}
+                style={{ backgroundColor }} // Dynamically set the background color
+            >
                 {/* Close Button */}
                 <button onClick={onClose} className={styles.closeButton}>
                     &times;
@@ -39,9 +42,7 @@ function LanguageSelectionPopup({ onClose }) {
                     {[
                         { id: 'he', label: 'עברית' },
                         { id: 'en', label: 'English' },
-                        //{ id: 'es', label: 'Español' },
                         { id: 'ar', label: 'عربي' },
-                        //{ id: 'ru', label: 'Русский' },
                     ].map((lang) => (
                         <li key={lang.id}>
                             <label>

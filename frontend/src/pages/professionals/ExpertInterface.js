@@ -91,7 +91,8 @@ function ExpertInterface() {
             </div>
     
             {/* Language Selection Popup */}
-            {isLanguagePopupOpen && <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} />}
+            {isLanguagePopupOpen && <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)}            backgroundColor="#black" // Blue background for the client side
+            />}
             
             <div className={styles.spacer}></div>
             

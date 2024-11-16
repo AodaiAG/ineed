@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, ButtonBase } from "@mui/material";
 import "../../styles/client/AppStart.css"; // Import your custom CSS file
+import LanguageSelectionPopup from "../../components/LanguageSelectionPopup"; // Import your popup component
 
 const AppStart = () => {
+  const [showPopup, setShowPopup] = useState(false); // State to toggle popup visibility
+
   return (
     <Box className="appstart-container">
       {/* Header */}
       <Box className="appstart-header">
         {/* Translate Icon */}
         <div className="appstart-icon-button">
-          <ButtonBase>
+          <ButtonBase onClick={() => setShowPopup(true)}> {/* Show popup on click */}
             <img
               src="/images/ct/language-icon.png" // Replace with your actual path
               alt="Language Icon"
@@ -65,6 +68,15 @@ const AppStart = () => {
           לקוח
         </Button>
       </Box>
+
+      {/* Language Selection Popup */}
+      {showPopup && (
+        <LanguageSelectionPopup
+          onClose={() => setShowPopup(false)} // Close popup on action
+            backgroundColor="#1783E0" // Blue background for the client side
+
+        />
+      )}
     </Box>
   );
 };
