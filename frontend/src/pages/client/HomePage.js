@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, ButtonBase } from "@mui/material";
-import "./HomePage.css"; // Import your custom CSS file
+import "../../styles/client/HomePage.css"; // Import your custom CSS file
 
 const HomePage = () => {
   return (
