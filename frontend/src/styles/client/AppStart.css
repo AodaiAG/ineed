@@ -54,7 +54,7 @@ font-size: clamp(1rem, 17vw, 4.0rem);
 }
 
 .appstart-image {
-    width: clamp(200px, 78vw, 313px);
+    width: clamp(200px, 88vw, 315px);
     height: auto;
 margin-left: 27px;
 }
