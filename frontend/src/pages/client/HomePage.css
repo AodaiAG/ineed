@@ -1,0 +1,80 @@
+/* Container Styles */
+.home-container {
+  background:#1783E0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+/* Header Styles */
+.home-header {
+ 
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 5px;
+  width: 100%;
+  position: relative; /* Ensures absolute positioning for the child */
+ 
+}
+
+.header-icon-button {
+  position: absolute;
+  top: 10px;
+  right: 10px; /* Moves the icon to the far right */
+  border-radius: 50%;
+}
+
+.header-icon {
+  width: auto;
+  height: auto;
+  cursor: pointer;
+}
+
+.header-content {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.home-title {
+font-size: clamp(1rem, 17vw, 4.0rem);
+    font-weight: 500;
+    margin: 10px 0;
+}
+
+.home-description {
+font-size: clamp(1rem, 6vw, 2rem);
+    font-weight: 500;
+}
+
+/* Main Content Styles */
+.home-main {
+  text-align: center;
+  
+
+}
+
+.home-image {
+width: clamp(200px, 78vw, 313px);
+    height: auto;
+
+  
+}
+
+/* Footer Styles */
+.home-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+   margin-bottom:10px;
+}
+
+.footer-button {
+  font-weight: bold;
+  background-color: #fdbe00 !important;
+  width:300px;
+ 
+}
