@@ -69,9 +69,12 @@ margin-left: 84px;
 
 .service-provider-button {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
-  width :200px
+  width: 100%; /* Default width takes full space of container */
+  max-width: 200px; /* Maximum width of the button */
 }
 
 .client-button {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
+  width: 100%; /* Default width takes full space of container */
+  max-width: 200px; /* Maximum width of the button */
 }
