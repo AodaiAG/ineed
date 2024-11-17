@@ -6,7 +6,7 @@ import OrientationHandler from './components/OrientationHandler'; // Import the 
 import HomePage from './pages/client/HomePage';
 import AppStart from './pages/client/AppStart';
 import IntroPage from './pages/client/IntroPage';
-import MainPage from './pages/client/MainPage';
+import HelpForm from './pages/client/HelpForm';
 import LocationPage from './pages/client/LocationPage';
 import InfoPage from './pages/client/InfoPage';
 import ThankYouPage from './pages/client/ThankYouPage';
@@ -34,7 +34,7 @@ function App() {
                             <Route path="/" element={<AppStart />} />
                             <Route path="/home" element={<HomePage />} />
                             <Route path="/intro" element={<IntroPage />} />
-                            <Route path="/main" element={<MainPage />} />
+                            <Route path="/main" element={<HelpForm />} />
                             <Route path="/phone_verify" element={<PhoneVerifyPage />} />
                             <Route path="/search" element={<SearchPage />} />
                             <Route path="/location" element={<LocationPage />} />
