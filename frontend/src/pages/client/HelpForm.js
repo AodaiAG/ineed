@@ -122,6 +122,10 @@ const HelpForm = () => {
         variant="contained"
         className="help-form-submit"
         onClick={handleSubmit}
+        sx={{
+          borderRadius: "14px", // Apply border-radius
+          fontSize: "1.6rem", // Medium font size
+        }}
       >
         המשך
       </Button>
