@@ -1,7 +1,7 @@
 /* Container Styles */
 .help-form-container {
   background-color: #1783e0;
-  padding: 20px 20px 0px 20px;
+  padding: 10px 10px 0px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -52,16 +52,19 @@
 .help-form-field label {
   color: white;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: bold; 
+  margin: 3px;
 }
 
 .help-form-input {
   background-color: white !important;
   border-radius: 5px;
+  
   width: 100%;
-  padding: 0; /* Remove any internal padding */
-  margin: 0; /* Remove margins */
+  
 }
+
+
 .MuiAutocomplete-endAdornment {
 	display:flex;
   justify-content: flex-end; /* Move to the opposite side */
@@ -92,4 +95,36 @@
   width: 100%;
   max-width: 300px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Adjust height of the Autocomplete input */
+.help-form-input .MuiOutlinedInput-root {
+  height: 48px !important; /* Increased height */
+  padding: 0 !important; /* Remove inner padding */
+  border-radius: 5px; /* Adjust border radius */
+}
+
+/* Adjust padding inside the Autocomplete input */
+.help-form-input .MuiInputBase-input {
+  padding: 0 12px !important; /* Adjust padding for a larger height */
+  font-size: 16px; /* Increase font size */
+  line-height: normal; /* Reset line height */
+}
+
+/* Style datetime-local field separately */
+.help-form-input[type="datetime-local"] {
+  height: 48px; /* Match the height of other inputs */
+  padding: 8px 12px !important; /* Add padding for a better look */
+  font-size: 16px; /* Match font size */
+  text-align: center; /* Keep the text and placeholder centered */
+  border-radius: 5px; /* Keep border radius consistent */
+}
+
+/* Ensure the dropdown arrow aligns properly */
+.MuiAutocomplete-endAdornment {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px; /* Adjust spacing */
 }
