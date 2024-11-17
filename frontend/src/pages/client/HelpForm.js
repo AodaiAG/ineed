@@ -53,7 +53,7 @@ const HelpForm = () => {
 
       {/* Autocomplete Fields */}
       <Box className="help-form-field">
-        <label>בחר תחום:</label>
+        <label>בחר תחום</label>
         <Autocomplete
           options={categories}
           value={category}
@@ -71,7 +71,7 @@ const HelpForm = () => {
       </Box>
 
       <Box className="help-form-field">
-        <label>בחר נושא:</label>
+        <label>בחר נושא</label>
         <Autocomplete
           options={topics}
           value={topic}
@@ -89,7 +89,7 @@ const HelpForm = () => {
       </Box>
 
       <Box className="help-form-field">
-        <label>בחר עיר:</label>
+        <label>בחר עיר</label>
         <TextField
           value={city}
           onClick={() => setShowLocationPopup(true)} // Open the location popup
@@ -104,7 +104,7 @@ const HelpForm = () => {
       </Box>
 
       <Box className="help-form-field">
-        <label>בחר זמן:</label>
+        <label>בחר זמן</label>
         <TextField
           type="datetime-local"
           value={date}
