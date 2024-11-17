@@ -71,5 +71,18 @@
         "hereToConnect": "אנחנו כאן לחבר אותך למיטב המומחים.",
         "chooseHelp": "אתה תבחר במה אתה צריך עזרה, איפה ומתי. ואנחנו נמצא את המומחה שמתאים לך בדיוק.",
         "professionalsOnly": "אנו עובדים רק עם מקצוענים, אמינים ובמחירים נוחים. זמינות 24/7",
-        "mainDesktopAlt": "Main Desktop"
+        "mainDesktopAlt": "Main Desktop",
+		    "selectLocation": "בחר מיקום",
+		  "location": {
+    "selectLocation": "בחר מיקום",
+    "enterLocation": "הזן מיקום",
+    "locationPlaceholder": "הקלד את כתובתך",
+    "findMe": "מצא אותי",
+    "continue": "המשך",
+    "unknownError": "שגיאה לא ידועה",
+    "permissionDenied": "הרשאה נדחתה",
+    "positionUnavailable": "מיקום לא זמין",
+    "timeout": "זמן ההמתנה עבר",
+    "noGeolocationSupport": "אין תמיכה במיקום"
+  }
   }

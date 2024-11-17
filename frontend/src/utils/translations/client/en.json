@@ -70,6 +70,18 @@
         "hereToConnect": "We are here to connect you with the best experts.",
         "chooseHelp": "You choose what you need help with, where and when. And we will find the expert that suits you perfectly.",
         "professionalsOnly": "We only work with professionals, reliable and at affordable prices. Available 24/7",
-        "mainDesktopAlt": "Main Desktop"
+        "mainDesktopAlt": "Main Desktop",
+		 "location": {
+    "selectLocation": "בחר מיקום",
+    "enterLocation": "הזן מיקום",
+    "locationPlaceholder": "הקלד את כתובתך",
+    "findMe": "מצא אותי",
+    "continue": "המשך",
+    "unknownError": "שגיאה לא ידועה",
+    "permissionDenied": "הרשאה נדחתה",
+    "positionUnavailable": "מיקום לא זמין",
+    "timeout": "זמן ההמתנה עבר",
+    "noGeolocationSupport": "אין תמיכה במיקום"
+  }
 	
   }
