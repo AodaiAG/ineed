@@ -7,6 +7,8 @@ import HomePage from './pages/client/HomePage';
 import AppStart from './pages/client/AppStart';
 import HelpForm from './pages/client/HelpForm';
 import AboutForm from './pages/client/AboutForm';
+import SummaryForm from './pages/client/SummaryForm';
+
 
 
 
@@ -32,6 +34,9 @@ function App() {
                             <Route path="/home" element={<HomePage />} />
                             <Route path="/main" element={<HelpForm />} />
                             <Route path="/about" element={<AboutForm />} />
+                            <Route path="/summary" element={<SummaryForm />} />
+
+                            
 
                             {/* Professional Side Routes */}
                             <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />
