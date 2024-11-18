@@ -5,13 +5,10 @@ import { AuthProvider } from './contexts/AuthContext'; // Import AuthProvider
 import OrientationHandler from './components/OrientationHandler'; // Import the OrientationHandler
 import HomePage from './pages/client/HomePage';
 import AppStart from './pages/client/AppStart';
-import IntroPage from './pages/client/IntroPage';
 import HelpForm from './pages/client/HelpForm';
-import LocationPage from './pages/client/LocationPage';
-import InfoPage from './pages/client/InfoPage';
-import ThankYouPage from './pages/client/ThankYouPage';
-import SearchPage from './pages/client/SearchPage';
-import PhoneVerifyPage from './pages/client/VerifyPhonePage';
+import AboutForm from './pages/client/AboutForm';
+
+
 
 // Professional Pages
 import ProfessionalPhoneScreen from './pages/professionals/PhoneScreen';
@@ -33,13 +30,8 @@ function App() {
                             {/* Client Side Routes */}
                             <Route path="/" element={<AppStart />} />
                             <Route path="/home" element={<HomePage />} />
-                            <Route path="/intro" element={<IntroPage />} />
                             <Route path="/main" element={<HelpForm />} />
-                            <Route path="/phone_verify" element={<PhoneVerifyPage />} />
-                            <Route path="/search" element={<SearchPage />} />
-                            <Route path="/location" element={<LocationPage />} />
-                            <Route path="/information" element={<InfoPage />} />
-                            <Route path="/thankyou" element={<ThankYouPage />} />
+                            <Route path="/about" element={<AboutForm />} />
 
                             {/* Professional Side Routes */}
                             <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />

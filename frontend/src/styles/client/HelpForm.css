@@ -166,7 +166,7 @@
 }
 
 .search-icon-box.is-typing {
-  border-color: yellow; /* Highlight border in yellow when typing */
+  border-color: #fdbe00; /* Highlight border in yellow when typing */
   animation: pulse 2s infinite; /* Pulse animation when typing */
 }
 
