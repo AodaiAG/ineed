@@ -56,11 +56,11 @@ background-color: #1783e0;
 
 
 .back-button {
-  background-color: black;
+  background-color: black !important;
   color: white;
 
   border-radius: 10px;
-  width: 45%;
+ 
 }
 
 .submit-button {
@@ -68,5 +68,5 @@ background-color: #1783e0;
   color: black;
 
   border-radius: 10px;
-  width: 45%;
+
 }
