@@ -53,7 +53,7 @@ const HelpForm = () => {
     variant="outlined"
     size="small"
     fullWidth
-    
+
   />
    <Box className="search-icon-box">
     <SearchIcon className="search-icon "
@@ -142,6 +142,7 @@ const HelpForm = () => {
         sx={{
           borderRadius: "14px", // Apply border-radius
           fontSize: "1.6rem", // Medium font size
+          
         }}
       >
         המשך

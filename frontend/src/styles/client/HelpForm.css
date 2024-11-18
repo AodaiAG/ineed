@@ -162,3 +162,6 @@ width: 64px;
   color: white; /* Placeholder color */
   opacity: 1; /* Ensure the placeholder is fully visible */
 }
+.help-form-search input {
+  color: white; /* Input text color */
+}
