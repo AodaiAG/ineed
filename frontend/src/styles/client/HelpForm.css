@@ -1,5 +1,7 @@
 /* Container Styles */
-
+:root {
+  --container-direction: rtl; /* Default value */
+}
 .help-form-container {
   background-color: #1783e0;
   padding: 10px 10px 0px 10px;
@@ -23,22 +25,6 @@
   text-align: center;
 }
 
-/* Search Box Styles */
-.help-form-search-container {
-  width: 100%;
-}
-
-.help-form-search {
-  background-color: white;
-  border-radius: 5px;
-  width: 100%;
-  padding: 0; /* Remove extra padding */
-}
-
-.search-icon {
-  margin-right: 5px;
-  color: gray; /* Icon color */
-}
 
 /* Form Field Styles */
 .help-form-field {
@@ -131,4 +117,48 @@
   align-items: center;
   justify-content: flex-end;
   padding-right: 8px; /* Adjust spacing */
+}
+
+/* Search Box Styles */
+/* Container for search box */
+.help-form-search-container {
+  width: 100%;
+  display: flex;
+  align-items: center; /* Align items vertically */
+  gap: 10px; /* Add space between the icon and input */
+  direction: var(--container-direction); /* Adapt to page direction */
+}
+
+/* Box for the search icon */
+.search-icon-box {
+  padding: 2px; /* Add padding around the icon */
+  border-radius: 5px; /* Rounded edges for the icon box */
+width: 64px;
+    height: 40px;
+	display: flex;
+  justify-content: center;
+    border: 2px solid white; /* Add white border around the input field */
+  align-items: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+/* Icon styling */
+.search-icon {
+  color: white; /* Color of the icon */
+  transform: scaleX(var(--container-directio, 1)); /* Flip direction dynamically */
+  wdith:100%;
+}
+
+/* Input field styling */
+.help-form-search {
+     border: 2px solid white !important; /* Add white border around the input field */
+  border-radius: 5px;
+  font-size: 1rem;
+  padding: 10px; /* Adjust padding for consistency */
+  width: 100%;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a shadow to match the icon */
+}
+.help-form-search input::placeholder {
+  color: white; /* Placeholder color */
+  opacity: 1; /* Ensure the placeholder is fully visible */
 }

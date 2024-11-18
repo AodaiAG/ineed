@@ -46,21 +46,27 @@ const HelpForm = () => {
 
       {/* Search Box */}
       <Box className="help-form-search-container">
-        <TextField
-          className="help-form-search"
-          placeholder="חיפוש..."
-          variant="outlined"
-          size="small"
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon className="search-icon" />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+ 
+  <TextField
+    className="help-form-search"
+    placeholder="חיפוש..."
+    variant="outlined"
+    size="small"
+    fullWidth
+    
+  />
+   <Box className="search-icon-box">
+    <SearchIcon className="search-icon "
+    sx={{
+      width: "100%", // Set width explicitly
+      height: "100%", // Set height explicitly
+    }}
+     />
+  </Box>
+</Box>
+
+
+
 
       {/* Autocomplete Fields */}
       <Box className="help-form-field">
