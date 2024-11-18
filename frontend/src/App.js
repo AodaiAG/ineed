@@ -25,7 +25,7 @@ function App() {
         <Router>
             {/* Wrap entire app with AuthProvider */}
                 <LanguageProvider>
-                    <OrientationHandler>
+                    
                         <Routes>
                             {/* Client Side Routes */}
                             <Route path="/" element={<AppStart />} />
@@ -43,7 +43,7 @@ function App() {
                             <Route path="/pro/expert-main" element={<ExpertMainPage />} />
                             <Route path="/pro/explain" element={<ExplainScreen />} />
                         </Routes>
-                    </OrientationHandler>
+                    
                 </LanguageProvider>
         </Router>
     );
