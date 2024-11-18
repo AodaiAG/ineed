@@ -121,7 +121,6 @@
 }
 
 /* Search Box Styles */
-/* Container for search box */
 .help-form-search-container {
   width: 100%;
   display: flex;
@@ -130,39 +129,63 @@
   direction: var(--container-direction); /* Adapt to page direction */
 }
 
-/* Box for the search icon */
-.search-icon-box {
-  padding: 2px; /* Add padding around the icon */
-  border-radius: 5px; /* Rounded edges for the icon box */
-width: 64px;
-    height: 40px;
-	display: flex;
-  justify-content: center;
-    border: 2px solid white; /* Add white border around the input field */
-  align-items: center;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-}
-
-/* Icon styling */
-.search-icon {
-  color: white; /* Color of the icon */
-  transform: scaleX(var(--container-directio, 1)); /* Flip direction dynamically */
-  wdith:100%;
-}
-
-/* Input field styling */
 .help-form-search {
-     border: 2px solid white !important; /* Add white border around the input field */
+  border: 2px solid white !important; /* Default border color */
   border-radius: 5px;
   font-size: 1rem;
   padding: 10px; /* Adjust padding for consistency */
   width: 100%;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a shadow to match the icon */
+  transition: border-color 0.3s ease; /* Smooth border color transition */
 }
+
+.help-form-search.is-typing {
+  border-color: yellow !important; /* Highlight border in yellow when typing */
+}
+
 .help-form-search input::placeholder {
   color: white; /* Placeholder color */
   opacity: 1; /* Ensure the placeholder is fully visible */
 }
+
 .help-form-search input {
   color: white; /* Input text color */
 }
+
+.search-icon-box {
+  padding: 2px; /* Add padding around the icon */
+  border-radius: 5px; /* Rounded edges for the icon box */
+	width: 67px;
+    height: 43px;
+  display: flex;
+  justify-content: center;
+  border: 2px solid white; /* Default border color */
+  align-items: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  transition: border-color 0.3s ease; /* Smooth border color transition */
+}
+
+.search-icon-box.is-typing {
+  border-color: yellow; /* Highlight border in yellow when typing */
+  animation: pulse 2s infinite; /* Pulse animation when typing */
+}
+
+.search-icon {
+  color: white; /* Default color */
+  transform: scaleX(var(--container-directio, 1)); /* Flip direction dynamically */
+  width: 100%;
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+

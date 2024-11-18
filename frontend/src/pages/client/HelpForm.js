@@ -21,6 +21,8 @@ const HelpForm = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     return localStorage.getItem('userLanguage') || 'he';
 });
+  const [isTyping, setIsTyping] = useState(false);
+
 
   const categories = ["חשמל", "אינסטלציה", "נגרות"];
   const topics = ["התקנת שקע", "תיקון קצר", "תכנון מערכות"];
@@ -44,29 +46,27 @@ const HelpForm = () => {
       {/* Title */}
       <h2 className="help-form-title">במה אפשר לעזור?</h2>
 
-      {/* Search Box */}
-      <Box className="help-form-search-container">
- 
-  <TextField
-    className="help-form-search"
-    placeholder="חיפוש..."
-    variant="outlined"
-    size="small"
-    fullWidth
-
-  />
-   <Box className="search-icon-box">
-    <SearchIcon className="search-icon "
-    sx={{
-      width: "100%", // Set width explicitly
-      height: "100%", // Set height explicitly
-    }}
-     />
-  </Box>
-</Box>
-
-
-
+     
+        {/* Search Box */}
+        <Box className="help-form-search-container">
+          <TextField
+            className="help-form-search"
+            placeholder="חיפוש..."
+            variant="outlined"
+            size="small"
+            fullWidth
+            onChange={(e) => setIsTyping(e.target.value !== "")} // Trigger isTyping when text is entered
+          />
+          <Box className={`search-icon-box ${isTyping ? "is-typing" : ""}`}>
+            <SearchIcon
+              className="search-icon"
+              sx={{
+                width: "100%", // Set width explicitly
+                height: "100%", // Set height explicitly
+              }}
+            />
+          </Box>
+        </Box>
 
       {/* Autocomplete Fields */}
       <Box className="help-form-field">
