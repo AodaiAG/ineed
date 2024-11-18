@@ -31,9 +31,9 @@ background-color: #1783e0;
 
 .summary-form-label {
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.2rem !important;
     font-weight: bold;
-    margin: 5px;
+    margin: 5px !important;
 }
 
 .summary-form-value {
