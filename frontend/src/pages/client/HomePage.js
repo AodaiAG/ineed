@@ -5,7 +5,9 @@ import LanguageSelectionPopup from "../../components/LanguageSelectionPopup"; //
 
 const HomePage = () => {
   const [showPopup, setShowPopup] = useState(false); // State to toggle the popup
-
+const [selectedLanguage, setSelectedLanguage] = useState(() => {
+        return localStorage.getItem('userLanguage') || 'he';
+    });
   return (
     <Box className="home-container">
       {/* Header */}

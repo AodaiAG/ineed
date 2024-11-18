@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Box,
   TextField,
@@ -9,6 +9,8 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import LocationComponentPopup from "../../components/professionals/LocationComponentPopup"; // Import the location component
 import "../../styles/client/HelpForm.css"; // Custom CSS for styling
+import { getDirection } from "../../utils/generalUtils"; // Import getDirection
+
 
 const HelpForm = () => {
   const [category, setCategory] = useState("");
@@ -16,9 +18,17 @@ const HelpForm = () => {
   const [city, setCity] = useState("");
   const [date, setDate] = useState("");
   const [showLocationPopup, setShowLocationPopup] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    return localStorage.getItem('userLanguage') || 'he';
+});
 
   const categories = ["חשמל", "אינסטלציה", "נגרות"];
   const topics = ["התקנת שקע", "תיקון קצר", "תכנון מערכות"];
+  useEffect(() => {
+    const direction = getDirection(selectedLanguage); // Get the direction using the utility function
+    document.documentElement.style.setProperty("--container-direction", direction);
+  }, [selectedLanguage]);
+
 
   const handleSubmit = () => {
     console.log({ category, topic, city, date });
@@ -29,7 +39,8 @@ const HelpForm = () => {
   };
 
   return (
-    <Box className="help-form-container">
+    <Box className="help-form-container"
+    >
       {/* Title */}
       <h2 className="help-form-title">במה אפשר לעזור?</h2>
 

@@ -1,4 +1,5 @@
 /* Container Styles */
+
 .help-form-container {
   background-color: #1783e0;
   padding: 10px 10px 0px 10px;
@@ -11,7 +12,7 @@
   margin: 0 auto;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   justify-content: space-around;
-  direction: rtl; /* Default direction */
+  direction: var(--container-direction); /* Use the CSS variable */
 }
 
 /* Title Styles */
@@ -46,6 +47,10 @@
   flex-direction: column;
   gap: 5px;
   margin-bottom: 20px;
+}
+.MuiAutocomplete-paper {
+  direction: var(--container-direction) !important; /* Inherit direction */
+
 }
 
 .help-form-field label {
