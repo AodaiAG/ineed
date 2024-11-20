@@ -22,7 +22,11 @@
   font-size: 24px !important;
   font-weight: bold !important;
   color: white !important;
-  margin: 0 !important;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 14px;
+border: 3px solid #FFFFFF;
+
+  margin-bottom: 5px !important;
 }
 
 .requestsList {
@@ -34,7 +38,6 @@
     padding: 10px !important;
 
     /* Add padding to avoid cutoff for the first card */
-    padding-top: 30px !important; /* Adjust this value as needed */
     box-sizing: border-box !important; /* Ensure padding is included in layout */
 }
 
@@ -120,6 +123,15 @@
   left: 8.45% !important;
   right: 8.45% !important;
   text-align: center !important;
+  
+}
+.separator {
+width: 90%;
+height: 6px;
+    margin: 9px;
+background: rgba(26, 75, 117, 0.4);
+border-radius: 8px;
+transform: matrix(1, 0, 0, -1, 0, 0);
 }
 
 .backButton {

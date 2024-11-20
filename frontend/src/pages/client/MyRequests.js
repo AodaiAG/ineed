@@ -41,6 +41,7 @@ const MyRequests = () => {
           הקריאות שלי
         </Typography>
       </Box>
+      <Box className={styles.separator}></Box>
 
       {/* Scrollable List */}
       <Box
@@ -63,18 +64,7 @@ const MyRequests = () => {
   />
 </Fade>
 
-        <Fade in={showBottomIndicator}>
-          <Box
-            style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "20px",
-              background: "linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent)",
-            }}
-          />
-        </Fade>
+        
 
         {/* Request Cards */}
         {requests.map((request) => (
