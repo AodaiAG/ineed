@@ -8,7 +8,7 @@
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
-  padding: 20px 6px 10px 6px !important;
+  padding: 20px 6px 0px 6px !important;
   box-sizing: border-box !important;
 }
 .requestCard {
@@ -152,7 +152,7 @@ padding:9px;
   right: 0 !important;
   background: linear-gradient(to right, #1a4b75, #1783e0) !important;
   border-top: 3px solid #fdbe00 !important;
-  padding: 15px 20px !important;
+  padding: 8px 17px !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
