@@ -9,10 +9,17 @@
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
-  padding: 20px 20px 10px 20px !important;
+  padding: 20px 6px 10px 6px !important;
   box-sizing: border-box !important;
 }
+.requestCard {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease-in-out;
+}
 
+.requestCard:hover {
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
 .header {
   text-align: center !important;
 }
@@ -57,6 +64,8 @@ padding:9px;
   gap: 38px !important;
   padding: 30px 10px 50px 10px !important; /* Add top and bottom padding */
   box-sizing: border-box !important;
+    background: linear-gradient(to bottom, #1783e0, #1a4b75); /* Subtle gradient */
+
 }
 
 .requestCard {
