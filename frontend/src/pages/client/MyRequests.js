@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   Box,
   Button,
@@ -22,7 +22,6 @@ const MyRequests = () => {
   const [showBottomIndicator, setShowBottomIndicator] = useState(true);
   const listRef = useRef(null);
 
-  // Handle scroll event to toggle indicators
   const handleScroll = () => {
     const element = listRef.current;
     if (element) {
@@ -50,21 +49,19 @@ const MyRequests = () => {
         onScroll={handleScroll}
         style={{ position: "relative", overflowY: "auto" }}
       >
-        {/* Scroll Indicators */}
         <Fade in={showTopIndicator}>
-  <Box
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      height: "20px",
-      background: "linear-gradient(to bottom, rgba(24, 144, 255, 0.5), transparent)", // A light blue gradient
-    }}
-  />
-</Fade>
-
-        
+          <Box
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "20px",
+              background:
+                "linear-gradient(to bottom, rgba(24, 144, 255, 0.5), transparent)",
+            }}
+          />
+        </Fade>
 
         {/* Request Cards */}
         {requests.map((request) => (
@@ -72,13 +69,16 @@ const MyRequests = () => {
             <Typography className={styles.requestId}>
               קריאה {request.id}
             </Typography>
-            <CardContent>
-              <Typography variant="body1" className={styles.detailsText}>
-                {request.details}
-              </Typography>
-              <Typography variant="body2" className={styles.dateText}>
-                {request.dateTime}
-              </Typography>
+            <CardContent sx={{ padding: "0 !important" }}>
+              <Box className={styles.detailsContainer}>
+                <Typography variant="body1" className={styles.detailsText}>
+                  {request.details}
+                </Typography>
+                <Typography variant="body2" className={styles.dateText}>
+                  {request.dateTime}
+                </Typography>
+              </Box>
+
             </CardContent>
             <CardActions className={styles.cardActions}>
               <Button
