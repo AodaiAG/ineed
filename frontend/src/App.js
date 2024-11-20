@@ -8,6 +8,15 @@ import AppStart from './pages/client/AppStart';
 import HelpForm from './pages/client/HelpForm';
 import AboutForm from './pages/client/AboutForm';
 import SummaryForm from './pages/client/SummaryForm';
+import SMSVerificationC from './pages/client/SMSVerification';
+import RequestDetailsPage from './pages/client/RequestDetailsPage';
+import ClientDashboard from './pages/client/Dashboard';
+import MyRequests from './pages/client/MyRequests';
+
+
+
+
+
 
 
 
@@ -35,8 +44,13 @@ function App() {
                             <Route path="/main" element={<HelpForm />} />
                             <Route path="/about" element={<AboutForm />} />
                             <Route path="/summary" element={<SummaryForm />} />
+                            <Route path="/sms" element={<SMSVerificationC />} />
+                            <Route path="/request" element={<RequestDetailsPage />} />
+                            <Route path="/dashboard" element={<ClientDashboard />} />
+                            <Route path="/my-req" element={<MyRequests />} />
 
-                            
+                            ClientDashboard
+                            MyRequests
 
                             {/* Professional Side Routes */}
                             <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />

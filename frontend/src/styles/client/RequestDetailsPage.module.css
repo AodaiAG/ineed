@@ -1,0 +1,76 @@
+/* RequestDetailsPage.module.css */
+
+.pageContainer {
+  background-color: #1783e0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.cancelButton {
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.details {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px 0;
+  text-align: right;
+  line-height: 1.5;
+}
+
+.chatSection {
+  width: 100%;
+
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatTitle {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+    text-align: center; /* Horizontally centers text */
+
+}
+
+.chatContainer {
+  flex-grow: 1;
+  background-color: white;
+  border-radius: 10px;
+
+}
+
+.footer {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.backButton {
+  background-color: black !important;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px !important;
+  width: 100%;
+}

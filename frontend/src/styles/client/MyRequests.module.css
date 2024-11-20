@@ -1,0 +1,136 @@
+.myRequestsContainer {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  background: #1783e0 !important;
+  border-radius: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  padding: 20px 20px 10px 20px  !important;
+  box-sizing: border-box !important;
+}
+
+.header {
+  text-align: center !important;
+}
+
+.title {
+  font-family: "Saira", sans-serif !important;
+  font-size: 24px !important;
+  font-weight: bold !important;
+  color: white !important;
+  margin: 0 !important;
+}
+
+.requestsList {
+ flex-grow: 1 !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    padding: 10px !important;
+
+    /* Add padding to avoid cutoff for the first card */
+    padding-top: 30px !important; /* Adjust this value as needed */
+    box-sizing: border-box !important; /* Ensure padding is included in layout */
+}
+
+.requestCard {
+  position: relative !important;
+  box-sizing: border-box !important;
+  background: #1a4b75 !important;
+  border: 3px solid #fdbe00 !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important; /* Center content horizontally */
+  gap: 15px !important;
+  min-height: 200px !important; /* Ensure consistent height */
+  overflow:visible!important;
+}
+
+.requestId {
+  background-color: #fdbe00 !important;
+  color: #1a4b75 !important;
+  font-weight: bold !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
+  text-align: center !important;
+  position: absolute !important;
+  top: -15px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+}
+
+.cardContent {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important; /* Center content horizontally */
+  gap: 10px !important;
+}
+
+.detailsText {
+  font-family: "Inter", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  color: #ffffff !important;
+}
+
+.dateText {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
+  color: #fdbe00 !important;
+}
+
+.cardActions {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  width: 100% !important;
+}
+
+.button {
+  flex: 1 !important; /* Equal button sizes */
+  font-family: "Saira", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+  color: #1a4b75 !important;
+  border-radius: 14px !important;
+  padding: 10px !important;
+}
+
+.detailsButton {
+  background: #fdbe00 !important;
+}
+
+.professionalsButton {
+  background: #fdbe00 !important;
+}
+
+.footer {
+  position: sticky !important;
+  bottom: 10px !important;
+  left: 8.45% !important;
+  right: 8.45% !important;
+  text-align: center !important;
+}
+
+.backButton {
+  width: 100% !important;
+  height: 50px !important;
+  background: #000000 !important;
+  border-radius: 14px !important;
+  font-family: "Saira", sans-serif !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  color: #ffffff !important;
+  letter-spacing: 0.03em !important;
+  text-transform: uppercase !important;
+}

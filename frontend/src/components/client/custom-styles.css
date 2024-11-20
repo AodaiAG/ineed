@@ -1,0 +1,11 @@
+/* custom-styles.css */
+
+/* Style the container inside the chat channel */
+.str-chat__channel .str-chat__container {
+  height: 100% !important; /* Ensure the container fills the parent's height */
+  display: flex !important; /* Use flex layout for alignment */
+  width:100% !important;
+  flex-direction: column !important; /* Stack children vertically */
+  position: absolute !important; /* Absolute positioning for better control */
+}
+

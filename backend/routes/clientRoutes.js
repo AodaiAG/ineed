@@ -9,7 +9,8 @@ const {
     verifyCode,
     getMainProfessions,
     getSubProfessions,
-    getDomains 
+    getDomains,
+    generateUserToken
 } = require('../controllers/clientController');
 
 router.get('/search', search);
@@ -18,6 +19,7 @@ router.get('/autocomplete',getAutocomplete);
 router.post('/submit-data', submitData);
 router.post('/verify-code', verifyCode); // Add the route to link the verifyCode function
 router.get('/:lang/main-professions', getMainProfessions);
+router.post("/generate-user-token", generateUserToken);
 
 router.get('/:lang/domains', getDomains); // Add the route to link the getDomains function
 

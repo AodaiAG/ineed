@@ -2,7 +2,13 @@ const axios = require('axios');
 const OpenAI = require('openai');
 const JobType = require('../models/jobTypeModel'); // Import your Sequelize model
 const RequestModel = require('../models/requestModel'); // Import your Sequelize model
+const { StreamChat } = require("stream-chat");
 
+// Stream Chat credentials
+const STREAM_API_KEY = "v5t2erh2ur73";
+const STREAM_API_SECRET = "a9tdds8favzc9jbk4wd53w4sgx5rd9fz47cxkcsgpw4f4cdtfc9ztcyrax5dhy77";
+
+// Initialize Stream server client
 // Replace with your Google Maps API key
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -11,6 +17,25 @@ const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY, // OpenAI API key
 });
 
+exports.generateUserToken = async (req, res) => {
+    const serverClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
+    const { id } = req.body;
+    // Validate the request
+    if (!id) {
+        return res.status(400).json({ error: "User ID is required" });
+    }
+
+    try {
+        // Generate a token for the provided user ID
+        const token = serverClient.createToken(id);
+
+        // Respond with the token
+        res.status(200).json({ success: true, token });
+    } catch (error) {
+        console.error("Error generating token:", error);
+        res.status(500).json({ success: false, message: "Failed to generate user token" });
+    }
+};
 // Get address from lat/lon (Reverse geocoding)
 exports.getGeocode = async (req, res) => {
     const { lat, lon } = req.query;
