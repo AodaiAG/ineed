@@ -47,6 +47,7 @@
 .phone-number-container {
   display: flex;
   gap: 8px;
+  direction:rtl;
 }
 
 .phone-prefix-select {
