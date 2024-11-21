@@ -13,8 +13,10 @@ import RequestDetailsPage from './pages/client/RequestDetailsPage';
 import ClientDashboard from './pages/client/Dashboard';
 import MyRequests from './pages/client/MyRequests';
 import ProfessionalsList from './pages/client/ProfessionalList';
+import ProfilePage from './pages/client/ProfilePage';
 
 
+ProfilePage
 
 
 
@@ -33,6 +35,9 @@ import EditProfessionalSettings from './pages/professionals/EditProfessionalSett
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
 import ExplainScreen from './pages/professionals/ExplainScreen'; 
 
+
+
+ProfilePage
 function App() {
     return (
         <Router>
@@ -51,6 +56,8 @@ function App() {
                             <Route path="/dashboard" element={<ClientDashboard />} />
                             <Route path="/my-req" element={<MyRequests />} />
                             <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
+                            <Route path="/profile/:id" element={<ProfilePage />} />
+
 
                             
 
