@@ -1,13 +1,27 @@
 import React, { useState } from "react";
 import { Box, Button, ButtonBase } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import "../../styles/client/HomePage.css"; // Import your custom CSS file
 import LanguageSelectionPopup from "../../components/LanguageSelectionPopup"; // Import the popup component
+import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
 
 const HomePage = () => {
   const [showPopup, setShowPopup] = useState(false); // State to toggle the popup
-const [selectedLanguage, setSelectedLanguage] = useState(() => {
-        return localStorage.getItem('userLanguage') || 'he';
-    });
+  const { translation } = useLanguage(); // Access translations
+  const navigate = useNavigate(); // Initialize the navigation hook
+
+  // Handler for the "קדימה" button click
+  const handleButtonClick = () => {
+    navigate("/main"); // Navigate to the /main route
+  };
+  if (!translation) 
+    {
+    return (
+        <div className={'spinner-overlay'}>
+            <div className={'spinner'}></div>
+        </div>
+    );
+   }
   return (
     <Box className="home-container">
       {/* Header */}
@@ -25,8 +39,8 @@ const [selectedLanguage, setSelectedLanguage] = useState(() => {
 
         {/* Title and Description */}
         <Box className="header-content">
-          <h1 className="home-title">I Need</h1>
-          <p className="home-description">כל המומחים במקום אחד</p>
+          <h1 className="home-title">{translation.homePage.title}</h1>
+          <p className="home-description">{translation.homePage.description}</p>
         </Box>
       </Box>
 
@@ -49,8 +63,9 @@ const [selectedLanguage, setSelectedLanguage] = useState(() => {
             fontSize: "1.6rem", // Medium font size
           }}
           className="footer-button"
+          onClick={handleButtonClick} // Navigate to /main on click
         >
-          קדימה
+          {translation.homePage.continue}
         </Button>
       </Box>
 

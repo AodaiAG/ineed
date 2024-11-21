@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { useLanguage } from '../../contexts/LanguageContext'; // Import useLanguage hook
 import styles from '../../styles/LocationComponentPopup.module.css'; // Ensure the path is correct
-
-function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
+function LocationComponentPopup({ onClose, onSelect, initialLocation, theme = "default" }) {
   const { translation } = useLanguage(); // Use the translation object from context
-  const [address, setAddress] = useState(initialLocation?.address || '');
+  const [address, setAddress] = useState(initialLocation?.address || "");
   const [lat, setLat] = useState(initialLocation?.lat || 31.0461);
   const [lon, setLon] = useState(initialLocation?.lon || 34.8516);
-  const [errorMessage, setErrorMessage] = useState(''); // State to hold error messages
+  const [errorMessage, setErrorMessage] = useState(""); // State to hold error messages
 
   useEffect(() => {
     const loadGoogleMaps = () => {
@@ -29,7 +28,7 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
 
   useEffect(() => {
     if (initialLocation) {
-      setAddress(initialLocation.address || '');
+      setAddress(initialLocation.address || "");
       setLat(initialLocation.lat || 31.0461);
       setLon(initialLocation.lon || 34.8516);
     }
@@ -37,7 +36,7 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
 
   const initMap = () => {
     const initialLocationLatLng = { lat: lat, lng: lon };
-    const map = new window.google.maps.Map(document.getElementById('popupMap'), {
+    const map = new window.google.maps.Map(document.getElementById("popupMap"), {
       center: initialLocationLatLng,
       zoom: 13,
     });
@@ -47,12 +46,12 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
       map,
     });
 
-    const input = document.getElementById('popupLocationInput');
+    const input = document.getElementById("popupLocationInput");
     if (input) {
       const autocomplete = new window.google.maps.places.Autocomplete(input);
-      autocomplete.bindTo('bounds', map);
+      autocomplete.bindTo("bounds", map);
 
-      autocomplete.addListener('place_changed', () => {
+      autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
         if (!place.geometry) {
           alert("No details available for input: '" + place.name + "'");
@@ -63,24 +62,12 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
         map.setZoom(13);
         marker.setPosition(place.geometry.location);
 
-        // Update state with the selected place details
         setLat(place.geometry.location.lat());
         setLon(place.geometry.location.lng());
         setAddress(place.formatted_address);
       });
-
-      // Add a listener for when the user types in the input box
-      input.addEventListener('input', () => {
-        const service = new window.google.maps.places.AutocompleteService();
-        service.getPlacePredictions({ input: input.value }, (predictions, status) => {
-          if (status === window.google.maps.places.PlacesServiceStatus.OK && predictions) {
-          } else {
-            console.log('No predictions available');
-          }
-        });
-      });
     } else {
-      console.error('Input field for Autocomplete was not found');
+      console.error("Input field for Autocomplete was not found");
     }
   };
 
@@ -92,7 +79,7 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
           setLat(latitude);
           setLon(longitude);
           const location = new window.google.maps.LatLng(latitude, longitude);
-          const map = new window.google.maps.Map(document.getElementById('popupMap'), {
+          const map = new window.google.maps.Map(document.getElementById("popupMap"), {
             center: location,
             zoom: 13,
           });
@@ -100,10 +87,10 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
             position: location,
             map,
           });
-  
+
           const geocoder = new window.google.maps.Geocoder();
           geocoder.geocode({ location }, (results, status) => {
-            if (status === 'OK' && results[0]) {
+            if (status === "OK" && results[0]) {
               setAddress(results[0].formatted_address);
             } else {
               alert(translation.location.unknownError);
@@ -133,33 +120,50 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
   };
 
   return ReactDOM.createPortal(
-    <div className={styles['popupOverlay']}>
-      <div className={styles['location-container']}>
-        <h2 className={styles['location-title']}>{translation.location.selectLocation}</h2>
-        <label className={styles['location-label']}>{translation.location.enterLocation}</label>
+    <div className={styles["popupOverlay"]}>
+      <div
+        className={styles["location-container"]}
+        style={
+          theme === "client"
+            ? {
+                backgroundColor: "#1783e0",
+                border: "5px solid #ffffff",
+              }
+            : {}
+        }
+      >
+        <h2 className={styles["location-title"]}>{translation.location.selectLocation}</h2>
+        <label className={styles["location-label"]}>{translation.location.enterLocation}</label>
         <input
           type="text"
           id="popupLocationInput"
-          className={styles['location-input']}
+          className={styles["location-input"]}
           value={address}
-          onFocus={() => setAddress('')} // Clear the value when the input gains focus
+          onFocus={() => setAddress("")} // Clear the value when the input gains focus
           onChange={(e) => setAddress(e.target.value)}
           placeholder={translation.location.locationPlaceholder}
         />
-        <button className={styles['location-find-button']} onClick={handleFindMe}>
+        <button className={styles["location-find-button"]} onClick={handleFindMe}>
           <img
             src="/images/location_icon.png"
             alt={translation.location.locationIconAlt}
-            className={styles['location-button-icon']}
+            className={styles["location-button-icon"]}
           />
           {translation.location.findMe}
         </button>
-        <div className={styles['location-map-container']}>
-          <div id="popupMap" className={styles['location-map-image']} style={{ height: '200px', width: '100%' }}></div>
+        <div className={styles["location-map-container"]}>
+          <div id="popupMap" className={styles["location-map-image"]} style={{ height: "200px", width: "100%" }}></div>
         </div>
-        {errorMessage && <p className={styles['error-message']}>{errorMessage}</p>} {/* Display error messages */}
+        {errorMessage && <p className={styles["error-message"]}>{errorMessage}</p>} {/* Display error messages */}
         <button
-          className={styles['location-continue-button']}
+          className={styles["location-continue-button"]}
+          style={
+            theme === "client"
+              ? {
+                  color: "#ffffff", // Change text color to white
+                }
+              : {}
+          }
           onClick={() => {
             onSelect({
               address,
@@ -173,8 +177,9 @@ function LocationComponentPopup({ onClose, onSelect, initialLocation }) {
         </button>
       </div>
     </div>,
-    document.body // Append to body to ensure it is rendered as an overlay
+    document.body
   );
 }
 
 export default LocationComponentPopup;
+

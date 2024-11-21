@@ -1,10 +1,31 @@
 import React, { useState } from "react";
 import { Box, Button, ButtonBase } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import "../../styles/client/AppStart.css"; // Import your custom CSS file
 import LanguageSelectionPopup from "../../components/LanguageSelectionPopup"; // Import your popup component
+import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
 
 const AppStart = () => {
   const [showPopup, setShowPopup] = useState(false); // State to toggle popup visibility
+  const { translation } = useLanguage(); // Access translations
+  const navigate = useNavigate(); // Initialize the navigation hook
+
+  // Handlers for navigation
+  const handleClientClick = () => {
+    navigate("/home"); // Navigate to /home for clients
+  };
+
+  const handleServiceProviderClick = () => {
+    navigate("/pro/expert-main"); // Navigate to /pro/expert-main for service providers
+  };
+  if (!translation) 
+    {
+    return (
+        <div className={'spinner-overlay'}>
+            <div className={'spinner'}></div>
+        </div>
+    );
+   }
 
   return (
     <Box className="appstart-container">
@@ -23,8 +44,8 @@ const AppStart = () => {
 
         {/* Title and Description */}
         <Box className="appstart-content">
-          <h1 className="appstart-title">I Need</h1>
-          <p className="appstart-description">כל המומחים במקום אחד</p>
+          <h1 className="appstart-title">{translation.appStart.title}</h1>
+          <p className="appstart-description">{translation.appStart.description}</p>
         </Box>
       </Box>
 
@@ -50,8 +71,9 @@ const AppStart = () => {
             fontWeight: "bold",
             width: "45%",
           }}
+          onClick={handleServiceProviderClick} // Navigate to service provider page
         >
-          נותן שירות
+          {translation.appStart.serviceProvider}
         </Button>
         <Button
           variant="contained"
@@ -64,8 +86,9 @@ const AppStart = () => {
             fontWeight: "bold",
             width: "45%",
           }}
+          onClick={handleClientClick} // Navigate to client page
         >
-          לקוח
+          {translation.appStart.client}
         </Button>
       </Box>
 
@@ -73,8 +96,7 @@ const AppStart = () => {
       {showPopup && (
         <LanguageSelectionPopup
           onClose={() => setShowPopup(false)} // Close popup on action
-            backgroundColor="#1783E0" // Blue background for the client side
-
+          backgroundColor="#1783E0" // Blue background for the client side
         />
       )}
     </Box>

@@ -72,16 +72,52 @@
         "professionalsOnly": "We only work with professionals, reliable and at affordable prices. Available 24/7",
         "mainDesktopAlt": "Main Desktop",
 		 "location": {
-    "selectLocation": "בחר מיקום",
-    "enterLocation": "הזן מיקום",
-    "locationPlaceholder": "הקלד את כתובתך",
-    "findMe": "מצא אותי",
-    "continue": "המשך",
-    "unknownError": "שגיאה לא ידועה",
-    "permissionDenied": "הרשאה נדחתה",
-    "positionUnavailable": "מיקום לא זמין",
-    "timeout": "זמן ההמתנה עבר",
-    "noGeolocationSupport": "אין תמיכה במיקום"
+    "selectLocation": "Location for Service",
+    "enterLocation": "Enter location:",
+    "locationPlaceholder": "13 Afarani, Rosh HaAyin, Israel",
+    "locationIconAlt": "Location icon",
+    "findMe": "Find Me",
+    "mapLocationAlt": "Map location",
+    "continue": "Continue",
+	  "permissionDenied": "Permission denied. Please enable GPS access.",
+  "positionUnavailable": "Position unavailable. Please try again later.",
+  "timeout": "The request to get your location timed out.",
+  "unknownError": "An unknown error occurred.",
+  	"locationError": "Please enter your location.",
+  "noGeolocationSupport": "Your browser does not support geolocation."
+  },
+  "helpForm": {
+    "title": "How can we help you?",
+    "searchPlaceholder": "Search...",
+    "selectDomain": "Select Domain",
+    "selectProfession": "Select Profession",
+    "selectCity": "Select City",
+    "selectDate": "Select Time",
+    "continue": "Continue"
+  },
+  "homePage": {
+    "title": "I Need",
+    "description": "All the experts in one place",
+    "continue": "Continue"
+  },
+  "appStart": {
+    "title": "I Need",
+    "description": "All the experts in one place",
+    "serviceProvider": "Service Provider",
+    "client": "Client"
+  },
+  "aboutForm": {
+    "title": "Tell us about yourself",
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "phoneLabel": "Phone",
+    "phonePlaceholder": "123 4567",
+    "commentLabel": "Comment",
+    "commentPlaceholder": "Write your comment here...",
+    "submitButton": "Continue",
+    "requiredFieldsError": "All fields are required!"
   }
+  
+  
 	
   }

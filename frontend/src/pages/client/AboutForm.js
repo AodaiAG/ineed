@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   TextField,
@@ -7,76 +7,134 @@ import {
   MenuItem,
 } from "@mui/material";
 import "../../styles/client/AboutForm.css"; // Add your custom CSS here
+import { useNavigate } from "react-router-dom"; // For navigation
+import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
+import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 
 const AboutForm = () => {
-  const [fullName, setFullName] = useState("");
-  const [phonePrefix, setPhonePrefix] = useState("054");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [comment, setComment] = useState("");
+  const { translation } = useLanguage(); // Access translations
+  const navigate = useNavigate(); // Initialize navigation hook
+  const [selectedLanguage] = useState(
+    localStorage.getItem("userLanguage") || "he"
+  );
+
+  // Initialize state with sessionStorage values or defaults
+  const [fullName, setFullName] = useState(
+    sessionStorage.getItem("fullName") || ""
+  );
+  const [phonePrefix, setPhonePrefix] = useState(
+    sessionStorage.getItem("phonePrefix") || "054"
+  );
+  const [phoneNumber, setPhoneNumber] = useState(
+    sessionStorage.getItem("phoneNumber") || ""
+  );
+  const [comment, setComment] = useState(
+    sessionStorage.getItem("comment") || ""
+  );
+
+  useEffect(() => {
+    const direction = getDirection(selectedLanguage); // Get the direction using the utility function
+    document.documentElement.style.setProperty("--container-direction", direction);
+  }, [selectedLanguage]);
+
+  // Handle phone number input change
+  const handlePhoneNumberChange = (e) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) setPhoneNumber(value); // Allow only numeric values
+  };
 
   const handleSubmit = () => {
-    console.log({
-      fullName,
-      phone: `${phonePrefix}${phoneNumber}`,
-      comment,
-    });
+    // Validation: Ensure all fields are filled
+    if (!fullName.trim() || !phoneNumber.trim() || !comment.trim()) {
+      alert(translation.aboutForm.requiredFieldsError); // Display error message
+      return;
+    }
+
+    // Save data to sessionStorage
+    sessionStorage.setItem("fullName", fullName);
+    sessionStorage.setItem("phonePrefix", phonePrefix);
+    sessionStorage.setItem("phoneNumber", phoneNumber);
+    sessionStorage.setItem("comment", comment);
+
+    // Navigate to /sms
+    navigate("/sms");
   };
+
+  if (!translation) {
+    return (
+      <div className={'spinner-overlay'}>
+        <div className={'spinner'}></div>
+      </div>
+    );
+  }
 
   return (
     <Box className="about-form-container">
       {/* Header */}
-      <h2 className="about-form-title">קצת עליך</h2>
+      <h2 className="about-form-title">{translation.aboutForm.title}</h2>
 
       {/* Full Name Field */}
       <Box className="about-form-field">
-        <label>שם פרטי ומשפחה</label>
+        <label>{translation.aboutForm.fullNameLabel}</label>
         <TextField
-          
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          placeholder="הקלד את שמך המלא"
+          placeholder={translation.aboutForm.fullNamePlaceholder}
           fullWidth
           className="about-form-input"
+          required // Mark as required
         />
       </Box>
 
       {/* Phone Number Field */}
       <Box className="about-form-field phone-field">
-  <label>טלפון</label>
-  <Box className="phone-number-container">
-  <TextField
-      value={phoneNumber}
-      onChange={(e) => setPhoneNumber(e.target.value)}
-      placeholder="123 4567"
-      className="phone-number-input"
-      fullWidth
-    />
-    <Select
-      value={phonePrefix}
-      onChange={(e) => setPhonePrefix(e.target.value)}
-      className="phone-prefix-select"
-    >
-      <MenuItem value="054">054</MenuItem>
-      <MenuItem value="050">050</MenuItem>
-      <MenuItem value="052">052</MenuItem>
-      {/* Add more prefixes as needed */}
-    </Select>
-    
-  </Box>
-</Box>
+        <label>{translation.aboutForm.phoneLabel}</label>
+        <Box className="phone-number-container">
+        <TextField
+  value={phoneNumber}
+  onChange={(e) => {
+    const value = e.target.value;
 
+    // Allow only numeric input
+    if (/^\d*$/.test(value)) {
+      setPhoneNumber(value);
+    }
+  }}
+  placeholder={translation.aboutForm.phonePlaceholder}
+  className="phone-number-input"
+  fullWidth
+  required
+  inputProps={{
+    maxLength: 7, // Enforce at most 7 characters
+    pattern: "[0-9]*", // Allow only numeric input
+  }}
+/>
+
+          <Select
+            value={phonePrefix}
+            onChange={(e) => setPhonePrefix(e.target.value)}
+            className="phone-prefix-select"
+          >
+            <MenuItem value="054">054</MenuItem>
+            <MenuItem value="050">050</MenuItem>
+            <MenuItem value="052">052</MenuItem>
+            {/* Add more prefixes as needed */}
+          </Select>
+        </Box>
+      </Box>
 
       {/* Comment Field */}
       <Box className="about-form-field">
-        <label>הערה</label>
+        <label>{translation.aboutForm.commentLabel}</label>
         <TextField
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="כתוב הערה כאן..."
+          placeholder={translation.aboutForm.commentPlaceholder}
           fullWidth
           multiline
           rows={8}
           className="about-form-textarea"
+          required // Mark as required
         />
       </Box>
 
@@ -86,11 +144,11 @@ const AboutForm = () => {
         className="about-form-submit"
         onClick={handleSubmit}
         sx={{
-            borderRadius: "14px", // Apply border-radius
-            fontSize: "1.6rem", // Medium font size
-          }}
+          borderRadius: "14px", // Apply border-radius
+          fontSize: "1.6rem", // Medium font size
+        }}
       >
-        חבר לי מומחה
+        {translation.aboutForm.submitButton}
       </Button>
     </Box>
   );

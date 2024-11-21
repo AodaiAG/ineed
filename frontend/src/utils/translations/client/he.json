@@ -84,5 +84,39 @@
     "positionUnavailable": "מיקום לא זמין",
     "timeout": "זמן ההמתנה עבר",
     "noGeolocationSupport": "אין תמיכה במיקום"
+  },
+  "helpForm": {
+    "title": "במה אפשר לעזור?",
+    "searchPlaceholder": "חיפוש...",
+    "selectDomain": "בחר תחום",
+    "selectProfession": "בחר נושא",
+    "selectCity": "בחר עיר",
+    "selectDate": "בחר זמן",
+    "continue": "המשך"
+  },
+  "homePage": {
+    "title": "I Need",
+    "description": "כל המומחים במקום אחד",
+    "continue": "קדימה"
+  },
+  "appStart": {
+    "title": "I Need",
+    "description": "כל המומחים במקום אחד",
+    "serviceProvider": "נותן שירות",
+    "client": "לקוח"
+  },
+  "aboutForm": {
+    "title": "קצת עליך",
+    "fullNameLabel": "שם פרטי ומשפחה",
+    "fullNamePlaceholder": "הקלד את שמך המלא",
+    "phoneLabel": "טלפון",
+    "phonePlaceholder": "123 4567",
+    "commentLabel": "הערה",
+    "commentPlaceholder": "כתוב הערה כאן...",
+    "submitButton": "המשך",
+	  "requiredFieldsError": "יש למלא את כל השדות!"
+
+
   }
+  
   }
