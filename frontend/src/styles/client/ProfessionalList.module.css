@@ -1,10 +1,10 @@
 .professionalListContainer {
   position: absolute !important;
-  top: 0 !important;
   left: 0 !important;
   right: 0 !important;
+  top: 0 !important;
   bottom: 0 !important;
-  background: linear-gradient(to bottom, #1783e0, #1a4b75) !important; /* Gradient for depth */
+  background: #1783e0 !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
@@ -14,39 +14,35 @@
 
 .header {
   text-align: center !important;
-  margin-bottom: 15px !important;
+  margin-bottom: 10px !important;
 }
 
 .title {
   font-family: "Saira", sans-serif !important;
   font-size: 24px !important;
   font-weight: bold !important;
-  color: #ffffff !important;
+  color: white !important;
   background: #1a4b75 !important;
   border: 3px solid #ffffff !important;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
   border-radius: 14px !important;
-  padding: 10px !important;
-  margin: 0 auto 10px !important; /* Center the title */
+  padding: 9px !important;
 }
 
 .requestId {
-  font-family: "Inter", sans-serif !important;
-  font-size: 20px !important;
-  font-weight: bold !important;
-  color: #1a4b75 !important;
   background: #fdbe00 !important;
-  border-radius: 14px !important;
-  padding: 5px 15px !important;
+  color: #1a4b75 !important;
+  font-weight: bold !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
   text-align: center !important;
-  margin: 0 auto 15px !important; /* Center the ID */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  margin: 10px auto !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
 }
 
 .requestDetails {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  margin-bottom: 20px !important;
+  text-align: center !important;
+  margin: 10px 0 !important;
 }
 
 .detailsText,
@@ -54,15 +50,15 @@
   font-family: "Inter", sans-serif !important;
   font-size: 14px !important;
   font-weight: bold !important;
-  color: #ffffff !important;
+  color: white !important;
 }
 
 .divider {
-  background: rgba(255, 255, 255, 0.2) !important; /* Softer divider */
+  background: rgba(26, 75, 117, 0.4) !important;
   border-radius: 8px !important;
-  margin: 15px auto !important;
+  margin: 10px auto !important;
   width: 90% !important;
-  height: 4px !important; /* Thinner line */
+  height: 6px !important;
 }
 
 .professionalsList {
@@ -71,7 +67,8 @@
   display: flex !important;
   flex-direction: column !important;
   gap: 20px !important;
-  padding: 15px 10px !important; /* Uniform padding */
+  padding: 10px !important;
+  background: linear-gradient(to bottom, #1783e0, #1a4b75) !important;
 }
 
 .professionalCard {
@@ -79,28 +76,33 @@
   border: 3px solid #fdbe00 !important;
   border-radius: 14px !important;
   display: flex !important;
+      min-height: 211px !important;
   flex-direction: column !important;
-  justify-content: space-between !important;
   align-items: center !important;
   padding: 10px !important;
   gap: 10px !important;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 2px 4px rgba(0, 0, 0, 0.06) !important;
-  transition: transform 0.3s ease-in-out !important, box-shadow 0.3s ease-in-out !important;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.2s ease-in-out !important;
 }
 
 .professionalCard:hover {
-  transform: translateY(-5px) !important; /* Slight lift effect */
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15), 0px 3px 6px rgba(0, 0, 0, 0.1) !important;
+  transform: scale(1.05) !important;
 }
 
 .offerContainer {
-  font-family: "Saira", sans-serif !important;
-  font-size: 16px !important;
-  font-weight: bold !important;
-  color: #1a4b75 !important;
   background: #fdbe00 !important;
-  padding: 5px 15px !important;
-  border-radius: 14px !important;
+  padding: 5px 10px !important;
+  border-radius: 8px !important;
+  color: #1a4b75 !important;
+  font-weight: bold !important;
+  margin-bottom: 10px !important;
+}
+
+.avatar {
+  width: 50px !important;
+  height: 50px !important;
+  border: 3px solid #fdbe00 !important;
+  border-radius: 50% !important;
 }
 
 .profileContainer {
@@ -110,24 +112,23 @@
   gap: 5px !important;
 }
 
-.avatar {
-  width: 50px !important;
-  height: 50px !important;
-  border: 2px solid #fdbe00 !important;
-  border-radius: 50% !important;
-  margin-bottom: 5px !important;
+.profileText {
+  font-family: "Saira", sans-serif !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  color: white !important;
 }
 
 .nameText {
   font-family: "Inter", sans-serif !important;
-  font-size: 14px !important;
+  font-size: 16px !important;
   font-weight: bold !important;
-  color: #ffffff !important;
+  color: white !important;
 }
 
 .companyText {
   font-family: "Inter", sans-serif !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   font-weight: bold !important;
   color: #fdbe00 !important;
 }
@@ -135,9 +136,8 @@
 .footer {
   display: flex !important;
   justify-content: space-between !important;
-  align-items: center !important;
-  gap: 10px !important;
   padding: 10px 8.45% !important;
+  gap: 10px !important;
   background: #1a4b75 !important;
   border-top: 3px solid #fdbe00 !important;
 }
@@ -146,11 +146,11 @@
 .selectButton {
   flex: 1 !important;
   height: 50px !important;
+  border-radius: 14px !important;
   font-family: "Saira", sans-serif !important;
   font-size: 18px !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
-  border-radius: 14px !important;
 }
 
 .backButton {

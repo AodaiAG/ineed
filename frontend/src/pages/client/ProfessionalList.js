@@ -24,7 +24,7 @@ const ProfessionalList = () => {
     },
     {
       id: 2,
-      name: "תרים הציע מחיר",
+      name: "אלי רגדג",
       profileImage: "/images/professional2.png",
       offer: "400₪",
       company: "שלמה אינסטלציה בע״מ",
@@ -63,6 +63,9 @@ const ProfessionalList = () => {
               </Typography>
             </Box>
             <Box className={styles.profileContainer}>
+            <Typography className={styles.nameText}>
+              {professional.name}
+            </Typography>
               <Avatar
                 src={professional.profileImage}
                 alt={professional.name}
@@ -70,9 +73,7 @@ const ProfessionalList = () => {
               />
               <Typography className={styles.profileText}>פרופיל</Typography>
             </Box>
-            <Typography className={styles.nameText}>
-              {professional.name}
-            </Typography>
+            
             <Typography className={styles.companyText}>
               {professional.company}
             </Typography>
