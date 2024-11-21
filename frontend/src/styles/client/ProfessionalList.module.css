@@ -68,7 +68,6 @@
   flex-direction: column !important;
   gap: 20px !important;
   padding: 10px !important;
-  background: linear-gradient(to bottom, #1783e0, #1a4b75) !important;
 }
 
 .professionalCard {
@@ -76,11 +75,9 @@
   border: 3px solid #fdbe00 !important;
   border-radius: 14px !important;
   display: flex !important;
-      min-height: 211px !important;
-  flex-direction: column !important;
   align-items: center !important;
   padding: 10px !important;
-  gap: 10px !important;
+  gap: 15px !important;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1) !important;
   transition: transform 0.2s ease-in-out !important;
 }
@@ -89,13 +86,23 @@
   transform: scale(1.05) !important;
 }
 
-.offerContainer {
-  background: #fdbe00 !important;
-  padding: 5px 10px !important;
-  border-radius: 8px !important;
-  color: #1a4b75 !important;
-  font-weight: bold !important;
-  margin-bottom: 10px !important;
+.cardContent {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+.radioContainer {
+  margin-right: 10px !important;
+}
+
+.radio {
+  color: #fdbe00 !important;
+}
+
+.avatarContainer {
+  flex-shrink: 0 !important;
+  margin: 15px;
 }
 
 .avatar {
@@ -105,18 +112,12 @@
   border-radius: 50% !important;
 }
 
-.profileContainer {
+.textContainer {
+  flex-grow: 1 !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
+  justify-content: center !important;
   gap: 5px !important;
-}
-
-.profileText {
-  font-family: "Saira", sans-serif !important;
-  font-size: 14px !important;
-  font-weight: bold !important;
-  color: white !important;
 }
 
 .nameText {
@@ -126,39 +127,37 @@
   color: white !important;
 }
 
-.companyText {
-  font-family: "Inter", sans-serif !important;
-  font-size: 14px !important;
+.offerText {
+  font-family: "Saira", sans-serif !important;
+  font-size: 16px !important;
   font-weight: bold !important;
   color: #fdbe00 !important;
 }
 
-.footer {
-  display: flex !important;
-  justify-content: space-between !important;
-  padding: 10px 8.45% !important;
-  gap: 10px !important;
-  background: #1a4b75 !important;
-  border-top: 3px solid #fdbe00 !important;
-}
-
-.backButton,
-.selectButton {
-  flex: 1 !important;
-  height: 50px !important;
-  border-radius: 14px !important;
-  font-family: "Saira", sans-serif !important;
-  font-size: 18px !important;
+.companyText {
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px !important;
   font-weight: bold !important;
-  text-transform: uppercase !important;
-}
-
-.backButton {
-  background: #000000 !important;
   color: #ffffff !important;
 }
 
-.selectButton {
+.footer {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  padding: 10px 8.45% !important;
+  background: #1a4b75 !important;
+}
+
+.submitButton {
   background: #fdbe00 !important;
   color: #1a4b75 !important;
+  font-family: "Saira", sans-serif !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  padding: 10px 20px !important;
+  border-radius: 14px !important;
+  cursor: pointer !important;
+  border: none !important;
+  text-transform: uppercase !important;
 }

@@ -1,18 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-
-import {
-  Box,
-  Button,
-  Card,
-  Typography,
-  Avatar,
-  Divider,
-} from "@mui/material";
+import { Box, Card, Typography, Avatar, Divider, Radio, FormControlLabel } from "@mui/material";
 import styles from "../../styles/client/ProfessionalList.module.css";
 
 const ProfessionalList = () => {
-    const { id } = useParams(); // Get the request ID from the route
+  const { id } = useParams(); // Get the request ID from the route
 
   const professionals = [
     {
@@ -31,6 +23,12 @@ const ProfessionalList = () => {
     },
   ];
 
+  const [selectedProfessional, setSelectedProfessional] = useState(null);
+
+  const handleSelect = (id) => {
+    setSelectedProfessional(id);
+  };
+
   return (
     <Box className={styles.professionalListContainer}>
       {/* Header */}
@@ -43,12 +41,8 @@ const ProfessionalList = () => {
 
       {/* Request Details */}
       <Box className={styles.requestDetails}>
-        <Typography className={styles.detailsText}>
-          אינסטלציה, התקנת ברז
-        </Typography>
-        <Typography className={styles.dateText}>
-          17.05.2025 18:40
-        </Typography>
+        <Typography className={styles.detailsText}>אינסטלציה, התקנת ברז</Typography>
+        <Typography className={styles.dateText}>17.05.2025 18:40</Typography>
       </Box>
 
       <Divider className={styles.divider} />
@@ -57,38 +51,39 @@ const ProfessionalList = () => {
       <Box className={styles.professionalsList}>
         {professionals.map((professional) => (
           <Card key={professional.id} className={styles.professionalCard}>
-            <Box className={styles.offerContainer}>
-              <Typography className={styles.offerText}>
-                הצעה: {professional.offer}
-              </Typography>
+            <Box className={styles.cardContent}>
+              <Box className={styles.radioContainer}>
+                <Radio
+                  checked={selectedProfessional === professional.id}
+                  onChange={() => handleSelect(professional.id)}
+                  className={styles.radio}
+                />
+              </Box>
+              <Box className={styles.avatarContainer}>
+                <Avatar
+                  src={professional.profileImage}
+                  alt={professional.name}
+                  className={styles.avatar}
+                />
+              </Box>
+              <Box className={styles.textContainer}>
+                <Typography className={styles.nameText}>{professional.name}</Typography>
+                <Typography className={styles.offerText}>הצעה: {professional.offer}</Typography>
+                <Typography className={styles.companyText}>{professional.company}</Typography>
+              </Box>
             </Box>
-            <Box className={styles.profileContainer}>
-            <Typography className={styles.nameText}>
-              {professional.name}
-            </Typography>
-              <Avatar
-                src={professional.profileImage}
-                alt={professional.name}
-                className={styles.avatar}
-              />
-              <Typography className={styles.profileText}>פרופיל</Typography>
-            </Box>
-            
-            <Typography className={styles.companyText}>
-              {professional.company}
-            </Typography>
           </Card>
         ))}
       </Box>
 
       {/* Footer */}
       <Box className={styles.footer}>
-        <Button variant="contained" className={styles.backButton}>
-          חזור
-        </Button>
-        <Button variant="contained" className={styles.selectButton}>
-          בחר
-        </Button>
+        <button
+          className={styles.submitButton}
+          onClick={() => alert(`Selected Professional ID: ${selectedProfessional}`)}
+        >
+          המשך
+        </button>
       </Box>
     </Box>
   );
