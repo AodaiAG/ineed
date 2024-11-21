@@ -12,6 +12,8 @@ import SMSVerificationC from './pages/client/SMSVerification';
 import RequestDetailsPage from './pages/client/RequestDetailsPage';
 import ClientDashboard from './pages/client/Dashboard';
 import MyRequests from './pages/client/MyRequests';
+import ProfessionalsList from './pages/client/ProfessionalList';
+
 
 
 
@@ -48,9 +50,9 @@ function App() {
                             <Route path="/request" element={<RequestDetailsPage />} />
                             <Route path="/dashboard" element={<ClientDashboard />} />
                             <Route path="/my-req" element={<MyRequests />} />
+                            <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
 
-                            ClientDashboard
-                            MyRequests
+                            
 
                             {/* Professional Side Routes */}
                             <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />
