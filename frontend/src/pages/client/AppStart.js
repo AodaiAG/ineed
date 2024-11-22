@@ -44,7 +44,7 @@ const AppStart = () => {
 
         {/* Title and Description */}
         <Box className="appstart-content">
-          <h1 className="appstart-title">{translation.appStart.title}</h1>
+          <h1 className="appstart-title">I Need</h1>
           <p className="appstart-description">{translation.appStart.description}</p>
         </Box>
       </Box>
