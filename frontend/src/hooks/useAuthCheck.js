@@ -5,6 +5,7 @@ const useAuthCheck = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null); // Add user state to store response data
+    
 
     useEffect(() => {
         const verifyAuth = async () => {

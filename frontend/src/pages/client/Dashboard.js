@@ -1,9 +1,41 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Button, ButtonBase, Box } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+
 import styles from "../../styles/client/Dashboard.module.css";
+import useClientAuthCheck from '../../hooks/useClientAuthCheck';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const [showPopup, setShowPopup] = useState(false); // State to handle popup visibility
+  const { translation } = useLanguage();
+
+  const { isAuthenticated, loading ,user} = useClientAuthCheck();
+
+  useEffect(() => {
+    if (loading) return;
+    if (isAuthenticated) 
+        {
+          console.log("yes");
+
+        } 
+
+    else {
+        console.log("NO");
+    }
+}, [loading, isAuthenticated, navigate]);
+
+
+if (loading || !translation) 
+    {
+    return (
+        <div className={styles['spinner-overlay']}>
+            <div className={styles['spinner']}></div>
+        </div>
+    );
+}
 
   return (
     <Box className={styles.clientDContainer}>

@@ -29,6 +29,33 @@ const refreshAccessToken = async (refreshToken) => {
         throw error; // Propagate the error to be handled in authenticateToken
     }
 };
+const refreshClientAccessToken = async (refreshToken) => {
+    console.log('Received request to refresh access token');
+
+    if (!refreshToken) {
+        throw new Error('Refresh token required'); // Explicitly throw an error if no refresh token is provided
+    }
+
+    try {
+        // Verify if the refresh token is stored in the database
+        const storedToken = await RefreshTokenClient.findOne({ where: { token: refreshToken } });
+        if (!storedToken) {
+            throw new Error('Invalid refresh token'); // Throw an error if token is not found in the database
+        }
+
+        // Verify the refresh token itself
+        const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
+        
+        const { clientId } = decoded;
+        const newAccessToken = jwt.sign({ clientId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        
+        return newAccessToken; // Return the new access token
+    } catch (error) {
+        console.error('Error in refreshAccessToken function:', error.message);
+        throw error; // Propagate the error to be handled in authenticateToken
+    }
+};
+
 
 const grantClientAuth = async (client, res) => {
     const accessToken = jwt.sign({ clientId: client.id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
@@ -100,5 +127,5 @@ const logout = async (req, res) => {
 
 module.exports = {
     refreshAccessToken,
-    logout,verifyAuth,grantProfAuth,grantClientAuth, verifyClientAuth 
+    logout,verifyAuth,grantProfAuth,grantClientAuth, verifyClientAuth,refreshClientAccessToken
 };
