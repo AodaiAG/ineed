@@ -17,7 +17,8 @@ const authenticateToken = async (req, res, next) => {
         } catch (error) {
             if (error.name === 'TokenExpiredError' || !token) {
 
-                if (refreshToken) {
+                if (refreshToken)
+                     {
                     try {
 
                         // Generate a new access token using the refresh token

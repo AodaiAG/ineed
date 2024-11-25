@@ -3,6 +3,14 @@ const OpenAI = require('openai');
 const JobType = require('../models/jobTypeModel'); // Import your Sequelize model
 const RequestModel = require('../models/requestModel'); // Import your Sequelize model
 const { StreamChat } = require("stream-chat");
+const Client = require('../models/client/Client'); // Import your Sequelize model
+const PhoneVerification = require('../models/PhoneVerification');
+const ClientRequest = require('../models/client/ClientRequest'); // Import your Sequelize model
+const Request = require('../models/client/Request'); // Import your Sequelize model
+const {grantClientAuth} = require('./authController');
+
+
+
 
 // Stream Chat credentials
 const STREAM_API_KEY = "v5t2erh2ur73";
@@ -57,75 +65,133 @@ exports.getGeocode = async (req, res) => {
     }
 };
 // Verify phone number using the verification code
-exports.verifyCode = async (req, res) => {
-    const { requestId, phone, code } = req.body;
 
+
+exports.saveClient = async (req, res) => {
+    const { phoneNumber, fullName } = req.body;
 
     try {
-        // Fetch the request from the database based on provided jobId, phone, and code
-        const request = await RequestModel.findOne({
-            where: { id: requestId, client_phone: phone, sms_verification: code }
+        // Create the client
+        const client = await Client.create({ phoneNumber, fullName });
+
+        // Generate authentication tokens and set them in headers
+        await grantClientAuth(client, res);
+
+        // Return success status and client ID
+        res.status(201).json({
+            success: true,
+            clientId: client.id, // Include the client ID in the response
         });
-
-
-        if (request) {
-            // Update the request to mark SMS verification as complete
-            request.sms_verification = 'active';
-            await request.save();
-
-
-            res.status(200).json({ success: true, message: 'Phone number verified successfully.' });
-        } else {
-            console.log('Invalid code or phone number.'); // Log invalid case
-            res.status(400).json({ success: false, message: 'Invalid code or phone number.' });
-        }
     } catch (error) {
-        console.error('Error verifying code:', error); // Log any error encountered
-        res.status(500).json({ success: false, message: 'Error verifying phone number.' });
+        console.error('Error saving client:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
-exports.submitData = async (req, res) => {
-    const { name, codeN, phone, note, jobTypeId, main, sub, location, dateAndTime } = req.body;
-    const fullPhoneNumber = codeN + phone;
-    const verificationCode = Math.floor(1000 + Math.random() * 9000).toString(); // Generate a 4-digit code
+
+exports.getClientRequests = async (req, res) => {
+    const { clientId } = req.params;
 
     try {
-        // Store form data in the database
-        const newRequest = await RequestModel.create({
-            job_type: jobTypeId,
-            main_type: main,
-            sub_type: sub,
-            job_location: location,
-            job_timestamp: dateAndTime,
-            client_name: name,
-            client_phone: fullPhoneNumber,
-            sms_verification: verificationCode,
-            job_agent: null,
-            job_finished: false,
-            job_price: null,
-            job_image: null,
-            job_rate: null,
-            customer_description: note
+        // Fetch client requests along with request details
+        const clientRequests = await ClientRequest.findAll({
+            where: { clientId },
+            include: [
+                {
+                    model: Request,
+                    attributes: ['id', 'domain', 'mainProfession', 'city', 'date', 'comment'],
+                },
+            ],
         });
 
-        // Retrieve the job ID from the newly created record
-        const jobId = newRequest.id;
+        if (!clientRequests.length) {
+            return res.status(404).json({ success: false, message: 'No requests found for this client' });
+        }
 
-        // Send SMS with Twilio
-        //await sendVerificationCode(fullPhoneNumber, verificationCode);
-
-        // Return success response with the job ID
         res.status(200).json({
             success: true,
-            message: 'Form submitted successfully, verification code sent.',
-            jobId
+            data: clientRequests,
         });
     } catch (error) {
-        console.error('Error submitting form:', error);
-        res.status(500).json({ success: false, message: 'Error submitting form.' });
+        console.error('Error fetching client requests:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
 
+exports.submitClientRequest = async (req, res) => {
+    const { clientId, domain, mainProfession, city, date, comment, profId } = req.body;
+
+    try {
+        // Validate client existence
+        const client = await Client.findByPk(clientId);
+        if (!client) {
+            return res.status(404).json({ success: false, message: 'Client not found' });
+        }
+
+        // Create a new request
+        const request = await Request.create({ domain, mainProfession, city, date, comment });
+
+        // Link the request to the client in the ClientRequest table
+        const clientRequest = await ClientRequest.create({
+            clientId,
+            requestId: request.id,
+            profId, // Optional, depending on your requirements
+        });
+
+        // Respond with success
+        res.status(201).json({
+            success: true,
+            data: {
+                requestId: request.id,
+                clientRequestId: clientRequest.id,
+            },
+            message: 'Client request submitted successfully',
+        });
+    } catch (error) {
+        console.error('Error submitting client request:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+exports.getRequestDetails = async (req, res) => {
+    const { requestId } = req.params;
+
+    try {
+        // Fetch the request details
+        const request = await Request.findByPk(requestId);
+
+        if (!request) {
+            return res.status(404).json({ success: false, message: 'Request not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: request,
+        });
+    } catch (error) {
+        console.error('Error fetching request details:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+exports.deleteClientRequest = async (req, res) => {
+    const { clientRequestId } = req.params;
+
+    try {
+        // Delete the client request
+        const deleted = await ClientRequest.destroy({ where: { id: clientRequestId } });
+
+        if (!deleted) {
+            return res.status(404).json({ success: false, message: 'Client request not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Client request deleted successfully',
+        });
+    } catch (error) {
+        console.error('Error deleting client request:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
 
 // Get autocomplete suggestions for an address
 exports.getAutocomplete = async (req, res) => {
@@ -219,6 +285,66 @@ exports.getDomains = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch domains' });
     }
 };
+
+exports.verifyCodeHandler = async (req, res) => {
+    const { phoneNumber, code } = req.body;
+
+    try {
+        // Check if the client is registered
+        const client = await Client.findOne({ where: { phoneNumber } });
+        const isRegistered = Boolean(client);
+
+        // Retrieve the verification record
+        const verificationRecord = await PhoneVerification.findOne({ where: { phoneNumber } });
+
+        // If no verification record exists, return an error
+        if (!verificationRecord) {
+            return res.status(401).json({
+                success: false,
+                data: { registered: isRegistered },
+                message: 'Verification record not found',
+            });
+        }
+
+        const { code: storedCode, expiresAt } = verificationRecord;
+
+        // Check if the code is expired or invalid
+        if (new Date() > expiresAt || storedCode !== code) {
+            return res.status(401).json({
+                success: false,
+                data: { registered: isRegistered },
+                message: 'Code expired or invalid',
+            });
+        }
+
+        // If the client is registered, grant auth tokens
+        if (isRegistered) {
+            await grantClientAuth(client, res); // Replace with client-specific auth grant logic
+            return res.status(200).json({
+                success: true,
+                data: {
+                    clientId: client.id,
+                    registered: true,
+                },
+                message: 'Verification successful',
+            });
+        }
+
+        // If the client is not registered, return success and prompt registration
+        return res.status(200).json({
+            success: true,
+            data: { phoneNumber, registered: false },
+            message: 'Verification successful, but user not registered',
+        });
+    } catch (error) {
+        console.error('Error verifying code:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+};
+
 exports.getMainProfessions = async (req, res) => {
     const lang = req.params.lang || 'he'; // Get language from params, default to Hebrew if not provided
     const domain = req.query.domain; // Get domain from query parameters

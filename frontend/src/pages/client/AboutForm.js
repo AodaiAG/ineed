@@ -10,6 +10,10 @@ import "../../styles/client/AboutForm.css"; // Add your custom CSS here
 import { useNavigate } from "react-router-dom"; // For navigation
 import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
+import axios from "axios";
+import { API_URL } from '../../utils/constans';
+
+
 
 const AboutForm = () => {
   const { translation } = useLanguage(); // Access translations
@@ -49,15 +53,16 @@ const AboutForm = () => {
       alert(translation.aboutForm.requiredFieldsError); // Display error message
       return;
     }
-
+    const fullPhoneNumber = `${phonePrefix}${phoneNumber}`;
     // Save data to sessionStorage
     sessionStorage.setItem("fullName", fullName);
     sessionStorage.setItem("phonePrefix", phonePrefix);
     sessionStorage.setItem("phoneNumber", phoneNumber);
     sessionStorage.setItem("comment", comment);
 
-    // Navigate to /sms
-    navigate("/sms");
+    navigate("/summary");
+  
+    
   };
 
   if (!translation) {

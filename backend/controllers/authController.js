@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken');
+const RefreshTokenClient = require('../models/client/RefreshTokenClient');
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
 
 const refreshAccessToken = async (refreshToken) => {
@@ -29,7 +30,28 @@ const refreshAccessToken = async (refreshToken) => {
     }
 };
 
+const grantClientAuth = async (client, res) => {
+    const accessToken = jwt.sign({ clientId: client.id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({ clientId: client.id }, REFRESH_TOKEN_SECRET, { expiresIn: '90d' });
 
+    await RefreshTokenClient.create({
+        token: refreshToken,
+        clientId: client.id,
+        expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    });
+
+    res.setHeader('x-access-token', accessToken);
+    res.setHeader('x-refresh-token', refreshToken);
+
+    return { accessToken, refreshToken };
+};
+
+const verifyClientAuth = async (req, res) => {
+    res.status(200).json({
+        isValidUserdata: true,
+        decryptedUserdata: { ...req.user },
+    });
+};
 
 
 const verifyAuth = async (req, res) => {
@@ -78,5 +100,5 @@ const logout = async (req, res) => {
 
 module.exports = {
     refreshAccessToken,
-    logout,verifyAuth,grantProfAuth
+    logout,verifyAuth,grantProfAuth,grantClientAuth, verifyClientAuth 
 };
