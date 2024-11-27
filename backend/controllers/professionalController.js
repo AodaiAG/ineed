@@ -7,8 +7,12 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constant
 const {grantProfAuth} = require('./authController');
 const { Op } = require('sequelize');
 
-const Request = require('../models/client/Request');
 
+const { StreamChat } = require("stream-chat");
+
+// Stream Chat credentials
+const STREAM_API_KEY = "v5t2erh2ur73";
+const STREAM_API_SECRET = "a9tdds8favzc9jbk4wd53w4sgx5rd9fz47cxkcsgpw4f4cdtfc9ztcyrax5dhy77";
 
 
 const multer = require('multer');
@@ -17,6 +21,7 @@ const streamifier = require('streamifier');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken'); // Import RefreshToken model
+const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
 
 
 // Functions to generate tokens
@@ -408,8 +413,71 @@ END:VCARD
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+const addProfessionalToChannel = async (req, res) => {
+    const { userId, requestId } = req.body;
+    console.log("Received professionalId:", userId);
+    console.log("Received requestId:", requestId);
+    const streamClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
+    const channelId = `request_${requestId}`;
+  
+    try {
+      // Check if the professional exists
+      const professionalExists = await streamClient.queryUsers({ id: userId });
+      if (professionalExists.users.length === 0) {
+        await streamClient.upsertUser({
+          id: userId,
+          name: `Professional ${userId}`, // Customize as needed
+        });
+      }
+  
+      // Add professional to the channel
+      const channel = streamClient.channel("messaging", channelId);
+      await channel.addMembers([userId]);
+  
+      res.status(200).json({
+        success: true,
+        message: `Professional ${userId} added to channel ${channelId}`,
+      });
+    } catch (error) {
+      console.error("Error adding professional to channel:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  };
+  
 
+  const getProfessionalRequestDetails = async (req, res) => {
+    const { requestId } = req.params; // Extract request ID from params
 
+    try {
+        // Fetch the request details
+        const request = await Request.findByPk(requestId);
+
+        if (!request) {
+            return res
+                .status(404)
+                .json({ success: false, message: "Request not found" });
+        }
+
+        // Respond with the request details
+        res.status(200).json({
+            success: true,
+            data: {
+                id: request.id,
+                jobRequiredId: request.jobRequiredId,
+                city: request.city,
+                date: request.date,
+                comment: request.comment,
+                status: request.status,
+            },
+        });
+    } catch (error) {
+        console.error("Error fetching request details:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
 
 const fetchNewRequests = async (req, res) => {
     try {
@@ -493,10 +561,10 @@ module.exports = {
     getAllLocations,
     downloadVCardHandler,
     fetchProfessionalRequests,
-    
+
     assignRequestToProfessional,
-    
+    addProfessionalToChannel,
     registerProfessional,getProfessionalById,updateProfessional,uploadImage
     ,generateVerificationCodeHandler
-    ,verifyCodeHandler,createReportMissingProfession
+    ,verifyCodeHandler,createReportMissingProfession,getProfessionalRequestDetails
 };

@@ -83,13 +83,13 @@ function RequestPage() {
                                 primary={`${translation.clientName || 'סטאטוס'}: ${request.status}`}
                                 secondary={`${translation.dateLabel || 'תאריך'}: ${request.date} | ${translation.requestNumber || 'מספר קריאה'}: ${request.jobRequiredId}`}
                                 />
-                            <Button
-                                variant="contained"
-                                onClick={() => handleClaimRequest(request.id)}
-                                className={styles.claimButton}
-                            >
-                                {translation.claimRequestButton || 'תפוס קריאה'}
-                            </Button>
+                                        <Button
+                                        variant="contained"
+                                        onClick={() => navigate(`/pro/requests/${request.id}`)}
+                                        className={styles.detailsButton}
+                                        >
+                                        {translation.requestDetailsButton || "פרטי הקריאה"}
+                                        </Button>
                         </ListItem>
                     ))}
                 </List>

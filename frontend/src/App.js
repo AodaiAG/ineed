@@ -35,10 +35,12 @@ import EditProfessionalSettings from './pages/professionals/EditProfessionalSett
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
 import ExplainScreen from './pages/professionals/ExplainScreen'; 
 import RequestPage from './pages/professionals/RequestPage'; 
+import ProfessionalRequestDetailsPage from './pages/professionals/ProfessionalRequestDetailsPage'; 
 
 
+ProfessionalRequestDetailsPage
 
-ProfilePage
+
 function App() {
     return (
         <Router>
@@ -73,6 +75,8 @@ function App() {
                             <Route path="/pro/expert-main" element={<ExpertMainPage />} />
                             <Route path="/pro/explain" element={<ExplainScreen />} />
                             <Route path="pro/requests/new" element={<RequestPage />} />
+                            <Route path="/pro/requests/:id" element={<ProfessionalRequestDetailsPage />} />
+                            
 
                         </Routes>
                     

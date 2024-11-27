@@ -16,7 +16,8 @@ const { checkIfRegistered,
     fetchProfessionalRequests,
     registerProfessional,
     getProfessionalById,updateProfessional ,uploadImage,generateVerificationCodeHandler
-    ,verifyCodeHandler,createReportMissingProfession,downloadVCardHandler,
+    ,verifyCodeHandler,createReportMissingProfession,downloadVCardHandler,addProfessionalToChannel,
+    getProfessionalRequestDetails
     
  } = require('../controllers/professionalController');
 
@@ -37,6 +38,10 @@ router.post('/assign-request', authenticateToken, assignRequestToProfessional);
 router.get('/my-requests', authenticateToken, fetchProfessionalRequests);
 
 router.get('/new-requests', authenticateToken, fetchNewRequests);
+
+router.post("/join-chat", addProfessionalToChannel);
+
+router.get("/request/:requestId", authenticateToken, getProfessionalRequestDetails);
 
 
 

@@ -10,21 +10,21 @@ import api from "../../utils/clientApi";
 const RequestDetailsPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const requestId = searchParams.get("id"); // Retrieve the requestId from the URL
-  const [requestDetails, setRequestDetails] = useState(null); // State to hold request details
-  const [userToken, setUserToken] = useState(null); // State to hold the user token
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const requestId = searchParams.get("id");
+  const [requestDetails, setRequestDetails] = useState(null);
+  const [userToken, setUserToken] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Use authentication check to get user data
   const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
 
   useEffect(() => {
-    if (authLoading) return; // Wait until the authentication status is loaded
+    if (authLoading) return;
 
     if (!isAuthenticated) {
       console.error("User is not authenticated. Redirecting...");
-      navigate("/login"); // Redirect to login if not authenticated
+      navigate("/login");
       return;
     }
 
@@ -32,32 +32,26 @@ const RequestDetailsPage = () => {
       try {
         const response = await api.get(`/api/request/${requestId}`);
         if (response.data.success) {
-          setRequestDetails(response.data.data); // Set request details
+          setRequestDetails(response.data.data);
         } else {
           setError(response.data.message || "Failed to fetch request details");
         }
       } catch (error) {
-        if (error.response && error.response.status === 403) {
-          setError("You are not authorized to view this request");
-        } else {
-          setError("An error occurred while fetching the request details");
-        }
+        setError("An error occurred while fetching the request details");
       }
     };
 
     const fetchUserToken = async () => {
       try {
         const response = await api.post(`${API_URL}/generate-user-token`, {
-          id: user.id, // Use the user's ID from the auth context
+          id: user.id,
         });
         setUserToken(response.data.token);
-        
       } catch (error) {
         console.error("Failed to fetch user token:", error);
       }
     };
 
-    // Fetch both request details and user token
     Promise.all([fetchRequestDetails(), fetchUserToken()]).finally(() => {
       setLoading(false);
     });
@@ -86,38 +80,26 @@ const RequestDetailsPage = () => {
     );
   }
 
+  const { channelId } = requestDetails;
+
   return (
     <Box className={styles.pageContainer}>
       {/* Header */}
       <Box className={styles.header}>
         <h1 className={styles.title}>קריאה {requestId}</h1>
-        <Button
-          variant="contained"
-          color="error"
-          className={styles.cancelButton}
-          onClick={() => console.log("Cancel request logic here")}
-        >
-          ביטול
-        </Button>
       </Box>
 
       {/* Request Details */}
       <Box className={styles.details}>
         <p>
-          <strong>בתחום:</strong> {requestDetails.field || "Unknown Field"}
+          <strong>City:</strong> {requestDetails.city || "Unknown City"}
         </p>
         <p>
-          <strong>בנושא:</strong> {requestDetails.subject || "Unknown Subject"}
-        </p>
-        <p>
-          <strong>מיקום:</strong> {requestDetails.city || "Unknown Location"}
-        </p>
-        <p>
-          <strong>מועד העבודה:</strong>{" "}
+          <strong>Date:</strong>{" "}
           {new Date(requestDetails.date).toLocaleString() || "Unknown Date"}
         </p>
         <p>
-          <strong>הערת לקוח:</strong> {requestDetails.comment || "No Notes"}
+          <strong>Comment:</strong> {requestDetails.comment || "No Notes"}
         </p>
       </Box>
 
@@ -128,24 +110,14 @@ const RequestDetailsPage = () => {
           {userToken ? (
             <StreamChatComponent
               apiKey="v5t2erh2ur73" // Replace with your Stream API key
-              userToken={userToken} // Use the fetched user token
-              channelId={requestId} // Unique channel for each request
+              userToken={userToken}
+              channelId={requestId}
+              userID={user.id}
             />
           ) : (
             <p>Loading chat...</p>
           )}
         </div>
-      </Box>
-
-      {/* Footer */}
-      <Box className={styles.footer}>
-        <Button
-          variant="contained"
-          className={styles.backButton}
-          onClick={() => navigate("/dashboard")}
-        >
-          חזור
-        </Button>
       </Box>
     </Box>
   );

@@ -1,7 +1,6 @@
 const axios = require('axios');
 const OpenAI = require('openai');
 const JobType = require('../models/jobTypeModel'); // Import your Sequelize model
-const { StreamChat } = require("stream-chat");
 const PhoneVerification = require('../models/PhoneVerification');
 const {grantClientAuth} = require('./authController');
 const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
@@ -9,6 +8,7 @@ const { Client, ClientRequest, Request } = require('../models/index'); // Adjust
 
 
 
+const { StreamChat } = require("stream-chat");
 
 // Stream Chat credentials
 const STREAM_API_KEY = "v5t2erh2ur73";
@@ -26,16 +26,20 @@ const client = new OpenAI({
 exports.generateUserToken = async (req, res) => {
     const serverClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
     const { id } = req.body;
-    // Validate the request
+
     if (!id) {
         return res.status(400).json({ error: "User ID is required" });
     }
 
     try {
-        // Generate a token for the provided user ID
+        // Upsert the user with a specific role
+        await serverClient.upsertUser({
+            id, 
+            role: 'admin', // Assign a role with sufficient permissions
+        });
+
         const token = serverClient.createToken(id);
 
-        // Respond with the token
         res.status(200).json({ success: true, token });
     } catch (error) {
         console.error("Error generating token:", error);
@@ -136,20 +140,50 @@ exports.saveClient = async (req, res) => {
   };
   
   
-  
-
   exports.submitClientRequest = async (req, res) => {
-    const { clientId, jobRequiredId, city, date, comment, profId } = req.body;
+    const { clientId, jobRequiredId, city, date, comment } = req.body;
+    const streamClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
   
     try {
+      console.log("Validating client existence...");
       // Validate client existence
       const client = await Client.findByPk(clientId);
       if (!client) {
-        return res.status(404).json({ success: false, message: 'Client not found' });
+        console.log("Client not found");
+        return res.status(404).json({ success: false, message: "Client not found" });
+      }
+      console.log("Client validated:", clientId);
+  
+      console.log("Checking if client exists in Stream...");
+      // Ensure the client exists in Stream
+      const streamClientExists = await streamClient.queryUsers({ id: clientId });
+      if (streamClientExists.users.length === 0) {
+        console.log("Client not found in Stream, creating user...");
+        await streamClient.upsertUser({
+          id: clientId,
+          name: `${client.fname} ${client.lname}`, // Adjust based on client model
+        });
+        console.log("Client created in Stream:", clientId);
+      } else {
+        console.log("Client already exists in Stream:", clientId);
       }
   
-    
+      console.log("Checking if Admin exists in Stream...");
+      // Ensure Admin exists in Stream
+      const adminExists = await streamClient.queryUsers({ id: 'Admin' });
+      if (adminExists.users.length === 0) {
+        console.log("Admin not found in Stream, creating user...");
+        await streamClient.upsertUser({
+          id: 'Admin',
+          name: 'Admin',
+          role: 'admin',
+        });
+        console.log("Admin created in Stream");
+      } else {
+        console.log("Admin already exists in Stream");
+      }
   
+      console.log("Creating new request...");
       // Create a new request
       const request = await Request.create({
         jobRequiredId, // Use jobRequiredId to reference the JobType table
@@ -157,28 +191,47 @@ exports.saveClient = async (req, res) => {
         date,
         comment,
       });
+      console.log("Request created:", request.id);
   
+      console.log("Linking request to client...");
       // Link the request to the client in the ClientRequest table
-      const clientRequest = await ClientRequest.create({
+      await ClientRequest.create({
         clientId,
         requestId: request.id,
-        profId, // Optional, depending on your requirements
       });
+      console.log("Request linked to client:", clientId, "Request ID:", request.id);
+  
+      console.log("Creating chat channel for the request...");
+      // Create a chat channel for the request
+      const channelId = `request_${request.id}`;
+      const members = [clientId, 'Admin']; // Add the client and the Admin user
+      const channel = streamClient.channel("messaging", channelId, {
+        name: `Request ${request.id}`,
+        members,
+        created_by_id: 'Admin', // Set Admin as the channel creator
+      });
+  
+      await channel.create();
+      console.log("Chat channel created:", channelId);
   
       // Respond with success
       res.status(201).json({
         success: true,
         data: {
           requestId: request.id,
-          clientRequestId: clientRequest.id,
+          channelId: channelId,
         },
-        message: 'Client request submitted successfully',
+        message: "Client request and chat channel created successfully",
       });
     } catch (error) {
-      console.error('Error submitting client request:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
+      console.error("Error submitting client request:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
     }
   };
+  
+  
+  
+  
 
   exports.getRequestDetails = async (req, res) => {
     const { requestId } = req.params;

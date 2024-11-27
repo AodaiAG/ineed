@@ -60,10 +60,7 @@ const SMSVerification = () => {
         });
   
         if (response.data.success) {
-          if (response.data.data.registered) {
-            // If client is registered, navigate to dashboard
-            navigate('/dfdfd');
-          } else {
+         
             // If client is not registered, save client and create request
             try {
               // Step 1: Save the client
@@ -102,7 +99,7 @@ const SMSVerification = () => {
               console.error("Error saving client or submitting request:", error);
               alert(translation.generalErrorMessage || "An error occurred. Please try again.");
             }
-          }
+          
         } else {
           // Trigger error animation if the verification fails
           triggerErrorAnimation();
