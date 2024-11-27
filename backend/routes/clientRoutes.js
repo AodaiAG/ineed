@@ -17,7 +17,7 @@ const {
 router.post('/save_client', saveClient);
 router.post('/submit_client_request', submitClientRequest);
 router.get('/my_requests', tokenMiddleware,getClientRequests);
-router.get('/request/:requestId', getRequestDetails);
+router.get('/request/:requestId',tokenMiddleware, getRequestDetails);
 router.delete('/request/:clientRequestId', deleteClientRequest);
 //
 router.get('/search', search);

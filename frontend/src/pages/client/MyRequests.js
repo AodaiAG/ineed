@@ -127,7 +127,7 @@ const MyRequests = () => {
                 <Button
                   variant="contained"
                   className={`${styles.button} ${styles.detailsButton}`}
-                  onClick={() => navigate(`/requests/${request.id}`)}
+                  onClick={() => navigate(`/request?id=${request.id}`)}
                 >
                   פרטי הקריאה
                 </Button>

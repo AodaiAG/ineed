@@ -180,26 +180,47 @@ exports.saveClient = async (req, res) => {
     }
   };
 
-exports.getRequestDetails = async (req, res) => {
+  exports.getRequestDetails = async (req, res) => {
     const { requestId } = req.params;
+    const clientId = req.user.id; // Assuming clientId is in the decoded JWT
 
     try {
-        // Fetch the request details
-        const request = await Request.findByPk(requestId);
+        // Fetch the request details via the ClientRequest model
+        const clientRequest = await ClientRequest.findOne({
+            where: { requestId },
+            include: [
+                {
+                    model: Request,
+                    as: 'request', // Alias for the association
+                    required: true, // Ensure the join only happens if a related Request exists
+                },
+            ],
+        });
 
-        if (!request) {
+        // Check if the request exists
+        if (!clientRequest) {
             return res.status(404).json({ success: false, message: 'Request not found' });
         }
 
+        // Ensure the logged-in user is the owner of the request
+        if (clientRequest.clientId !== clientId) {
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        // Extract raw request data
+        const requestData = clientRequest.request.get({ plain: true });
+
         res.status(200).json({
             success: true,
-            data: request,
+            data: requestData, // Return only the plain request data
         });
     } catch (error) {
         console.error('Error fetching request details:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+
 exports.deleteClientRequest = async (req, res) => {
     const { clientRequestId } = req.params;
 
