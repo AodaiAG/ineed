@@ -34,6 +34,7 @@ import BusinessCard from './pages/professionals/BusinessCard';
 import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; 
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
 import ExplainScreen from './pages/professionals/ExplainScreen'; 
+import RequestPage from './pages/professionals/RequestPage'; 
 
 
 
@@ -59,6 +60,7 @@ function App() {
                             <Route path="/profile/:id" element={<ProfilePage />} />
 
 
+
                             
 
                             {/* Professional Side Routes */}
@@ -70,6 +72,8 @@ function App() {
                             <Route path="/pro/edit-settings" element={<EditProfessionalSettings />} />
                             <Route path="/pro/expert-main" element={<ExpertMainPage />} />
                             <Route path="/pro/explain" element={<ExplainScreen />} />
+                            <Route path="pro/requests/new" element={<RequestPage />} />
+
                         </Routes>
                     
                 </LanguageProvider>

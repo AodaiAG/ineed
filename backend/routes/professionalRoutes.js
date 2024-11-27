@@ -11,9 +11,13 @@ const authenticateToken = require('../middleware/authenticateToken');
 
 const { checkIfRegistered,
     getAllLocations,
+    assignRequestToProfessional,
+    fetchNewRequests,
+    fetchProfessionalRequests,
     registerProfessional,
     getProfessionalById,updateProfessional ,uploadImage,generateVerificationCodeHandler
-    ,verifyCodeHandler,createReportMissingProfession,downloadVCardHandler
+    ,verifyCodeHandler,createReportMissingProfession,downloadVCardHandler,
+    
  } = require('../controllers/professionalController');
 
 router.post('/check-if-registered', checkIfRegistered); // check if the user registerd or not
@@ -26,6 +30,17 @@ router.post('/verify-code', verifyCodeHandler); // Verify the SMS verification c
 router.post('/upload-image', upload.single('image'), uploadImage);
 router.post('/report-missing-profession', createReportMissingProfession);
 router.get('/vcard/:id', downloadVCardHandler);
+
+//
+router.post('/assign-request', authenticateToken, assignRequestToProfessional);
+
+router.get('/my-requests', authenticateToken, fetchProfessionalRequests);
+
+router.get('/new-requests', authenticateToken, fetchNewRequests);
+
+
+
+
 
 
 

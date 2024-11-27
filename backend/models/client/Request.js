@@ -1,19 +1,20 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/db');
+const Professional = require('../professional');
+
+// Import JobType model (dynamic table name should be handled in initialization)
+const JobType = require('../jobTypeModel')
 
 const Request = sequelize.define('Request', {
     id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4, // Generate a unique ID
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
     },
-    domain: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    mainProfession: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    jobRequiredId: {
+        type: DataTypes.INTEGER,
+        allowNull: false, // Required field
+        
     },
     city: {
         type: DataTypes.STRING,
@@ -27,8 +28,20 @@ const Request = sequelize.define('Request', {
         type: DataTypes.TEXT,
         allowNull: true,
     },
+    status: {
+        type: DataTypes.ENUM('new', 'in-process', 'closed'),
+        defaultValue: 'new', // Default status is 'new'
+    },
+    professionalId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Professional, // Reference the Professional model
+            key: 'id', // The id field in Professional
+        },
+        allowNull: true, // Null if no professional has taken the request yet
+    },
 }, {
-    timestamps: true, // Adds createdAt and updatedAt fields
+    timestamps: true,
     tableName: 'Requests', // Explicit table name
 });
 

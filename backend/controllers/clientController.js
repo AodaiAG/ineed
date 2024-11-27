@@ -1,7 +1,6 @@
 const axios = require('axios');
 const OpenAI = require('openai');
 const JobType = require('../models/jobTypeModel'); // Import your Sequelize model
-const RequestModel = require('../models/requestModel'); // Import your Sequelize model
 const { StreamChat } = require("stream-chat");
 const Client = require('../models/client/Client'); // Import your Sequelize model
 const PhoneVerification = require('../models/PhoneVerification');
@@ -69,88 +68,117 @@ exports.getGeocode = async (req, res) => {
 
 exports.saveClient = async (req, res) => {
     const { phoneNumber, fullName } = req.body;
-
+  
     try {
-        // Create the client
-        const client = await Client.create({ phoneNumber, fullName });
-
-        // Generate authentication tokens and set them in headers
-        await grantClientAuth(client, res);
-
-        // Return success status and client ID
-        res.status(201).json({
-            success: true,
-            clientId: client.id, // Include the client ID in the response
+      // Check if the client already exists based on the phone number
+      let client = await Client.findOne({ where: { phoneNumber } });
+  
+      if (client) {
+        // Client exists, return the ID
+        console.log('Client already exists:', client.id);
+        return res.status(200).json({
+          success: true,
+          clientId: client.id,
+          message: 'Client already exists',
         });
+      }
+  
+      // Client does not exist, create a new one
+      client = await Client.create({ phoneNumber, fullName });
+  
+      // Generate authentication tokens and set them in headers
+      await grantClientAuth(client, res);
+  
+      // Return success status and client ID
+      res.status(201).json({
+        success: true,
+        clientId: client.id, // Include the client ID in the response
+        message: 'Client created successfully',
+      });
     } catch (error) {
-        console.error('Error saving client:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+      console.error('Error saving client:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
-};
+  };
+  
 
 exports.getClientRequests = async (req, res) => {
     const { clientId } = req.params;
-
+  
     try {
-        // Fetch client requests along with request details
-        const clientRequests = await ClientRequest.findAll({
-            where: { clientId },
+      // Fetch client requests along with request details and job type information
+      const clientRequests = await ClientRequest.findAll({
+        where: { clientId },
+        include: [
+          {
+            model: Request,
+            attributes: ['id', 'jobRequiredId', 'city', 'date', 'comment'],
             include: [
-                {
-                    model: Request,
-                    attributes: ['id', 'domain', 'mainProfession', 'city', 'date', 'comment'],
-                },
+              {
+                model: JobType,
+                as: 'jobType', // Alias for easier reference
+                attributes: ['domain', 'main', 'sub'], // Include these fields
+              },
             ],
-        });
-
-        if (!clientRequests.length) {
-            return res.status(404).json({ success: false, message: 'No requests found for this client' });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: clientRequests,
-        });
+          },
+        ],
+      });
+  
+      if (!clientRequests.length) {
+        return res.status(404).json({ success: false, message: 'No requests found for this client' });
+      }
+  
+      res.status(200).json({
+        success: true,
+        data: clientRequests,
+      });
     } catch (error) {
-        console.error('Error fetching client requests:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+      console.error('Error fetching client requests:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
-};
+  };
 
-exports.submitClientRequest = async (req, res) => {
-    const { clientId, domain, mainProfession, city, date, comment, profId } = req.body;
-
+  exports.submitClientRequest = async (req, res) => {
+    const { clientId, jobRequiredId, city, date, comment, profId } = req.body;
+  
     try {
-        // Validate client existence
-        const client = await Client.findByPk(clientId);
-        if (!client) {
-            return res.status(404).json({ success: false, message: 'Client not found' });
-        }
-
-        // Create a new request
-        const request = await Request.create({ domain, mainProfession, city, date, comment });
-
-        // Link the request to the client in the ClientRequest table
-        const clientRequest = await ClientRequest.create({
-            clientId,
-            requestId: request.id,
-            profId, // Optional, depending on your requirements
-        });
-
-        // Respond with success
-        res.status(201).json({
-            success: true,
-            data: {
-                requestId: request.id,
-                clientRequestId: clientRequest.id,
-            },
-            message: 'Client request submitted successfully',
-        });
+      // Validate client existence
+      const client = await Client.findByPk(clientId);
+      if (!client) {
+        return res.status(404).json({ success: false, message: 'Client not found' });
+      }
+  
+    
+  
+      // Create a new request
+      const request = await Request.create({
+        jobRequiredId, // Use jobRequiredId to reference the JobType table
+        city,
+        date,
+        comment,
+      });
+  
+      // Link the request to the client in the ClientRequest table
+      const clientRequest = await ClientRequest.create({
+        clientId,
+        requestId: request.id,
+        profId, // Optional, depending on your requirements
+      });
+  
+      // Respond with success
+      res.status(201).json({
+        success: true,
+        data: {
+          requestId: request.id,
+          clientRequestId: clientRequest.id,
+        },
+        message: 'Client request submitted successfully',
+      });
     } catch (error) {
-        console.error('Error submitting client request:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+      console.error('Error submitting client request:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
     }
-};
+  };
 
 exports.getRequestDetails = async (req, res) => {
     const { requestId } = req.params;

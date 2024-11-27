@@ -78,8 +78,7 @@ const SMSVerification = () => {
                 // Step 2: Create the request
                 const requestDetails = {
                   clientId,
-                  domain: sessionStorage.getItem("domain"),
-                  mainProfession: sessionStorage.getItem("mainProfession"),
+                  jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id, // Use jobRequiredId from sessionStorage
                   city: sessionStorage.getItem("city"),
                   date: sessionStorage.getItem("date"),
                   comment: sessionStorage.getItem("comment"),
@@ -116,6 +115,7 @@ const SMSVerification = () => {
       triggerErrorAnimation();
     }
   };
+  
   
 
   return (

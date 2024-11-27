@@ -5,6 +5,10 @@ const Location = require('../models/Location'); // Import the Location model
 const ReportMissingProfession = require('../models/ReportMissingProfession');
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
 const {grantProfAuth} = require('./authController');
+const { Op } = require('sequelize');
+
+const Request = require('../models/client/Request');
+
 
 
 const multer = require('multer');
@@ -271,6 +275,7 @@ const updateProfessional = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
 const sendSms = async (phoneNumber, message) => {
     try {
         const url = `https://sms.innovio.co.il/sms.php?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
@@ -406,13 +411,91 @@ END:VCARD
 
 
 
+const fetchNewRequests = async (req, res) => {
+    try {
+        console.log("Step 1: Entered fetchNewRequests function"); // Check if the function is called
+
+        const professionalId = req.professional.profId; // Extract from the decoded JWT
+        console.log("Step 2: Extracted professionalId from req.professional:", professionalId);
+
+        const professional = await Professional.findByPk(professionalId);
+        console.log("Step 3: Fetched professional from the database:", professional);
+
+        if (!professional) {
+            console.log("Step 4: Professional not found for ID:", professionalId);
+            return res.status(404).json({ success: false, message: 'Professional not found' });
+        }
+
+        console.log("Step 5: Professional found. Professions array:", professional.professions);
+
+        // Fetch matching requests
+        const matchingRequests = await Request.findAll({
+            where: {
+              jobRequiredId: { [Op.in]: professional.professions }, // Check against profession IDs
+              professionalId: null, // Only unclaimed requests
+              status: 'new', // Only new requests
+            },
+          });
+
+        console.log("Step 6: Matching requests fetched from the database:", matchingRequests);
+
+        res.status(200).json({ success: true, data: matchingRequests });
+    } catch (error) {
+        console.error("Step 7: Error occurred in fetchNewRequests:", error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+const assignRequestToProfessional = async (req, res) => {
+    const { requestId } = req.body;
+    const professionalId = req.professional.profId; // Extract from the decoded JWT
+
+    try {
+        const request = await Request.findByPk(requestId);
+
+        if (!request || request.status !== 'new') {
+            return res.status(400).json({ success: false, message: 'Request is not available' });
+        }
+
+        await request.update({ professionalId, status: 'in-process' });
+
+        res.status(200).json({ success: true, message: 'Request assigned successfully', data: request });
+    } catch (error) {
+        console.error('Error assigning request:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+const fetchProfessionalRequests = async (req, res) => {
+    const professionalId = req.professional.profId; // Extract from the decoded JWT
+
+    try {
+        const requests = await Request.findAll({
+            where: {
+                professionalId,
+            },
+        });
+
+        res.status(200).json({ success: true, data: requests });
+    } catch (error) {
+        console.error('Error fetching professional requests:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
 
 
 
 module.exports = {
+    fetchNewRequests,
     checkIfRegistered,
+    assignRequestToProfessional,
     getAllLocations,
     downloadVCardHandler,
+    fetchProfessionalRequests,
+    
+    assignRequestToProfessional,
+    
     registerProfessional,getProfessionalById,updateProfessional,uploadImage
     ,generateVerificationCodeHandler
     ,verifyCodeHandler,createReportMissingProfession

@@ -22,11 +22,11 @@ router.delete('/request/:clientRequestId', deleteClientRequest);
 router.get('/search', search);
 router.get('/geocode', getGeocode);
 router.get('/autocomplete',getAutocomplete);
-router.get('/:lang/main-professions', getMainProfessions);
+
 router.post("/generate-user-token", generateUserToken);
 router.post('/verify-code', verifyCodeHandler); // Verify the SMS verification code
 
-
+router.get('/:lang/main-professions', getMainProfessions);
 router.get('/:lang/domains', getDomains); // Add the route to link the getDomains function
 
 // Route to fetch sub-professions with language and main category parameters

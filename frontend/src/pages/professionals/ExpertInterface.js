@@ -1,30 +1,24 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '../../styles/ExpertInterface.module.css';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
 import { useLanguage } from '../../contexts/LanguageContext';
-import api from '../../utils/api';
-import { useAuth } from '../../contexts/AuthContext';  // Import useAuth hook
+import { IconButton } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 import useAuthCheck from '../../hooks/useAuthCheck';
-
 
 function ExpertInterface() {
     const navigate = useNavigate();
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
-    const [sendDisabled, setSendDisabled] = useState(false);
-    const { isAuthenticated, loading ,user} = useAuthCheck();
+    const { isAuthenticated, loading, user } = useAuthCheck();
 
     useEffect(() => {
-        if (!loading && !isAuthenticated)
-             {
+        if (!loading && !isAuthenticated) {
             navigate('/pro/enter'); // Redirect to login if not authenticated
-            }
-        
+        }
     }, [loading, isAuthenticated, navigate]);
 
-
- 
     // Initialize styles
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -34,40 +28,19 @@ function ExpertInterface() {
             document.body.classList.remove(styles.expertInterface_body);
         };
     }, []);
-     // Optional: Show a loading indicator while verifying
-   
-     
-     
-    // Function to open WhatsApp with a predefined message
-    const handleWhatsAppClick = () => {
-        const phoneNumber = '0504564232';
-        const internationalPhoneNumber = `+972${phoneNumber}`;
-        const message = encodeURIComponent(translation.customerSupportMessage || "Hello, I'm reaching out regarding your services.");
-        window.location.href = `https://wa.me/${internationalPhoneNumber}?text=${message}`;
-    };
 
-    // Toggle the language selection popup
     const handleLanguageIconClick = () => {
         setIsLanguagePopupOpen((prev) => !prev);
     };
 
-    // Navigate to settings page
-    const handleMySettingsClick = () => {
+    const handleSettingsClick = () => {
         navigate('/pro/edit-settings');
     };
 
-    // Redirect to the business card page
-    const handleBusinessCardClick = () => {
-        const id = user.profId;
-        if (!id) {
-            alert(translation.errorOccurredMessage);
-            return;
-        }
-        // Navigate to the business card page with the professional's ID
-        navigate(`/pro/bs-card?id=${id}`);
+    const handleNavigateToRequests = (path) => {
+        navigate(`/pro/requests/${path}`);
     };
 
-    
     if (loading || !translation) {
         return (
             <div className={styles['spinner-overlay']}>
@@ -75,56 +48,79 @@ function ExpertInterface() {
             </div>
         );
     }
-    
 
     return (
         <div className={styles.expertInterface_container}>
-            {/* Header Container for Language Switch, Title, and Subtitle */}
+            {/* Header Container */}
             <div className={styles.headerContainer}>
                 <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
                     <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
                 </div>
+                <IconButton
+                    className={styles.settingsIcon}
+                    onClick={handleSettingsClick}
+                    style={{ position: 'absolute', top: '10px', left: '20px' }} // Move settings icon to the top-left
+                >
+                    <SettingsIcon />
+                </IconButton>
                 <div className={styles.titleContainer}>
                     <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
                     <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
                 </div>
             </div>
-    
+
             {/* Language Selection Popup */}
-            {isLanguagePopupOpen && <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)}            backgroundColor="#black" // Blue background for the client side
-            />}
-            
+            {isLanguagePopupOpen && (
+                <LanguageSelectionPopup
+                    onClose={() => setIsLanguagePopupOpen(false)}
+                    backgroundColor="black"
+                />
+            )}
+
             <div className={styles.spacer}></div>
-            
+
             {/* Image Section */}
             <div className={styles.expertInterface_imageContainer}>
-                <img src="/images/Prof/worker2.png" alt={translation.workerImageAlt} className={styles.expertInterface_workerImage} />
-                {/* New Text Under Worker Image with clickable "כאן" */}
+                <img
+                    src="/images/Prof/worker2.png"
+                    alt={translation.workerImageAlt}
+                    className={styles.expertInterface_workerImage}
+                />
                 <p className={styles.expertInterface_contactPrompt}>
                     {translation.inquiryMessage}
-                    <span className={styles.clickableText} onClick={handleWhatsAppClick}> {translation.clickHere}</span>
+                    <span className={styles.clickableText} onClick={() => navigate('/pro/contact')}>
+                        {translation.clickHere}
+                    </span>
                 </p>
             </div>
-    
+
             <div className={styles.spacer}></div>
-            
-            {/* Business Card Button */}
+
+            {/* Request Buttons */}
             <div className={styles.footerContainer}>
                 <button
                     className={styles.expertInterface_businessCardButton}
-                    onClick={handleBusinessCardClick}
-                    disabled={sendDisabled}
+                    onClick={() => handleNavigateToRequests('new')}
                 >
-                        {translation.myBusinessCard}
-
+                    קריאות חדשות
                 </button>
-                
-                {/* Settings Button */}
                 <button
-                    className={styles.expertInterface_settingsButton}
-                    onClick={handleMySettingsClick}
+                    className={styles.expertInterface_businessCardButton}
+                    onClick={() => handleNavigateToRequests('in-process')}
                 >
-                    {translation.mySettingsButtonLabel}
+                    קריאות בתהליך
+                </button>
+                <button
+                    className={styles.expertInterface_businessCardButton}
+                    onClick={() => handleNavigateToRequests('mine')}
+                >
+                    הקריאות שלי
+                </button>
+                <button
+                    className={styles.expertInterface_businessCardButton}
+                    onClick={() => handleNavigateToRequests('closed')}
+                >
+                    קריאות סגורות
                 </button>
             </div>
         </div>

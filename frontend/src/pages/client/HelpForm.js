@@ -17,7 +17,14 @@ import axios from "axios";
 const HelpForm = () => {
   const navigate = useNavigate();
   const { translation } = useLanguage();
+  const [subProfessions, setSubProfessions] = useState([]); // Ensure it starts as an empty array
+  const [selectedSubProfession, setSelectedSubProfession] = useState(() => {
+    const savedSubProfession = JSON.parse(sessionStorage.getItem("subProfession"));
+    return savedSubProfession || null;
+  });
+  
 
+  
   const [domain, setDomain] = useState(
     JSON.parse(sessionStorage.getItem("domain")) || null
   );
@@ -78,6 +85,28 @@ const HelpForm = () => {
     }
   }, [domain, selectedLanguage]);
 
+useEffect(() => {
+  if (mainProfession) {
+    const fetchSubProfessions = async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL}/${selectedLanguage}/sub-professions/${mainProfession.main}`
+        );
+        setSubProfessions(Array.isArray(response.data) ? response.data : []); // Ensure it's an array
+      } catch (error) {
+        console.error("Error fetching sub professions:", error);
+        setSubProfessions([]); // Set to an empty array in case of an error
+      }
+    };
+
+    fetchSubProfessions();
+  } else {
+    setSubProfessions([]); // Clear if no main profession is selected
+  }
+}, [mainProfession, selectedLanguage]);
+
+  
+
   if (!translation) 
     {
     return (
@@ -98,6 +127,8 @@ const HelpForm = () => {
     sessionStorage.setItem("mainProfession", JSON.stringify(mainProfession));
     sessionStorage.setItem("city", city);
     sessionStorage.setItem("date", date);
+    sessionStorage.setItem("subProfession", JSON.stringify(selectedSubProfession)); // Save selected sub-profession
+
 
     // Navigate to /about
     navigate("/about");
@@ -182,6 +213,33 @@ const HelpForm = () => {
           )}
         />
       </Box>
+      <Box className="help-form-field">
+        
+      <label>{translation.helpForm.selectSubProfession || "Select Sub-Profession"}</label>
+  <Autocomplete
+    options={subProfessions} // Ensure this is an array
+    getOptionLabel={(option) => option.sub || ""}
+    isOptionEqualToValue={(option, value) => option.id === value.id} // Match by unique ID
+    value={selectedSubProfession} // Track the selected value
+    onChange={(event, newValue) => setSelectedSubProfession(newValue)} // Update state on selection
+    openOnFocus
+    disabled={!mainProfession} // Disable until a mainProfession is selected
+    renderInput={(params) => (
+      <TextField
+        {...params}
+        placeholder={
+          !mainProfession
+            ? translation.helpForm.selectProfession
+            : translation.helpForm.selectSubProfession
+        }
+        fullWidth
+        className="help-form-input"
+      />
+    )}
+  />
+
+</Box>
+
 
       <Box className="help-form-field">
         <label>{translation.helpForm.selectCity}</label>

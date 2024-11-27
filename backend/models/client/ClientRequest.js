@@ -18,7 +18,7 @@ const ClientRequest = sequelize.define('ClientRequest', {
         allowNull: false,
     },
     requestId: {
-        type: DataTypes.UUID,
+        type: DataTypes.INTEGER,
         references: {
             model: Request,
             key: 'id',
