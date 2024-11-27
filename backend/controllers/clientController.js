@@ -2,11 +2,10 @@ const axios = require('axios');
 const OpenAI = require('openai');
 const JobType = require('../models/jobTypeModel'); // Import your Sequelize model
 const { StreamChat } = require("stream-chat");
-const Client = require('../models/client/Client'); // Import your Sequelize model
 const PhoneVerification = require('../models/PhoneVerification');
-const ClientRequest = require('../models/client/ClientRequest'); // Import your Sequelize model
-const Request = require('../models/client/Request'); // Import your Sequelize model
 const {grantClientAuth} = require('./authController');
+const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
+
 
 
 
@@ -102,25 +101,20 @@ exports.saveClient = async (req, res) => {
   };
   
 
-exports.getClientRequests = async (req, res) => {
-    const { clientId } = req.params;
+  exports.getClientRequests = async (req, res) => {
+    const clientId = req.user.id; // Extract client ID from the decoded JWT
   
     try {
-      // Fetch client requests along with request details and job type information
+      // Fetch client requests along with request details
       const clientRequests = await ClientRequest.findAll({
-        where: { clientId },
+        where: { clientId }, // Filter by clientId
+        attributes: [], // Exclude all fields from ClientRequest
         include: [
           {
             model: Request,
-            attributes: ['id', 'jobRequiredId', 'city', 'date', 'comment'],
-            include: [
-              {
-                model: JobType,
-                as: 'jobType', // Alias for easier reference
-                attributes: ['domain', 'main', 'sub'], // Include these fields
-              },
-            ],
-          },
+            as: 'request', // Specify the alias defined in the association
+            attributes: { exclude: [] }, // Include all fields from Request
+        },
         ],
       });
   
@@ -128,15 +122,21 @@ exports.getClientRequests = async (req, res) => {
         return res.status(404).json({ success: false, message: 'No requests found for this client' });
       }
   
+      // Extract the request data only
+      const serializedRequests = clientRequests.map((req) => req.request.toJSON());
+  
       res.status(200).json({
         success: true,
-        data: clientRequests,
+        data: serializedRequests, // Send only the request details
       });
     } catch (error) {
       console.error('Error fetching client requests:', error);
       res.status(500).json({ success: false, message: 'Internal server error' });
     }
   };
+  
+  
+  
 
   exports.submitClientRequest = async (req, res) => {
     const { clientId, jobRequiredId, city, date, comment, profId } = req.body;

@@ -25,7 +25,6 @@ const authenticateToken = async (req, res, next) => {
                         const newAccessToken = await refreshAccessToken(refreshToken);
 
                         if (newAccessToken) {
-                            console.log("New Access Token generated:", newAccessToken);
 
                             // Send the new access token to the client in response headers
                             res.setHeader('x-access-token', newAccessToken);

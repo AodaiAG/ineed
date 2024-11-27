@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const tokenMiddleware = require('../middleware/AuthenticateClientToken');
 
 const {
     getGeocode,
@@ -15,7 +16,7 @@ const {
 ////
 router.post('/save_client', saveClient);
 router.post('/submit_client_request', submitClientRequest);
-router.get('/:clientId/requests', getClientRequests);
+router.get('/my_requests', tokenMiddleware,getClientRequests);
 router.get('/request/:requestId', getRequestDetails);
 router.delete('/request/:clientRequestId', deleteClientRequest);
 //

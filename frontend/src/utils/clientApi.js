@@ -14,6 +14,7 @@ clientApi.interceptors.request.use(
         const refreshToken = localStorage.getItem('clientRefreshToken');
 
         if (accessToken) {
+            
             config.headers['x-access-token'] = accessToken;
         }
         if (refreshToken) {

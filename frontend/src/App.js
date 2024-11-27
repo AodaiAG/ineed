@@ -55,7 +55,7 @@ function App() {
                             <Route path="/sms" element={<SMSVerificationC />} />
                             <Route path="/request" element={<RequestDetailsPage />} />
                             <Route path="/dashboard" element={<ClientDashboard />} />
-                            <Route path="/my-req" element={<MyRequests />} />
+                            <Route path="/dashboard/my-requests" element={<MyRequests />} />
                             <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
                             <Route path="/profile/:id" element={<ProfilePage />} />
 

@@ -27,6 +27,10 @@ const Dashboard = () => {
     }
 }, [loading, isAuthenticated, navigate]);
 
+const handleNavigateToMyRequests = () => {
+  navigate('/dashboard/my-requests'); // Navigate to the "My Requests" page
+};
+
 
 if (loading || !translation) 
     {
@@ -83,6 +87,7 @@ if (loading || !translation)
         <Button
           variant="contained"
           className={`${styles.clientDButton} ${styles.clientDMyRequestsButton}`}
+          onClick={handleNavigateToMyRequests}
           sx={{
             borderRadius: "14px", // Apply border-radius
             fontSize: "1.6rem", // Medium font size

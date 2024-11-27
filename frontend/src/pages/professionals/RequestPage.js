@@ -21,7 +21,7 @@ function RequestPage() {
                 if (response.data.success) {
                     setRequests(response.data.data); // Set fetched requests
                 } else {
-                    console.log(response.data.data)
+                   
 
                     console.error('Failed to fetch requests');
                 }
@@ -50,7 +50,6 @@ function RequestPage() {
                     prevRequests.filter((request) => request.id !== requestId)
                 ); // Remove claimed request from the list
             } else {
-                console.log(response.data)
                 alert(translation.requestClaimFailedMessage || 'Failed to claim request.');
             }
         } catch (error) {
@@ -81,7 +80,7 @@ function RequestPage() {
                     {requests.map((request) => (
                         <ListItem key={request.id} className={styles.requestItem}>
                             <ListItemText
-                                primary={`${translation.clientName || 'לקוח'}: ${request.clientName}`}
+                                primary={`${translation.clientName || 'סטאטוס'}: ${request.status}`}
                                 secondary={`${translation.dateLabel || 'תאריך'}: ${request.date} | ${translation.requestNumber || 'מספר קריאה'}: ${request.jobRequiredId}`}
                                 />
                             <Button

@@ -15,7 +15,7 @@ const authenticateClientToken = async (req, res, next) => {
         try {
             // Attempt to verify the current access token
             const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
-            req.professional = decoded; // Attach decoded data to request
+            req.user = decoded; // Attach decoded data to request
             next(); // Proceed to the next middleware
         } catch (error) {
             if (error.name === 'TokenExpiredError' || !token) {
@@ -28,7 +28,6 @@ const authenticateClientToken = async (req, res, next) => {
                         const newAccessToken = await refreshClientAccessToken(refreshToken);
 
                         if (newAccessToken) {
-                            console.log("New Access Token generated:", newAccessToken);
 
                             // Send the new access token to the client in response headers
                             res.setHeader('x-access-token', newAccessToken);
@@ -36,7 +35,7 @@ const authenticateClientToken = async (req, res, next) => {
                             
                             // Re-attempt verification with the new access token
                             const decoded = jwt.verify(newAccessToken, ACCESS_TOKEN_SECRET);
-                            req.professional = decoded; // Attach decoded data to req
+                            req.user = decoded; // Attach decoded data to req
                             next(); // Proceed to the next middleware
                         } else {
                             console.warn("Refresh token found but unable to generate new access token.");

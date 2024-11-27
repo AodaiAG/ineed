@@ -46,8 +46,8 @@ const refreshClientAccessToken = async (refreshToken) => {
         // Verify the refresh token itself
         const decoded = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
         
-        const { clientId } = decoded;
-        const newAccessToken = jwt.sign({ clientId }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        const { id } = decoded;
+        const newAccessToken = jwt.sign({ id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
         
         return newAccessToken; // Return the new access token
     } catch (error) {
@@ -58,8 +58,8 @@ const refreshClientAccessToken = async (refreshToken) => {
 
 
 const grantClientAuth = async (client, res) => {
-    const accessToken = jwt.sign({ clientId: client.id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-    const refreshToken = jwt.sign({ clientId: client.id }, REFRESH_TOKEN_SECRET, { expiresIn: '90d' });
+    const accessToken = jwt.sign({ id: client.id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+    const refreshToken = jwt.sign({ id: client.id }, REFRESH_TOKEN_SECRET, { expiresIn: '90d' });
 
     await RefreshTokenClient.create({
         token: refreshToken,
