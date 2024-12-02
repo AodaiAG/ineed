@@ -135,10 +135,12 @@ const ProfessionalRequestDetailsPage = () => {
         <div className={styles.chatContainer}>
           {userToken ? (
             <StreamChatComponent
-              apiKey="v5t2erh2ur73" // Replace with your Stream API key
+              apiKey="4kp4vrvuedgh" // Replace with your Stream API key
               userToken={userToken} // Use the fetched chat token
               channelId={`request_${requestId}`} // Use the channel ID
               userID={String(user.profId)}
+              userRole="prof" // Specify the role as 'prof' for professionals
+
             />
           ) : (
             <Typography>Loading chat...</Typography>

@@ -1,0 +1,131 @@
+/* RequestDetailsPage.module.css */
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #1a73e8;
+  border-radius: 8px;
+  color: white;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.cancelButton {
+  background-color: #e57373;
+  color: white;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.details > p,
+.details > h6 {
+  margin: 8px 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.chatSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chatTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.chatContainer {
+  width: 100%;
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 10px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background-color: #1a73e8;
+  border-radius: 8px;
+}
+
+.backButton {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #1a73e8;
+  border-radius: 8px;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.loadingContainer,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.loadingContainer {
+  color: #1a73e8;
+}
+
+.errorContainer {
+  color: #e57373;
+}
+
+.errorContainer h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+

@@ -11,8 +11,8 @@ const { Op } = require('sequelize');
 const { StreamChat } = require("stream-chat");
 
 // Stream Chat credentials
-const STREAM_API_KEY = "v5t2erh2ur73";
-const STREAM_API_SECRET = "a9tdds8favzc9jbk4wd53w4sgx5rd9fz47cxkcsgpw4f4cdtfc9ztcyrax5dhy77";
+const STREAM_API_KEY = "4kp4vrvuedgh";
+const STREAM_API_SECRET = "8jdxypjcathpjym7knuqmfhcgz8shckprkf7qg8r8bxhad27zqnqvbcmdpz4cxt3";
 
 
 const multer = require('multer');
@@ -413,36 +413,75 @@ END:VCARD
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
 const addProfessionalToChannel = async (req, res) => {
     const { userId, requestId } = req.body;
     console.log("Received professionalId:", userId);
     console.log("Received requestId:", requestId);
+
     const streamClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
     const channelId = `request_${requestId}`;
-  
+
     try {
-      // Check if the professional exists
-      const professionalExists = await streamClient.queryUsers({ id: userId });
-      if (professionalExists.users.length === 0) {
-        await streamClient.upsertUser({
-          id: userId,
-          name: `Professional ${userId}`, // Customize as needed
+        const professional = await Professional.findByPk(userId);
+        if (!professional) {
+            return res.status(404).json({ success: false, message: "Professional not found" });
+        }
+
+        const professionalData = {
+            id: userId,
+            name: `${professional.fname} ${professional.lname}#prof`,
+            image: professional.image || '/default-prof.png',
+        };
+
+        console.log("Upserting professional into Stream...");
+        const professionalExists = await streamClient.queryUsers({ id: userId });
+        if (professionalExists.users.length === 0) {
+            console.log("Professional does not exist in Stream, creating user...");
+            await streamClient.upsertUser({
+                ...professionalData,
+                role: 'prof',
+            });
+        } else {
+            console.log("Professional already exists in Stream, updating user...");
+            await streamClient.partialUpdateUser({
+                id: userId,
+                set: {
+                    ...professionalData,
+                    role: 'prof',
+                },
+            });
+        }
+
+        console.log("Professional successfully created/updated in Stream:", professionalData);
+
+        console.log("Adding professional to the channel...");
+        const channel = streamClient.channel("messaging", channelId);
+        await channel.addMembers([userId]);
+
+        console.log("Channel members updated:", channel.state.members);
+
+        res.status(200).json({
+            success: true,
+            message: `Professional ${userId} added to channel ${channelId}`,
         });
-      }
-  
-      // Add professional to the channel
-      const channel = streamClient.channel("messaging", channelId);
-      await channel.addMembers([userId]);
-  
-      res.status(200).json({
-        success: true,
-        message: `Professional ${userId} added to channel ${channelId}`,
-      });
     } catch (error) {
-      console.error("Error adding professional to channel:", error);
-      res.status(500).json({ success: false, message: "Internal server error" });
+        console.error("Error adding professional to channel:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
     }
-  };
+};
+
+
+
+
+
+
+
+
+
+
+
   
 
   const getProfessionalRequestDetails = async (req, res) => {
@@ -481,20 +520,16 @@ const addProfessionalToChannel = async (req, res) => {
 
 const fetchNewRequests = async (req, res) => {
     try {
-        console.log("Step 1: Entered fetchNewRequests function"); // Check if the function is called
 
         const professionalId = req.professional.profId; // Extract from the decoded JWT
-        console.log("Step 2: Extracted professionalId from req.professional:", professionalId);
 
         const professional = await Professional.findByPk(professionalId);
-        console.log("Step 3: Fetched professional from the database:", professional);
 
         if (!professional) {
             console.log("Step 4: Professional not found for ID:", professionalId);
             return res.status(404).json({ success: false, message: 'Professional not found' });
         }
 
-        console.log("Step 5: Professional found. Professions array:", professional.professions);
 
         // Fetch matching requests
         const matchingRequests = await Request.findAll({
@@ -505,7 +540,6 @@ const fetchNewRequests = async (req, res) => {
             },
           });
 
-        console.log("Step 6: Matching requests fetched from the database:", matchingRequests);
 
         res.status(200).json({ success: true, data: matchingRequests });
     } catch (error) {

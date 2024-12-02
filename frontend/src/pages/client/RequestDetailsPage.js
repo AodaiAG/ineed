@@ -45,6 +45,7 @@ const RequestDetailsPage = () => {
       try {
         const response = await api.post(`${API_URL}/generate-user-token`, {
           id: user.id,
+
         });
         setUserToken(response.data.token);
       } catch (error) {
@@ -109,10 +110,12 @@ const RequestDetailsPage = () => {
         <div className={styles.chatContainer}>
           {userToken ? (
             <StreamChatComponent
-              apiKey="v5t2erh2ur73" // Replace with your Stream API key
+              apiKey="4kp4vrvuedgh" // Replace with your Stream API key
               userToken={userToken}
-              channelId={requestId}
+              channelId={`request_${requestId}`} // Use the channel ID
               userID={user.id}
+              userRole="client" // Specify the role as 'client' for clients
+
             />
           ) : (
             <p>Loading chat...</p>
