@@ -460,7 +460,6 @@ const addProfessionalToChannel = async (req, res) => {
         const channel = streamClient.channel("messaging", channelId);
         await channel.addMembers([userId]);
 
-        console.log("Channel members updated:", channel.state.members);
 
         res.status(200).json({
             success: true,
@@ -474,8 +473,64 @@ const addProfessionalToChannel = async (req, res) => {
 
 
 
+const updateQuotation = async (req, res) => {
+    const { requestId, quotation } = req.body;
+    const professionalId = req.professional.profId; // Extract from the decoded JWT
 
+    console.log("Professional ID:", professionalId);
+    if (!requestId || quotation === undefined) {
+        return res
+            .status(400)
+            .json({ success: false, message: "Request ID and quotation are required." });
+    }
 
+    try {
+        const request = await Request.findByPk(requestId);
+
+        if (!request) {
+            return res.status(404).json({ success: false, message: "Request not found." });
+        }
+
+        console.log("Request before update:", request.quotations);
+
+        // Parse or initialize the quotations array
+        const quotations = request.quotations || [];
+
+        // Find if the professional already has a quotation
+        const existingQuotationIndex = quotations.findIndex(
+            (q) => q.professionalId === professionalId
+        );
+
+        if (existingQuotationIndex !== -1) {
+            // Update the existing quotation
+            quotations[existingQuotationIndex].price = quotation;
+        } else {
+            // Add a new quotation
+            quotations.push({ professionalId, price: quotation });
+        }
+
+        console.log("Quotations to be saved:", quotations);
+
+        // Update the quotations field in the database
+        request.quotations = quotations; // Set the field
+        request.changed('quotations', true); // Mark as changed
+        await request.save(); // Save the entire object
+
+        // Refresh the request to ensure the update persisted
+        const updatedRequest = await Request.findByPk(requestId);
+
+        console.log("Request after update:", updatedRequest.quotations);
+
+        res.json({
+            success: true,
+            message: "Quotation updated successfully.",
+            data: updatedRequest.quotations,
+        });
+    } catch (error) {
+        console.error("Error processing quotation:", error);
+        res.status(500).json({ success: false, message: "Server error." });
+    }
+};
 
 
 
@@ -484,8 +539,10 @@ const addProfessionalToChannel = async (req, res) => {
 
   
 
-  const getProfessionalRequestDetails = async (req, res) => {
+const getProfessionalRequestDetails = async (req, res) => {
     const { requestId } = req.params; // Extract request ID from params
+    const professionalId = req.professional.profId; // Extract from the decoded JWT
+
 
     try {
         // Fetch the request details
@@ -497,7 +554,16 @@ const addProfessionalToChannel = async (req, res) => {
                 .json({ success: false, message: "Request not found" });
         }
 
-        // Respond with the request details
+
+        // Extract the quotation for this professional
+        const professionalQuotation = request.quotations?.find(
+            (q) => String(q.professionalId) === String(professionalId) // Ensure type-safe comparison
+        );
+
+        const professionalPrice = professionalQuotation?.price || null; // Extract the price or null if no quotation
+
+
+        // Respond with the request details and the professional's price
         res.status(200).json({
             success: true,
             data: {
@@ -507,6 +573,7 @@ const addProfessionalToChannel = async (req, res) => {
                 date: request.date,
                 comment: request.comment,
                 status: request.status,
+                quotation: professionalPrice, // Only send the price
             },
         });
     } catch (error) {
@@ -517,6 +584,9 @@ const addProfessionalToChannel = async (req, res) => {
         });
     }
 };
+
+
+
 
 const fetchNewRequests = async (req, res) => {
     try {
@@ -595,7 +665,7 @@ module.exports = {
     getAllLocations,
     downloadVCardHandler,
     fetchProfessionalRequests,
-
+    updateQuotation,
     assignRequestToProfessional,
     addProfessionalToChannel,
     registerProfessional,getProfessionalById,updateProfessional,uploadImage

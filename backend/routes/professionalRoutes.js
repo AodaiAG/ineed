@@ -13,6 +13,7 @@ const { checkIfRegistered,
     getAllLocations,
     assignRequestToProfessional,
     fetchNewRequests,
+    updateQuotation,
     fetchProfessionalRequests,
     registerProfessional,
     getProfessionalById,updateProfessional ,uploadImage,generateVerificationCodeHandler
@@ -38,6 +39,7 @@ router.post('/assign-request', authenticateToken, assignRequestToProfessional);
 router.get('/my-requests', authenticateToken, fetchProfessionalRequests);
 
 router.get('/new-requests', authenticateToken, fetchNewRequests);
+router.post('/quotation', authenticateToken, updateQuotation);
 
 router.post("/join-chat", addProfessionalToChannel);
 
