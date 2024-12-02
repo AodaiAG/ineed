@@ -40,7 +40,9 @@ if (loading || !translation)
         </div>
     );
 }
-
+const handleNavigateToMain = () => {
+  navigate("/main"); // Navigate to the "Main" page
+};
   return (
     <Box className={styles.clientDContainer}>
       {/* Header */}
@@ -77,6 +79,8 @@ if (loading || !translation)
         <Button
           variant="contained"
           className={`${styles.clientDButton} ${styles.clientDNewRequestButton}`}
+          onClick={handleNavigateToMain} // Navigate to /main
+
           sx={{
             borderRadius: "14px", // Apply border-radius
             fontSize: "1.6rem", // Medium font size

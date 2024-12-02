@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, TextField } from "@mui/material";
+import { Box, Button, Typography, TextField, CircularProgress } from "@mui/material"; // Added CircularProgress
 import "../../styles/client/SummaryForm.css"; // Custom CSS for styling
 import { useNavigate } from "react-router-dom"; // Assuming navigation is used
 import axios from "axios";
 import { API_URL } from '../../utils/constans';
 import api from '../../utils/clientApi';
 import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
-
-
+import useClientAuthCheck from '../../hooks/useClientAuthCheck';
 
 const SummaryForm = () => {
   const navigate = useNavigate(); // For navigation
@@ -24,6 +23,17 @@ const SummaryForm = () => {
 
   const [phonePrefix, setPhonePrefix] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
+  const [loading, setLoading] = useState(false); // Added loading state
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (isAuthenticated) {
+      console.log("yes");
+    } else {
+      console.log("NO");
+    }
+  }, [authLoading, isAuthenticated, navigate]);
 
   // Fetch data from sessionStorage when the component mounts
   useEffect(() => {
@@ -47,31 +57,88 @@ const SummaryForm = () => {
     setPhonePrefix(storedPhonePrefix);
     setPhoneNumber(storedPhoneNumber);
   }, []);
-        const handleReturn =() => 
-        {
-          navigate("/about");
-        }
-  const handleSubmit = () => {
-    const fullPhoneNumber = `${phonePrefix}${phoneNumber}`;
-    console.log("Full Phone Number:", fullPhoneNumber);
-    try {
-      axios.post(`${API_URL}/professionals/send-sms`, {
-        phoneNumber: fullPhoneNumber,
-        message: translation.verificationCodeMessage + " {code}",
-      });
 
-      
-
-      navigate("/sms");
-    } catch (error) {
-      console.error("Failed to send SMS:", error);
-      alert(translation.failedToSendSmsMessage);
+  const handleReturn = () => {
+    if (isAuthenticated) {
+      navigate("/main");
+    } else {
+      navigate("/about");
     }
-   
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true); // Start loading
+    try {
+      if (isAuthenticated && user?.id) {
+        console.log("Authenticated user ID:", user.id);
+
+        const requestDetails = {
+          clientId: user.id, // Use user ID for the authenticated client
+          jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id, // Use jobRequiredId from sessionStorage
+          city: sessionStorage.getItem("city"),
+          date: sessionStorage.getItem("date"),
+          comment: summaryData.comment, // Use the updated comment
+        };
+
+        const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
+
+        if (submitRequestResponse.data.success) {
+          console.log("Request submitted successfully!");
+          navigate("/dashboard"); // Navigate to dashboard after saving client and request
+        } else {
+          console.error("Failed to submit client request");
+          alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+        }
+      } else {
+        console.log("User is not authenticated, sending SMS instead.");
+
+        const fullPhoneNumber = `${phonePrefix}${phoneNumber}`;
+        console.log("Full Phone Number:", fullPhoneNumber);
+
+        await axios.post(`${API_URL}/professionals/send-sms`, {
+          phoneNumber: fullPhoneNumber,
+          message: translation.verificationCodeMessage + " {code}",
+        });
+
+        navigate("/sms");
+      }
+    } catch (error) {
+      console.error("Error during submission:", error);
+      alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+    } finally {
+      setLoading(false); // End loading
+    }
+  };
+
+  const handleCommentChange = (event) => {
+    setSummaryData((prevState) => ({
+      ...prevState,
+      comment: event.target.value,
+    }));
   };
 
   return (
-    <Box className="summary-form-container">
+    <Box className="summary-form-container" sx={{ position: "relative" }}>
+      {/* Loading overlay */}
+      {loading && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      )}
+
       {/* Title */}
       <Typography variant="h4" className="summary-form-title">
         סכם לפני שליחה
@@ -121,11 +188,9 @@ const SummaryForm = () => {
         <TextField
           multiline
           rows={6}
-          value={summaryData.comment || "אין הערות"}
+          value={summaryData.comment}
+          onChange={handleCommentChange} // Added handler for changes
           className="summary-form-textarea"
-          sx={{
-            readOnly: true, // Make the text area readonly
-          }}
         />
       </Box>
 
@@ -149,7 +214,6 @@ const SummaryForm = () => {
           variant="contained"
           className="back-button"
           onClick={handleReturn}
-
           sx={{
             color: "#FFFFFF",
             borderRadius: "14px",

@@ -13,6 +13,8 @@ import { API_URL } from "../../utils/constans";
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 import axios from "axios";
+import useClientAuthCheck from '../../hooks/useClientAuthCheck';
+
 
 const HelpForm = () => {
   const navigate = useNavigate();
@@ -44,6 +46,23 @@ const HelpForm = () => {
     localStorage.getItem("userLanguage") || "he"
   );
   const [isTyping, setIsTyping] = useState(false);
+
+
+  const { isAuthenticated, loading ,user} = useClientAuthCheck();
+
+  useEffect(() => {
+    if (loading) return;
+    if (isAuthenticated) 
+        {
+          console.log("yes");
+
+        } 
+
+    else {
+        console.log("NO");
+    }
+}, [loading, isAuthenticated, navigate]);
+
   useEffect(() => {
     const direction = getDirection(selectedLanguage); // Get the direction using the utility function
     document.documentElement.style.setProperty("--container-direction", direction);
@@ -129,9 +148,16 @@ useEffect(() => {
     sessionStorage.setItem("date", date);
     sessionStorage.setItem("subProfession", JSON.stringify(selectedSubProfession)); // Save selected sub-profession
 
+    if (isAuthenticated) {
+      navigate("/summary");
 
-    // Navigate to /about
+    }
+    else
+    {
+// Navigate to /about
     navigate("/about");
+    }
+    
   };
 
   const handleLocationSelect = (location) => {
