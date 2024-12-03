@@ -4,6 +4,8 @@ const JobType = require('../models/jobTypeModel'); // Import your Sequelize mode
 const PhoneVerification = require('../models/PhoneVerification');
 const {grantClientAuth} = require('./authController');
 const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
+const Professional = require('../models/professional'); // Adjust path if necessary
+
 const ADMIN_USER_ID = "Admin_v2"; // New Admin ID
 
 
@@ -231,47 +233,112 @@ exports.submitClientRequest = async (req, res) => {
   
   
   
-  
+exports.updateSelectedProfessional = async (req, res) => {
+    const { requestId, professionalId } = req.body;
+    const clientId = req.user.id; // Assuming clientId is in the decoded JWT
 
-  exports.getRequestDetails = async (req, res) => {
+
+
+    try {
+        // Verify ownership using ClientRequest
+        const clientRequest = await ClientRequest.findOne({
+            where: { requestId, clientId }, // Ensure the client owns the request
+        });
+
+        if (!clientRequest) {
+            console.log("Access denied: Client does not own the request");
+            return res.status(403).json({ success: false, message: 'Access denied' });
+        }
+
+        // Fetch the request to update
+        const request = await Request.findByPk(requestId);
+
+        if (!request) {
+            console.log("Request not found");
+            return res.status(404).json({ success: false, message: 'Request not found' });
+        }
+
+        // Update the professionalId field
+        await request.update({ professionalId });
+
+        console.log("Updated Request Professional ID:", professionalId);
+
+        res.json({ success: true, message: 'Professional selected successfully.' });
+    } catch (error) {
+        console.error('Error updating professional:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
+
+
+exports.getRequestDetails = async (req, res) => {
     const { requestId } = req.params;
     const clientId = req.user.id; // Assuming clientId is in the decoded JWT
 
+
     try {
-        // Fetch the request details via the ClientRequest model
+        // Fetch the request details through ClientRequest
         const clientRequest = await ClientRequest.findOne({
-            where: { requestId },
+            where: { requestId, clientId }, // Ensure the client owns the request
             include: [
                 {
                     model: Request,
-                    as: 'request', // Alias for the association
-                    required: true, // Ensure the join only happens if a related Request exists
+                    as: 'request', // Alias for the Request model
+                    required: true, // Ensure it only includes if the Request exists
                 },
             ],
         });
 
-        // Check if the request exists
+
         if (!clientRequest) {
-            return res.status(404).json({ success: false, message: 'Request not found' });
+            return res.status(404).json({ success: false, message: 'Request not found or access denied' });
         }
 
-        // Ensure the logged-in user is the owner of the request
-        if (clientRequest.clientId !== clientId) {
-            return res.status(403).json({ success: false, message: 'Access denied' });
-        }
+        const request = clientRequest.request;
 
-        // Extract raw request data
-        const requestData = clientRequest.request.get({ plain: true });
+        // Fetch the professional details associated with quotations
+        const quotations = request.quotations || [];
+
+        const professionalIds = quotations.map((q) => q.professionalId);
+
+        const professionals = await Professional.findAll({
+            where: { id: professionalIds },
+            attributes: ['id', 'fname', 'lname', 'image'], // Select necessary fields
+        });
+
+
+        // Merge professional details with quotations
+        const quotationsWithDetails = quotations.map((q) => {
+            const professional = professionals.find((p) => p.id === q.professionalId);
+            return {
+                professionalId: q.professionalId,
+                price: q.price,
+                name: professional ? `${professional.fname} ${professional.lname}` : 'Unknown',
+                image: professional ? professional.image : null,
+            };
+        });
+
 
         res.status(200).json({
             success: true,
-            data: requestData, // Return only the plain request data
+            data: {
+                request: {
+                    id: request.id,
+                    jobRequiredId: request.jobRequiredId,
+                    city: request.city,
+                    date: request.date,
+                    comment: request.comment,
+                    status: request.status,
+                },
+                quotations: quotationsWithDetails,
+            },
         });
     } catch (error) {
         console.error('Error fetching request details:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
 
 
 exports.deleteClientRequest = async (req, res) => {

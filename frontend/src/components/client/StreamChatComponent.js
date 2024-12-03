@@ -15,42 +15,7 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID }) => {
   const [error, setError] = useState(false); // State to track initialization errors
   const client = StreamChat.getInstance(apiKey);
 
-  const customMessageRenderer = (message) => {
-    if (!message.user || !message.user.name) {
-      console.warn("Message user is missing or malformed:", message);
-      return (
-        <div className="custom-message">
-          <p className="message-text">
-            {message.text || "Message content unavailable"}
-          </p>
-        </div>
-      );
-    }
-
-    const senderName = message.user.name || "Unknown User";
-    const senderID = message.user.id;
-    let displayName = senderName.replace(/#(prof|client)$/, ""); // Remove suffix
-    let displayImage = message.user.image || "/default-profile.png";
-
-    // Adjust display based on suffix
-    if (senderName.endsWith("#prof") && senderID !== userID) {
-      displayName = `Prof ${senderID.slice(-4)}`; // Mask other professionals
-      displayImage = "/default-prof-image.png"; // Generic prof image
-    } else if (senderName.endsWith("#client")) {
-      displayName = "Client"; // Display generic client name
-      displayImage = "/default-client-image.png"; // Generic client image
-    }
-
-    return (
-      <div className="custom-message">
-        <img src={displayImage} alt="User" className="message-avatar" />
-        <div className="message-content">
-          <p className="message-sender">{displayName}</p>
-          <p className="message-text">{message.text}</p>
-        </div>
-      </div>
-    );
-  };
+  
 
   useEffect(() => {
     const setupChat = async () => {
@@ -105,7 +70,6 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID }) => {
         <ChannelHeader />
         <MessageList
           noMessagesRenderer={() => <p>No messages to display</p>}
-          Message={customMessageRenderer} // Use the custom message renderer
         />
         <MessageInput />
       </Channel>
