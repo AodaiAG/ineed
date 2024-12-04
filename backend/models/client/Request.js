@@ -30,8 +30,8 @@ const Request = sequelize.define('Request', {
         defaultValue: [], // Initialize as an empty array
     },
     status: {
-        type: DataTypes.ENUM('new', 'in-process', 'closed'),
-        defaultValue: 'new',
+        type: DataTypes.ENUM('open', 'closed'),
+        defaultValue: 'open',
     },
     professionalId: {
         type: DataTypes.INTEGER,

@@ -12,7 +12,7 @@ const authenticateToken = require('../middleware/authenticateToken');
 const { checkIfRegistered,
     getAllLocations,
     assignRequestToProfessional,
-    fetchNewRequests,
+    fetchProfRequests,
     updateQuotation,
     fetchProfessionalRequests,
     registerProfessional,
@@ -38,7 +38,7 @@ router.post('/assign-request', authenticateToken, assignRequestToProfessional);
 
 router.get('/my-requests', authenticateToken, fetchProfessionalRequests);
 
-router.get('/new-requests', authenticateToken, fetchNewRequests);
+router.get('/get-prof-requests', authenticateToken, fetchProfRequests);
 router.post('/quotation', authenticateToken, updateQuotation);
 
 router.post("/join-chat", addProfessionalToChannel);

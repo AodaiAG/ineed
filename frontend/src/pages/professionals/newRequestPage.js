@@ -15,14 +15,14 @@ function RequestPage() {
 
     // Fetch new requests on component mount
     useEffect(() => {
-        const fetchRequests = async () => {
+        const fetchRequests = async (mode) => {
             try {
-                const response = await api.get('/api/professionals/new-requests'); // Fetch new requests
+                // Include the mode as a query parameter in the API request
+                const response = await api.get(`/api/professionals/get-prof-requests?mode=${'new'}`);
+                
                 if (response.data.success) {
                     setRequests(response.data.data); // Set fetched requests
                 } else {
-                   
-
                     console.error('Failed to fetch requests');
                 }
             } catch (error) {
@@ -31,6 +31,7 @@ function RequestPage() {
                 setLoading(false);
             }
         };
+        
 
         fetchRequests();
     }, []);

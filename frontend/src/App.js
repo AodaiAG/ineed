@@ -34,7 +34,7 @@ import BusinessCard from './pages/professionals/BusinessCard';
 import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; 
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
 import ExplainScreen from './pages/professionals/ExplainScreen'; 
-import RequestPage from './pages/professionals/RequestPage'; 
+import RequestPage from './pages/professionals/newRequestPage'; 
 import ProfessionalRequestDetailsPage from './pages/professionals/ProfessionalRequestDetailsPage'; 
 
 

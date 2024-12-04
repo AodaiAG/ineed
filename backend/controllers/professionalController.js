@@ -6,6 +6,7 @@ const ReportMissingProfession = require('../models/ReportMissingProfession');
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
 const {grantProfAuth} = require('./authController');
 const { Op } = require('sequelize');
+const sequelize = require('../config/db'); // Sequelize instance
 
 
 const { StreamChat } = require("stream-chat");
@@ -585,38 +586,81 @@ const getProfessionalRequestDetails = async (req, res) => {
     }
 };
 
-
-
-
-const fetchNewRequests = async (req, res) => {
+const fetchProfRequests = async (req, res) => {
     try {
+        const { mode } = req.query; // Extract the mode from query parameters
+        const professionalId = req.professional.profId; // Extract professional ID from JWT
 
-        const professionalId = req.professional.profId; // Extract from the decoded JWT
+        console.log("Mode:", mode);
+        console.log("Professional ID:", professionalId);
 
-        const professional = await Professional.findByPk(professionalId);
+        let matchingRequests = [];
 
-        if (!professional) {
-            console.log("Step 4: Professional not found for ID:", professionalId);
-            return res.status(404).json({ success: false, message: 'Professional not found' });
+        const jsonContainsProfessionalId = (field, id) =>
+            `JSON_CONTAINS(${field}, '{"professionalId": ${id}}', '$')`;
+
+        switch (mode) {
+            case 'new': // Requests the professional hasn't quoted yet
+                console.log("Fetching new requests");
+                matchingRequests = await Request.findAll({
+                    where: {
+                        status: 'open', // Open requests
+                        [Op.or]: [
+                            { quotations: { [Op.is]: null } }, // No quotations exist
+                            sequelize.literal(`NOT ${jsonContainsProfessionalId('quotations', professionalId)}`), // Current professional hasn't quoted
+                        ],
+                    },
+                });
+                break;
+
+            case 'in-process': // Requests the professional has quoted
+                console.log("Fetching in-process requests");
+                matchingRequests = await Request.findAll({
+                    where: {
+                        status: 'open', // Open requests
+                        [Op.and]: [
+                            sequelize.literal(`${jsonContainsProfessionalId('quotations', professionalId)}`), // Contains this professional's quotation
+                        ],
+                    },
+                });
+                break;
+
+            case 'mine': // Requests assigned to the professional
+                console.log("Fetching my requests");
+                matchingRequests = await Request.findAll({
+                    where: {
+                        status: 'open', // Open requests
+                        professionalId: professionalId, // Assigned to this professional
+                    },
+                });
+                break;
+
+            case 'closed': // Closed requests previously assigned to the professional
+                console.log("Fetching closed requests");
+                matchingRequests = await Request.findAll({
+                    where: {
+                        status: 'closed', // Closed requests
+                        professionalId: professionalId, // Previously assigned to this professional
+                    },
+                });
+                break;
+
+            default:
+                console.log("Invalid mode");
+                return res.status(400).json({ success: false, message: 'Invalid mode' });
         }
 
-
-        // Fetch matching requests
-        const matchingRequests = await Request.findAll({
-            where: {
-              jobRequiredId: { [Op.in]: professional.professions }, // Check against profession IDs
-              professionalId: null, // Only unclaimed requests
-              status: 'new', // Only new requests
-            },
-          });
-
+        console.log("Matching Requests:", matchingRequests.length);
 
         res.status(200).json({ success: true, data: matchingRequests });
     } catch (error) {
-        console.error("Step 7: Error occurred in fetchNewRequests:", error);
+        console.error("Error fetching professional requests:", error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
+
+
+
 
 const assignRequestToProfessional = async (req, res) => {
     const { requestId } = req.body;
@@ -659,7 +703,7 @@ const fetchProfessionalRequests = async (req, res) => {
 
 
 module.exports = {
-    fetchNewRequests,
+    fetchProfRequests,
     checkIfRegistered,
     assignRequestToProfessional,
     getAllLocations,
