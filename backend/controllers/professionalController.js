@@ -618,6 +618,8 @@ const fetchProfRequests = async (req, res) => {
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'open', // Open requests
+                        professionalId: { [Op.is]: null }, // Not assigned to any professional
+
                         [Op.and]: [
                             sequelize.literal(`${jsonContainsProfessionalId('quotations', professionalId)}`), // Contains this professional's quotation
                         ],
