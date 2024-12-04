@@ -34,8 +34,11 @@ import BusinessCard from './pages/professionals/BusinessCard';
 import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings'; 
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
 import ExplainScreen from './pages/professionals/ExplainScreen'; 
-import RequestPage from './pages/professionals/newRequestPage'; 
 import ProfessionalRequestDetailsPage from './pages/professionals/ProfessionalRequestDetailsPage'; 
+import RequestPage from './pages/professionals/newRequestPage'; 
+import InProcessRequestsPage from './pages/professionals/InProcessRequestsPage';
+import MineRequestsPage from './pages/professionals/mineRequestsPage';
+import ClosedRequestsPage from './pages/professionals/ClosedRequestsPage';
 
 
 ProfessionalRequestDetailsPage
@@ -74,8 +77,12 @@ function App() {
                             <Route path="/pro/edit-settings" element={<EditProfessionalSettings />} />
                             <Route path="/pro/expert-main" element={<ExpertMainPage />} />
                             <Route path="/pro/explain" element={<ExplainScreen />} />
-                            <Route path="pro/requests/new" element={<RequestPage />} />
                             <Route path="/pro/requests/:id" element={<ProfessionalRequestDetailsPage />} />
+                            <Route path="/pro/requests/new" element={<RequestPage />} />
+                            <Route path="/pro/requests/in-process" element={<InProcessRequestsPage />} />
+                            <Route path="/pro/requests/mine" element={<MineRequestsPage />} />
+                            <Route path="/pro/requests/closed" element={<ClosedRequestsPage />} />
+
                             
 
                         </Routes>
