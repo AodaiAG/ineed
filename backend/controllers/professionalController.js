@@ -22,7 +22,7 @@ const streamifier = require('streamifier');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken'); // Import RefreshToken model
-const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
+const { Client, ClientRequest, Request,Notification } = require('../models/index'); // Adjust path if necessary
 
 
 // Functions to generate tokens
@@ -674,6 +674,17 @@ const assignRequestToProfessional = async (req, res) => {
         if (!request || request.status !== 'new') {
             return res.status(400).json({ success: false, message: 'Request is not available' });
         }
+         // Create a notification
+         const notification = await Notification.create({
+            recipientType: 'professional',
+            recipientId: professionalId,
+            message: `You have been assigned a new request (ID: ${requestId}).`,
+            requestId: requestId,
+        });
+
+        // Emit the notification via Socket.IO
+        const io = getIO();
+        io.to(professionalId).emit('new-notification', notification);
 
         await request.update({ professionalId, status: 'in-process' });
 
