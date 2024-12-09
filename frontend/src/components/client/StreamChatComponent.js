@@ -77,7 +77,7 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
       <Channel channel={channel}>
         <ChannelHeader />
         <MessageList Message={CustomMessage} noMessagesRenderer={() => <p>No messages to display</p>} />
-        <MessageInput />
+        <MessageInput publishTypingEvent={false} />
       </Channel>
     </Chat>
   );
