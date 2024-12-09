@@ -12,8 +12,8 @@ const sequelize = require('../config/db'); // Sequelize instance
 const { StreamChat } = require("stream-chat");
 
 // Stream Chat credentials
-const STREAM_API_KEY = "4kp4vrvuedgh";
-const STREAM_API_SECRET = "8jdxypjcathpjym7knuqmfhcgz8shckprkf7qg8r8bxhad27zqnqvbcmdpz4cxt3";
+const STREAM_API_KEY = "nr6puhgsrawn";
+const STREAM_API_SECRET = "kb22mfy754kdex5vanjhsbmv37ujhzmj95vk5chx299wvd6p6evep5ps9azvs5kd";
 
 
 const multer = require('multer');
@@ -429,38 +429,30 @@ const addProfessionalToChannel = async (req, res) => {
         if (!professional) {
             return res.status(404).json({ success: false, message: "Professional not found" });
         }
+         
+        console.log(professional.fname + professional.lname)
+        // Fallback to a default name if fname or lname is missing
+        const professionalName =
+  (professional.fname || professional.lname
+    ? [professional.fname, professional.lname].filter(Boolean).join(" ")
+    : `Professional_${userId}`);
 
         const professionalData = {
             id: userId,
-            name: `${professional.fname} ${professional.lname}#prof`,
+            name: professionalName,
             image: professional.image || '/default-prof.png',
+           
         };
 
-        console.log("Upserting professional into Stream...");
-        const professionalExists = await streamClient.queryUsers({ id: userId });
-        if (professionalExists.users.length === 0) {
-            console.log("Professional does not exist in Stream, creating user...");
-            await streamClient.upsertUser({
-                ...professionalData,
-                role: 'prof',
-            });
-        } else {
-            console.log("Professional already exists in Stream, updating user...");
-            await streamClient.partialUpdateUser({
-                id: userId,
-                set: {
-                    ...professionalData,
-                    role: 'prof',
-                },
-            });
-        }
+        console.log("Upserting professional into Stream with data:", professionalData);
 
-        console.log("Professional successfully created/updated in Stream:", professionalData);
+        // Upsert the user into Stream
+        const upsertResponse = await streamClient.upsertUser(professionalData);
+        console.log("Upsert response:", upsertResponse);
 
         console.log("Adding professional to the channel...");
         const channel = streamClient.channel("messaging", channelId);
         await channel.addMembers([userId]);
-
 
         res.status(200).json({
             success: true,
@@ -471,6 +463,7 @@ const addProfessionalToChannel = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
+
 
 
 
@@ -591,8 +584,7 @@ const fetchProfRequests = async (req, res) => {
         const { mode } = req.query; // Extract the mode from query parameters
         const professionalId = req.professional.profId; // Extract professional ID from JWT
 
-        console.log("Mode:", mode);
-        console.log("Professional ID:", professionalId);
+
 
         let matchingRequests = [];
 
@@ -601,7 +593,6 @@ const fetchProfRequests = async (req, res) => {
 
         switch (mode) {
             case 'new': // Requests the professional hasn't quoted yet
-                console.log("Fetching new requests");
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'open', // Open requests
@@ -614,7 +605,6 @@ const fetchProfRequests = async (req, res) => {
                 break;
 
             case 'in-process': // Requests the professional has quoted
-                console.log("Fetching in-process requests");
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'open', // Open requests
@@ -628,7 +618,6 @@ const fetchProfRequests = async (req, res) => {
                 break;
 
             case 'mine': // Requests assigned to the professional
-                console.log("Fetching my requests");
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'open', // Open requests
@@ -638,7 +627,6 @@ const fetchProfRequests = async (req, res) => {
                 break;
 
             case 'closed': // Closed requests previously assigned to the professional
-                console.log("Fetching closed requests");
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'closed', // Closed requests
@@ -652,7 +640,6 @@ const fetchProfRequests = async (req, res) => {
                 return res.status(400).json({ success: false, message: 'Invalid mode' });
         }
 
-        console.log("Matching Requests:", matchingRequests.length);
 
         res.status(200).json({ success: true, data: matchingRequests });
     } catch (error) {

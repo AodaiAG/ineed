@@ -11,7 +11,7 @@ const ProfessionalRequestDetailsPage = () => {
     const navigate = useNavigate();
     const { id: requestId } = useParams();
     const [requestDetails, setRequestDetails] = useState(null);
-    const [userToken, setUserToken] = useState(null);
+    const [userToken, setUserToken] = useState(sessionStorage.getItem("profChatToken"));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [quotation, setQuotation] = useState("");
@@ -42,28 +42,32 @@ const ProfessionalRequestDetailsPage = () => {
         };
 
         const joinChatChannel = async () => {
-            try {
-                const response = await api.post(`/api/professionals/join-chat`, {
-                    userId: String(user.profId),
-                    requestId,
-                });
-                const responseToken = await api.post(`/api/generate-user-token`, {
-                    id: String(user.profId),
-                });
-                if (response.data.success) {
-                    setUserToken(responseToken.data.token);
-                } else {
-                    setError("Failed to join the chat");
+            if (!userToken) {
+                try {
+                    const response = await api.post(`/api/professionals/join-chat`, {
+                        userId: String(user.profId),
+                        requestId,
+                    });
+                    const responseToken = await api.post(`/api/generate-user-token`, {
+                        id: String(user.profId),
+                        type:"prof",
+                    });
+                    if (response.data.success) {
+                        sessionStorage.setItem("profChatToken", responseToken.data.token);
+                        setUserToken(responseToken.data.token);
+                    } else {
+                        setError("Failed to join the chat");
+                    }
+                } catch (error) {
+                    setError("An error occurred while joining the chat");
                 }
-            } catch (error) {
-                setError("An error occurred while joining the chat");
             }
         };
 
         Promise.all([fetchRequestDetails(), joinChatChannel()]).finally(() => {
             setLoading(false);
         });
-    }, [authLoading, isAuthenticated, navigate, requestId, user]);
+    }, [authLoading, isAuthenticated, navigate, requestId, user, userToken]);
 
     const handleQuotationSubmit = async () => {
         try {
@@ -144,7 +148,7 @@ const ProfessionalRequestDetailsPage = () => {
                 <div className={styles.chatContainer}>
                     {userToken ? (
                         <StreamChatComponent
-                            apiKey="4kp4vrvuedgh"
+                            apiKey="nr6puhgsrawn"
                             userToken={userToken}
                             channelId={`request_${requestId}`}
                             userID={String(user.profId)}
@@ -162,27 +166,22 @@ const ProfessionalRequestDetailsPage = () => {
                         <TextField
                             label="הצעת מחיר"
                             value={quotation}
-                            onChange={(e) => setQuotation(e.target.value)} // Allow typing without triggering submission
+                            onChange={(e) => setQuotation(e.target.value)}
                             variant="outlined"
                             type="number"
                         />
                         <Button
                             variant="contained"
-                            onClick={handleQuotationSubmit} // Only triggers submission when explicitly clicked
-                            disabled={!quotation || parseFloat(quotation) <= 0} // Validate input
+                            onClick={handleQuotationSubmit}
+                            disabled={!quotation || parseFloat(quotation) <= 0}
                         >
                             {quotation ? "עדכן" : "השתבץ"}
                         </Button>
                     </Box>
                 ) : (
                     <Box>
-                        <Typography>
-                            הצעת מחיר שהצעת: {quotation} ש"ח
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            onClick={() => setIsEditing(true)} // Switch to editing mode
-                        >
+                        <Typography>הצעת מחיר שהצעת: {quotation} ש"ח</Typography>
+                        <Button variant="contained" onClick={() => setIsEditing(true)}>
                             עדכן
                         </Button>
                     </Box>
@@ -190,11 +189,7 @@ const ProfessionalRequestDetailsPage = () => {
             </Box>
 
             <Box className={styles.footer}>
-                <Button
-                    variant="contained"
-                    className={styles.backButton}
-                    onClick={() => navigate("/pro/expert-interface")}
-                >
+                <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
                     חזור
                 </Button>
             </Box>

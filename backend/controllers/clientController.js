@@ -14,8 +14,8 @@ const ADMIN_USER_ID = "Admin_v2"; // New Admin ID
 const { StreamChat } = require("stream-chat");
 
 // Stream Chat credentials
-const STREAM_API_KEY = "4kp4vrvuedgh";
-const STREAM_API_SECRET = "8jdxypjcathpjym7knuqmfhcgz8shckprkf7qg8r8bxhad27zqnqvbcmdpz4cxt3";
+const STREAM_API_KEY = "nr6puhgsrawn";
+const STREAM_API_SECRET = "kb22mfy754kdex5vanjhsbmv37ujhzmj95vk5chx299wvd6p6evep5ps9azvs5kd";
 
 // Initialize Stream server client
 // Replace with your Google Maps API key
@@ -28,20 +28,27 @@ const client = new OpenAI({
 
 exports.generateUserToken = async (req, res) => {
     const serverClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
-    const { id } = req.body;
+    const { id, type } = req.body; // Extract id and type from the request body
 
-    if (!id) {
-        return res.status(400).json({ error: "User ID is required" });
+    if (!id || !type) {
+        return res.status(400).json({ error: "User ID and type are required" });
     }
 
     try {
-        // Upsert the user with a specific role
-        await serverClient.upsertUser({
-            id, 
-            name: `i wanaaa see`,
+        // Validate the type to ensure it is either 'client' or 'prof'
+        if (type !== 'client' && type !== 'prof') {
+            return res.status(400).json({ error: "Invalid type. Must be 'client' or 'prof'" });
+        }
 
+        // Upsert the user with the specified role
+        await serverClient.upsertUser({
+            id,
+            role: type, // Set the role based on the 'type' parameter
         });
 
+        console.log(`User with ID ${id} and role ${type} upserted successfully`);
+
+        // Generate a token for the user
         const token = serverClient.createToken(id);
 
         res.status(200).json({ success: true, token });
@@ -50,6 +57,9 @@ exports.generateUserToken = async (req, res) => {
         res.status(500).json({ success: false, message: "Failed to generate user token" });
     }
 };
+
+
+
 // Get address from lat/lon (Reverse geocoding)
 exports.getGeocode = async (req, res) => {
     const { lat, lon } = req.query;
@@ -162,7 +172,7 @@ exports.submitClientRequest = async (req, res) => {
         console.log("Upserting client into Stream...");
         const clientData = {
             id: clientId,
-            name: `${client.fullName}#client`,
+            name: client.fullName || `Client_${clientId}`, // Fallback to a default name if fullName is missing
             image: client.image || '/default-client.png',
         };
 
@@ -171,7 +181,7 @@ exports.submitClientRequest = async (req, res) => {
             console.log("Client does not exist in Stream, creating user...");
             await streamClient.upsertUser({
                 ...clientData,
-                role: 'client',
+               
             });
         } else {
             console.log("Client already exists in Stream, updating user...");
@@ -179,7 +189,7 @@ exports.submitClientRequest = async (req, res) => {
                 id: clientId,
                 set: {
                     ...clientData,
-                    role: 'client',
+                 
                 },
             });
         }

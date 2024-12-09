@@ -58,7 +58,7 @@ function RequestsPage({ mode, title }) {
                         <ListItem key={request.id} className={styles.requestItem}>
                             <ListItemText
                                 primary={`${translation.status || 'סטאטוס'}: ${request.status}`}
-                                secondary={`${translation.dateLabel || 'תאריך'}: ${request.date} | ${translation.requestNumber || 'מספר קריאה'}: ${request.jobRequiredId}`}
+                                secondary={`${translation.dateLabel || 'תאריך'}: ${request.date} | ${translation.requestNumber || 'מספר קריאה'}: ${request.id}`}
                             />
                             <Button
                                 variant="contained"
