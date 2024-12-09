@@ -5,6 +5,7 @@ import {
   ChannelHeader,
   MessageList,
   MessageInput,
+  defaultRenderMessages,
 } from "stream-chat-react";
 import { StreamChat } from "stream-chat";
 import { Avatar, Box, Typography } from "@mui/material";
@@ -29,6 +30,7 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
         const joinedChannel = client.channel("messaging", channelId);
 
         await joinedChannel.watch();
+        console.log("Channel joined successfully:", joinedChannel);
 
         setChannel(joinedChannel);
       } catch (error) {
@@ -41,6 +43,7 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
 
     return () => {
       if (client && client.userID) {
+        console.log("Disconnecting user...");
         client.disconnectUser();
       }
     };
@@ -60,39 +63,33 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
         <ChannelHeader />
 
         <MessageList
-          customMessageRenderer={(props) => {
-            const { message } = props;
+          renderMessages={(messageListProps) => {
+            const elements = defaultRenderMessages(messageListProps);
 
-            console.log("Message User:", message.user);
-            console.log("User Role Passed In:", userRole);
-            console.log("Current User ID:", userID);
+            // Custom logic to modify each message element
+            return elements.map((element) => {
+              const message = element.props.message;
+              const isOwnMessage = message.user.id === userID;
+              const isProfessional = message.user.role === "prof";
 
-            const isOwnMessage = message.user.id === userID;
-            const isProfessional = message.user.role === "prof";
+              const displayName =
+                isProfessional && !isOwnMessage ? "Anonymous Professional" : message.user.name;
 
-            console.log("Is Own Message:", isOwnMessage);
-            console.log("Is Professional:", isProfessional);
+              const avatarSrc =
+                isProfessional && !isOwnMessage ? "/default-anonymous.png" : message.user.image;
 
-            // Logic to anonymize other professionals' details
-            const displayName =
-              isProfessional && !isOwnMessage ? "Anonymous Professional" : message.user.name;
-
-            console.log("Display Name:", displayName);
-
-            const avatarSrc =
-              isProfessional && !isOwnMessage ? "/default-anonymous.png" : message.user.image;
-
-            console.log("Avatar Source:", avatarSrc);
-
-            return (
-              <Box className="custom-message" display="flex" alignItems="center">
-                <Avatar src={avatarSrc} />
-                <Typography marginLeft={1} fontWeight="bold">
-                  {displayName}
-                </Typography>
-                <Typography marginLeft={2}>{message.text}</Typography>
-              </Box>
-            );
+              return (
+                <li key={message.id} className="custom-message" style={{ listStyle: "none" }}>
+                  <Box display="flex" alignItems="center">
+                    <Avatar src={avatarSrc} />
+                    <Typography marginLeft={1} fontWeight="bold">
+                      {displayName}
+                    </Typography>
+                    <Typography marginLeft={2}>{message.text}</Typography>
+                  </Box>
+                </li>
+              );
+            });
           }}
           noMessagesRenderer={() => <p>No messages to display</p>}
         />
