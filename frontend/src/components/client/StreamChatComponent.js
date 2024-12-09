@@ -5,10 +5,10 @@ import {
   ChannelHeader,
   MessageList,
   MessageInput,
-  defaultRenderMessages,
+  MessageSimple, // Import the default Message component
+  useMessageContext,
 } from "stream-chat-react";
 import { StreamChat } from "stream-chat";
-import { Avatar, Box, Typography } from "@mui/material";
 import "stream-chat-react/dist/css/v2/index.css";
 import "./custom-styles.css";
 
@@ -21,10 +21,7 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
     const setupChat = async () => {
       try {
         console.log(`Connecting user: ${userID}`);
-        await client.connectUser(
-          { id: userID },
-          userToken
-        );
+        await client.connectUser({ id: userID }, userToken);
 
         console.log(`Joining channel: ${channelId}`);
         const joinedChannel = client.channel("messaging", channelId);
@@ -57,43 +54,29 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
     return <p>Loading chat...</p>;
   }
 
+  // Custom Message Component with Updated Logic
+  const CustomMessage = (props) => {
+    const { message } = useMessageContext();
+
+    const isOwnMessage = message.user?.id === userID;
+    const senderRole = message.user?.role;
+
+    let displayName = message.user?.name || "Unknown User";
+
+    // Logic to anonymize other professionals for professionals only
+    if (userRole === "prof" && senderRole === "prof" && !isOwnMessage) {
+      displayName = "Anonymous Professional";
+    }
+
+    // Use the default MessageSimple component provided by Stream
+    return <MessageSimple {...props} message={{ ...message, user: { ...message.user, name: displayName } }} />;
+  };
+
   return (
     <Chat client={client} theme="messaging light">
       <Channel channel={channel}>
         <ChannelHeader />
-
-        <MessageList
-          renderMessages={(messageListProps) => {
-            const elements = defaultRenderMessages(messageListProps);
-
-            // Custom logic to modify each message element
-            return elements.map((element) => {
-              const message = element.props.message;
-              const isOwnMessage = message.user.id === userID;
-              const isProfessional = message.user.role === "prof";
-
-              const displayName =
-                isProfessional && !isOwnMessage ? "Anonymous Professional" : message.user.name;
-
-              const avatarSrc =
-                isProfessional && !isOwnMessage ? "/default-anonymous.png" : message.user.image;
-
-              return (
-                <li key={message.id} className="custom-message" style={{ listStyle: "none" }}>
-                  <Box display="flex" alignItems="center">
-                    <Avatar src={avatarSrc} />
-                    <Typography marginLeft={1} fontWeight="bold">
-                      {displayName}
-                    </Typography>
-                    <Typography marginLeft={2}>{message.text}</Typography>
-                  </Box>
-                </li>
-              );
-            });
-          }}
-          noMessagesRenderer={() => <p>No messages to display</p>}
-        />
-
+        <MessageList Message={CustomMessage} noMessagesRenderer={() => <p>No messages to display</p>} />
         <MessageInput />
       </Channel>
     </Chat>
