@@ -5,12 +5,15 @@ import {
   ChannelHeader,
   MessageList,
   MessageInput,
-  MessageSimple, // Import the default Message component
+  Avatar,
+  MessageText,
   useMessageContext,
 } from "stream-chat-react";
 import { StreamChat } from "stream-chat";
 import "stream-chat-react/dist/css/v2/index.css";
 import "./custom-styles.css";
+import { useNavigate } from "react-router-dom";
+
 
 const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole }) => {
   const [channel, setChannel] = useState(null);
@@ -46,6 +49,50 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
     };
   }, [client, userToken, channelId, userID]);
 
+  // Custom Message Component with Updated Logic
+  const CustomMessage = (props) => {
+    const { isMyMessage, message } = useMessageContext();
+    const navigate = useNavigate();
+  
+    const messageUiClassNames = ["custom-message-ui"];
+  
+    if (isMyMessage()) {
+      messageUiClassNames.push("custom-message-ui--mine");
+    } else {
+      messageUiClassNames.push("custom-message-ui--other");
+    }
+  
+    const isOwnMessage = message.user?.id === userID;
+    const senderRole = message.user?.role;
+  
+    let displayName = message.user?.name || "Unknown User";
+  
+    if (userRole === "prof" && senderRole === "prof" && !isOwnMessage) {
+      displayName = "Anonymous Professional";
+    }
+  
+    const handleAvatarClick = () => {
+      if (message.user?.id) {
+        navigate(`/profile/${message.user.id}`);
+      }
+    };
+  
+    return (
+      <div className={messageUiClassNames.join(" ")} data-message-id={message.id}>
+        <div className="custom-message-ui__body">
+          <Avatar
+            image={message.user?.image}
+            name={displayName}
+            onClick={handleAvatarClick}  // Added onClick handler
+            style={{ cursor: "pointer" }} // Make it clear the avatar is clickable
+          />
+          <MessageText />
+        </div>
+      </div>
+    );
+  };
+  
+
   if (error) {
     return <div>Failed to initialize chat. Please try again later.</div>;
   }
@@ -54,29 +101,11 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
     return <p>Loading chat...</p>;
   }
 
-  // Custom Message Component with Updated Logic
-  const CustomMessage = (props) => {
-    const { message } = useMessageContext();
-
-    const isOwnMessage = message.user?.id === userID;
-    const senderRole = message.user?.role;
-
-    let displayName = message.user?.name || "Unknown User";
-
-    // Logic to anonymize other professionals for professionals only
-    if (userRole === "prof" && senderRole === "prof" && !isOwnMessage) {
-      displayName = "Anonymous Professional";
-    }
-
-    // Use the default MessageSimple component provided by Stream
-    return <MessageSimple {...props} message={{ ...message, user: { ...message.user, name: displayName } }} />;
-  };
-
   return (
     <Chat client={client} theme="messaging light">
       <Channel channel={channel}>
         <ChannelHeader />
-        <MessageList Message={CustomMessage} noMessagesRenderer={() => <p>No messages to display</p>} />
+        <MessageList Message={CustomMessage} />
         <MessageInput publishTypingEvent={false} />
       </Channel>
     </Chat>

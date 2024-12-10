@@ -4,8 +4,45 @@
 .str-chat__channel .str-chat__container {
   height: 100% !important; /* Ensure the container fills the parent's height */
   display: flex !important; /* Use flex layout for alignment */
-  width:100% !important;
+  width: 100% !important;
   flex-direction: column !important; /* Stack children vertically */
   position: absolute !important; /* Absolute positioning for better control */
 }
 
+.custom-message-ui {
+  --cmui-gap-size: 0.5rem !important;
+  --cmui-inline-spacing: 2rem !important;
+  --cmui-block-spacing: 0.5rem !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+  gap: var(--cmui-gap-size) !important;
+  padding-inline: var(--cmui-inline-spacing) !important;
+  padding-block: var(--cmui-block-spacing) !important;
+}
+
+.custom-message-ui__body {
+  gap: var(--cmui-gap-size) !important;
+  display: flex !important;
+}
+
+.custom-message-ui--mine .custom-message-ui__body {
+  flex-direction: row-reverse !important;
+  text-align: right !important;
+}
+
+.custom-message-ui .str-chat__message-text {
+  display: flex !important;
+  flex-direction: column !important;
+  align-self: center !important;
+}
+
+.custom-message-ui .str-chat__message-text p {
+  all: unset !important;
+}
+
+.custom-message-ui .str-chat__message-mention {
+  font-weight: bold !important;
+  color: palevioletred !important;
+  cursor: pointer !important;
+}
