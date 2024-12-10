@@ -54,12 +54,12 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
     const { isMyMessage, message } = useMessageContext();
     const navigate = useNavigate();
   
-    const messageUiClassNames = ["custom-message-ui"];
+    const messageUiClassNames = ["str-chat__message-simple"];
   
     if (isMyMessage()) {
-      messageUiClassNames.push("custom-message-ui--mine");
+      messageUiClassNames.push("str-chat__message--me");
     } else {
-      messageUiClassNames.push("custom-message-ui--other");
+      messageUiClassNames.push("str-chat__message--other");
     }
   
     const isOwnMessage = message.user?.id === userID;
@@ -79,14 +79,21 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
   
     return (
       <div className={messageUiClassNames.join(" ")} data-message-id={message.id}>
-        <div className="custom-message-ui__body">
+        <div className="str-chat__message-inner">
           <Avatar
             image={message.user?.image}
             name={displayName}
-            onClick={handleAvatarClick}  // Added onClick handler
-            style={{ cursor: "pointer" }} // Make it clear the avatar is clickable
+            onClick={handleAvatarClick}
+            className="str-chat__avatar"
           />
-          <MessageText />
+          <div className="str-chat__message-content">
+            <div className="str-chat__message-text">
+              <MessageText />
+            </div>
+            <div className="str-chat__message-data">
+              <span className="str-chat__message-username">{displayName}</span>
+            </div>
+          </div>
         </div>
       </div>
     );

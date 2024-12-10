@@ -46,3 +46,40 @@
   color: palevioletred !important;
   cursor: pointer !important;
 }
+.str-chat__message-simple {
+  margin: 1rem;
+  display: flex;
+}
+
+.str-chat__message-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.str-chat__message--me {
+  justify-content: flex-end;
+}
+
+.str-chat__message--me .str-chat__message-inner {
+  flex-direction: row-reverse;
+}
+
+.str-chat__message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.str-chat__message-data {
+  font-size: 0.8rem;
+  color: var(--str-chat__primary-color);
+}
+
+.str-chat__avatar {
+  cursor: pointer;
+}
+
+.str-chat__message--me .str-chat__message-data {
+  text-align: right;
+}
