@@ -9,6 +9,8 @@
     const app = express();
     const PORT = 3001; // Fixed port
     const cookieParser = require('cookie-parser');
+    const notificationRoutes = require('./routes/notifications');
+
     
 
     app.use(cookieParser());
@@ -26,12 +28,15 @@
     app.use('/api/professionals', professionalRoutes);
     app.use('/auth', authRoutes);
     app.use('/api', clientRoutes);  
+    app.use('/api/notifications', notificationRoutes);
+
     // Serve static files from the React app's build directory
     app.use(express.static(path.join(__dirname, '../frontend/build')));
     // Handle any other routes and send the React frontend
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
     });
+    
 
 
     // Sync the database models and start the server

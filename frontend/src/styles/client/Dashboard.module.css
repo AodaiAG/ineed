@@ -96,3 +96,39 @@ width: 231px;
 .clientDClosedRequestsButton {
   background-color: #fdbe00 !important;
 }
+
+.notificationIcon {
+    position: relative;
+    cursor: pointer;
+    color: #555; /* Ensure the icon color is visible */
+}
+
+.notificationIcon svg {
+    font-size: 35px; /* Set a larger font size for visibility */
+}
+
+.notificationIcon .MuiBadge-root {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iconContainer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.notificationDropdown {
+    position: absolute;
+    top: 60px;
+    background: #fff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    padding: 10px;
+}

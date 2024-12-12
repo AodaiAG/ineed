@@ -7,6 +7,8 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constant
 const {grantProfAuth} = require('./authController');
 const { Op } = require('sequelize');
 const sequelize = require('../config/db'); // Sequelize instance
+const Notification = require('../models/notifications/Notification'); // Adjust the path if necessary
+
 
 
 const { StreamChat } = require("stream-chat");
@@ -22,7 +24,7 @@ const streamifier = require('streamifier');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken'); // Import RefreshToken model
-const { Client, ClientRequest, Request,Notification } = require('../models/index'); // Adjust path if necessary
+const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
 
 
 // Functions to generate tokens
@@ -470,61 +472,74 @@ const addProfessionalToChannel = async (req, res) => {
 const updateQuotation = async (req, res) => {
     const { requestId, quotation } = req.body;
     const professionalId = req.professional.profId; // Extract from the decoded JWT
-
-    console.log("Professional ID:", professionalId);
+  
+    console.log('Professional ID:', professionalId);
+  
     if (!requestId || quotation === undefined) {
-        return res
-            .status(400)
-            .json({ success: false, message: "Request ID and quotation are required." });
+      return res.status(400).json({ success: false, message: 'Request ID and quotation are required.' });
     }
-
+  
     try {
-        const request = await Request.findByPk(requestId);
-
-        if (!request) {
-            return res.status(404).json({ success: false, message: "Request not found." });
-        }
-
-        console.log("Request before update:", request.quotations);
-
-        // Parse or initialize the quotations array
-        const quotations = request.quotations || [];
-
-        // Find if the professional already has a quotation
-        const existingQuotationIndex = quotations.findIndex(
-            (q) => q.professionalId === professionalId
-        );
-
-        if (existingQuotationIndex !== -1) {
-            // Update the existing quotation
-            quotations[existingQuotationIndex].price = quotation;
-        } else {
-            // Add a new quotation
-            quotations.push({ professionalId, price: quotation });
-        }
-
-        console.log("Quotations to be saved:", quotations);
-
-        // Update the quotations field in the database
-        request.quotations = quotations; // Set the field
-        request.changed('quotations', true); // Mark as changed
-        await request.save(); // Save the entire object
-
-        // Refresh the request to ensure the update persisted
-        const updatedRequest = await Request.findByPk(requestId);
-
-        console.log("Request after update:", updatedRequest.quotations);
-
-        res.json({
-            success: true,
-            message: "Quotation updated successfully.",
-            data: updatedRequest.quotations,
-        });
+      const request = await Request.findByPk(requestId);
+  
+      if (!request) {
+        return res.status(404).json({ success: false, message: 'Request not found.' });
+      }
+  
+      console.log('Request before update:', request.quotations);
+  
+      // Fetch the ClientRequest to get the clientId
+      const clientRequest = await ClientRequest.findOne({ where: { requestId } });
+  
+      if (!clientRequest) {
+        return res.status(404).json({ success: false, message: 'ClientRequest not found.' });
+      }
+  
+      const clientId = clientRequest.clientId;
+  
+      // Parse or initialize the quotations array
+      const quotations = request.quotations || [];
+  
+      // Find if the professional already has a quotation
+      const existingQuotationIndex = quotations.findIndex((q) => q.professionalId === professionalId);
+  
+      if (existingQuotationIndex !== -1) {
+        // Update the existing quotation
+        quotations[existingQuotationIndex].price = quotation;
+      } else {
+        // Add a new quotation
+        quotations.push({ professionalId, price: quotation });
+      }
+  
+      console.log('Quotations to be saved:', quotations);
+  
+      // Update the quotations field in the database
+      request.quotations = quotations;
+      request.changed('quotations', true); // Mark as changed
+      await request.save();
+  
+      console.log(requestId)
+      // Create a notification for the client
+      await Notification.create({
+        recipientId: clientId.toString(),
+        recipientType: 'client',
+        messageKey: 'notifications.quotationSubmitted', // Use a key for translation
+        requestId: requestId, // Include requestId for dynamic URL
+        action: `/request?id=${requestId}`, // Action URL to navigate to request details
+      });
+  
+      console.log('Notification sent to client:', clientId);
+  
+      res.json({
+        success: true,
+        message: 'Quotation updated successfully.',
+        data: request.quotations,
+      });
     } catch (error) {
-        console.error("Error processing quotation:", error);
-        res.status(500).json({ success: false, message: "Server error." });
+      console.error('Error processing quotation:', error);
+      res.status(500).json({ success: false, message: 'Server error.' });
     }
-};
+  };
 
 
 

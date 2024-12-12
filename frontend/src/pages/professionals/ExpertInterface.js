@@ -3,15 +3,21 @@ import styles from '../../styles/ExpertInterface.module.css';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelectionPopup from '../../components/LanguageSelectionPopup';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { IconButton } from '@mui/material';
+import { IconButton, Badge, Box } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import useAuthCheck from '../../hooks/useAuthCheck';
+import NotificationComponent from '../../components/NotificationComponent'; // Import the NotificationComponent
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import { FaBell } from 'react-icons/fa';
+
 
 function ExpertInterface() {
     const navigate = useNavigate();
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const { isAuthenticated, loading, user } = useAuthCheck();
+    const [showNotifications, setShowNotifications] = useState(false);
 
     useEffect(() => {
         if (!loading && !isAuthenticated) {
@@ -32,13 +38,16 @@ function ExpertInterface() {
     const handleLanguageIconClick = () => {
         setIsLanguagePopupOpen((prev) => !prev);
     };
+    const handleNavigateToRequests = (path) => {
+        navigate(`/pro/requests/${path}`);
+    };
 
     const handleSettingsClick = () => {
         navigate('/pro/edit-settings');
     };
 
-    const handleNavigateToRequests = (path) => {
-        navigate(`/pro/requests/${path}`);
+    const handleNotificationClick = () => {
+        setShowNotifications((prev) => !prev);
     };
 
     if (loading || !translation) {
@@ -53,21 +62,44 @@ function ExpertInterface() {
         <div className={styles.expertInterface_container}>
             {/* Header Container */}
             <div className={styles.headerContainer}>
-                <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
-                    <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
-                </div>
-                <IconButton
-                    className={styles.settingsIcon}
-                    onClick={handleSettingsClick}
-                    style={{ position: 'absolute', top: '10px', left: '20px' }} // Move settings icon to the top-left
-                >
-                    <SettingsIcon />
-                </IconButton>
+                <Box className={styles.iconContainer}>
+                    {/* Language Icon */}
+                    <div className={styles.expertInterface_languageSwitch} onClick={handleLanguageIconClick}>
+                        <img src="/images/Prof/language-icon.png" alt={translation.languageIconAlt} />
+                    </div>
+
+                    {/* Notification Icon */}
+                    <IconButton
+    className={styles.notificationIcon}
+    onClick={handleNotificationClick}
+>
+    <Badge color="error" variant="dot">
+        <NotificationsActiveIcon />
+    </Badge>
+</IconButton>
+
+                    {/* Settings Icon */}
+                    <IconButton
+                        className={styles.settingsIcon}
+                        onClick={handleSettingsClick}
+                        style={{ position: 'absolute', top: '10px', left: '20px' }}
+                    >
+                        <SettingsIcon />
+                    </IconButton>
+                </Box>
+
                 <div className={styles.titleContainer}>
                     <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
                     <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
                 </div>
             </div>
+
+            {/* Notification Dropdown */}
+            {showNotifications && (
+                <div className={styles.notificationDropdown}>
+                    <NotificationComponent userId={user?.id} userType="professional" />
+                </div>
+            )}
 
             {/* Language Selection Popup */}
             {isLanguagePopupOpen && (

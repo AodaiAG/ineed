@@ -5,6 +5,8 @@ const PhoneVerification = require('../models/PhoneVerification');
 const {grantClientAuth} = require('./authController');
 const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
 const Professional = require('../models/professional'); // Adjust path if necessary
+const Notification = require('../models/notifications/Notification'); // Adjust the path if necessary
+
 
 const ADMIN_USER_ID = "Admin_v2"; // New Admin ID
 

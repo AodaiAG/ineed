@@ -15,6 +15,8 @@ import StreamChatComponent from "../../components/client/StreamChatComponent";
 import styles from "../../styles/client/RequestDetailsPage.module.css";
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import api from "../../utils/clientApi";
+import { NotificationProvider } from "../../contexts/NotificationContext";
+
 
 const RequestDetailsPage = () => {
     const [searchParams] = useSearchParams();
@@ -111,6 +113,8 @@ const RequestDetailsPage = () => {
     }
 
     return (
+        <NotificationProvider userId={user?.id} userType="client">
+
         <Box className={styles.pageContainer}>
             {/* Header */}
             <Box className={styles.header}>
@@ -177,6 +181,8 @@ const RequestDetailsPage = () => {
                 </div>
             </Box>
         </Box>
+        </NotificationProvider>
+
     );
 };
 
