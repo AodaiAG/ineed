@@ -20,18 +20,30 @@ router.get('/:recipientType/:recipientId', async (req, res) => {
 // Add a new notification
 router.post('/', async (req, res) => {
   try {
-    const { recipientId, recipientType, message } = req.body;
-    if (!recipientId || !recipientType || !message) {
+    const { recipientId, recipientType, messageKey, requestId, action, isRead } = req.body;
+
+    // Validate required fields
+    if (!recipientId || !recipientType || !messageKey || !requestId || !action) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
-    const notification = await Notification.create({ recipientId: recipientId.toString(), recipientType, message });
+    // Create the notification
+    const notification = await Notification.create({
+      recipientId: recipientId.toString(),
+      recipientType,
+      messageKey,
+      requestId,
+      action,
+      isRead: isRead !== undefined ? isRead : false, // Default isRead to false if not provided
+    });
+
     res.status(201).json({ success: true, data: notification });
   } catch (error) {
     console.error('Error creating notification:', error);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 // Mark a notification as read
 router.put('/:id/read', async (req, res) => {

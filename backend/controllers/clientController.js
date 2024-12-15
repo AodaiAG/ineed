@@ -272,6 +272,14 @@ exports.updateSelectedProfessional = async (req, res) => {
 
         // Update the professionalId field
         await request.update({ professionalId });
+        await Notification.create({
+            recipientId: professionalId.toString(),
+            recipientType: 'professional',
+            messageKey: 'notifications.professionalSelected', // Key for translation
+            requestId,
+            action: `/pro/requests/${requestId}`, // Add action to navigate to the request details page
+            isRead: false,
+          });
 
         console.log("Updated Request Professional ID:", professionalId);
 
@@ -341,6 +349,8 @@ exports.getRequestDetails = async (req, res) => {
                     date: request.date,
                     comment: request.comment,
                     status: request.status,
+                    professionalId: request.professionalId, // Add this line
+
                 },
                 quotations: quotationsWithDetails,
             },

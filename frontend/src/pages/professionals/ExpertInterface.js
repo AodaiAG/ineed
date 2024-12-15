@@ -10,6 +10,8 @@ import useAuthCheck from '../../hooks/useAuthCheck';
 import NotificationComponent from '../../components/NotificationComponent'; // Import the NotificationComponent
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { FaBell } from 'react-icons/fa';
+import { NotificationProvider } from "../../contexts/NotificationContext";
+
 
 
 function ExpertInterface() {
@@ -59,6 +61,8 @@ function ExpertInterface() {
     }
 
     return (
+        <NotificationProvider userId={user?.profId} userType="professional">
+
         <div className={styles.expertInterface_container}>
             {/* Header Container */}
             <div className={styles.headerContainer}>
@@ -156,6 +160,8 @@ function ExpertInterface() {
                 </button>
             </div>
         </div>
+        </NotificationProvider>
+
     );
 }
 

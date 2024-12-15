@@ -33,11 +33,9 @@ export const NotificationProvider = ({ children, userId, userType }) => {
   // Fetch notifications from the backend
   const fetchNotifications = async () => {
     try {
-      console.log('Fetching notifications...');
       const response = await axios.get(`${API_URL}/notifications/${userType}/${userId}`);
       if (response.data.success) {
         const newNotifications = response.data.data;
-        console.log('Fetched Notifications:', newNotifications);
 
         // Show toast notifications for unread items
         newNotifications.forEach((notif) => {

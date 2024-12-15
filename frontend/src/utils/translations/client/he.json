@@ -122,11 +122,18 @@
   "notifications": {
     "title": "התראות",
     "noNotifications": "אין התראות זמינות.",
-    "quotationSubmitted": "איש מקצוע שלח הצעת מחיר לבקשה שלך",
+    "quotationSubmitted": "איש מקצוע שלח הצעת מחיר לבקשה שלך.",
     "newMessage": "יש לך הודעה חדשה.",
     "requestApproved": "הבקשה שלך #{{requestId}} אושרה.",
     "requestClosed": "הבקשה שלך #{{requestId}} נסגרה.",
-    "chatUpdated": "התווספה הודעה חדשה לצ'אט שלך."
+    "chatUpdated": "התווספה הודעה חדשה לצ'אט שלך.",
+    "professionalSelected": "נבחרת לביצוע הקריאה.",
+    "professionalDeselected": "הוסרת מביצוע הקריאה.",
+    "requestCreated": "בקשה חדשה נוצרה בהצלחה.",
+    "requestUpdated": "הבקשה שלך #{{requestId}} עודכנה.",
+    "requestCancelled": "הבקשה שלך #{{requestId}} בוטלה.",
+    "quotationApproved": "הצעת המחיר שלך אושרה.",
+    "quotationRejected": "הצעת המחיר שלך נדחתה."
   }
 
 
