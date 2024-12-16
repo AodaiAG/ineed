@@ -1,0 +1,81 @@
+.container {
+  background-color: #2196f3;
+  color: white;
+  min-height: 100vh;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mainTitle {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.signInText {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.phonePrompt {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.inputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.countryCodeSelect {
+  background-color: white;
+  color: black;
+  width: 80px;
+  height: 50px;
+}
+
+.phoneNumberInput {
+  background-color: white;
+  color: black;
+  width: 150px;
+  height: 50px;
+}
+
+.termsText {
+  font-size: 0.8rem;
+  margin-bottom: 20px;
+}
+
+.termsLink {
+  color: #ffcc00;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.signInButton {
+  background-color: #ffcc00;
+  color: black;
+  font-size: 1.2rem;
+  width: 200px;
+  height: 50px;
+}
+
+.workerImageContainer {
+  margin-top: 30px;
+}
+
+.workerImage {
+  width: 100px;
+  height: auto;
+}

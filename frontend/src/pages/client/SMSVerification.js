@@ -59,8 +59,14 @@ const SMSVerification = () => {
           code,
         });
   
-        if (response.data.success) {
-         
+        if (response.data.success) 
+          {
+
+          if(response.data.registered)
+          {
+                  navigate('/dashboard');
+
+          }
             // If client is not registered, save client and create request
             try {
               // Step 1: Save the client

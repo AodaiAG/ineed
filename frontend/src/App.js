@@ -16,6 +16,8 @@ import ClientDashboard from './pages/client/Dashboard';
 import MyRequests from './pages/client/MyRequests';
 import ProfessionalsList from './pages/client/ProfessionalList';
 import ProfilePage from './pages/client/ProfilePage';
+import SignInPage from "./pages/client/SignInPage";
+
 
 import ProfessionalPhoneScreen from './pages/professionals/PhoneScreen';
 import SMSVerification from './pages/professionals/SMSVerification';
@@ -48,6 +50,8 @@ function App() {
           <Route path="/dashboard/my-requests" element={<MyRequests />} />
           <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/sign-in" element={<SignInPage />} />
+
 
           {/* Professional Side Routes */}
           <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button, ButtonBase, Box, IconButton, Badge } from "@mui/material";
+import { Button, ButtonBase, Box, IconButton, Badge, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import MenuIcon from "@mui/icons-material/Menu";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LanguageIcon from "@mui/icons-material/Language";
 import styles from "../../styles/client/Dashboard.module.css";
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import { useLanguage } from "../../contexts/LanguageContext";
@@ -12,15 +15,14 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false); // State to handle popup visibility
   const [showNotifications, setShowNotifications] = useState(false); // State to toggle notifications
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar
   const { translation } = useLanguage();
   const { isAuthenticated, loading, user } = useClientAuthCheck();
 
   useEffect(() => {
     if (loading) return;
-    if (isAuthenticated) {
-      console.log("yes");
-    } else {
-      console.log("NO");
+    if (!isAuthenticated) {
+      navigate("/login");
     }
   }, [loading, isAuthenticated, navigate]);
 
@@ -34,6 +36,14 @@ const Dashboard = () => {
 
   const handleNavigateToMain = () => {
     navigate("/main");
+  };
+
+  const handleSettingsClick = () => {
+    navigate("/client/edit-settings");
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
   };
 
   if (loading || !translation) {
@@ -50,14 +60,10 @@ const Dashboard = () => {
         {/* Header */}
         <Box className={styles.clientDHeader}>
           <Box className={styles.clientDIconContainer}>
-            {/* Language Icon */}
-            <ButtonBase onClick={() => setShowPopup(true)} className={styles.clientDIconButton}>
-              <img
-                src="/images/ct/language-icon.png"
-                alt="Language Icon"
-                className={styles.clientDIcon}
-              />
-            </ButtonBase>
+            {/* Hamburger Menu Icon */}
+            <IconButton onClick={toggleSidebar} className={styles.menuIcon}>
+              <MenuIcon />
+            </IconButton>
 
             {/* Notification Icon */}
             <IconButton className={styles.notificationIcon} onClick={handleNotificationClick}>
@@ -67,6 +73,34 @@ const Dashboard = () => {
             </IconButton>
           </Box>
         </Box>
+
+        {/* Sidebar */}
+        <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
+          <Box className={styles.sidebarContainer} role="presentation" onClick={toggleSidebar}>
+            <List>
+              <ListItem button onClick={handleSettingsClick}>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
+              </ListItem>
+
+              <ListItem button onClick={() => setShowPopup(true)}>
+                <ListItemIcon>
+                  <LanguageIcon />
+                </ListItemIcon>
+                <ListItemText primary="Language" />
+              </ListItem>
+
+              <ListItem button onClick={handleNotificationClick}>
+                <ListItemIcon>
+                  <NotificationsActiveIcon />
+                </ListItemIcon>
+                <ListItemText primary="Notifications" />
+              </ListItem>
+            </List>
+          </Box>
+        </Drawer>
 
         {/* Notification Dropdown */}
         {showNotifications && (
