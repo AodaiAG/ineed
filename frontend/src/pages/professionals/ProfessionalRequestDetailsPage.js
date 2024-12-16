@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate, useParams } from "react-router-dom";
-import { Button, Box, CircularProgress, Typography, TextField } from "@mui/material";
+import {
+    Button,
+    Box,
+    CircularProgress,
+    Typography,
+    TextField,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+} from "@mui/material";
 import StreamChatComponent from "../../components/client/StreamChatComponent";
 import api from "../../utils/api";
 import useAuthCheck from "../../hooks/useAuthCheck";
@@ -15,7 +25,9 @@ const ProfessionalRequestDetailsPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [quotation, setQuotation] = useState("");
-    const [isEditing, setIsEditing] = useState(true); // Initially allow editing
+    const [isEditing, setIsEditing] = useState(true);
+    const [showCancelDialog, setShowCancelDialog] = useState(false);
+    const [cancelReason, setCancelReason] = useState("");
 
     const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
 
@@ -32,6 +44,7 @@ const ProfessionalRequestDetailsPage = () => {
                 const response = await api.get(`/api/professionals/request/${requestId}`);
                 if (response.data.success) {
                     setRequestDetails(response.data.data);
+                    console.table(response.data.data);
                     setQuotation(response.data.data.quotation || "");
                 } else {
                     setError(response.data.message || "Failed to fetch request details");
@@ -50,7 +63,7 @@ const ProfessionalRequestDetailsPage = () => {
                     });
                     const responseToken = await api.post(`/api/generate-user-token`, {
                         id: String(user.profId),
-                        type:"prof",
+                        type: "prof",
                     });
                     if (response.data.success) {
                         sessionStorage.setItem("profChatToken", responseToken.data.token);
@@ -78,11 +91,29 @@ const ProfessionalRequestDetailsPage = () => {
 
             if (response.data.success) {
                 setIsEditing(false);
+                alert("Quotation submitted successfully.");
             } else {
                 setError("Failed to process quotation");
             }
         } catch (error) {
-            setError("An error occurred while processing the quotation");
+            console.error("Error submitting quotation:", error);
+            alert("An error occurred while submitting the quotation.");
+        }
+    };
+
+    const handleCancelRequest = async () => {
+        try {
+            await api.post("/api/professionals/cancel-request", {
+                requestId,
+                reason: cancelReason,
+            });
+
+            alert("The request has been canceled successfully.");
+            setShowCancelDialog(false);
+            navigate("/pro/expert-interface");
+        } catch (error) {
+            console.error("Error canceling request:", error);
+            alert("Failed to cancel the request.");
         }
     };
 
@@ -98,11 +129,7 @@ const ProfessionalRequestDetailsPage = () => {
         return (
             <Box className={styles.errorContainer}>
                 <Typography>{error}</Typography>
-                <Button
-                    variant="contained"
-                    onClick={() => navigate("/pro/expert-interface")}
-                    className={styles.backButton}
-                >
+                <Button variant="contained" onClick={() => navigate("/pro/expert-interface")} className={styles.backButton}>
                     חזור
                 </Button>
             </Box>
@@ -115,16 +142,14 @@ const ProfessionalRequestDetailsPage = () => {
                 <Typography variant="h4" className={styles.title}>
                     פרטי הקריאה
                 </Typography>
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => console.log("Cancel or close logic")}
-                    className={styles.cancelButton}
-                >
-                    סגור
-                </Button>
+                {requestDetails.professionalId === user.profId && (
+                    <Button variant="contained" color="error" onClick={() => setShowCancelDialog(true)} className={styles.cancelButton}>
+                        ביטול
+                    </Button>
+                )}
             </Box>
 
+            {/* Request Details */}
             <Box className={styles.details}>
                 <Typography>
                     <strong>בתחום:</strong> {requestDetails.jobRequiredId || "לא ידוע"}
@@ -133,14 +158,16 @@ const ProfessionalRequestDetailsPage = () => {
                     <strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}
                 </Typography>
                 <Typography>
-                    <strong>מועד העבודה:</strong>{" "}
-                    {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}
+                    <strong>מועד העבודה:</strong> {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}
                 </Typography>
                 <Typography>
                     <strong>הערות:</strong> {requestDetails.comment || "אין הערות"}
                 </Typography>
             </Box>
 
+            
+
+            {/* Chat Section */}
             <Box className={styles.chatSection}>
                 <Typography variant="h6" className={styles.chatTitle}>
                     התכתבויות
@@ -159,7 +186,7 @@ const ProfessionalRequestDetailsPage = () => {
                     )}
                 </div>
             </Box>
-
+            {/* Quotation Section */}
             <Box className={styles.quotationSection}>
                 {isEditing ? (
                     <Box>
@@ -187,6 +214,29 @@ const ProfessionalRequestDetailsPage = () => {
                     </Box>
                 )}
             </Box>
+
+            {/* Cancel Request Dialog */}
+            <Dialog open={showCancelDialog} onClose={() => setShowCancelDialog(false)}>
+                <DialogTitle>ביטול הקריאה</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="סיבת הביטול"
+                        multiline
+                        rows={4}
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setShowCancelDialog(false)} color="primary">
+                        ביטול
+                    </Button>
+                    <Button onClick={handleCancelRequest} color="error" disabled={!cancelReason}>
+                        שלח
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
             <Box className={styles.footer}>
                 <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>

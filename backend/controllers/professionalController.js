@@ -24,7 +24,7 @@ const streamifier = require('streamifier');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../models/RefreshToken'); // Import RefreshToken model
-const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
+const { Client, ClientRequest, Request ,Cancellation} = require('../models/index'); // Adjust path if necessary
 
 
 // Functions to generate tokens
@@ -39,7 +39,76 @@ const generateRefreshToken = (payload) => {
 const cloudinary = require('../config/cloudinaryConfig'); // Import the Cloudinary config
 const storage = multer.memoryStorage();
 
+const cancelRequest = async (req, res) => {
+    const { requestId, reason } = req.body;
+    const professionalId = req.professional.profId; // Extracted from the decoded JWT
 
+    console.log("Professional ID:", professionalId);
+
+    // Validate required fields
+    if (!requestId || !reason) {
+        return res.status(400).json({ success: false, message: "Request ID and reason are required." });
+    }
+
+    try {
+        // Fetch the request by ID
+        const request = await Request.findByPk(requestId);
+        if (!request) {
+            return res.status(404).json({ success: false, message: "Request not found." });
+        }
+
+        // Ensure the professional is assigned to the request
+        if (request.professionalId !== professionalId) {
+            return res.status(403).json({ success: false, message: "You are not assigned to this request." });
+        }
+
+        console.log("Request before cancellation:", request);
+
+        // Fetch the client ID from ClientRequest
+        const clientRequest = await ClientRequest.findOne({ where: { requestId } });
+        if (!clientRequest) {
+            return res.status(404).json({ success: false, message: "ClientRequest not found." });
+        }
+
+        const clientId = clientRequest.clientId;
+        console.log("Client ID associated with the request:", clientId);
+
+        // Create a cancellation record
+        await Cancellation.create({
+            requestId,
+            profId: professionalId,
+            reason,
+        });
+
+        console.log("Cancellation recorded with reason:", reason);
+
+        // Deselect the professional from the request
+        request.professionalId = null;
+        await request.save();
+
+        console.log("Professional deselected from request:", requestId);
+
+        // Send a notification to the client
+        await Notification.create({
+            recipientId: clientId.toString(),
+            recipientType: "client",
+            messageKey: "notifications.professionalDeselectedAlone",
+            requestId,
+            action: `/client/requests/${requestId}`,
+            isRead: false,
+        });
+
+        console.log("Notification sent to client:", clientId);
+
+        res.json({
+            success: true,
+            message: "Professional deselected and cancellation recorded.",
+        });
+    } catch (error) {
+        console.error("Error processing cancellation:", error);
+        res.status(500).json({ success: false, message: "Server error." });
+    }
+};
 
 const uploadImage = async (req, res) => {
     try {
@@ -582,6 +651,7 @@ const getProfessionalRequestDetails = async (req, res) => {
                 date: request.date,
                 comment: request.comment,
                 status: request.status,
+                professionalId: request.professionalId,
                 quotation: professionalPrice, // Only send the price
             },
         });
@@ -721,7 +791,7 @@ module.exports = {
     fetchProfRequests,
     checkIfRegistered,
     assignRequestToProfessional,
-    getAllLocations,
+    getAllLocations,cancelRequest,
     downloadVCardHandler,
     fetchProfessionalRequests,
     updateQuotation,

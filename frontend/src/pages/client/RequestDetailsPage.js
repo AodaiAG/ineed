@@ -74,8 +74,27 @@ const RequestDetailsPage = () => {
             }
         };
 
-        fetchRequestDetails().finally(() => setLoading(false));
-    }, [authLoading, isAuthenticated, navigate, requestId, user]);
+        const fetchUserToken = async () => {
+            if (!userToken) {
+                try {
+                    console.log("Fetching user token...");
+                    const response = await api.post("/api/generate-user-token", {
+                        id: user.id,
+                        type: "client",
+                    });
+                    const token = response.data.token;
+                    sessionStorage.setItem("clientChatToken", token);
+                    setUserToken(token);
+                    console.log("User token fetched successfully:", token);
+                } catch (error) {
+                    console.error("Failed to fetch user token:", error);
+                    setError("Failed to initialize chat.");
+                }
+            }
+        };
+
+        Promise.all([fetchRequestDetails(), fetchUserToken()]).finally(() => setLoading(false));
+    }, [authLoading, isAuthenticated, navigate, requestId, user, userToken]);
 
     const handleSelectProfessional = async () => {
         console.log("Selecting professional with ID:", selectedProfessionalId);
@@ -102,6 +121,15 @@ const RequestDetailsPage = () => {
                         isRead: false,
                     });
                 }
+
+                await api.post("/api/notifications", {
+                    recipientId: selectedProfessionalId.toString(),
+                    recipientType: "professional",
+                    messageKey: "notifications.professionalSelected",
+                    requestId,
+                    action: `/pro/requests/${requestId}`,
+                    isRead: false,
+                });
 
                 // Confirm the new professional selection
                 setConfirmedProfessionalId(selectedProfessionalId);
