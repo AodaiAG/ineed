@@ -19,7 +19,7 @@ const { checkIfRegistered,
     registerProfessional,
     getProfessionalById,updateProfessional ,uploadImage,generateVerificationCodeHandler
     ,verifyCodeHandler,createReportMissingProfession,downloadVCardHandler,addProfessionalToChannel,
-    getProfessionalRequestDetails
+    getProfessionalRequestDetails,finishRequest
     
  } = require('../controllers/professionalController');
 
@@ -33,6 +33,8 @@ router.post('/verify-code', verifyCodeHandler); // Verify the SMS verification c
 router.post('/upload-image', upload.single('image'), uploadImage);
 router.post('/report-missing-profession', createReportMissingProfession);
 router.get('/vcard/:id', downloadVCardHandler);
+router.post('/finish-request', authenticateToken, finishRequest);
+
 
 //
 router.post('/assign-request', authenticateToken, assignRequestToProfessional);

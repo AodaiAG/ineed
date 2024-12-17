@@ -137,6 +137,65 @@ const uploadImage = async (req, res) => {
     }
   };
 
+  const finishRequest = async (req, res) => {
+    try {
+  
+      const { requestId, completionDate, workCost, comment, imageUrls } = req.body;
+      const professionalId = req.professional.profId;
+  
+
+  
+      // Convert requestId to integer
+      const parsedRequestId = parseInt(requestId, 10);
+  
+      // Check if the request exists
+      const request = await Request.findByPk(parsedRequestId);
+  
+      if (!request) {
+        return res.status(404).json({ success: false, message: 'Request not found.' });
+      }
+  
+      // Ensure the professional is assigned to the request
+      if (request.professionalId !== professionalId) {
+        return res.status(403).json({ success: false, message: 'You are not assigned to this request.' });
+      }
+  
+      // Update request details
+      request.status = 'closed';
+      request.completionDate = completionDate;
+      request.workCost = workCost;
+      request.completionComment = comment;
+      request.imageUrls = imageUrls; // Save the uploaded image URLs
+  
+      await request.save();
+  
+      // Fetch the client associated with this request
+      const clientRequest = await ClientRequest.findOne({ where: { requestId: parsedRequestId } });
+      if (!clientRequest) {
+        return res.status(404).json({ success: false, message: 'Client associated with this request not found.' });
+      }
+  
+      const clientId = clientRequest.clientId;
+  
+      // Send notification to the client
+      await Notification.create({
+        recipientId: clientId,
+        recipientType: 'client',
+        messageKey: 'notifications.requestFinished',
+        requestId: request.id,
+        action: `/client/rate/${request.id}`,
+        isRead: false,
+      });
+  
+  
+      res.json({ success: true, message: 'Request marked as finished successfully.' });
+    } catch (error) {
+      console.error('Error finishing request:', error);
+      res.status(500).json({ success: false, message: 'Server error.' });
+    }
+  };
+  
+  
 
   const createReportMissingProfession = async (req, res) => {
     const { domain, isMissing, mainProfession, additionalSubProfession } = req.body;
@@ -790,6 +849,7 @@ const fetchProfessionalRequests = async (req, res) => {
 module.exports = {
     fetchProfRequests,
     checkIfRegistered,
+    finishRequest,
     assignRequestToProfessional,
     getAllLocations,cancelRequest,
     downloadVCardHandler,
