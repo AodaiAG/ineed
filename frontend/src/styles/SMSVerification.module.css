@@ -152,10 +152,9 @@ body, html{
 .smsVerification_button {
     background-color: #fdbe00; /* More vibrant golden background */
     color: white; /* Black text for contrast */
-    font-size: 1.8rem; /* Adjusted font size */
-    font-weight: 600;
+    font-size: 1.6rem; /* Adjusted font size */
     border: none;
-    padding: 10px; /* Make the button wider */
+    padding: 13px; /* Make the button wider */
     cursor: pointer;
     border-radius: 14px;
     margin: 5px auto;

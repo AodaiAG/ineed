@@ -3,162 +3,151 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: black;
+    height: 100vh;
     padding: 20px;
-    background: linear-gradient(to bottom, #f3f4f6, #e5e7eb);
-    min-height: 100vh;
-    font-family: 'Roboto', sans-serif;
-    color: #333333;
 }
 
-/* Back button */
-.backButton {
-    background-color: #007bff;
-    color: #ffffff;
-    font-size: 1.2rem;
-    font-weight: 500;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.backButton:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-/* Page title */
-.pageTitle {
-    font-size: 2.5rem;
+/* Header */
+.headerContainer {
+    width: 90%;
+    background-color: #0D3C66;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 17px;
     font-weight: bold;
-    color: #333333;
-    margin-bottom: 30px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Loader container */
-.loaderContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50vh;
-}
-
-/* Loader */
-.loader {
-    color: #007bff;
-    animation: rotate 1.5s linear infinite;
-}
-
-/* Loader animation */
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    margin-bottom: 20px;
+    border: 3px solid white; /* White border around the header */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* Request list */
 .requestList {
-    width: 100%;
-    max-width: 800px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-/* Individual request item */
-.requestItem {
+    width: 90%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    flex-direction: column;
+    gap: 10px;
 }
 
-.requestItem:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+/* Request card */
+.requestCard {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    border: 2px solid #FFC107;
+    position: relative;
+    cursor: pointer; /* Make it clear it's clickable */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.requestCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(255, 193, 7, 0.5);
+}
+
+/* Request info */
+.requestInfo {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* Request ID */
+.requestId {
+    background-color: #F0F0F0;
+    color: #B0B0B0;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
 }
 
 /* Request details */
 .requestDetails {
-    display: flex;
-    flex-direction: column;
-    font-size: 1rem;
+    flex-grow: 1;
+    color: black !important; /* Ensures text is black */
 }
 
-.requestTitle {
-    font-size: 1.3rem;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: #333333;
+.profession {
+    font-size: 16px;
+    font-weight: bold;
+    color: black !important;
 }
 
-.requestDate {
-    font-size: 0.9rem;
-    color: #666666;
+.dateTime {
+    font-size: 14px;
+    color: black !important;
 }
 
-/* Claim button */
-.claimButton {
-    background-color: #28a745;
-    color: #ffffff;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.claimButton:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
-}
-
-/* No requests message */
-.noRequestsMessage {
-    font-size: 1.5rem;
-    color: #999999;
+/* Location and call info */
+.locationInfo, .callInfo {
     text-align: center;
-    margin-top: 40px;
+    font-size: 14px;
+    color: black !important;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .requestPageContainer {
-        padding: 15px;
-    }
+.callNumber {
+    font-weight: bold;
+    color: black !important;
+}
 
-    .pageTitle {
-        font-size: 2rem;
-    }
+/* Unread messages */
+.unreadMessages {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .requestList {
-        padding: 15px;
-    }
+/* Support message */
+.supportMessage {
+    color: white;
+    font-size: 14px;
+    margin-top: 20px;
+}
 
-    .requestItem {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.supportMessage a {
+    color: #FFC107;
+    text-decoration: none;
+}
 
-    .claimButton {
-        width: 100%;
-        margin-top: 10px;
-    }
+/* Back button */
+.backButton {
+    background-color: #FFC107 !important;
+    color: black !important;
+    font-size: 18px !important;
+    padding: 10px 40px !important;
+    border-radius: 10px !important;
+    margin-top: 20px !important;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.backButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
+}
+
+/* Separator between requests */
+.requestSeparator {
+    width: 100%; /* Full width */
+    height: 2px;
+    background-color: #1A4B75;
+    margin: 10px 0;
+    border-radius: 5px;
 }

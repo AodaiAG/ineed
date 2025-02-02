@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CircularProgress, Button, List, ListItem, ListItemText } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import api from '../../utils/api';
 import { useLanguage } from '../../contexts/LanguageContext';
 import useAuthCheck from '../../hooks/useAuthCheck';
@@ -32,8 +32,8 @@ function RequestsPage({ mode, title }) {
         fetchRequests();
     }, [mode]);
 
-    const handleBackClick = () => {
-        navigate('/pro/expert-interface');
+    const handleRequestClick = (requestId) => {
+        navigate(`/pro/requests/${requestId}`);
     };
 
     if (loading || !translation) {
@@ -46,35 +46,52 @@ function RequestsPage({ mode, title }) {
 
     return (
         <div className={styles.requestPageContainer}>
-            <Button variant="contained" onClick={handleBackClick} className={styles.backButton}>
-                {translation.backButtonLabel || 'חזור'}
-            </Button>
+            <div className={styles.headerContainer}>
+                <h1 className={styles.pageTitle}>קריאות חדשות</h1>
+            </div>
 
-            <h1 className={styles.pageTitle}>{title || translation.defaultTitle || 'בקשות'}</h1>
-
-            {requests.length > 0 ? (
-                <List className={styles.requestList}>
-                    {requests.map((request) => (
-                        <ListItem key={request.id} className={styles.requestItem}>
-                            <ListItemText
-                                primary={`${translation.status || 'סטאטוס'}: ${request.status}`}
-                                secondary={`${translation.dateLabel || 'תאריך'}: ${request.date} | ${translation.requestNumber || 'מספר קריאה'}: ${request.id}`}
-                            />
-                            <Button
-                                variant="contained"
-                                onClick={() => navigate(`/pro/requests/${request.id}`)}
-                                className={styles.detailsButton}
+            <div className={styles.requestList}>
+                {requests.length > 0 ? (
+                    requests.map((request, index) => (
+                        <React.Fragment key={request.id}>
+                            <div 
+                                className={styles.requestCard} 
+                                onClick={() => handleRequestClick(request.id)} // Clickable request
                             >
-                                {translation.requestDetailsButton || 'פרטי הקריאה'}
-                            </Button>
-                        </ListItem>
-                    ))}
-                </List>
-            ) : (
-                <p className={styles.noRequestsMessage}>
-                    {translation.noRequestsMessage || 'אין בקשות'}
-                </p>
-            )}
+                                <div className={styles.requestInfo}>
+                                    <span className={styles.requestId}>{index + 1}</span>
+                                    <div className={styles.requestDetails}>
+                                        <p className={styles.profession}>{request.profession}, {request.subProfession}</p>
+                                        <p className={styles.dateTime}>{request.date} - {request.time}</p>
+                                    </div>
+                                    <div className={styles.locationInfo}>
+                                        <span>מיקום</span>
+                                        <span>{request.city}</span>
+                                    </div>
+                                    <div className={styles.callInfo}>
+                                        <span>קריאה</span>
+                                        <span className={styles.callNumber}>{request.id}</span>
+                                    </div>
+                                    <span className={styles.unreadMessages}>{request.unreadMessages}</span>
+                                </div>
+                            </div>
+
+                            {/* Separator between requests */}
+                            {index < requests.length - 1 && <div className={styles.requestSeparator}></div>}
+                        </React.Fragment>
+                    ))
+                ) : (
+                    <p className={styles.noRequestsMessage}>אין בקשות</p>
+                )}
+            </div>
+
+            <p className={styles.supportMessage}>
+                *ביטול או תקלה צור קשר עם השירות <a href="#">כאן</a>
+            </p>
+
+            <button onClick={() => navigate('/pro/expert-interface')} className={styles.backButton}>
+                חזור
+            </button>
         </div>
     );
 }

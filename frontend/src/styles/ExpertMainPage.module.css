@@ -38,8 +38,6 @@
 
 }
 
-
-
 /* Main Container */
 .expertPage_mainContainer {
 display: flex;
@@ -68,17 +66,19 @@ display: flex;
 }
 
 
+
+
 /* Language Icon */
 .expertPage_languageIcon {
-    position: absolute;
-    top: 10px; /* Place it slightly above the title */
-    right: 20px; /* Move it to be aligned slightly to the right */
+position: absolute;
+    top: 3px;
+    right: 11px;
 }
 
 
 .expertPage_languageIcon img {
-width: 50px;
-    height: 40px;
+width: 68px;
+    height: 61px;
     cursor: pointer;
     transition: transform 0.3s ease, opacity 0.3s;
 }
@@ -92,7 +92,7 @@ width: 50px;
 .expertPage_mainTitle {
 font-size: 4.0rem;
     font-weight: 500;
-    margin-top: 22px;
+    margin-top: 32px;
     max-width: 100%;
     text-align: center;
 }
@@ -136,11 +136,10 @@ margin-top: 6px;
 .expertPage_ctaButton {
     background-color: #FDBE00; /* More vibrant golden background */
     color: white; /* Black text for contrast */
-    font-size: 1.8rem; /* Adjusted font size */
-    font-weight: 600;
+    font-size: 1.6rem; /* Adjusted font size */
     border: none;
-    padding: 10px;
-width: 300px;    
+    padding: 13px;
+    width: 300px;    
     cursor: pointer;
     border-radius: 14px;
     transition: background-color 0.3s, transform 0.2s;
@@ -154,4 +153,7 @@ width: 300px;
     flex-grow: 1;
 }
 
+.home-container {
+  background:black !important;
 
+}

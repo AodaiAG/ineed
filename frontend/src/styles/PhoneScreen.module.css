@@ -211,30 +211,31 @@ font-size: clamp(1rem, 10vw, 2.5rem);
   flex-direction: column;
   align-items: center; /* Center the illustration section */
   width: 100%;
-  margin-bottom: 10px;
+  
 
   margin-top: 40px;
 }
 
 .phoneScreen_illustration img {
   width: 165px;
-  margin: 0 auto; /* Center the image */
+  margin: 10px auto; /* Center the image */
 }
 
 /* Enter Button */
 .phoneScreen_enterButton {
-  background-color: #fdbe00; /* More vibrant golden background */
-  color: white; /* White text for contrast */
-  font-size: 1.8rem; /* Adjusted font size */
-  font-weight: 600;
-  border: none;
-  padding: 10px; /* Make the button wider */
-  cursor: pointer;
-  border-radius: 14px;
-margin-top: 20px;
-  width: 100%;
-  transition: background-color 0.3s;
-  max-width: 300px;
+background-color: #fdbe00;
+    color: white;
+    font-size: 1.6rem;
+    /* font-weight: 600; */
+    border: none;
+    padding: 13px;
+    cursor: pointer;
+    border-radius: 14px;
+    margin: 5px auto;
+    width: 100%;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+    max-width: 300px;
 }
 
 .phoneScreen_enterButton:hover {

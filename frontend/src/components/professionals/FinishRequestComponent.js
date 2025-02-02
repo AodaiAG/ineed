@@ -58,7 +58,7 @@ const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
         headers: { "Content-Type": "application/json" },
       });
 
-      onClose();
+       onClose();
     } catch (error) {
       console.error("Error finishing request:", error);
       alert("Failed to finish the request.");
