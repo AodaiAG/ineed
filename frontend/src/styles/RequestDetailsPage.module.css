@@ -1,61 +1,65 @@
-/* RequestDetailsPage.module.css */
-
+/* Main Page */
 .pageContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding: 20px;
-  background-color: #f4f6f8;
+  background-color: black;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
+/* Header */
 .header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 800px;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #1a73e8;
-  border-radius: 8px;
   color: white;
+  margin-bottom: 20px;
+}
+
+.requestNumber {
+  font-size: 24px;
+  font-weight: bold;
+  color: #FDD500; /* Updated color */
+  margin-right: 10px;
 }
 
 .title {
   font-size: 24px;
   font-weight: bold;
-}
-
-.cancelButton {
-  background-color: #e57373;
   color: white;
 }
 
+/* Request Details */
 .details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
   width: 100%;
-  max-width: 800px;
-  padding: 20px;
+  max-width: 350px;
+  text-align: right;
+  color: white;
   margin-bottom: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  direction: rtl; /* Ensure right-to-left text alignment */
 }
 
-.details > p,
-.details > h6 {
-  margin: 8px 0;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #333;
+/* Ensures Hebrew labels don't shift when English values are displayed */
+.details strong {
+  color: #FDD500; /* Updated color */
+  display: inline-block;
+  min-width: 100px; /* Ensures labels stay in place */
 }
 
+.details p {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Chat Section */
 .chatSection {
   display: flex;
   flex-direction: column;
@@ -87,25 +91,62 @@
   padding: 10px;
 }
 
-.footer {
+/* Quotation Section */
+.quotationSection {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 10px;
-  background-color: #1a73e8;
-  border-radius: 8px;
+  max-width: 350px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.backButton {
+.quotationInputContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.quotationDisplay {
+  text-align: center;
   font-size: 16px;
   font-weight: bold;
-  color: white;
-  background-color: #1a73e8;
-  border-radius: 8px;
-  padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  color: black;
 }
 
+.quotationButton {
+  background-color: #FDD500; /* Updated color */
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+.quotationText {
+  color: white;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* Back Button */
+.backButton {
+  background-color: #FDD500; /* Updated color */
+  color: black;
+  font-size: 18px;
+  padding: 10px 40px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* Loading & Error Containers */
 .loadingContainer,
 .errorContainer {
   display: flex;
@@ -113,19 +154,41 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f6f8;
-}
-
-.loadingContainer {
-  color: #1a73e8;
+  background-color: black;
 }
 
 .errorContainer {
-  color: #e57373;
+  color: red;
+  text-align: center;
 }
 
-.errorContainer h1 {
-  font-size: 20px;
-  margin-bottom: 20px;
-}
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .pageContainer {
+    padding: 10px;
+  }
 
+  .requestNumber {
+    font-size: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .details {
+    max-width: 90%;
+  }
+
+  .chatContainer {
+    max-width: 90%;
+  }
+
+  .quotationSection {
+    max-width: 90%;
+  }
+
+  .backButton {
+    width: 90%;
+  }
+}
