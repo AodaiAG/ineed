@@ -1,131 +1,232 @@
+/* Main Page */
 .pageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5; /* Light background for readability */
-    color: #333; /* Default text color for visibility */
+    background-color: #007BFF; /* Background color as seen in the image */
     min-height: 100vh;
+    box-sizing: border-box;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #222; /* Darker color for better contrast */
-}
-
-.details {
-    background-color: #fff;
+/* Header */
+.headerContainer {
+    width: 90%;
+    background-color: #0D3C66;
+    color: white;
+    text-align: center;
     padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    color: #333; /* Ensure text color is visible */
-}
-
-.details p {
-    margin: 5px 0;
-    font-size: 1rem;
-}
-
-.quotationsSection {
-    background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
-
-.quotationsTitle {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
+    border-radius: 10px;
+    font-size: 20px;
     font-weight: bold;
-    color: #222; /* Improved contrast */
+    margin-bottom: 20px;
+    border: 3px solid white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-.quotationItem {
+/* Request Details Card */
+.requestDetailsCard {
+    width: 90%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 2px solid #FFC107;
+    font-size: 16px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+/* Request Type */
+.requestType {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* Professionals Section */
+.professionalHeader {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
     margin-bottom: 10px;
-    transition: background-color 0.2s ease-in-out;
-    background-color: #f9f9f9; /* Light background for items */
 }
 
-.quotationItem:hover {
-    background-color: #f1f1f1;
+.professionalList {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.quotationItemAvatar {
+/* Professional Cards */
+.professionalCard {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    border: 2px solid #FFC107;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: black !important; /* Ensures text is black */
 }
 
-.quotationItem img {
+.professionalCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(255, 193, 7, 0.5);
+}
+
+/* Avatar */
+.professionalCard img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    object-fit: cover;
 }
 
-.quotationItemDetails {
-    flex-grow: 1;
-    color: #444; /* Darker color for better readability */
-}
-
-.quotationItemDetails p {
-    margin: 0;
-    font-size: 1rem;
-}
-
-.quotationItemDetails .price {
+/* Fix for Professional Name */
+.professionalText .MuiListItemText-primary {
+    font-size: 16px;
     font-weight: bold;
-    color: #007bff;
+    color: black !important; /* Fix: Make name visible */
 }
 
-.chatSection {
-    background-color: #fff; /* Ensure chat section is visible */
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+/* Selection Radio Button */
+.professionalCard .MuiFormControlLabel-root {
+    width: 100%;
 }
 
-.chatTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #222; /* Improve visibility */
-    margin-bottom: 15px;
+/* Select Button */
+.selectButton {
+    background-color: #FDD500 !important;
+    color: black !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    padding: 12px 40px !important;
+    border-radius: 10px !important;
+    margin-top: 10px !important;
+    cursor: pointer;
+	margin-bottom: 5px;
+    text-align: center;
 }
 
+.selectButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
+}
+
+/* Chat Section */
 .chatContainer {
-    height: 300px;
-    overflow-y: auto; /* Add scrolling for chat messages */
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    width: 90%;
+    background-color: white;
+    border-radius: 10px;
     padding: 10px;
-    background-color: #f9f9f9; /* Ensure a distinct background */
+    margin-bottom: 20px;
+    height: 350px;
+    overflow-y: auto;
+    border: 2px solid #ddd;
 }
 
-.backButton {
-    background-color: #007bff;
+/* Chat Bubbles */
+.chatBubble {
+    max-width: 80%;
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* User Messages (Yellow) */
+.userMessage {
+    background-color: #FDD500;
+    color: black;
+    align-self: flex-start;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* Professional Messages (Blue) */
+.professionalMessage {
+    background-color: #007BFF;
     color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-transform: none;
+    align-self: flex-end;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* System Messages (Gray) */
+.systemMessage {
+    background-color: #4A4A4A;
+    color: white;
+    align-self: center;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* Back Button */
+.backButton {
+    background-color: #FDD500 !important;
+    color: black !important;
+    font-size: 18px !important;
+    padding: 10px 40px !important;
+    border-radius: 10px !important;
+    margin-top: 20px !important;
+    cursor: pointer;
+    text-align: center;
 }
 
 .backButton:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
+}
+
+/* Loading & Error Containers */
+.loadingContainer,
+.errorContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: black;
+    color: white;
+}
+
+.errorContainer {
+    color: red;
+    text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .pageContainer {
+        padding: 10px;
+    }
+
+    .headerContainer {
+        font-size: 18px;
+    }
+
+    .requestDetailsCard {
+        max-width: 90%;
+    }
+
+    .professionalList {
+        max-width: 90%;
+    }
+
+    .chatContainer {
+        max-width: 90%;
+    }
+
+    .selectButton {
+        width: 90%;
+    }
+
+    .backButton {
+        width: 90%;
+    }
 }

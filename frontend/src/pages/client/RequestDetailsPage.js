@@ -4,7 +4,6 @@ import {
     Button,
     Box,
     CircularProgress,
-    List,
     ListItem,
     ListItemAvatar,
     Avatar,
@@ -39,37 +38,26 @@ const RequestDetailsPage = () => {
         if (authLoading) return;
 
         if (!isAuthenticated) {
-            console.error("User is not authenticated. Redirecting...");
             navigate("/login");
             return;
         }
 
         const fetchRequestDetails = async () => {
             try {
-                console.log("Fetching request details for requestId:", requestId);
                 const response = await api.get(`/api/request/${requestId}`);
-                console.log("Response from fetchRequestDetails:", response.data);
-
                 if (response.data.success) {
                     const request = response.data.data.request;
-                    console.log("Fetched request details:", request);
-
                     setRequestDetails(request);
                     setQuotations(response.data.data.quotations);
 
-                    // Set the confirmed professional if it exists
                     if (request.professionalId) {
                         setSelectedProfessionalId(request.professionalId);
                         setConfirmedProfessionalId(request.professionalId);
-                        console.log("Confirmed Professional ID set to:", request.professionalId);
-                    } else {
-                        console.log("No professional ID found in the request");
                     }
                 } else {
                     setError(response.data.message || "Failed to fetch request details");
                 }
             } catch (error) {
-                console.error("Error while fetching request details:", error);
                 setError("An error occurred while fetching the request details");
             }
         };
@@ -77,7 +65,6 @@ const RequestDetailsPage = () => {
         const fetchUserToken = async () => {
             if (!userToken) {
                 try {
-                    console.log("Fetching user token...");
                     const response = await api.post("/api/generate-user-token", {
                         id: user.id,
                         type: "client",
@@ -85,9 +72,7 @@ const RequestDetailsPage = () => {
                     const token = response.data.token;
                     sessionStorage.setItem("clientChatToken", token);
                     setUserToken(token);
-                    console.log("User token fetched successfully:", token);
                 } catch (error) {
-                    console.error("Failed to fetch user token:", error);
                     setError("Failed to initialize chat.");
                 }
             }
@@ -97,7 +82,6 @@ const RequestDetailsPage = () => {
     }, [authLoading, isAuthenticated, navigate, requestId, user, userToken]);
 
     const handleSelectProfessional = async () => {
-        console.log("Selecting professional with ID:", selectedProfessionalId);
         try {
             const response = await api.put("/api/request/select-professional", {
                 requestId,
@@ -107,10 +91,6 @@ const RequestDetailsPage = () => {
             if (response.data.success) {
                 alert("Professional selected successfully!");
 
-                console.log("Notification for previous professional:", confirmedProfessionalId);
-                console.log("Notification for new professional:", selectedProfessionalId);
-
-                // Send notifications using the new API structure
                 if (confirmedProfessionalId && confirmedProfessionalId !== selectedProfessionalId) {
                     await api.post("/api/notifications", {
                         recipientId: confirmedProfessionalId.toString(),
@@ -131,11 +111,9 @@ const RequestDetailsPage = () => {
                     isRead: false,
                 });
 
-                // Confirm the new professional selection
                 setConfirmedProfessionalId(selectedProfessionalId);
             }
         } catch (error) {
-            console.error("Error selecting professional:", error);
             alert("Failed to select professional.");
         }
     };
@@ -163,33 +141,22 @@ const RequestDetailsPage = () => {
         <NotificationProvider userId={user?.id} userType="client">
             <Box className={styles.pageContainer}>
                 {/* Header */}
-                <Box className={styles.header}>
-                    <Typography variant="h4" className={styles.title}>
-                        קריאה {requestId}
-                    </Typography>
+                <Box className={styles.headerContainer}>
+                    <Typography className={styles.headerTitle}>פרטי הקריאה</Typography>
                 </Box>
 
                 {/* Request Details */}
-                <Box className={styles.details}>
-                    <Typography>
-                        <strong>City:</strong> {requestDetails.city || "Unknown City"}
-                    </Typography>
-                    <Typography>
-                        <strong>Date:</strong> {new Date(requestDetails.date).toLocaleString() || "Unknown Date"}
-                    </Typography>
-                    <Typography>
-                        <strong>Comment:</strong> {requestDetails.comment || "No Notes"}
-                    </Typography>
+                <Box className={styles.requestDetailsCard}>
+                    <Typography className={styles.requestType}>קריאה {requestId}</Typography>
+                    <Typography>{requestDetails.date} - {requestDetails.city}</Typography>
                 </Box>
 
-                {/* Quotations Section */}
-                <Box className={styles.quotationsSection}>
-                    <Typography variant="h5" className={styles.quotationsTitle}>
-                        הצעות מחיר
-                    </Typography>
+                {/* Professionals Section */}
+                <Typography className={styles.professionalHeader}>בעלי מקצוע שמוכנים לתת שירות</Typography>
+                <Box className={styles.professionalList}>
                     <RadioGroup value={selectedProfessionalId} onChange={(e) => setSelectedProfessionalId(e.target.value)}>
                         {quotations.map((q) => (
-                            <ListItem key={q.professionalId} className={styles.quotationItem}>
+                            <ListItem key={q.professionalId} className={styles.professionalCard}>
                                 <FormControlLabel
                                     value={q.professionalId}
                                     control={<Radio disabled={confirmedProfessionalId === q.professionalId} />}
@@ -198,37 +165,35 @@ const RequestDetailsPage = () => {
                                             <ListItemAvatar>
                                                 <Avatar src={q.image} alt={q.name} />
                                             </ListItemAvatar>
-                                            <ListItemText primary={q.name} secondary={`Price: ${q.price} ₪`} />
+                                            <ListItemText primary={q.name} secondary={`₪${q.price}`} className={styles.professionalText} />
                                         </Box>
                                     }
                                 />
                             </ListItem>
                         ))}
                     </RadioGroup>
-                    <Button variant="contained" onClick={handleSelectProfessional} disabled={!selectedProfessionalId || selectedProfessionalId === confirmedProfessionalId}>
-                        {confirmedProfessionalId ? "החלף" : "בחר"}
-                    </Button>
                 </Box>
 
+                {/* Select Button */}
+                <Button className={styles.selectButton} onClick={handleSelectProfessional} disabled={!selectedProfessionalId || selectedProfessionalId === confirmedProfessionalId}>
+                    {confirmedProfessionalId ? "החלף" : "בחר"}
+                </Button>
+
                 {/* Chat Section */}
-                <Box className={styles.chatSection}>
-                    <Typography variant="h6" className={styles.chatTitle}>
-                        התכתבויות
-                    </Typography>
-                    <div className={styles.chatContainer}>
-                        {userToken ? (
-                            <StreamChatComponent
-                                apiKey="nr6puhgsrawn" // Replace with your Stream API key
-                                userToken={userToken}
-                                channelId={`request_${requestId}`}
-                                userID={user.id}
-                                userRole="client"
-                            />
-                        ) : (
-                            <Typography>Loading chat...</Typography>
-                        )}
-                    </div>
+                <Box className={styles.chatContainer}>
+                    <StreamChatComponent
+                        apiKey="nr6puhgsrawn"
+                        userToken={userToken}
+                        channelId={`request_${requestId}`}
+                        userID={user.id}
+                        userRole="client"
+                    />
                 </Box>
+
+                {/* Back Button */}
+                <Button className={styles.backButton} onClick={() => navigate("/dashboard")}>
+                    חזור
+                </Button>
             </Box>
         </NotificationProvider>
     );

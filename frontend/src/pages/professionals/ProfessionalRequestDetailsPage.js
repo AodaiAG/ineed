@@ -30,36 +30,53 @@ const ProfessionalRequestDetailsPage = () => {
     if (authLoading) return;
 
     if (!isAuthenticated) {
-      navigate("/login");
-      return;
+        navigate("/login");
+        return;
     }
 
     const fetchRequestDetails = async () => {
-      try {
-        const response = await api.get(`/api/professionals/request/${requestId}`);
-        if (response.data.success) {
-          setRequestDetails(response.data.data);
-          setQuotation(response.data.data.quotation || "");
+        try {
+            const response = await api.get(`/api/professionals/request/${requestId}`);
+            if (response.data.success) {
+                setRequestDetails(response.data.data);
+                setQuotation(response.data.data.quotation || "");
 
-          // Fetch profession details using jobRequiredId
-          const professionResponse = await api.get(`/api/professionals/profession/${response.data.data.jobRequiredId}/${language}`);
-          if (professionResponse.data.success) {
-            setProfession(professionResponse.data.data);
-          } else {
-            setProfession({ main: "לא ידוע", sub: "לא ידוע" });
-          }
-        } else {
-          setError(response.data.message || "Failed to fetch request details");
+                // Fetch profession details using jobRequiredId
+                const professionResponse = await api.get(`/api/professionals/profession/${response.data.data.jobRequiredId}/${language}`);
+                if (professionResponse.data.success) {
+                    setProfession(professionResponse.data.data);
+                } else {
+                    setProfession({ main: "לא ידוע", sub: "לא ידוע" });
+                }
+            } else {
+                setError(response.data.message || "Failed to fetch request details");
+            }
+        } catch (error) {
+            setError("An error occurred while fetching the request details");
+        } finally {
+            setLoading(false);
         }
-      } catch (error) {
-        setError("An error occurred while fetching the request details");
-      } finally {
-        setLoading(false);
-      }
     };
 
-    fetchRequestDetails();
-  }, [authLoading, isAuthenticated, navigate, requestId]);
+    const fetchUserToken = async () => {
+        if (!userToken) {
+            try {
+                const response = await api.post("/api/generate-user-token", {
+                    id: String(user.profId),
+                    type: "prof",
+                });
+                const token = response.data.token;
+                sessionStorage.setItem("profChatToken", token);
+                setUserToken(token);
+            } catch (error) {
+                setError("Failed to initialize chat.");
+            }
+        }
+    };
+
+    Promise.all([fetchRequestDetails(), fetchUserToken()]).finally(() => setLoading(false));
+}, [authLoading, isAuthenticated, navigate, requestId, userToken]);  // ✅ Added `userToken`
+
 
   const handleQuotationSubmit = async () => {
     try {
