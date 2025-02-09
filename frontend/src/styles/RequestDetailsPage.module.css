@@ -8,7 +8,22 @@
   background-color: black;
   min-height: 100vh;
   box-sizing: border-box;
+  position: relative; /* Needed for absolute positioning of the cancel button */
 }
+
+/* ביטול Button (Top Left Corner) */
+.cancelButton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: red;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
 
 /* Header */
 .header {
@@ -24,7 +39,7 @@
 .requestNumber {
   font-size: 24px;
   font-weight: bold;
-  color: #FDD500; /* Updated color */
+  color: #FDD500;
   margin-right: 10px;
 }
 
@@ -45,11 +60,10 @@
   direction: rtl; /* Ensure right-to-left text alignment */
 }
 
-/* Ensures Hebrew labels don't shift when English values are displayed */
 .details strong {
-  color: #FDD500; /* Updated color */
+  color: #FDD500;
   display: inline-block;
-  min-width: 100px; /* Ensures labels stay in place */
+  min-width: 100px;
 }
 
 .details p {
@@ -60,29 +74,9 @@
 }
 
 /* Chat Section */
-.chatSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  max-width: 800px;
-  padding: 20px;
-  margin-bottom: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.chatTitle {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
-}
-
 .chatContainer {
   width: 100%;
+  max-width: 800px;
   height: 400px;
   overflow-y: auto;
   border: 1px solid #ddd;
@@ -105,24 +99,20 @@
   margin-top: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .quotationInputContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 10px; /* Adds spacing between input and button */
+  width: 100%;
+  max-width: 350px;
+  margin-top: 15px;
 }
 
-.quotationDisplay {
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-  color: black;
-}
 
 .quotationButton {
-  background-color: #FDD500; /* Updated color */
+  background-color: #FDD500;
   color: black;
   font-size: 16px;
   font-weight: bold;
@@ -136,29 +126,22 @@
   margin-top: 10px;
 }
 
-/* Back Button */
-.backButton {
-  background-color: #FDD500; /* Updated color */
+/* Back & Finish Work Buttons (Side by Side) */
+.buttonsRow {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* Space between buttons */
+  margin-top: 20px;
+}
+
+.backButton,
+.finalizeButton {
+  background-color: #FDD500;
   color: black;
   font-size: 18px;
   padding: 10px 40px;
   border-radius: 10px;
-  margin-top: 20px;
-}
-
-/* Loading & Error Containers */
-.loadingContainer,
-.errorContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: black;
-}
-
-.errorContainer {
-  color: red;
+  min-width: 150px; /* Ensure both buttons are the same size */
   text-align: center;
 }
 
@@ -188,7 +171,11 @@
     max-width: 90%;
   }
 
-  .backButton {
+  .buttonsRow {
+  }
+
+  .backButton,
+  .finalizeButton {
     width: 90%;
   }
 }

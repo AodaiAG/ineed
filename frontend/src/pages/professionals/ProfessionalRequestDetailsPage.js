@@ -6,8 +6,13 @@ import {
   CircularProgress,
   Typography,
   TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import StreamChatComponent from "../../components/client/StreamChatComponent";
+import FinishRequestComponent from "../../components/professionals/FinishRequestComponent";
 import api from "../../utils/api";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestDetailsPage.module.css";
@@ -16,67 +21,66 @@ const ProfessionalRequestDetailsPage = () => {
   const navigate = useNavigate();
   const { id: requestId } = useParams();
   const [requestDetails, setRequestDetails] = useState(null);
-  const [profession, setProfession] = useState(null); // Store profession data
-  const [quotation, setQuotation] = useState(""); // Store quotation amount
+  const [profession, setProfession] = useState(null);
+  const [quotation, setQuotation] = useState("");
   const [userToken, setUserToken] = useState(sessionStorage.getItem("profChatToken"));
+  const [quotations, setQuotations] = useState([]); // ✅ Store quotations
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isEditing, setIsEditing] = useState(true); // Quotation edit state
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSelectedProfessional, setIsSelectedProfessional] = useState(false);
+  const [showFinishDialog, setShowFinishDialog] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
 
   const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
-  const language = "he"; // Change based on user preference
+  const language = "he"; 
 
   useEffect(() => {
     if (authLoading) return;
 
     if (!isAuthenticated) {
-        navigate("/login");
-        return;
+      navigate("/login");
+      return;
     }
 
     const fetchRequestDetails = async () => {
-        try {
-            const response = await api.get(`/api/professionals/request/${requestId}`);
-            if (response.data.success) {
-                setRequestDetails(response.data.data);
-                setQuotation(response.data.data.quotation || "");
+      try {
+        const response = await api.get(`/api/professionals/request/${requestId}`);
+        if (response.data.success) {
+          const requestData = response.data.data;
+          setRequestDetails(requestData);
+          setQuotation(requestData.quotation || "");
 
-                // Fetch profession details using jobRequiredId
-                const professionResponse = await api.get(`/api/professionals/profession/${response.data.data.jobRequiredId}/${language}`);
-                if (professionResponse.data.success) {
-                    setProfession(professionResponse.data.data);
-                } else {
-                    setProfession({ main: "לא ידוע", sub: "לא ידוע" });
-                }
-            } else {
-                setError(response.data.message || "Failed to fetch request details");
-            }
-        } catch (error) {
-            setError("An error occurred while fetching the request details");
-        } finally {
-            setLoading(false);
+          if (requestData.professionalId === user.profId) {
+            setIsSelectedProfessional(true);
+          }
+
+          // ✅ Fetch quotations
+          const quotationsResponse = await api.get(`/api/professionals/request/${requestId}/quotations`);
+          if (quotationsResponse.data.success) {
+            setQuotations(quotationsResponse.data.data);
+          }
+
+          // Fetch profession details
+          const professionResponse = await api.get(`/api/professionals/profession/${requestData.jobRequiredId}/${language}`);
+          if (professionResponse.data.success) {
+            setProfession(professionResponse.data.data);
+          } else {
+            setProfession({ main: "לא ידוע", sub: "לא ידוע" });
+          }
+        } else {
+          setError(response.data.message || "Failed to fetch request details");
         }
+      } catch (error) {
+        setError("An error occurred while fetching the request details");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const fetchUserToken = async () => {
-        if (!userToken) {
-            try {
-                const response = await api.post("/api/generate-user-token", {
-                    id: String(user.profId),
-                    type: "prof",
-                });
-                const token = response.data.token;
-                sessionStorage.setItem("profChatToken", token);
-                setUserToken(token);
-            } catch (error) {
-                setError("Failed to initialize chat.");
-            }
-        }
-    };
-
-    Promise.all([fetchRequestDetails(), fetchUserToken()]).finally(() => setLoading(false));
-}, [authLoading, isAuthenticated, navigate, requestId, userToken]);  // ✅ Added `userToken`
-
+    Promise.all([fetchRequestDetails()]).finally(() => setLoading(false));
+  }, [authLoading, isAuthenticated, navigate, requestId]);
 
   const handleQuotationSubmit = async () => {
     try {
@@ -97,6 +101,22 @@ const ProfessionalRequestDetailsPage = () => {
     }
   };
 
+  const handleCancelRequest = async () => {
+    try {
+      await api.post("/api/professionals/cancel-request", {
+        requestId,
+        reason: cancelReason,
+      });
+
+      alert("The request has been canceled successfully.");
+      setShowCancelDialog(false);
+      navigate("/pro/expert-interface");
+    } catch (error) {
+      console.error("Error canceling request:", error);
+      alert("Failed to cancel the request.");
+    }
+  };
+
   if (loading || authLoading) {
     return (
       <Box className={styles.loadingContainer}>
@@ -105,92 +125,88 @@ const ProfessionalRequestDetailsPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Box className={styles.errorContainer}>
-        <Typography>{error}</Typography>
-        <Button variant="contained" onClick={() => navigate("/pro/expert-interface")} className={styles.backButton}>
-          חזור
-        </Button>
-      </Box>
-    );
-  }
-
   return (
     <Box className={styles.pageContainer}>
+      {/* ביטול Button (Top Left Corner) */}
+      <Button variant="contained" className={styles.cancelButton} onClick={() => setShowCancelDialog(true)}>
+        ביטול
+      </Button>
+
       {/* Header Section */}
       <Box className={styles.header}>
         <Typography className={styles.requestNumber}>{requestDetails.id}</Typography>
         <Typography className={styles.title}>קריאה</Typography>
       </Box>
 
+ 
+
       {/* Request Details */}
       <Box className={styles.details}>
-        <Typography>
-          <strong>בתחום:</strong> {profession?.main || "טוען..."}
-        </Typography>
-        <Typography>
-          <strong>בנושא:</strong> {profession?.sub || "טוען..."}
-        </Typography>
-        <Typography>
-          <strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}
-        </Typography>
-        <Typography>
-          <strong>מועד:</strong> {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}
-        </Typography>
-        <Typography>
-          <strong>הערת לקוח:</strong> {requestDetails.comment || "אין הערות"}
-        </Typography>
+        <Typography><strong>בתחום:</strong> {profession?.main || "טוען..."}</Typography>
+        <Typography><strong>בנושא:</strong> {profession?.sub || "טוען..."}</Typography>
+        <Typography><strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}</Typography>
+        <Typography><strong>מועד:</strong> {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}</Typography>
+        <Typography><strong>הערת לקוח:</strong> {requestDetails.comment || "אין הערות"}</Typography>
       </Box>
 
-      {/* Chat Section */}
-      <Box className={styles.chatContainer}>
-        <StreamChatComponent
-          apiKey="nr6puhgsrawn"
-          userToken={userToken}
-          channelId={`request_${requestId}`}
-          userID={String(user.profId)}
-          userRole="prof"
-        />
-      </Box>
-
-      {/* Quotation Section */}
-      <Box className={styles.quotationSection}>
-        {isEditing ? (
-          <Box className={styles.quotationInputContainer}>
-            <TextField
-              label="הצעת מחיר"
-              value={quotation}
-              onChange={(e) => setQuotation(e.target.value)}
-              variant="outlined"
-              type="number"
-            />
-            <Button
-              variant="contained"
-              onClick={handleQuotationSubmit}
-              disabled={!quotation || parseFloat(quotation) <= 0}
-              className={styles.quotationButton}
-            >
-              {quotation ? "עדכן" : "השתבץ"}
-            </Button>
-          </Box>
+             {/* Chat Section */}
+             <Box className={styles.chatContainer}>
+        {userToken ? (
+          <StreamChatComponent
+            apiKey="nr6puhgsrawn"
+            userToken={userToken}
+            channelId={`request_${requestId}`}
+            userID={String(user.profId)}
+            userRole="prof"
+          />
         ) : (
-          <Box className={styles.quotationDisplay}>
-            <Typography>הצעת מחיר שהצעת: {quotation} ש"ח</Typography>
-            <Button variant="contained" onClick={() => setIsEditing(true)} className={styles.quotationButton}>
-              עדכן
-            </Button>
-          </Box>
+          <Typography>Loading chat...</Typography>
         )}
       </Box>
 
-      {/* Quotation Note */}
-      <Typography className={styles.quotationText}>* הצעה מקסימלית 700 ש"ח</Typography>
 
-      {/* Back Button */}
-      <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
-        חזור
-      </Button>
+      {/* Quotations Section */}
+      <Box className={styles.quotationSection}>
+
+
+              {/* Quotation Edit Button */}
+      {isEditing ? (
+        <Box className={styles.quotationInputContainer}>
+          <TextField
+            label="הצעת מחיר"
+            value={quotation}
+            onChange={(e) => setQuotation(e.target.value)}
+            variant="outlined"
+            type="number"
+          />
+          <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
+            עדכן
+          </Button>
+        </Box>
+      ) : (
+        <Button variant="contained" onClick={() => setIsEditing(true)} className={styles.quotationButton}>
+          ערוך הצעת מחיר
+        </Button>
+      )}
+      </Box>
+
+
+
+    
+      {/* Buttons Row */}
+      <Box className={styles.buttonsRow}>
+        <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
+          חזור
+        </Button>
+        {isSelectedProfessional && (
+          <Button variant="contained" className={styles.finalizeButton} onClick={() => setShowFinishDialog(true)}>
+            סיום העבודה
+          </Button>
+        )}
+      </Box>
+
+      {/* Finish Request Component */}
+      <FinishRequestComponent open={showFinishDialog} onClose={() => setShowFinishDialog(false)} requestId={requestId} clientId={requestDetails.clientId} />
     </Box>
   );
 };
