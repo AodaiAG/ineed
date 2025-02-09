@@ -59,7 +59,7 @@ const Dashboard = () => {
       <Box className={styles.clientDContainer}>
         {/* Header */}
         <Box className={styles.clientDHeader}>
-          <Box className={styles.clientDIconContainer}>
+          <Box className={styles.iconContainer}>
             {/* Hamburger Menu Icon */}
             <IconButton onClick={toggleSidebar} className={styles.menuIcon}>
               <MenuIcon />

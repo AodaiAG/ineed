@@ -64,7 +64,14 @@ font-size: clamp(1rem, 17vw, 4.0rem);
     max-width: 100%;
     text-align: center;
 }
+.menuIcon svg {
+  color: white !important;
+}
 
+/* Change color of the bell (notification) icon */
+.notificationIcon svg {
+  color: white !important;
+}
 /* Subtitle */
 .expertInterface_subTitle {
   font-size: clamp(1rem, 8vw, 2rem);
@@ -88,7 +95,7 @@ font-size: clamp(1rem, 17vw, 4.0rem);
 /* Worker Image */
 .expertInterface_workerImage {
     width: 100%;
-   max-width: 175px;
+   max-width: 161px;
     margin: auto;
 }
 
@@ -294,8 +301,12 @@ display: flex;
 
 .iconContainer {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    gap: 35px;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
 }
 
 

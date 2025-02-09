@@ -7,6 +7,7 @@
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
+	padding: 10px;
  
   
 
@@ -37,7 +38,7 @@
 
 .clientDContent {
   text-align: center;
-    margin-top: 40px;
+    
 }
 
 .clientDTitle {
@@ -115,8 +116,13 @@ width: 231px;
 
 .iconContainer {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    gap: 35px;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+	margin:10px;
 }
 
 
