@@ -59,7 +59,7 @@ max-width: 400px;
 .expertInterface_mainTitle {
 font-size: clamp(1rem, 17vw, 4.0rem);
     font-weight: 500;
-    margin-top: 22px;
+        margin-top: -11px;
 	
     max-width: 100%;
     text-align: center;
