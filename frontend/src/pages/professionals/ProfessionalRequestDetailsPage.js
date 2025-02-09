@@ -55,9 +55,29 @@ const ProfessionalRequestDetailsPage = () => {
         setLoading(false);
       }
     };
+    const fetchUserToken = async () => {
+      if (!userToken) {
+          try {
+              console.log("Fetching user token...");
+              const response = await api.post("/api/generate-user-token", {
+                  id: String(user.profId),
+                  type: "prof",
+              });
+              const token = response.data.token;
+              sessionStorage.setItem("profChatToken", token);
+              setUserToken(token);
+              console.log("User token fetched successfully:", token);
+          } catch (error) {
+              console.error("Failed to fetch user token:", error);
+              setError("Failed to initialize chat.");
+          }
+      }
+  };
 
-    fetchRequestDetails();
-  }, [authLoading, isAuthenticated, navigate, requestId]);
+  Promise.all([fetchRequestDetails(), fetchUserToken()]).finally(() => setLoading(false));
+
+    
+  }, [authLoading, isAuthenticated, navigate, requestId,userToken]);
 
   const handleQuotationSubmit = async () => {
     try {
@@ -187,7 +207,7 @@ const ProfessionalRequestDetailsPage = () => {
               userRole="prof"
             />
           ) : (
-            <Typography>Loading chat...</Typography>
+            <Typography>Loaddddng chat...</Typography>
           )}
         </div>
       </Box>

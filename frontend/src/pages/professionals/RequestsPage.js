@@ -115,7 +115,7 @@ function RequestsPage({ mode, title }) {
                                         <span>קריאה</span>
                                         <span className={styles.callNumber}>{request.id}</span>
                                     </div>
-                                    <span className={styles.unreadMessages}>{request.unreadMessages}</span>
+                                    <span className={styles.unreadMessages}>{8}</span>
                                 </div>
                             </div>
 
