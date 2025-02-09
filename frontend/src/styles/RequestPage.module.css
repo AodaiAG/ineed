@@ -74,8 +74,11 @@
 
 /* Request details */
 .requestDetails {
+    display: flex;
+    flex-direction: column; /* Ensures details are stacked vertically */
+    color: black !important;
     flex-grow: 1;
-    color: black !important; /* Ensures text is black */
+    gap: 5px; /* Adds spacing between elements */
 }
 
 .profession {
@@ -94,6 +97,9 @@
     text-align: center;
     font-size: 14px;
     color: black !important;
+    display: flex;
+    flex-direction: column; /* Aligns text in a column */
+    align-items: center;
 }
 
 .callNumber {

@@ -8,10 +8,14 @@ import styles from '../../styles/RequestPage.module.css';
 
 function RequestsPage({ mode, title }) {
     const [requests, setRequests] = useState([]);
+    const [professions, setProfessions] = useState({}); // Stores professions fetched from backend
     const [loading, setLoading] = useState(true);
     const { translation } = useLanguage();
     const { user } = useAuthCheck();
     const navigate = useNavigate();
+
+    // Assume the language is determined somewhere in the app (default to Hebrew)
+    const language = 'he'; // Change this dynamically based on user preference
 
     useEffect(() => {
         const fetchRequests = async () => {
@@ -32,8 +36,44 @@ function RequestsPage({ mode, title }) {
         fetchRequests();
     }, [mode]);
 
+    // Fetch profession details for each request
+    useEffect(() => {
+        const fetchProfessions = async () => {
+            for (const request of requests) {
+                if (!professions[request.jobRequiredId]) {
+                    try {
+                        const response = await api.get(`/api/professionals/profession/${request.jobRequiredId}/${language}`);
+                        if (response.data.success) {
+                            setProfessions((prev) => ({
+                                ...prev,
+                                [request.jobRequiredId]: response.data.data
+                            }));
+                        }
+                    } catch (error) {
+                        console.error('Error fetching profession details:', error);
+                    }
+                }
+            }
+        };
+
+        if (requests.length > 0) {
+            fetchProfessions();
+        }
+    }, [requests]);
+
     const handleRequestClick = (requestId) => {
         navigate(`/pro/requests/${requestId}`);
+    };
+
+    const formatDateTime = (dateTimeString) => {
+        const dateObj = new Date(dateTimeString);
+        const hours = dateObj.getHours().toString().padStart(2, '0');
+        const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const year = dateObj.getFullYear();
+    
+        return `${hours}:${minutes} - ${day}/${month}/${year}`;
     };
 
     if (loading || !translation) {
@@ -61,8 +101,11 @@ function RequestsPage({ mode, title }) {
                                 <div className={styles.requestInfo}>
                                     <span className={styles.requestId}>{index + 1}</span>
                                     <div className={styles.requestDetails}>
-                                        <p className={styles.profession}>{request.profession}, {request.subProfession}</p>
-                                        <p className={styles.dateTime}>{request.date} - {request.time}</p>
+                                        <p className={styles.profession}>
+                                            {professions[request.jobRequiredId]?.main || 'טוען...'}, 
+                                            {professions[request.jobRequiredId]?.sub || 'טוען...'}
+                                        </p>
+                                        <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
                                     </div>
                                     <div className={styles.locationInfo}>
                                         <span>מיקום</span>

@@ -8,6 +8,7 @@ const {grantProfAuth} = require('./authController');
 const { Op } = require('sequelize');
 const sequelize = require('../config/db'); // Sequelize instance
 const Notification = require('../models/notifications/Notification'); // Adjust the path if necessary
+const JobType = require('../models/jobTypeModel'); // Import your Sequelize model
 
 
 
@@ -843,6 +844,39 @@ const fetchProfessionalRequests = async (req, res) => {
     }
 };
 
+const fetchProfessionById = async (req, res) => {
+    const { id, language } = req.params;
+
+    try {
+        // Determine the correct table based on language
+        let tableName = 'job_type'; // Default to Hebrew
+        if (language !== 'he') {
+            tableName = `job_type_${language}`;
+        }
+
+        // Validate language
+        const validLanguages = ['he', 'ar', 'en', 'es', 'ru'];
+        if (!validLanguages.includes(language)) {
+            return res.status(400).json({ success: false, message: 'Invalid language' });
+        }
+
+        // Fetch profession details using the dynamically assigned table
+        const jobTypeModel = JobType(tableName);
+        const profession = await jobTypeModel.findOne({
+            where: { id },
+            attributes: ['main', 'sub']
+        });
+
+        if (!profession) {
+            return res.status(404).json({ success: false, message: 'Profession not found' });
+        }
+
+        res.status(200).json({ success: true, data: profession });
+    } catch (error) {
+        console.error('Error fetching profession:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
 
 
 
@@ -853,6 +887,7 @@ module.exports = {
     assignRequestToProfessional,
     getAllLocations,cancelRequest,
     downloadVCardHandler,
+    fetchProfessionById,
     fetchProfessionalRequests,
     updateQuotation,
     assignRequestToProfessional,

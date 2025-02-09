@@ -15,6 +15,7 @@ const { checkIfRegistered,
     fetchProfRequests,
     updateQuotation,
     cancelRequest,
+    fetchProfessionById,
     fetchProfessionalRequests,
     registerProfessional,
     getProfessionalById,updateProfessional ,uploadImage,generateVerificationCodeHandler
@@ -48,6 +49,7 @@ router.post("/join-chat", addProfessionalToChannel);
 
 router.get("/request/:requestId", authenticateToken, getProfessionalRequestDetails);
 
+router.get('/profession/:id/:language', fetchProfessionById);
 
 router.post("/cancel-request", authenticateToken, cancelRequest);
 
