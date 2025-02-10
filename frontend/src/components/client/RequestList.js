@@ -24,7 +24,7 @@ const RequestList = ({ title, requestType }) => {
 
           // Fetch professions for each request
           const updatedRequests = await Promise.all(
-            fetchedRequests.map(async (request, index) => { // ✅ Add index for left section
+            fetchedRequests.map(async (request, index) => {
               try {
                 const professionResponse = await api.get(
                   `/api/professionals/profession/${request.jobRequiredId}/${language}`
@@ -88,27 +88,31 @@ const RequestList = ({ title, requestType }) => {
 
               {/* Middle Section - Details */}
               <Box className={styles.middleSection}>
+                {/* Request ID */}
+                <Box className={styles.infoBlock}>
+                  <Typography className={styles.infoLabel}>קריאה</Typography>
+                  <Typography className={styles.infoValue}>{request.id}</Typography>
+                </Box>
+
+                {/* Experts */}
                 <Box className={styles.infoBlock}>
                   <Typography className={styles.infoLabel}>מומחים</Typography>
                   <Typography className={styles.infoValue}>{request.experts || "N/A"}</Typography>
                 </Box>
-                <Box className={styles.infoBlock}>
-                  <Typography className={styles.infoLabel}>בתחום</Typography>
-                  <Typography className={styles.infoValue}>{request.mainProfession}</Typography>
-                </Box>
-                <Box className={styles.infoBlock}>
-                  <Typography className={styles.infoLabel}>בנושא</Typography>
-                  <Typography className={styles.infoValue}>{request.subProfession}</Typography>
-                </Box>
-                <Box className={styles.infoBlock}>
-                  <Typography className={styles.infoLabel}>תאריך</Typography>
-                  <Typography className={styles.infoValue}>{new Date(request.date).toLocaleString()}</Typography>
+
+                {/* Profession & Main (No Label) */}
+                <Box className={styles.professionDateContainer}>
+                  <Typography className={styles.professionValue}>
+                    {request.mainProfession}, {request.subProfession}
+                  </Typography>
+                  <Typography className={styles.dateText}>
+                    {new Date(request.date).toLocaleString()}
+                  </Typography>
                 </Box>
               </Box>
 
-              {/* Right Section - Request Label & Unread Messages */}
+              {/* Right Section - Unread Messages */}
               <Box className={styles.rightSection}>
-                <Typography className={styles.requestLabel}>קריאה {request.id}</Typography>
                 <Box className={styles.unreadBadge}>{request.unreadMessages || 0}</Box>
               </Box>
             </Box>

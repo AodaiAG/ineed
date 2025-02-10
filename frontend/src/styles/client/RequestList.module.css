@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: flex-start;
   min-height: 100vh;
-  padding: 20px 16px;
+  padding: 20px 5px;
 }
 
 /* Header */
@@ -35,7 +35,7 @@
   max-width: 400px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
   padding: 20px 10px;
 }
 
@@ -47,7 +47,8 @@
   background: #ffffff;
   border: 3px solid #fdbe00;
   border-radius: 14px;
-  padding: 15px;
+  padding: 12px;
+  gap: 13px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
 }
@@ -64,7 +65,7 @@
   margin: 10px auto;
 }
 
-/* Left Section - Request ID */
+/* Left Section - Request Index */
 .leftSection {
   display: flex;
   justify-content: center;
@@ -83,38 +84,56 @@
   text-align: right;
   color: black;
   display: flex;
-  flex-direction: column;
-  gap: 5px;
+  flex-direction: row-reverse;
+  gap: 9px;
 }
 
+/* Info Block */
 .infoBlock {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
+/* Labels (Black) */
 .infoLabel {
   font-size: 14px;
   font-weight: bold;
-  color: #1A4B75;
+  color: #000000; /* ✅ Black */
 }
 
+/* Values (Grey) */
 .infoValue {
   font-size: 14px;
-  color: black;
+  color: #A3A3A3; /* ✅ Grey */
 }
 
-/* Right Section - Request Label & Unread Messages */
+/* Profession & Date in One Box */
+.professionDateContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+/* Profession Value (Grey) */
+.professionValue {
+  font-size: 14px;
+  font-weight: bold;
+  color: black; /* ✅ Grey */
+}
+
+/* Date Value (Grey) */
+.dateText {
+  font-size: 12px;
+  color: #A3A3A3; /* ✅ Grey */
+}
+
+/* Right Section - Unread Messages */
 .rightSection {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.requestLabel {
-  font-size: 14px;
-  font-weight: bold;
-  color: black;
 }
 
 /* Unread Messages Badge */
