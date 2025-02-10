@@ -14,6 +14,7 @@ import SMSVerificationC from './pages/client/SMSVerification';
 import RequestDetailsPage from './pages/client/RequestDetailsPage';
 import ClientDashboard from './pages/client/Dashboard';
 import MyRequests from './pages/client/MyRequests';
+import ClosedRequests from './pages/client/ClosedRequests';
 import ProfessionalsList from './pages/client/ProfessionalList';
 import ProfilePage from './pages/client/ProfilePage';
 import SignInPage from "./pages/client/SignInPage";
@@ -48,6 +49,7 @@ function App() {
           <Route path="/request" element={<RequestDetailsPage />} />
           <Route path="/dashboard" element={<ClientDashboard />} />
           <Route path="/dashboard/my-requests" element={<MyRequests />} />
+          <Route path="/dashboard/closed-requests" element={<ClosedRequests />} />
           <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/sign-in" element={<SignInPage />} />

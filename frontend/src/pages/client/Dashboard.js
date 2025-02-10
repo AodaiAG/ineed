@@ -33,6 +33,9 @@ const Dashboard = () => {
   const handleNavigateToMyRequests = () => {
     navigate("/dashboard/my-requests");
   };
+  const handleNavigateToClosedRequests = () => {
+    navigate("/dashboard/closed-requests");
+  };
 
   const handleNavigateToMain = () => {
     navigate("/main");
@@ -145,6 +148,7 @@ const Dashboard = () => {
           <Button
             variant="contained"
             className={`${styles.clientDButton} ${styles.clientDClosedRequestsButton}`}
+            onClick={handleNavigateToClosedRequests}
             sx={{ borderRadius: "14px", fontSize: "1.6rem" }}
           >
             קריאות סגורות

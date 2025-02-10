@@ -122,19 +122,21 @@ exports.saveClient = async (req, res) => {
   
 
   exports.getClientRequests = async (req, res) => {
-    const clientId = req.user.id; // Extract client ID from the decoded JWT
+    const clientId = req.user.id; // Extract client ID from JWT
+    const status = req.query.status || 'open'; // Default to 'open' if no status is provided
   
     try {
-      // Fetch client requests along with request details
+      // Fetch client requests with related request details
       const clientRequests = await ClientRequest.findAll({
-        where: { clientId }, // Filter by clientId
+        where: { clientId },
         attributes: [], // Exclude all fields from ClientRequest
         include: [
           {
             model: Request,
-            as: 'request', // Specify the alias defined in the association
-            attributes: { exclude: [] }, // Include all fields from Request
-        },
+            as: 'request', // Use the alias defined in the association
+            attributes: { exclude: [] }, // Include all fields
+            where: { status }, // Filter requests by status
+          },
         ],
       });
   
