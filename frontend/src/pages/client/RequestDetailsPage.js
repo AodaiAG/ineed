@@ -12,7 +12,10 @@ import {
     Radio,
     RadioGroup,
     FormControlLabel,
+    Collapse
 } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import StreamChatComponent from "../../components/client/StreamChatComponent";
 import styles from "../../styles/client/RequestDetailsPage.module.css";
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
@@ -30,6 +33,10 @@ const RequestDetailsPage = () => {
     const [userToken, setUserToken] = useState(sessionStorage.getItem("clientChatToken"));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Expandable Sections
+    const [showProfessionals, setShowProfessionals] = useState(false);
+    const [showChat, setShowChat] = useState(false);
 
     // Authentication check
     const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
@@ -90,27 +97,6 @@ const RequestDetailsPage = () => {
 
             if (response.data.success) {
                 alert("Professional selected successfully!");
-
-                if (confirmedProfessionalId && confirmedProfessionalId !== selectedProfessionalId) {
-                    await api.post("/api/notifications", {
-                        recipientId: confirmedProfessionalId.toString(),
-                        recipientType: "professional",
-                        messageKey: "notifications.professionalDeselected",
-                        requestId,
-                        action: `/pro/requests/${requestId}`,
-                        isRead: false,
-                    });
-                }
-
-                await api.post("/api/notifications", {
-                    recipientId: selectedProfessionalId.toString(),
-                    recipientType: "professional",
-                    messageKey: "notifications.professionalSelected",
-                    requestId,
-                    action: `/pro/requests/${requestId}`,
-                    isRead: false,
-                });
-
                 setConfirmedProfessionalId(selectedProfessionalId);
             }
         } catch (error) {
@@ -151,44 +137,62 @@ const RequestDetailsPage = () => {
                     <Typography>{requestDetails.date} - {requestDetails.city}</Typography>
                 </Box>
 
-                {/* Professionals Section */}
-                <Typography className={styles.professionalHeader}>בעלי מקצוע שמוכנים לתת שירות</Typography>
-                <Box className={styles.professionalList}>
-                    <RadioGroup value={selectedProfessionalId} onChange={(e) => setSelectedProfessionalId(e.target.value)}>
-                        {quotations.map((q) => (
-                            <ListItem key={q.professionalId} className={styles.professionalCard}>
-                                <FormControlLabel
-                                    value={q.professionalId}
-                                    control={<Radio disabled={confirmedProfessionalId === q.professionalId} />}
-                                    label={
-                                        <Box display="flex" alignItems="center">
-                                            <ListItemAvatar>
-                                                <Avatar src={q.image} alt={q.name} />
-                                            </ListItemAvatar>
-                                            <ListItemText primary={q.name} secondary={`₪${q.price}`} className={styles.professionalText} />
-                                        </Box>
-                                    }
-                                />
-                            </ListItem>
-                        ))}
-                    </RadioGroup>
+                {/* Professionals Section (Expandable) */}
+                <Box className={styles.expandableHeader} onClick={() => { setShowProfessionals(!showProfessionals); setShowChat(false); }}>
+                    <Typography>בעלי מקצוע שמוכנים לתת שירות</Typography>
+                    {showProfessionals ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </Box>
-
-                {/* Select Button */}
+                <Collapse in={showProfessionals} className={styles.collapseContainer}>
+    <Box className={styles.collapseWrapper}>
+        <Box className={styles.professionalList}>
+            <RadioGroup value={selectedProfessionalId} onChange={(e) => setSelectedProfessionalId(e.target.value)}>
+                {quotations.length > 0 ? (
+                    quotations.map((q) => (
+                        <ListItem key={q.professionalId} className={styles.professionalCard}>
+                            <FormControlLabel
+                                value={q.professionalId}
+                                control={<Radio />}
+                                label={
+                                    <Box display="flex" alignItems="center">
+                                        <ListItemAvatar>
+                                            <Avatar src={q.image} alt={q.name} />
+                                        </ListItemAvatar>
+                                        <ListItemText primary={q.name} secondary={`₪${q.price}`} className={styles.professionalText} />
+                                    </Box>
+                                }
+                            />
+                        </ListItem>
+                    ))
+                ) : (
+                    <Typography className={styles.noExpertsMessage}>אין כרגע מומחים זמינים</Typography>
+                )}
+            </RadioGroup>
+            {quotations.length > 0 && (
                 <Button className={styles.selectButton} onClick={handleSelectProfessional} disabled={!selectedProfessionalId || selectedProfessionalId === confirmedProfessionalId}>
-                    {confirmedProfessionalId ? "החלף" : "בחר"}
+                    בחר מומחה
                 </Button>
+            )}
+        </Box>
+    </Box>
+</Collapse>
 
-                {/* Chat Section */}
-                <Box className={styles.chatContainer}>
-                    <StreamChatComponent
-                        apiKey="nr6puhgsrawn"
-                        userToken={userToken}
-                        channelId={`request_${requestId}`}
-                        userID={user.id}
-                        userRole="client"
-                    />
+
+                {/* Chat Section (Expandable) */}
+                <Box className={styles.expandableHeader} onClick={() => { setShowChat(!showChat); setShowProfessionals(false); }}>
+                    <Typography>צ׳אט עם המומחים שלנו</Typography>
+                    {showChat ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </Box>
+                <Collapse in={showChat}>
+                    <Box className={styles.chatContainer}>
+                        <StreamChatComponent
+                            apiKey="nr6puhgsrawn"
+                            userToken={userToken}
+                            channelId={`request_${requestId}`}
+                            userID={user.id}
+                            userRole="client"
+                        />
+                    </Box>
+                </Collapse>
 
                 {/* Back Button */}
                 <Button className={styles.backButton} onClick={() => navigate("/dashboard")}>

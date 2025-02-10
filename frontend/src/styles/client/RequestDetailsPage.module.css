@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: flex-start;
     padding: 20px;
-    background-color: #007BFF; /* Background color as seen in the image */
+    background-color: #1783E0; /* ✅ Background color from image */
     min-height: 100vh;
     box-sizing: border-box;
 }
@@ -13,11 +13,11 @@
 /* Header */
 .headerContainer {
     width: 90%;
-    background-color: #0D3C66;
+    background-color: #1A4B75; /* ✅ Dark blue header */
     color: white;
     text-align: center;
     padding: 15px;
-    border-radius: 10px;
+    border-radius: 14px;
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
@@ -29,12 +29,12 @@
 .requestDetailsCard {
     width: 90%;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 14px;
     padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    border: 2px solid #FFC107;
+    border: 3px solid #FDD500; /* ✅ Yellow border */
     font-size: 16px;
     color: black;
     margin-bottom: 20px;
@@ -46,34 +46,157 @@
     font-size: 18px;
 }
 
-/* Professionals Section */
-.professionalHeader {
+/* Expandable Sections */
+.expandableHeader {
+    width: 90%;
+    background: #FDD500; /* ✅ Yellow */
+    color: black;
     font-size: 18px;
     font-weight: bold;
-    color: white;
-    text-align: center;
+    padding: 10px;
+    border-radius: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 10px;
+    text-align: center;
 }
 
-.professionalList {
+/* Professional List Container (NEW) */
+.professionalListContainer {
     width: 90%;
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* ✅ Subtle shadow */
+    border: 3px solid #FDD500;
+    margin-bottom: 15px;
+}
+
+/* Professionals Section */
+.professionalList {
     display: flex;
+	
     flex-direction: column;
     gap: 10px;
 }
 
+
+
 /* Professional Cards */
 .professionalCard {
     background-color: white;
-    border-radius: 10px;
+    border-radius: 14px;
     padding: 15px;
+
     display: flex;
     align-items: center;
-    border: 2px solid #FFC107;
+    border: 3px solid #FDD500;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    color: black !important; /* Ensures text is black */
+    color: black !important;
 }
+
+/* Full List Container */
+.professionalListContainer {
+    width: 90%;
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 3px solid #FDD500;
+    margin-bottom: 15px;
+}
+
+/* Each Professional Card */
+.professionalCard {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    border: 3px solid #FDD500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    max-width: 450px; /* Adjust as needed */
+}
+
+/* Hover Effect */
+.professionalCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(255, 193, 7, 0.5);
+}
+
+/* Avatar */
+.professionalAvatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Name & Price */
+.professionalInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.professionalName {
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+}
+
+.professionalPrice {
+    font-size: 14px;
+    color: #1A4B75;
+}
+
+/* Select Button */
+.selectButton {
+    width: 100%;
+    background-color: #FDD500 !important;
+    color: black !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    padding: 12px 40px !important;
+    border-radius: 14px !important;
+    margin-top: 10px !important;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+/* Target the Collapse container */
+.collapseContainer {
+    width: 100%; /* Make it full width */
+}
+
+/* Target the Collapse wrapper */
+.collapseWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Target the professional list */
+.professionalList {
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    margin: 0 auto; /* Center it */
+}
+
+
+
+.selectButton:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
+}
+
 
 .professionalCard:hover {
     transform: translateY(-3px);
@@ -91,7 +214,7 @@
 .professionalText .MuiListItemText-primary {
     font-size: 16px;
     font-weight: bold;
-    color: black !important; /* Fix: Make name visible */
+    color: black !important;
 }
 
 /* Selection Radio Button */
@@ -99,22 +222,24 @@
     width: 100%;
 }
 
-/* Select Button */
+/* Select Button (UPDATED) */
 .selectButton {
+    width: 100%;
     background-color: #FDD500 !important;
     color: black !important;
     font-size: 18px !important;
     font-weight: bold !important;
     padding: 12px 40px !important;
-    border-radius: 10px !important;
+    border-radius: 14px !important;
     margin-top: 10px !important;
     cursor: pointer;
-	margin-bottom: 5px;
+    margin-bottom: 5px;
     text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .selectButton:hover {
-    transform: translateY(-2px);
+    transform: scale(1.03);
     box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
 }
 
@@ -122,19 +247,19 @@
 .chatContainer {
     width: 90%;
     background-color: white;
-    border-radius: 10px;
+    border-radius: 14px;
     padding: 10px;
     margin-bottom: 20px;
-    height: 350px;
+    height: 400px; /* ✅ Increased height */
     overflow-y: auto;
-    border: 2px solid #ddd;
+    border: 3px solid #1A4B75;
 }
 
 /* Chat Bubbles */
 .chatBubble {
     max-width: 80%;
     padding: 10px;
-    border-radius: 12px;
+    border-radius: 14px;
     margin-bottom: 10px;
     font-size: 14px;
 }
@@ -145,7 +270,7 @@
     color: black;
     align-self: flex-start;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 14px;
 }
 
 /* Professional Messages (Blue) */
@@ -154,7 +279,7 @@
     color: white;
     align-self: flex-end;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 14px;
 }
 
 /* System Messages (Gray) */
@@ -163,19 +288,29 @@
     color: white;
     align-self: center;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 14px;
+}
+
+/* No Experts Available Message */
+.noExpertsMessage {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #1A4B75; /* ✅ Dark blue */
+    padding: 10px;
 }
 
 /* Back Button */
 .backButton {
-    background-color: #FDD500 !important;
-    color: black !important;
+    background-color: #000000 !important;
+    color: white !important;
     font-size: 18px !important;
     padding: 10px 40px !important;
-    border-radius: 10px !important;
+    border-radius: 14px !important;
     margin-top: 20px !important;
     cursor: pointer;
     text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .backButton:hover {
@@ -214,7 +349,7 @@
         max-width: 90%;
     }
 
-    .professionalList {
+    .professionalListContainer {
         max-width: 90%;
     }
 
