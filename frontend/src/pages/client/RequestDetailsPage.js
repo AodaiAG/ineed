@@ -21,6 +21,7 @@ import styles from "../../styles/client/RequestDetailsPage.module.css";
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import api from "../../utils/clientApi";
 import { NotificationProvider } from "../../contexts/NotificationContext";
+import dayjs from "dayjs";
 
 const RequestDetailsPage = () => {
     const [searchParams] = useSearchParams();
@@ -33,6 +34,9 @@ const RequestDetailsPage = () => {
     const [userToken, setUserToken] = useState(sessionStorage.getItem("clientChatToken"));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [profession, setProfession] = useState("לא ידוע");
+    const [subProfession, setSubProfession] = useState("לא ידוע");
+    const language = "he"; // Default language
 
     // Expandable Sections
     const [showProfessionals, setShowProfessionals] = useState(false);
@@ -48,7 +52,6 @@ const RequestDetailsPage = () => {
             navigate("/login");
             return;
         }
-
         const fetchRequestDetails = async () => {
             try {
                 const response = await api.get(`/api/request/${requestId}`);
@@ -61,6 +64,17 @@ const RequestDetailsPage = () => {
                         setSelectedProfessionalId(request.professionalId);
                         setConfirmedProfessionalId(request.professionalId);
                     }
+
+                    // Fetch profession details
+                    if (request.jobRequiredId) {
+                        const professionResponse = await api.get(
+                            `/api/professionals/profession/${request.jobRequiredId}/${language}`
+                        );
+                        if (professionResponse.data.success) {
+                            setProfession(professionResponse.data.data.main);
+                            setSubProfession(professionResponse.data.data.sub);
+                        }
+                    }
                 } else {
                     setError(response.data.message || "Failed to fetch request details");
                 }
@@ -68,6 +82,7 @@ const RequestDetailsPage = () => {
                 setError("An error occurred while fetching the request details");
             }
         };
+
 
         const fetchUserToken = async () => {
             if (!userToken) {
@@ -123,6 +138,11 @@ const RequestDetailsPage = () => {
         );
     }
 
+        // ✅ Format date & time
+        const formattedDate = requestDetails?.date
+        ? dayjs(requestDetails.date).format("DD/MM/YYYY - hh:mm:ss A")
+        : "תאריך לא ידוע";
+
     return (
         <NotificationProvider userId={user?.id} userType="client">
             <Box className={styles.pageContainer}>
@@ -131,11 +151,23 @@ const RequestDetailsPage = () => {
                     <Typography className={styles.headerTitle}>פרטי הקריאה</Typography>
                 </Box>
 
-                {/* Request Details */}
-                <Box className={styles.requestDetailsCard}>
-                    <Typography className={styles.requestType}>קריאה {requestId}</Typography>
-                    <Typography>{requestDetails.date} - {requestDetails.city}</Typography>
+   {/* Request Details */}
+   <Box className={styles.requestDetailsContainer}>
+                    <Box className={styles.requestDetailsCard}>
+                        <Box className={styles.requestHeader}>
+                            <Typography className={styles.requestType}>קריאה {requestId}</Typography>
+                            <Box className={styles.deleteIcon}>🗑️</Box>
+                        </Box>
+                        <Typography className={styles.profession}>
+                            {profession}, {subProfession}
+                        </Typography>
+                        <Typography className={styles.date}>{formattedDate}</Typography>
+                        <Typography className={styles.address}>
+                            {requestDetails?.city}
+                        </Typography>
+                    </Box>
                 </Box>
+
 
                 {/* Professionals Section (Expandable) */}
                 <Box className={styles.expandableHeader} onClick={() => { setShowProfessionals(!showProfessionals); setShowChat(false); }}>
