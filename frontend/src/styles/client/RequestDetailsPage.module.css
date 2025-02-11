@@ -46,20 +46,24 @@
     font-size: 18px;
 }
 
+
 /* Expandable Sections */
 .expandableHeader {
     width: 90%;
     background: #FDD500; /* ✅ Yellow */
     color: black;
     font-size: 18px;
+	    box-shadow: 20px 20px 20px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
     font-weight: bold;
     padding: 10px;
     border-radius: 14px;
+	margin: 5px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    
     text-align: center;
 }
 
@@ -173,6 +177,7 @@
 /* Target the Collapse container */
 .collapseContainer {
     width: 100%; /* Make it full width */
+	
 }
 
 /* Target the Collapse wrapper */
@@ -185,10 +190,28 @@
 
 /* Target the professional list */
 .professionalList {
-    width: 100%;
-    max-width: 600px; /* Adjust as needed */
-    margin: 0 auto; /* Center it */
+width: 100%;
+    max-width: 600px;
+     display: flex; 
+    margin: 12px auto;
+    justify-content: center;
+    align-items: center;
 }
+/* ✅ Target the RadioGroup */
+.radioGroupCustom {
+    width: 80% !important;  /* Set width */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+	gap:5px;
+    box-shadow: 0px 15px 7px rgb(72 72 72 / 60%);
+border-radius: 20px; /* Rounded edges */
+background: transparent; /* Make background fully transparent */
+
+    justify-content: center;
+    margin: auto;
+}
+
 
 
 
@@ -224,16 +247,16 @@
 
 /* Select Button (UPDATED) */
 .selectButton {
-    width: 100%;
-    background-color: #FDD500 !important;
-    color: black !important;
+    width: 50% !important;
+    background-color: #1A4B75 !important;
+    color: white !important;
     font-size: 18px !important;
-    font-weight: bold !important;
+
     padding: 12px 40px !important;
     border-radius: 14px !important;
     margin-top: 10px !important;
     cursor: pointer;
-    margin-bottom: 5px;
+
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -247,6 +270,7 @@
 .chatContainer {
     width: 90%;
     background-color: white;
+	
     border-radius: 14px;
     padding: 10px;
     margin-bottom: 20px;
@@ -334,6 +358,53 @@
     color: red;
     text-align: center;
 }
+.chatCollapseContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* ✅ Center the chat */
+    align-items: center;
+}
+/* Collapse Container - Full Width */
+.chatCollapseContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* ✅ Center the chat */
+    align-items: center;
+}
+
+/* Collapse Wrapper - Centers Content */
+.chatCollapseWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Chat Section */
+.chatContainer {
+    width: 100%; /* ✅ Make it full width */
+    max-width: 700px; /* ✅ Set max width */
+    background-color: white;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 20px;
+    height: 450px; /* ✅ Increased height */
+    overflow-y: auto;
+    border: 3px solid #1A4B75;
+    
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+    .chatContainer {
+        max-width: 95%;
+    }
+}
+
+
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {

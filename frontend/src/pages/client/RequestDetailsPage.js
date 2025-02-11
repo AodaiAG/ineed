@@ -145,8 +145,11 @@ const RequestDetailsPage = () => {
                 <Collapse in={showProfessionals} className={styles.collapseContainer}>
     <Box className={styles.collapseWrapper}>
         <Box className={styles.professionalList}>
-            <RadioGroup value={selectedProfessionalId} onChange={(e) => setSelectedProfessionalId(e.target.value)}>
-                {quotations.length > 0 ? (
+        <RadioGroup 
+                    className={styles.radioGroupCustom} /* <-- Added class here */
+                    value={selectedProfessionalId} 
+                    onChange={(e) => setSelectedProfessionalId(e.target.value)}
+                >                {quotations.length > 0 ? (
                     quotations.map((q) => (
                         <ListItem key={q.professionalId} className={styles.professionalCard}>
                             <FormControlLabel
@@ -178,21 +181,25 @@ const RequestDetailsPage = () => {
 
 
                 {/* Chat Section (Expandable) */}
-                <Box className={styles.expandableHeader} onClick={() => { setShowChat(!showChat); setShowProfessionals(false); }}>
-                    <Typography>צ׳אט עם המומחים שלנו</Typography>
-                    {showChat ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </Box>
-                <Collapse in={showChat}>
-                    <Box className={styles.chatContainer}>
-                        <StreamChatComponent
-                            apiKey="nr6puhgsrawn"
-                            userToken={userToken}
-                            channelId={`request_${requestId}`}
-                            userID={user.id}
-                            userRole="client"
-                        />
-                    </Box>
-                </Collapse>
+{/* Chat Section (Expandable) */}
+<Box className={styles.expandableHeader} onClick={() => { setShowChat(!showChat); setShowProfessionals(false); }}>
+    <Typography>צ׳אט עם המומחים שלנו</Typography>
+    {showChat ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+</Box>
+<Collapse in={showChat} className={styles.chatCollapseContainer}>
+    <Box className={styles.chatCollapseWrapper}>
+        <Box className={styles.chatContainer}>
+            <StreamChatComponent
+                apiKey="nr6puhgsrawn"
+                userToken={userToken}
+                channelId={`request_${requestId}`}
+                userID={user.id}
+                userRole="client"
+            />
+        </Box>
+    </Box>
+</Collapse>
+
 
                 {/* Back Button */}
                 <Button className={styles.backButton} onClick={() => navigate("/dashboard")}>
