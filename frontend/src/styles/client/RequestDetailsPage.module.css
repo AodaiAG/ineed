@@ -594,7 +594,9 @@ font-size: 20px !important;
 }
 
 
-
+.headerTitle{
+	font-size: 1.5rem;
+}
 
 
 /* Responsive Fix */
@@ -613,7 +615,7 @@ font-size: 20px !important;
     }
 
     .headerContainer {
-        font-size: 18px;
+        font-size: 25px !important;
     }
 
     .requestDetailsCard {
