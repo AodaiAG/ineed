@@ -152,21 +152,43 @@ const RequestDetailsPage = () => {
                 </Box>
 
    {/* Request Details */}
-   <Box className={styles.requestDetailsContainer}>
-                    <Box className={styles.requestDetailsCard}>
-                        <Box className={styles.requestHeader}>
-                            <Typography className={styles.requestType}>קריאה {requestId}</Typography>
-                            <Box className={styles.deleteIcon}>🗑️</Box>
-                        </Box>
-                        <Typography className={styles.profession}>
-                            {profession}, {subProfession}
-                        </Typography>
-                        <Typography className={styles.date}>{formattedDate}</Typography>
-                        <Typography className={styles.address}>
-                            {requestDetails?.city}
-                        </Typography>
-                    </Box>
-                </Box>
+  {/* Request Details */}
+<Box className={styles.requestDetailsContainer}>
+    {/* Left Section (Trash Icon) */}
+    <Box className={styles.y1}>
+        <Box className={styles.deleteIcon}>🗑️</Box>
+    </Box>
+
+    {/* Right Section (Details) */}
+    <Box className={styles.y2}>
+        {/* Details without Request Number */}
+
+                {/* Request Number */}
+                <Box className={styles.x2}>
+    {/* Label (Top) */}
+    <Typography className={styles.requestLabel}>קריאה</Typography> 
+
+    {/* Value (Bottom) */}
+    <Typography className={styles.requestNumber}>{requestId}</Typography>
+</Box>
+
+
+        <Box className={styles.x1}>
+            <Typography className={styles.profession}>
+                {profession}, {subProfession}
+            </Typography>
+            <Typography className={styles.dateTime}>
+                {formattedDate}
+            </Typography>
+            <Typography className={styles.address}>
+                {requestDetails?.city}
+            </Typography>
+        </Box>
+
+
+    </Box>
+</Box>
+
 
 
                 {/* Professionals Section (Expandable) */}

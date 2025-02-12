@@ -448,6 +448,154 @@ background: transparent; /* Make background fully transparent */
     color: #A3A3A3 !important;
     margin-top: 5px !important;
 }
+/* Request Details Main Container */
+.requestDetailsContainer {
+width: 100% !important;
+    display: flex !important
+;
+    align-items: center !important;
+    justify-content: space-between !important;
+    background-color: #c20000 !important;
+    border-radius: 14px !important;
+    border: 3px solid #FDD500 !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    margin: 20px 0 !important;
+}
+
+/* Left Section (Trash Icon) */
+.y1 {
+    width: 20% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Delete Icon */
+.deleteIcon {
+    font-size: 30px !important;
+    cursor: pointer !important;
+}
+
+/* Right Section (Details) */
+.y2 {
+    width: 84% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+	    border: 3px solid #FDD500 !important;
+    border-radius: 14px !important;
+	background: white;
+}
+
+/* Details without Request Number */
+.x1 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    width: 75% !important;
+	
+}
+
+/* Request Number */
+.x2 {
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /* background-color: red !important; */
+    color: #000000 !important;
+	    margin: 4px;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    border-radius: 10px !important;
+    flex-direction: column;
+}
+
+/* Profession */
+.profession {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: black !important;
+    
+}
+
+/* Date & Time */
+.dateTime {
+    font-size: 16px !important;
+    color: gray !important;
+    
+}
+
+/* Address */
+.address {
+    font-size: 16px !important;
+    color: gray !important;
+    white-space: nowrap !important; /* Prevent text from breaking into multiple lines */
+    overflow: hidden !important; /* Hide overflow text */
+    text-overflow: ellipsis !important; /* Add "..." if text is too long */
+    width: 100% !important; /* Ensure full width */
+    display: block !important; /* Make sure it behaves correctly */
+	margin-bottom:2px;
+}
+.requestLabel {
+font-size: 20px !important;
+    font-weight: bold !important;
+    color: black !important;  /* Label styling */
+    text-align: center !important; 
+}
+
+.requestNumber {
+    font-size: 16px !important;
+    font-weight: bold !important;
+    color: #FDBE00 !important; /* Number styling */
+    text-align: center !important;
+    margin-top: 5px !important; /* Add spacing between label & number */
+}
+/* Parent container */
+.x1 {
+    width: 75% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin: 0px 0px 6px 0px;
+}
+
+/* Profession Text */
+.profession {
+    width: 100% !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: black !important;
+    white-space: nowrap !important;  /* Prevents wrapping */
+    overflow: hidden !important;  /* Hide overflow */
+    text-overflow: ellipsis !important;  /* Add "..." if text is too long */
+}
+
+/* Date & Time */
+.dateTime {
+    width: 100% !important;
+    font-size: 16px !important;
+    font-weight: normal !important;
+    color: gray !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Address */
+.address {
+    width: 100% !important;
+    font-size: 14px !important;
+    color: gray !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+
+
+
 
 /* Responsive Fix */
 @media (max-width: 768px) {
