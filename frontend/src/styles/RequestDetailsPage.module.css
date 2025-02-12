@@ -9,7 +9,7 @@
   min-height: 100vh !important;
   box-sizing: border-box !important;
   position: relative !important; /* Needed for absolute positioning of the cancel button */
-}
+}	
 
 /* ביטול Button (Top Left Corner) */
 .cancelButton {
@@ -118,11 +118,45 @@
   padding: 10px 20px !important;
   border-radius: 8px !important;
 }
+.expandableHeader {
+  width: 90% !important;
+  max-width: 800px !important;
+  background: #FDD500 !important;
+  color: black !important;
+  font-size: 18px !important;
+  font-weight: bold !important;
+  padding: 10px !important;
+  border-radius: 14px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  justify-content: flex-end;
+    align-items: flex-end;
+  align-items: center !important;
+  margin-top: 10px !important;
+  box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.3) !important;
+}
 
 .quotationText {
   color: white !important;
   font-size: 14px !important;
   margin-top: 10px !important;
+}
+.chatCollapseContainer,
+.quotationCollapseContainer {
+  width: 90% !important;
+  max-width: 800px !important;
+  display: flex !important;
+  justify-content: center !important;
+  margin-top: 10px !important;
+}
+.chatContainer {
+  width: 100% !important;
+  background-color: white !important;
+  border-radius: 14px !important;
+  padding: 15px !important;
+  height: 400px !important;
+  overflow-y: auto !important;
+  border: 3px solid #1A4B75 !important;
 }
 
 /* Back & Finish Work Buttons (Side by Side) */
@@ -143,7 +177,14 @@
   min-width: 150px !important; /* Ensure both buttons are the same size */
   text-align: center !important;
 }
-
+.quotationSection {
+  width: 100% !important;
+  max-width: 400px !important;
+  background-color: white !important;
+  border-radius: 10px !important;
+  padding: 15px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .pageContainer {
@@ -162,13 +203,9 @@
     max-width: 90% !important;
   }
 
-  .chatContainer {
-    max-width: 90% !important;
-  }
 
-  .quotationSection {
-    max-width: 90% !important;
-  }
+
+
 
   .buttonsRow {
     gap: 10px !important;

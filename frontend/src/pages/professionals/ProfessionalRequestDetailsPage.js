@@ -6,11 +6,14 @@ import {
   CircularProgress,
   Typography,
   TextField,
+  Collapse,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import StreamChatComponent from "../../components/client/StreamChatComponent";
 import FinishRequestComponent from "../../components/professionals/FinishRequestComponent";
 import api from "../../utils/api";
@@ -24,7 +27,7 @@ const ProfessionalRequestDetailsPage = () => {
   const [profession, setProfession] = useState(null);
   const [quotation, setQuotation] = useState("");
   const [userToken, setUserToken] = useState(sessionStorage.getItem("profChatToken"));
-  const [quotations, setQuotations] = useState([]); // ✅ Store quotations
+  const [quotations, setQuotations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -33,8 +36,13 @@ const ProfessionalRequestDetailsPage = () => {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
 
+  // Expandable Sections
+  const [showDetails, setShowDetails] = useState(true);
+  const [showChat, setShowChat] = useState(false);
+  const [showQuotation, setShowQuotation] = useState(false);
+
   const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
-  const language = "he"; 
+  const language = "he";
 
   useEffect(() => {
     if (authLoading) return;
@@ -56,13 +64,11 @@ const ProfessionalRequestDetailsPage = () => {
             setIsSelectedProfessional(true);
           }
 
-          // ✅ Fetch quotations
           const quotationsResponse = await api.get(`/api/professionals/request/${requestId}/quotations`);
           if (quotationsResponse.data.success) {
             setQuotations(quotationsResponse.data.data);
           }
 
-          // Fetch profession details
           const professionResponse = await api.get(`/api/professionals/profession/${requestData.jobRequiredId}/${language}`);
           if (professionResponse.data.success) {
             setProfession(professionResponse.data.data);
@@ -82,6 +88,7 @@ const ProfessionalRequestDetailsPage = () => {
     Promise.all([fetchRequestDetails()]).finally(() => setLoading(false));
   }, [authLoading, isAuthenticated, navigate, requestId]);
 
+  // ✅ Restored function
   const handleQuotationSubmit = async () => {
     try {
       const response = await api.post(`/api/professionals/quotation`, {
@@ -100,7 +107,6 @@ const ProfessionalRequestDetailsPage = () => {
       alert("An error occurred while submitting the quotation.");
     }
   };
-
   const handleCancelRequest = async () => {
     try {
       await api.post("/api/professionals/cancel-request", {
@@ -127,67 +133,67 @@ const ProfessionalRequestDetailsPage = () => {
 
   return (
     <Box className={styles.pageContainer}>
-      {/* ביטול Button (Top Left Corner) */}
       <Button variant="contained" className={styles.cancelButton} onClick={() => setShowCancelDialog(true)}>
         ביטול
       </Button>
-
-      {/* Header Section */}
-      <Box className={styles.header}>
+            {/* Header Section */}
+            <Box className={styles.header}>
         <Typography className={styles.requestNumber}>{requestDetails.id}</Typography>
         <Typography className={styles.title}>קריאה</Typography>
       </Box>
 
- 
-
-      {/* Request Details */}
+      {/* Expandable Request Details */}
       <Box className={styles.details}>
-        <Typography><strong>בתחום:</strong> {profession?.main || "טוען..."}</Typography>
-        <Typography><strong>בנושא:</strong> {profession?.sub || "טוען..."}</Typography>
-        <Typography><strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}</Typography>
-        <Typography><strong>מועד:</strong> {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}</Typography>
-        <Typography><strong>הערת לקוח:</strong> {requestDetails.comment || "אין הערות"}</Typography>
+          <Typography><strong>בתחום:</strong> {profession?.main || "טוען..."}</Typography>
+          <Typography><strong>בנושא:</strong> {profession?.sub || "טוען..."}</Typography>
+          <Typography><strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}</Typography>
+          <Typography><strong>מועד:</strong> {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}</Typography>
+          <Typography><strong>הערת לקוח:</strong> {requestDetails.comment || "אין הערות"}</Typography>
+        </Box>
+
+      {/* Expandable Chat Section */}
+      <Box className={styles.expandableHeader} onClick={() => setShowChat(!showChat)}>
+        <Typography>צ׳אט עם הלקוח</Typography>
+        {showChat ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Box>
+      <Collapse in={showChat} className={styles.chatCollapseContainer}>
+        <Box className={styles.chatContainer}>
+          {userToken ? (
+            <StreamChatComponent
+              apiKey="nr6puhgsrawn"
+              userToken={userToken}
+              channelId={`request_${requestId}`}
+              userID={String(user.profId)}
+              userRole="prof"
+            />
+          ) : (
+            <Typography>Loading chat...</Typography>
+          )}
+        </Box>
+      </Collapse>
 
-             {/* Chat Section */}
-             <Box className={styles.chatContainer}>
-        {userToken ? (
-          <StreamChatComponent
-            apiKey="nr6puhgsrawn"
-            userToken={userToken}
-            channelId={`request_${requestId}`}
-            userID={String(user.profId)}
-            userRole="prof"
-          />
-        ) : (
-          <Typography>Loading chat...</Typography>
-        )}
+      {/* Expandable Quotation Section */}
+      <Box className={styles.expandableHeader} onClick={() => setShowQuotation(!showQuotation)}>
+        <Typography>הצעת מחיר</Typography>
+        {showQuotation ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Box>
+      <Collapse in={showQuotation} className={styles.quotationCollapseContainer}>
+        <Box className={styles.quotationSection}>
+          <Box className={styles.quotationInputContainer}>
+            <TextField
+              label="הצעת מחיר"
+              value={quotation}
+              onChange={(e) => setQuotation(e.target.value)}
+              variant="outlined"
+              type="number"
+            />
+            <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
+              עדכן
+            </Button>
+          </Box>
+        </Box>
+      </Collapse>
 
-
-      {/* Quotations Section */}
-{/* Quotations Section */}
-<Box className={styles.quotationSection}>
-  {/* Quotation Input Container (Always Visible) */}
-  <Box className={styles.quotationInputContainer}>
-    <TextField
-      label="הצעת מחיר"
-      value={quotation}
-      onChange={(e) => setQuotation(e.target.value)}
-      variant="outlined"
-      type="number"
-    />
-    <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
-      עדכן
-    </Button>
-  </Box>
-</Box>
-
-
-
-
-    
-      {/* Buttons Row */}
       <Box className={styles.buttonsRow}>
         <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
           חזור
@@ -199,7 +205,6 @@ const ProfessionalRequestDetailsPage = () => {
         )}
       </Box>
 
-      {/* Finish Request Component */}
       <FinishRequestComponent open={showFinishDialog} onClose={() => setShowFinishDialog(false)} requestId={requestId} clientId={requestDetails.clientId} />
     </Box>
   );
