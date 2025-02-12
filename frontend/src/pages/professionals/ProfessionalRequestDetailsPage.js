@@ -164,23 +164,26 @@ const ProfessionalRequestDetailsPage = () => {
         )}
       </Box>
 
+
+      {/* Quotations Section */}
 {/* Quotations Section */}
 <Box className={styles.quotationSection}>
-  {isEditing && (
-    <Box className={styles.quotationInputContainer}>
-      <TextField
-        label="הצעת מחיר"
-        value={quotation}
-        onChange={(e) => setQuotation(e.target.value)}
-        variant="outlined"
-        type="number"
-      />
-      <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
-        עדכן
-      </Button>
-    </Box>
-  )}
+  {/* Quotation Input Container (Always Visible) */}
+  <Box className={styles.quotationInputContainer}>
+    <TextField
+      label="הצעת מחיר"
+      value={quotation}
+      onChange={(e) => setQuotation(e.target.value)}
+      variant="outlined"
+      type="number"
+    />
+    <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
+      עדכן
+    </Button>
+  </Box>
 </Box>
+
+
 
 
     
