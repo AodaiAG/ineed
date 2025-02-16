@@ -177,15 +177,7 @@ const RequestList = ({ title, requestType }) => {
       </Box>
 
       {/* Footer */}
-      <Box className={styles.footer}>
-        <Button
-          variant="contained"
-          className={styles.backButton}
-          onClick={() => navigate("/dashboard")}
-        >
-          חזור
-        </Button>
-      </Box>
+ 
     </Box>
   );
 };
