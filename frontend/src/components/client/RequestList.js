@@ -8,15 +8,30 @@ import {
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/clientApi";
 import styles from "../../styles/client/RequestList.module.css";
+import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
+import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 
 const RequestList = ({ title, requestType }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchingRequests, setFetchingRequests] = useState(true);
+  const [fetchingUnread, setFetchingUnread] = useState(false);
+  
   const navigate = useNavigate();
   const language = "he"; // Define language preference for fetching professions
+  const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
 
   useEffect(() => {
+    if (authLoading) return; // ✅ Wait for auth to finish
+
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    // ✅ Only fetch requests after auth is confirmed
     const fetchRequests = async () => {
+      setFetchingRequests(true);
       try {
         const response = await api.get(`/api/my_requests?type=${requestType}`);
         if (response.data.success) {
@@ -49,21 +64,58 @@ const RequestList = ({ title, requestType }) => {
             })
           );
 
-          setRequests(updatedRequests);
+          setRequests(updatedRequests); // ✅ Set state before fetching unread counts
+          setFetchingRequests(false);
+
+          // ✅ Fetch unread message counts after requests are loaded
+          fetchUnreadCounts(updatedRequests);
         } else {
           console.error("Failed to fetch requests:", response.data.message);
+          setFetchingRequests(false);
         }
       } catch (error) {
         console.error("Error fetching requests:", error);
-      } finally {
-        setLoading(false);
+        setFetchingRequests(false);
       }
     };
 
     fetchRequests();
-  }, [requestType]);
+  }, [authLoading, isAuthenticated, requestType, navigate]);
 
-  if (loading) {
+  // ✅ Fetch unread message counts **only after requests are loaded**
+  const fetchUnreadCounts = async (updatedRequests) => {
+    if (!user) return;
+    setFetchingUnread(true);
+
+    const userId = user.id; 
+    const userToken = sessionStorage.getItem("clientChatToken");
+
+    if (!userId || !userToken) {
+      setFetchingUnread(false);
+      return;
+    }
+
+    try {
+      const requestIds = updatedRequests.map((req) => req.id);
+      const unreadCounts = await fetchUnreadMessages(userId, userToken, requestIds);
+
+      console.table(unreadCounts);
+
+      setRequests((prevRequests) =>
+        prevRequests.map((request) => ({
+          ...request,
+          unreadMessages: unreadCounts[request.id] || 0, // ✅ Default to 0 if not found
+        }))
+      );
+    } catch (error) {
+      console.error("Error fetching unread messages:", error);
+    } finally {
+      setFetchingUnread(false);
+    }
+  };
+
+  // ✅ **Show loading only if authentication OR fetching requests is in progress**
+  if (authLoading || fetchingRequests) {
     return (
       <Box className={styles.loaderContainer}>
         <CircularProgress className={styles.loader} />
@@ -97,7 +149,7 @@ const RequestList = ({ title, requestType }) => {
                 {/* Experts */}
                 <Box className={styles.infoBlock}>
                   <Typography className={styles.infoLabel}>מומחים</Typography>
-                  <Typography className={styles.infoValue}>{request.experts || "N/A"}</Typography>
+                  <Typography className={styles.infoValue}>{request.numOfProfs || "0"}</Typography>
                 </Box>
 
                 {/* Profession & Main (No Label) */}
@@ -113,7 +165,9 @@ const RequestList = ({ title, requestType }) => {
 
               {/* Right Section - Unread Messages */}
               <Box className={styles.rightSection}>
-                <Box className={styles.unreadBadge}>{request.unreadMessages || 0}</Box>
+                <Box className={styles.unreadBadge}>
+                  {fetchingUnread ? "..." : request.unreadMessages || 0}
+                </Box>
               </Box>
             </Box>
             {/* Separator */}

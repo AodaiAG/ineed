@@ -124,38 +124,43 @@ exports.saveClient = async (req, res) => {
   exports.getClientRequests = async (req, res) => {
     const clientId = req.user.id; // Extract client ID from JWT
     const status = req.query.status || 'open'; // Default to 'open' if no status is provided
-  
+
     try {
-      // Fetch client requests with related request details
-      const clientRequests = await ClientRequest.findAll({
-        where: { clientId },
-        attributes: [], // Exclude all fields from ClientRequest
-        include: [
-          {
-            model: Request,
-            as: 'request', // Use the alias defined in the association
-            attributes: { exclude: [] }, // Include all fields
-            where: { status }, // Filter requests by status
-          },
-        ],
-      });
-  
-      if (!clientRequests.length) {
-        return res.status(404).json({ success: false, message: 'No requests found for this client' });
-      }
-  
-      // Extract the request data only
-      const serializedRequests = clientRequests.map((req) => req.request.toJSON());
-  
-      res.status(200).json({
-        success: true,
-        data: serializedRequests, // Send only the request details
-      });
+        // Fetch client requests with related request details
+        const clientRequests = await ClientRequest.findAll({
+            where: { clientId },
+            attributes: [], // Exclude all fields from ClientRequest
+            include: [
+                {
+                    model: Request,
+                    as: 'request', // Use the alias defined in the association
+                    attributes: { exclude: [] }, // Include all fields
+                    where: { status }, // Filter requests by status
+                },
+            ],
+        });
+
+        if (!clientRequests.length) {
+            return res.status(404).json({ success: false, message: 'No requests found for this client' });
+        }
+
+        // Extract the request data only and include `numOfProfs`
+        const serializedRequests = clientRequests.map((clientReq) => {
+            const request = clientReq.request.toJSON();
+            request.numOfProfs = Array.isArray(request.quotations) ? request.quotations.length : 0; // Count quotations
+            return request;
+        });
+
+        res.status(200).json({
+            success: true,
+            data: serializedRequests, // Send only the request details
+        });
     } catch (error) {
-      console.error('Error fetching client requests:', error);
-      res.status(500).json({ success: false, message: 'Internal server error' });
+        console.error('Error fetching client requests:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
-  };
+};
+
   
   
 
