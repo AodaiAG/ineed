@@ -702,7 +702,8 @@ const getProfessionalRequestDetails = async (req, res) => {
         );
 
         const professionalPrice = professionalQuotation?.price || null; // Extract the price or null if no quotation
-
+ // ✅ Initialize Stream Chat
+ 
 
         // Respond with the request details and the professional's price
         res.status(200).json({
@@ -788,6 +789,26 @@ const fetchProfRequests = async (req, res) => {
                 return res.status(400).json({ success: false, message: 'Invalid mode' });
         }
 
+        const streamClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
+ // ✅ Join the professional to all missing chat channels
+        for (const request of matchingRequests) {
+            const channelId = `request_${request.id}`;
+            const channel = streamClient.channel("messaging", channelId);
+
+            try {
+                // Check if the professional is already a member
+                const channelState = await channel.queryMembers({ id: String(professionalId) });
+
+                if (!channelState.members.some(member => member.user_id === String(professionalId))) {
+                    await channel.addMembers([String(professionalId)]);
+                    console.log(`✅ Professional ${professionalId} added to chat: ${channelId}`);
+                } else {
+                    console.log(`⚡ Professional ${professionalId} is already a member of chat: ${channelId}`);
+                }
+            } catch (error) {
+                console.error(`❌ Error adding professional to chat ${channelId}:`, error);
+            }
+        }
 
         res.status(200).json({ success: true, data: matchingRequests });
     } catch (error) {

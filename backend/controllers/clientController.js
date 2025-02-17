@@ -41,6 +41,7 @@ exports.generateUserToken = async (req, res) => {
         if (type !== 'client' && type !== 'prof') {
             return res.status(400).json({ error: "Invalid type. Must be 'client' or 'prof'" });
         }
+        
 
         // Upsert the user with the specified role
         await serverClient.upsertUser({

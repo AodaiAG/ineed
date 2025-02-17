@@ -77,8 +77,12 @@ function RequestsPage({ mode, title }) {
         setFetchingUnread(true);
 
         const userId = String(user.profId);
-        console.log('here')
+
         const userToken = sessionStorage.getItem("profChatToken");
+
+        console.log('here profid : '+ userId +'usertoken' + userToken
+            
+        )
 
         if (!userId || !userToken) {
             setFetchingUnread(false);

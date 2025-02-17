@@ -93,6 +93,7 @@ const ProfessionalRequestDetailsPage = () => {
               const response = await api.post("/api/generate-user-token", {
                   id: String(user.profId),
                   type: "prof",
+                  
               });
               const token = response.data.token;
               sessionStorage.setItem("profChatToken", token);
