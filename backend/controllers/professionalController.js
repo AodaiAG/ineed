@@ -84,8 +84,11 @@ const cancelRequest = async (req, res) => {
         console.log("Cancellation recorded with reason:", reason);
 
         // Deselect the professional from the request
-        request.professionalId = null;
-        await request.save();
+        // Deselect the professional from the request
+            request.professionalId = null;
+            request.status = "closed";  // Mark as closed since no professional is assigned
+            await request.save();
+
 
         console.log("Professional deselected from request:", requestId);
 

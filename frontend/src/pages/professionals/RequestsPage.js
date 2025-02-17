@@ -1,42 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
-import api from '../../utils/api';
-import { useLanguage } from '../../contexts/LanguageContext';
-import useAuthCheck from '../../hooks/useAuthCheck';
-import styles from '../../styles/RequestPage.module.css';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+import api from "../../utils/api";
+import { useLanguage } from "../../contexts/LanguageContext";
+import useAuthCheck from "../../hooks/useAuthCheck";
+import styles from "../../styles/RequestPage.module.css";
+import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
 
 function RequestsPage({ mode, title }) {
     const [requests, setRequests] = useState([]);
-    const [professions, setProfessions] = useState({}); // Stores professions fetched from backend
+    const [professions, setProfessions] = useState({});
     const [loading, setLoading] = useState(true);
+    const [fetchingUnread, setFetchingUnread] = useState(false);
     const { translation } = useLanguage();
-    const { user } = useAuthCheck();
+    const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
     const navigate = useNavigate();
 
-    // Assume the language is determined somewhere in the app (default to Hebrew)
-    const language = 'he'; // Change this dynamically based on user preference
+    const language = "he"; // Default to Hebrew
 
     useEffect(() => {
+        if (authLoading) return; // ✅ Wait for authentication
+
+        if (!isAuthenticated) {
+            navigate("/login");
+            return;
+        }
+
+        // ✅ Fetch Requests
         const fetchRequests = async () => {
             try {
                 const response = await api.get(`/api/professionals/get-prof-requests?mode=${mode}`);
                 if (response.data.success) {
                     setRequests(response.data.data);
+                    fetchUnreadCounts(response.data.data); // ✅ Fetch unread messages after setting requests
                 } else {
-                    console.error('Failed to fetch requests');
+                    console.error("Failed to fetch requests");
                 }
             } catch (error) {
-                console.error('Error fetching requests:', error);
+                console.error("Error fetching requests:", error);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchRequests();
-    }, [mode]);
+    }, [authLoading, isAuthenticated, mode, navigate]);
 
-    // Fetch profession details for each request
+    // ✅ Fetch profession details for each request
     useEffect(() => {
         const fetchProfessions = async () => {
             for (const request of requests) {
@@ -46,11 +56,11 @@ function RequestsPage({ mode, title }) {
                         if (response.data.success) {
                             setProfessions((prev) => ({
                                 ...prev,
-                                [request.jobRequiredId]: response.data.data
+                                [request.jobRequiredId]: response.data.data,
                             }));
                         }
                     } catch (error) {
-                        console.error('Error fetching profession details:', error);
+                        console.error("Error fetching profession details:", error);
                     }
                 }
             }
@@ -61,18 +71,52 @@ function RequestsPage({ mode, title }) {
         }
     }, [requests]);
 
+    // ✅ Fetch Unread Message Counts
+    const fetchUnreadCounts = async (updatedRequests) => {
+        if (!user) return;
+        setFetchingUnread(true);
+
+        const userId = String(user.profId);
+        console.log('here')
+        const userToken = sessionStorage.getItem("profChatToken");
+
+        if (!userId || !userToken) {
+            setFetchingUnread(false);
+            return;
+        }
+        console.log('maybe here')
+
+        try {
+            const requestIds = updatedRequests.map((req) => req.id);
+            const unreadCounts = await fetchUnreadMessages(userId, userToken, requestIds);
+
+            console.table(unreadCounts);
+
+            setRequests((prevRequests) =>
+                prevRequests.map((request) => ({
+                    ...request,
+                    unreadMessages: unreadCounts[request.id] || 0, // ✅ Default to 0 if not found
+                }))
+            );
+        } catch (error) {
+            console.error("Error fetching unread messages:", error);
+        } finally {
+            setFetchingUnread(false);
+        }
+    };
+
     const handleRequestClick = (requestId) => {
         navigate(`/pro/requests/${requestId}`);
     };
 
     const formatDateTime = (dateTimeString) => {
         const dateObj = new Date(dateTimeString);
-        const hours = dateObj.getHours().toString().padStart(2, '0');
-        const minutes = dateObj.getMinutes().toString().padStart(2, '0');
-        const day = dateObj.getDate().toString().padStart(2, '0');
-        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const hours = dateObj.getHours().toString().padStart(2, "0");
+        const minutes = dateObj.getMinutes().toString().padStart(2, "0");
+        const day = dateObj.getDate().toString().padStart(2, "0");
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
         const year = dateObj.getFullYear();
-    
+
         return `${hours}:${minutes} - ${day}/${month}/${year}`;
     };
 
@@ -87,23 +131,23 @@ function RequestsPage({ mode, title }) {
     return (
         <div className={styles.requestPageContainer}>
             <div className={styles.headerContainer}>
-                <h1 className={styles.pageTitle}>קריאות חדשות</h1>
+                <h1 className={styles.pageTitle}>{title}</h1>
             </div>
 
             <div className={styles.requestList}>
                 {requests.length > 0 ? (
                     requests.map((request, index) => (
                         <React.Fragment key={request.id}>
-                            <div 
-                                className={styles.requestCard} 
-                                onClick={() => handleRequestClick(request.id)} // Clickable request
+                            <div
+                                className={styles.requestCard}
+                                onClick={() => handleRequestClick(request.id)}
                             >
                                 <div className={styles.requestInfo}>
                                     <span className={styles.requestId}>{index + 1}</span>
                                     <div className={styles.requestDetails}>
                                         <p className={styles.profession}>
-                                            {professions[request.jobRequiredId]?.main || 'טוען...'}, 
-                                            {professions[request.jobRequiredId]?.sub || 'טוען...'}
+                                            {professions[request.jobRequiredId]?.main || "טוען..."},{" "}
+                                            {professions[request.jobRequiredId]?.sub || "טוען..."}
                                         </p>
                                         <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
                                     </div>
@@ -115,7 +159,11 @@ function RequestsPage({ mode, title }) {
                                         <span>קריאה</span>
                                         <span className={styles.callNumber}>{request.id}</span>
                                     </div>
-                                    <span className={styles.unreadMessages}>{8}</span>
+
+                                    {/* ✅ Unread Messages Section */}
+                                    <span className={styles.unreadMessages}>
+                                        {fetchingUnread ? "..." : request.unreadMessages || 0}
+                                    </span>
                                 </div>
                             </div>
 
@@ -132,7 +180,7 @@ function RequestsPage({ mode, title }) {
                 *ביטול או תקלה צור קשר עם השירות <a href="#">כאן</a>
             </p>
 
-            <button onClick={() => navigate('/pro/expert-interface')} className={styles.backButton}>
+            <button onClick={() => navigate("/pro/expert-interface")} className={styles.backButton}>
                 חזור
             </button>
         </div>

@@ -16,6 +16,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import StreamChatComponent from "../../components/client/StreamChatComponent";
 import FinishRequestComponent from "../../components/professionals/FinishRequestComponent";
+import CancelRequestComponent from "../../components/professionals/CancelRequestComponent";
+
 import api from "../../utils/api";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestDetailsPage.module.css";
@@ -84,9 +86,28 @@ const ProfessionalRequestDetailsPage = () => {
         setLoading(false);
       }
     };
+    const fetchUserToken = async () => {
+      if (!userToken) {
+          try {
+              console.log("Fetching user token...");
+              const response = await api.post("/api/generate-user-token", {
+                  id: String(user.profId),
+                  type: "prof",
+              });
+              const token = response.data.token;
+              sessionStorage.setItem("profChatToken", token);
+              setUserToken(token);
+              console.log("User token fetched successfully:", token);
+          } catch (error) {
+              console.error("Failed to fetch user token:", error);
+              setError("Failed to initialize chat.");
+          }
+      }
+  };
 
-    Promise.all([fetchRequestDetails()]).finally(() => setLoading(false));
-  }, [authLoading, isAuthenticated, navigate, requestId]);
+
+    Promise.all([fetchRequestDetails(),fetchUserToken()]).finally(() => setLoading(false));
+  }, [authLoading, isAuthenticated, navigate, requestId,userToken]);
 
   // ✅ Restored function
   const handleQuotationSubmit = async () => {
@@ -133,9 +154,26 @@ const ProfessionalRequestDetailsPage = () => {
 
   return (
     <Box className={styles.pageContainer}>
-      <Button variant="contained" className={styles.cancelButton} onClick={() => setShowCancelDialog(true)}>
-        ביטול
-      </Button>
+{isSelectedProfessional && (
+  <>
+    <Button
+      variant="contained"
+      className={styles.cancelButton}
+      onClick={() => setShowCancelDialog(true)}
+    >
+      ביטול
+    </Button>
+
+    <CancelRequestComponent
+      open={showCancelDialog}
+      onClose={() => setShowCancelDialog(false)}
+      requestId={requestId}
+      onSuccess={() => navigate("/pro/expert-interface")} // Redirect after cancel
+    />
+  </>
+)}
+
+
             {/* Header Section */}
             <Box className={styles.header}>
         <Typography className={styles.requestNumber}>{requestDetails.id}</Typography>
