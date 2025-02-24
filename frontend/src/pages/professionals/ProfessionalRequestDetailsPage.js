@@ -169,8 +169,8 @@ const ProfessionalRequestDetailsPage = () => {
       open={showCancelDialog}
       onClose={() => setShowCancelDialog(false)}
       requestId={requestId}
-      onSuccess={() => navigate("/pro/expert-interface")} // Redirect after cancel
-    />
+      onSuccess={() => navigate(0)} // ✅ React Router refresh
+      />
   </>
 )}
 

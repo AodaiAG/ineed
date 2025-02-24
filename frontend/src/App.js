@@ -18,6 +18,7 @@ import ClosedRequests from './pages/client/ClosedRequests';
 import ProfessionalsList from './pages/client/ProfessionalList';
 import ProfilePage from './pages/client/ProfilePage';
 import SignInPage from "./pages/client/SignInPage";
+import RatingPage from "./pages/client/RatingPage";
 
 
 import ProfessionalPhoneScreen from './pages/professionals/PhoneScreen';
@@ -53,6 +54,7 @@ function App() {
           <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/request/rate/:id" element={<RatingPage />} />
 
 
           {/* Professional Side Routes */}

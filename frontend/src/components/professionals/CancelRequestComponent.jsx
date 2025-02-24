@@ -23,7 +23,6 @@ const CancelRequestComponent = ({ open, onClose, requestId, onSuccess }) => {
       });
 
       if (response.data.success) {
-        alert("הבקשה בוטלה בהצלחה.");
         onClose();
         onSuccess(); // Callback function to refresh data
       } else {

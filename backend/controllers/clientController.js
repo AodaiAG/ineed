@@ -124,7 +124,7 @@ exports.saveClient = async (req, res) => {
 
   exports.getClientRequests = async (req, res) => {
     const clientId = req.user.id; // Extract client ID from JWT
-    const status = req.query.status || 'open'; // Default to 'open' if no status is provided
+    const status = req.query.type || 'open'; // Default to 'open' if no status is provided
 
     try {
         // Fetch client requests with related request details

@@ -111,8 +111,9 @@ const RequestDetailsPage = () => {
             });
 
             if (response.data.success) {
-                alert("Professional selected successfully!");
                 setConfirmedProfessionalId(selectedProfessionalId);
+               
+
             }
         } catch (error) {
             alert("Failed to select professional.");
