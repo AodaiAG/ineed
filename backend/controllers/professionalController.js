@@ -187,7 +187,7 @@ const uploadImage = async (req, res) => {
         recipientType: 'client',
         messageKey: 'notifications.requestFinished',
         requestId: request.id,
-        action: `/client/rate/${request.id}`,
+        action: `/request/rate/${request.id}`,
         isRead: false,
       });
   

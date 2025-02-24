@@ -5,6 +5,8 @@ const PhoneVerification = require('../models/PhoneVerification');
 const {grantClientAuth} = require('./authController');
 const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
 const Professional = require('../models/professional'); // Adjust path if necessary
+const { ProfessionalRating } = require("../models/index");
+
 const Notification = require('../models/notifications/Notification'); // Adjust the path if necessary
 
 
@@ -162,7 +164,47 @@ exports.saveClient = async (req, res) => {
     }
 };
 
-  
+exports.rateProfessional = async (req, res) => {
+    try {
+        const { requestId, qualityRating, professionalismRating, priceRating } = req.body;
+        const clientId = req.user.id; // Extract from JWT (authenticated client)
+
+        // ✅ 1. Fetch the request to get professionalId
+        const request = await Request.findOne({ where: { id: requestId } });
+
+        if (!request) {
+            return res.status(404).json({ success: false, message: "Request not found" });
+        }
+
+        const professionalId = request.professionalId;
+
+        if (!professionalId) {
+            return res.status(400).json({ success: false, message: "No professional assigned to this request" });
+        }
+
+        // ✅ 2. Ensure the request is completed before allowing a rating
+        if (request.status !== "closed") {
+            return res.status(400).json({ success: false, message: "You can only rate completed jobs" });
+        }
+console.log('Qa:  '+ qualityRating
+    +'pro : '+professionalismRating+ 'price : '+ priceRating
+)
+        // ✅ 3. Save the rating
+        const rating = await ProfessionalRating.create({
+            clientId,
+            requestId,
+            professionalId,
+            quality: qualityRating,           // ✅ Fix field name
+            professionalism: professionalismRating, // ✅ Fix field name
+            price: priceRating,               // ✅ Fix field name
+        });
+
+        res.status(201).json({ success: true, message: "Rating submitted successfully", data: rating });
+    } catch (error) {
+        console.error("Error submitting rating:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
   
 
 
@@ -616,5 +658,64 @@ const getAiJobMatch = async (query, jobList) => {
     } catch (error) {
         console.error('AI suggestion error:', error);
         return null;
+    }
+};
+
+
+exports.validateRatingRequest = async (req, res) => {
+    try {
+        const { requestId } = req.params; 
+        const clientId = req.user.id; // Extract client ID from JWT
+
+        // ✅ 1. Check if the request exists and is linked to the client
+        const clientRequest = await ClientRequest.findOne({
+            where: { requestId, clientId }, // Ensure the request belongs to the client
+            include: [
+                {
+                    model: Request,
+                    as: "request",
+                },
+            ],
+        });
+
+        if (!clientRequest) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized: This request does not belong to you.",
+            });
+        }
+
+        // ✅ 2. Ensure the request is completed
+        if (clientRequest.request.status !== "closed") {
+            return res.status(400).json({
+                success: false,
+                message: "You can only rate completed jobs.",
+            });
+        }
+
+        // ✅ 3. Check if the rating already exists
+        const existingRating = await ProfessionalRating.findOne({
+            where: { requestId, clientId }
+        });
+
+        if (existingRating) {
+            return res.status(409).json({
+                success: false,
+                message: "You have already rated this professional.",
+            });
+        }
+
+        // ✅ 4. If everything is valid, allow rating
+        res.status(200).json({
+            success: true,
+            message: "You can rate this professional.",
+        });
+
+    } catch (error) {
+        console.error("Error validating rating request:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
     }
 };

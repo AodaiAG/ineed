@@ -12,15 +12,19 @@ const {
     getDomains,
     updateSelectedProfessional,
     verifyCodeHandler,
-    generateUserToken,saveClient,submitClientRequest,getClientRequests,getRequestDetails,deleteClientRequest
+    generateUserToken,saveClient,submitClientRequest,getClientRequests,getRequestDetails,deleteClientRequest,
+    rateProfessional,validateRatingRequest
 } = require('../controllers/clientController');
 ////
 router.post('/save_client', saveClient);
 router.post('/submit_client_request', submitClientRequest);
 router.get('/my_requests', tokenMiddleware,getClientRequests);
+
 router.get('/request/:requestId',tokenMiddleware, getRequestDetails);
 router.delete('/request/:clientRequestId', deleteClientRequest);
 router.put('/request/select-professional', tokenMiddleware, updateSelectedProfessional);
+router.get("/validate-rating/:requestId", tokenMiddleware, validateRatingRequest);
+router.post("/rate-professional", tokenMiddleware, rateProfessional);
 
 //
 router.get('/search', search);

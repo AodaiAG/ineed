@@ -1,9 +1,9 @@
 // models/professional/ProfessionalRating.js
 const { DataTypes } = require("sequelize");
-const sequelize = require("../../config/db"); // Import Sequelize instance
-const Professional = require("Professional"); // Import Professional model
-const Client = require("../client/Client"); // Import Client model
-const Request = require("../client/Request"); // Import Request model
+const sequelize = require("../config/db"); // Import Sequelize instance
+const Professional = require("./professional"); // Import Professional model
+const Client = require("./client/Client"); // Import Client model
+const Request = require("./client/Request"); // Import Request model
 
 const ProfessionalRating = sequelize.define(
   "ProfessionalRating",
@@ -14,12 +14,12 @@ const ProfessionalRating = sequelize.define(
       primaryKey: true,
     },
     clientId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Client, // Client who gave the rating
-        key: "id",
-      },
+        type: DataTypes.UUID, // ✅ FIX: Match Client's ID type
+        allowNull: false,
+        references: {
+          model: Client,
+          key: "id",
+        },
     },
     professionalId: {
       type: DataTypes.INTEGER,

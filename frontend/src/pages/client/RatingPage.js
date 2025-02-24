@@ -1,62 +1,132 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom"; // ✅ Import useParams
-import { Box, Typography, Button } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star";
-import styles from "../../styles/client/RatingPage.module.css"; // Import CSS
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
+import Rating from "@mui/material/Rating";
+import api from "../../utils/clientApi";
+import useAuthCheck from "../../hooks/useAuthCheck";
+import styles from "../../styles/client/RatingPage.module.css";
 
 const RatingPage = () => {
-  const { id } = useParams(); // ✅ Get the request ID from the URL
-  const [ratings, setRatings] = useState({
-    quality: 0,
-    professionalism: 0,
-    price: 0,
+  const navigate = useNavigate();
+  const { id: requestId } = useParams();
+  const [ratingAllowed, setRatingAllowed] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
+
+  const [ratingData, setRatingData] = useState({
+    qualityRating: 1,
+    professionalismRating: 1,
+    priceRating: 1,
   });
 
-  const handleRating = (category, value) => {
-    setRatings({ ...ratings, [category]: value });
+  useEffect(() => {
+    if (authLoading) return;
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    const validateRating = async () => {
+      try {
+        const response = await api.get(`/api/validate-rating/${requestId}`);
+        if (response.data.success) {
+          setRatingAllowed(true);
+        } else {
+          setErrorMessage(response.data.message);
+        }
+      } catch (error) {
+        setErrorMessage(error.response?.data?.message || "Error validating rating.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    validateRating();
+  }, [authLoading, isAuthenticated, navigate, requestId]);
+
+  const handleSubmitRating = async () => {
+    try {
+      const response = await api.post(`/api/rate-professional`, {
+        requestId,
+        ...ratingData,
+      });
+
+      if (response.data.success) {
+        alert("Your rating has been submitted successfully.");
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || "Failed to submit rating.");
+    }
   };
+
+  if (loading) {
+    return (
+      <Box className={styles.loadingContainer}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!ratingAllowed) {
+    return (
+      <Box className={styles.errorContainer}>
+        <Typography variant="h6">{errorMessage}</Typography>
+        <Button variant="contained" onClick={() => navigate("/dashboard")} className={styles.backButton}>
+          חזור
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box className={styles.pageContainer}>
       {/* Header */}
-      <Box className={styles.header}>
+      <Box className={styles.headerContainer}>
         <Typography className={styles.headerTitle}>הקריאה הסתיימה</Typography>
-        <Box className={styles.requestNumberContainer}>
-          <Typography className={styles.requestLabel}>קריאה</Typography>
-          <Typography className={styles.requestNumber}>{id}</Typography> {/* ✅ Dynamic Request ID */}
+        <Box className={styles.requestIdContainer}>
+          <Typography className={styles.requestIdLabel}>קריאה</Typography>
+          <Typography className={styles.requestId}>{requestId}</Typography>
         </Box>
       </Box>
 
-      {/* Rating Sections */}
-      {["quality", "professionalism", "price"].map((category, index) => (
-        <Box key={index} className={styles.ratingSection}>
-          <Typography className={styles.ratingLabel}>
-            {category === "quality"
-              ? "איכות"
-              : category === "professionalism"
-              ? "מקצועיות"
-              : "מחיר"}
-          </Typography>
-          <Box
-            className={`${styles.ratingContainer} ${
-              category === "price" ? styles.whiteBackground : ""
-            }`}
-          >
-            {[1, 2, 3, 4, 5].map((value) => (
-              <StarIcon
-                key={value}
-                className={`${styles.star} ${
-                  value <= ratings[category] ? styles.selectedStar : ""
-                }`}
-                onClick={() => handleRating(category, value)}
-              />
-            ))}
-          </Box>
+      {/* Ratings */}
+      <Box className={styles.ratingSection}>
+        <Typography className={styles.ratingLabel}>איכות</Typography>
+        <Box className={styles.ratingContainer}>
+          <Rating
+            value={ratingData.qualityRating}
+            onChange={(e, newValue) => setRatingData({ ...ratingData, qualityRating: newValue })}
+          />
         </Box>
-      ))}
+
+        <Typography className={styles.ratingLabel}>מקצועיות</Typography>
+        <Box className={styles.ratingContainer}>
+          <Rating
+            value={ratingData.professionalismRating}
+            onChange={(e, newValue) => setRatingData({ ...ratingData, professionalismRating: newValue })}
+          />
+        </Box>
+
+        <Typography className={styles.ratingLabel}>מחיר</Typography>
+        <Box className={styles.ratingContainer}>
+          <Rating
+            value={ratingData.priceRating}
+            onChange={(e, newValue) => setRatingData({ ...ratingData, priceRating: newValue })}
+          />
+        </Box>
+      </Box>
 
       {/* Submit Button */}
-      <Button className={styles.submitButton}>שליחה</Button>
+      <Button variant="contained" onClick={handleSubmitRating} className={styles.submitButton}>
+        שליחה
+      </Button>
     </Box>
   );
 };
