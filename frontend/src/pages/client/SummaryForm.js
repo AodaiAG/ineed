@@ -150,8 +150,21 @@ const SummaryForm = () => {
           בתחום
         </Typography>
         <Typography variant="body1" className="summary-form-value">
-          {summaryData.profession || "לא הוזן"}
-        </Typography>
+  {(() => {
+    try {
+      const parsedProfession =
+        typeof summaryData.profession === "string"
+          ? JSON.parse(summaryData.profession)
+          : summaryData.profession;
+
+      return parsedProfession?.domain?.trim() || "לא הוזן";
+    } catch (error) {
+      console.error("Failed to parse profession:", error);
+      return "לא הוזן";
+    }
+  })()}
+</Typography>
+
       </Box>
 
       <Box className="summary-form-field">
@@ -159,8 +172,21 @@ const SummaryForm = () => {
           בנושא
         </Typography>
         <Typography variant="body1" className="summary-form-value">
-          {summaryData.subject || "לא הוזן"}
-        </Typography>
+  {(() => {
+    try {
+      const parsedSubject =
+        typeof summaryData.subject === "string"
+          ? JSON.parse(summaryData.subject)
+          : summaryData.subject;
+
+      return parsedSubject?.main?.trim() || "לא הוזן";
+    } catch (error) {
+      console.error("Failed to parse subject:", error);
+      return "לא הוזן";
+    }
+  })()}
+</Typography>
+
       </Box>
 
       <Box className="summary-form-field">
