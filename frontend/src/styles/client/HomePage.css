@@ -79,3 +79,17 @@ width: clamp(200px, 78vw, 313px);
   width:300px;
  
 }
+
+/* Styles for the "כניסה חוזרת" clickable text */
+.relogin-text {
+  cursor: pointer !important;
+  color: #fdbe00 !important; /* Yellow color to match button */
+  text-align: center !important;
+  margin-top: 10px !important;
+  font-size: clamp(1.5rem, 3vw, 1.4rem) !important; /* Responsive font size */
+}
+.relogin-text:hover {
+  color: #ffffff !important; /* White color on hover */
+}
+
+

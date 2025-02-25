@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, ButtonBase } from "@mui/material";
+import { Box, Button, ButtonBase,Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import "../../styles/client/HomePage.css"; // Import your custom CSS file
 import LanguageSelectionPopup from "../../components/LanguageSelectionPopup"; // Import the popup component
@@ -51,6 +51,15 @@ const HomePage = () => {
           alt="Worker"
           className="home-image"
         />
+
+          <Typography
+            variant="body1"
+            className="relogin-text"
+            onClick={() => navigate("/sign-in")}
+          >
+            כניסה חוזרת
+          </Typography>
+
       </Box>
 
       {/* Footer */}
