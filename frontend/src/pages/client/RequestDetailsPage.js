@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import ReactDOM from "react-dom";
+
 import {
     Button,
     Box,
@@ -22,6 +24,8 @@ import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import api from "../../utils/clientApi";
 import { NotificationProvider } from "../../contexts/NotificationContext";
 import dayjs from "dayjs";
+import CancelRequestPage from "../../components/client/CancelRequestPage"; // ✅ Import CancelRequestPage
+
 
 const RequestDetailsPage = () => {
     const [searchParams] = useSearchParams();
@@ -44,6 +48,10 @@ const RequestDetailsPage = () => {
 
     // Authentication check
     const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
+    //
+
+    const [showCancelPopup, setShowCancelPopup] = useState(false);
+
 
     useEffect(() => {
         if (authLoading) return;
@@ -144,6 +152,15 @@ const RequestDetailsPage = () => {
         ? dayjs(requestDetails.date).format("DD/MM/YYYY - hh:mm:ss A")
         : "תאריך לא ידוע";
 
+            // ✅ Toggle the cancel popup
+    const handleOpenCancelPopup = () => {
+        setShowCancelPopup(true);
+    };
+
+    const handleCloseCancelPopup = () => {
+        setShowCancelPopup(false);
+    };
+
     return (
         <NotificationProvider userId={user?.id} userType="client">
             <Box className={styles.pageContainer}>
@@ -156,9 +173,10 @@ const RequestDetailsPage = () => {
   {/* Request Details */}
 <Box className={styles.requestDetailsContainer}>
     {/* Left Section (Trash Icon) */}
-    <Box className={styles.y1}>
-        <Box className={styles.deleteIcon}>🗑️</Box>
-    </Box>
+    <Box className={styles.y1} onClick={handleOpenCancelPopup}>
+    <Box className={styles.deleteIcon}>🗑️</Box>
+</Box>
+
 
     {/* Right Section (Details) */}
     <Box className={styles.y2}>
@@ -254,6 +272,17 @@ const RequestDetailsPage = () => {
         </Box>
     </Box>
 </Collapse>
+
+
+                {/* ✅ Cancel Request Popup Overlay */}
+                {showCancelPopup && (
+    <CancelRequestPage 
+        open={showCancelPopup} 
+        onClose={handleCloseCancelPopup} 
+        requestId={requestId} // ✅ Pass the request ID
+    />
+)}
+
 
 
                 {/* Back Button */}

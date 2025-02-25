@@ -13,7 +13,7 @@ const {
     updateSelectedProfessional,
     verifyCodeHandler,
     generateUserToken,saveClient,submitClientRequest,getClientRequests,getRequestDetails,deleteClientRequest,
-    rateProfessional,validateRatingRequest
+    rateProfessional,validateRatingRequest,cancelRequest
 } = require('../controllers/clientController');
 ////
 router.post('/save_client', saveClient);
@@ -25,6 +25,8 @@ router.delete('/request/:clientRequestId', deleteClientRequest);
 router.put('/request/select-professional', tokenMiddleware, updateSelectedProfessional);
 router.get("/validate-rating/:requestId", tokenMiddleware, validateRatingRequest);
 router.post("/rate-professional", tokenMiddleware, rateProfessional);
+router.post("/cancel-request/:requestId", tokenMiddleware, cancelRequest);
+
 
 //
 router.get('/search', search);

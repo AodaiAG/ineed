@@ -719,3 +719,31 @@ exports.validateRatingRequest = async (req, res) => {
         });
     }
 };
+
+exports.cancelRequest = async (req, res) => {
+    try {
+        const { requestId } = req.params;
+        const clientId = req.user.id; // Extract client ID from JWT
+        const { reason, details } = req.body;
+
+        // ✅ 1. Find the request
+        const clientRequest = await ClientRequest.findOne({ 
+            where: { requestId, clientId }
+        });
+
+        if (!clientRequest) {
+            return res.status(404).json({ success: false, message: "הקריאה לא נמצאה או אינה שייכת לך" });
+        }
+
+        // ✅ 2. Delete the request
+        await Request.destroy({ where: { id: requestId } });
+
+        // ✅ 3. Log the reason (optional)
+        console.log(`Request ${requestId} canceled by client ${clientId}. Reason: ${reason}. Details: ${details}`);
+
+        res.status(200).json({ success: true, message: "הקריאה בוטלה בהצלחה" });
+    } catch (error) {
+        console.error("Error canceling request:", error);
+        res.status(500).json({ success: false, message: "שגיאה פנימית בשרת" });
+    }
+};
