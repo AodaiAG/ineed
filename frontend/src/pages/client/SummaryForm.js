@@ -7,6 +7,8 @@ import { API_URL } from '../../utils/constans';
 import api from '../../utils/clientApi';
 import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
 import useClientAuthCheck from '../../hooks/useClientAuthCheck';
+import { format } from "date-fns";
+import { he } from "date-fns/locale"; // Import Hebrew locale if needed
 
 const SummaryForm = () => {
   const navigate = useNavigate(); // For navigation
@@ -203,8 +205,21 @@ const SummaryForm = () => {
           מועד העבודה
         </Typography>
         <Typography variant="body1" className="summary-form-value">
-          {summaryData.date || "לא הוזן"}
-        </Typography>
+  {(() => {
+    try {
+      if (!summaryData.date) return "לא הוזן";
+
+      const formattedDate = format(new Date(summaryData.date), "dd/MM/yyyy HH:mm", {
+        locale: he, // Use Hebrew locale if needed
+      });
+
+      return formattedDate;
+    } catch (error) {
+      console.error("Failed to format date:", error);
+      return "לא הוזן";
+    }
+  })()}
+</Typography>
       </Box>
 
       <Box className="summary-form-field">
