@@ -103,7 +103,7 @@
 }
 
 .callNumber {
-    font-weight: bold;
+
     color: black !important;
 }
 
@@ -113,8 +113,8 @@
     color: white;
     font-weight: bold;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -157,3 +157,72 @@
     margin: 10px 0;
     border-radius: 5px;
 }
+
+/* Main requestInfo container */
+.requestInfo {
+    display: flex;
+    align-items: center; /* Keep items vertically aligned */
+    justify-content: space-between;
+    width: 100%;
+    gap: 10px;
+}
+
+/* Container for Labels & Values */
+.requestContent {
+    display: flex;
+    flex-direction: column; /* Stack labels and values */
+    flex-grow: 1;
+}
+
+/* Labels Row */
+.requestLabels {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: bold;
+    text-align: center;
+    color: black;
+    padding-bottom: 5px;
+}
+
+/* Values Row */
+.requestValues {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    text-align: center;
+}
+
+/* Individual Labels */
+.requestLabel {
+    flex: 1; /* Ensures equal spacing */
+    text-align: center;
+    font-weight: bold;
+    color: black;
+}
+
+/* Individual Values */
+.requestValue,
+.callNumber {
+    flex: 1;
+    text-align: center;
+
+    color: black;
+}
+
+/* Profession & Date */
+.requestDetails {
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Ensure dateTime is properly aligned */
+.dateTime {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+}
+

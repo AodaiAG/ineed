@@ -531,6 +531,8 @@ exports.verifyCodeHandler = async (req, res) => {
     const { phoneNumber, code } = req.body;
 
     try {
+
+        console.log(phoneNumber , code)
         // Check if the client is registered
         const client = await Client.findOne({ where: { phoneNumber } });
         const isRegistered = Boolean(client);

@@ -25,24 +25,29 @@ const SignInPage = () => {
   };
 
   const handleSignIn = async () => {
+    if (phoneNumber.length !== 7) {
+      alert("מספר הטלפון חייב להכיל בדיוק 7 ספרות");
+      return;
+    }
+  
     try {
       setIsSending(true);
-
+      
       // Save phone number and country code to sessionStorage
       sessionStorage.setItem("phonePrefix", countryCode);
       sessionStorage.setItem("phoneNumber", phoneNumber);
-
+  
       const fullPhoneNumber = `${countryCode}${phoneNumber}`;
       console.log("Full Phone Number:", fullPhoneNumber);
-
+  
       // Send SMS via API
       await axios.post(`${API_URL}/professionals/send-sms`, {
         phoneNumber: fullPhoneNumber,
         message: translation.verificationCodeMessage + " {code}",
       });
-
+  
       console.log("SMS sent successfully.");
-
+  
       // Navigate to the SMS verification page
       navigate("/sms");
     } catch (error) {
@@ -52,6 +57,7 @@ const SignInPage = () => {
       setIsSending(false);
     }
   };
+  
 
   return (
     <Box className={styles.container}>
@@ -90,13 +96,18 @@ const SignInPage = () => {
 
         {/* Phone Number Input */}
         <TextField
-          type="text"
-          value={phoneNumber}
-          onChange={handlePhoneNumberChange}
-          placeholder="123 4567"
-          className={styles.phoneNumberInput}
-          inputProps={{ maxLength: 7 }}
-        />
+  type="text"
+  value={phoneNumber}
+  onChange={handlePhoneNumberChange}
+  placeholder="123 4567"
+  className={styles.phoneNumberInput}
+  inputProps={{
+    maxLength: 7,
+    minLength: 7,
+    pattern: "[0-9]{7}",
+  }}
+/>
+
       </Box>
 
       {/* Terms Agreement */}

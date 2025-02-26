@@ -363,16 +363,16 @@ background: transparent; /* Make background fully transparent */
 
 /* Chat Section */
 .chatContainer {
-    width: 100%; /* ✅ Make it full width */
-    max-width: 700px; /* ✅ Set max width */
+width: 100%;
+    max-width: 700px;
     background-color: white;
     border-radius: 14px;
     padding: 15px;
     margin-bottom: 20px;
-    height: 450px; /* ✅ Increased height */
+    margin-top: 9px;
+    height: 450px;
     overflow-y: auto;
-    border: 3px solid #1A4B75;
-    
+    border: 3px solid #FDD500;
     justify-content: center;
     align-items: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -455,7 +455,7 @@ width: 100% !important;
 ;
     align-items: center !important;
     justify-content: space-between !important;
-    background-color: #c20000 !important;
+    background-color: #FB0000 !important;
     border-radius: 14px !important;
     border: 3px solid #FDD500 !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;

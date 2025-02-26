@@ -194,7 +194,7 @@ const RequestDetailsPage = () => {
 
         <Box className={styles.x1}>
             <Typography className={styles.profession}>
-                {profession}, {subProfession}
+                {profession}
             </Typography>
             <Typography className={styles.dateTime}>
                 {formattedDate}

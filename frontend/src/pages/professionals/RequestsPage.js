@@ -6,6 +6,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestPage.module.css";
 import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
+import { Modal, Box, Typography } from "@mui/material";
 
 function RequestsPage({ mode, title }) {
     const [requests, setRequests] = useState([]);
@@ -15,6 +16,8 @@ function RequestsPage({ mode, title }) {
     const { translation } = useLanguage();
     const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
+const [modalText, setModalText] = useState("");
 
     const language = "he"; // Default to Hebrew
 
@@ -146,29 +149,34 @@ function RequestsPage({ mode, title }) {
                                 className={styles.requestCard}
                                 onClick={() => handleRequestClick(request.id)}
                             >
-                                <div className={styles.requestInfo}>
-                                    <span className={styles.requestId}>{index + 1}</span>
-                                    <div className={styles.requestDetails}>
-                                        <p className={styles.profession}>
-                                            {professions[request.jobRequiredId]?.main || "טוען..."},{" "}
-                                            {professions[request.jobRequiredId]?.sub || "טוען..."}
-                                        </p>
-                                        <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
-                                    </div>
-                                    <div className={styles.locationInfo}>
-                                        <span>מיקום</span>
-                                        <span>{request.city}</span>
-                                    </div>
-                                    <div className={styles.callInfo}>
-                                        <span>קריאה</span>
-                                        <span className={styles.callNumber}>{request.id}</span>
-                                    </div>
+<div className={styles.requestInfo}>
+    {/* Request ID (Keep as is) */}
+    <span className={styles.requestId}>{index + 1}</span>
 
-                                    {/* ✅ Unread Messages Section */}
-                                    <span className={styles.unreadMessages}>
-                                        {fetchingUnread ? "..." : request.unreadMessages || 0}
-                                    </span>
-                                </div>
+    <div className={styles.requestContent}>
+        {/* First Flex Row: Labels */}
+        <div className={styles.requestLabels}>
+            <span className={styles.requestLabel}>
+                {`${professions[request.jobRequiredId]?.main || "טוען..."}`}
+            </span>
+            <span className={styles.requestLabel}>מיקום</span>
+            <span className={styles.requestLabel}>קריאה</span>
+        </div>
+
+        {/* Second Flex Row: Values */}
+        <div className={styles.requestValues}>
+            <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
+            <span className={styles.requestValue}>{request.city}</span>
+            <span className={styles.callNumber}>{request.id}</span>
+        </div>
+    </div>
+
+    {/* Unread Messages (Keep as is) */}
+    <span className={styles.unreadMessages}>
+        {fetchingUnread ? "..." : request.unreadMessages || 0}
+    </span>
+</div>
+
                             </div>
 
                             {/* Separator between requests */}
