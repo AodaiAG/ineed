@@ -89,6 +89,7 @@ font-size: clamp(1rem, 17vw, 4.0rem);
     display: flex;
     justify-content: center;
 	    flex-direction: column;
+		margin-bottom: -5px;
 
 }
 
