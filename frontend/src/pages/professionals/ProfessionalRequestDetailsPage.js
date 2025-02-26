@@ -44,6 +44,9 @@ const ProfessionalRequestDetailsPage = () => {
   const [showQuotation, setShowQuotation] = useState(false);
 
   const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
+
+  const [expandedSection, setExpandedSection] = useState(null);
+
   const language = "he";
 
   useEffect(() => {
@@ -153,6 +156,11 @@ const ProfessionalRequestDetailsPage = () => {
     );
   }
 
+  const toggleSection = (section) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
+  
+
   return (
     <Box className={styles.pageContainer}>
 {isSelectedProfessional && (
@@ -191,47 +199,49 @@ const ProfessionalRequestDetailsPage = () => {
         </Box>
 
       {/* Expandable Chat Section */}
-      <Box className={styles.expandableHeader} onClick={() => setShowChat(!showChat)}>
-        <Typography>צ׳אט עם הלקוח</Typography>
-        {showChat ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-      </Box>
-      <Collapse in={showChat} className={styles.chatCollapseContainer}>
-        <Box className={styles.chatContainer}>
-          {userToken ? (
-            <StreamChatComponent
-              apiKey="nr6puhgsrawn"
-              userToken={userToken}
-              channelId={`request_${requestId}`}
-              userID={String(user.profId)}
-              userRole="prof"
-            />
-          ) : (
-            <Typography>Loading chat...</Typography>
-          )}
-        </Box>
-      </Collapse>
+      <Box className={styles.expandableHeader} onClick={() => toggleSection("chat")}>
+  <Typography>צ׳אט עם הלקוח</Typography>
+  {expandedSection === "chat" ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+</Box>
+<Collapse in={expandedSection === "chat"} className={styles.chatCollapseContainer} >
+  <Box className={styles.chatContainer}>
+    {userToken ? (
+      <StreamChatComponent
+        apiKey="nr6puhgsrawn"
+        userToken={userToken}
+        channelId={`request_${requestId}`}
+        userID={String(user.profId)}
+        userRole="prof"
+      />
+    ) : (
+      <Typography>Loading chat...</Typography>
+    )}
+  </Box>
+</Collapse>
+
 
       {/* Expandable Quotation Section */}
-      <Box className={styles.expandableHeader} onClick={() => setShowQuotation(!showQuotation)}>
-        <Typography>הצעת מחיר</Typography>
-        {showQuotation ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-      </Box>
-      <Collapse in={showQuotation} className={styles.quotationCollapseContainer}>
-        <Box className={styles.quotationSection}>
-          <Box className={styles.quotationInputContainer}>
-            <TextField
-              label="הצעת מחיר"
-              value={quotation}
-              onChange={(e) => setQuotation(e.target.value)}
-              variant="outlined"
-              type="number"
-            />
-            <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
-              עדכן
-            </Button>
-          </Box>
-        </Box>
-      </Collapse>
+      <Box className={styles.expandableHeader} onClick={() => toggleSection("quotation")}>
+  <Typography>הצעת מחיר</Typography>
+  {expandedSection === "quotation" ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+</Box>
+<Collapse in={expandedSection === "quotation"} className={styles.quotationCollapseContainer}>
+  <Box className={styles.quotationSection}>
+    <Box className={styles.quotationInputContainer}>
+      <TextField
+        label="הצעת מחיר"
+        value={quotation}
+        onChange={(e) => setQuotation(e.target.value)}
+        variant="outlined"
+        type="number"
+      />
+      <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
+        עדכן
+      </Button>
+    </Box>
+  </Box>
+</Collapse>
+
 
       <Box className={styles.buttonsRow}>
         <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
