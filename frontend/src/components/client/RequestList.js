@@ -10,6 +10,8 @@ import api from "../../utils/clientApi";
 import styles from "../../styles/client/RequestList.module.css";
 import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
+import { NotificationProvider } from "../../contexts/NotificationContext";
+
 
 const RequestList = ({ title, requestType }) => {
   const [requests, setRequests] = useState([]);
@@ -124,6 +126,9 @@ const RequestList = ({ title, requestType }) => {
   }
 
   return (
+
+    <NotificationProvider userId={user?.id} userType="client">
+
     <Box className={styles.requestListContainer}>
       {/* Header */}
       <Box className={styles.header}>
@@ -179,7 +184,9 @@ const RequestList = ({ title, requestType }) => {
       {/* Footer */}
  
     </Box>
+    </NotificationProvider>
   );
 };
+
 
 export default RequestList;

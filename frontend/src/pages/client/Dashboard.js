@@ -81,12 +81,7 @@ const Dashboard = () => {
         <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
           <Box className={styles.sidebarContainer} role="presentation" onClick={toggleSidebar}>
             <List>
-              <ListItem button onClick={handleSettingsClick}>
-                <ListItemIcon>
-                  <SettingsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Settings" />
-              </ListItem>
+             
 
               <ListItem button onClick={() => setShowPopup(true)}>
                 <ListItemIcon>

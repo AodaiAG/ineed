@@ -7,6 +7,8 @@ import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestPage.module.css";
 import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
 import { Modal, Box, Typography } from "@mui/material";
+import { NotificationProvider } from "../../contexts/NotificationContext";
+
 
 function RequestsPage({ mode, title }) {
     const [requests, setRequests] = useState([]);
@@ -136,7 +138,10 @@ const [modalText, setModalText] = useState("");
     }
 
     return (
+
+        <NotificationProvider userId={user?.profId} userType="professional">
         <div className={styles.requestPageContainer}>
+            
             <div className={styles.headerContainer}>
                 <h1 className={styles.pageTitle}>{title}</h1>
             </div>
@@ -149,33 +154,33 @@ const [modalText, setModalText] = useState("");
                                 className={styles.requestCard}
                                 onClick={() => handleRequestClick(request.id)}
                             >
-<div className={styles.requestInfo}>
-    {/* Request ID (Keep as is) */}
-    <span className={styles.requestId}>{index + 1}</span>
+                            <div className={styles.requestInfo}>
+                                {/* Request ID (Keep as is) */}
+                                <span className={styles.requestId}>{index + 1}</span>
 
-    <div className={styles.requestContent}>
-        {/* First Flex Row: Labels */}
-        <div className={styles.requestLabels}>
-            <span className={styles.requestLabel}>
-                {`${professions[request.jobRequiredId]?.main || "טוען..."}`}
-            </span>
-            <span className={styles.requestLabel}>מיקום</span>
-            <span className={styles.requestLabel}>קריאה</span>
-        </div>
+                                <div className={styles.requestContent}>
+                                    {/* First Flex Row: Labels */}
+                                    <div className={styles.requestLabels}>
+                                        <span className={styles.requestLabel}>
+                                            {`${professions[request.jobRequiredId]?.main || "טוען..."}`}
+                                        </span>
+                                        <span className={styles.requestLabel}>מיקום</span>
+                                        <span className={styles.requestLabel}>קריאה</span>
+                                    </div>
 
-        {/* Second Flex Row: Values */}
-        <div className={styles.requestValues}>
-            <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
-            <span className={styles.requestValue}>{request.city}</span>
-            <span className={styles.callNumber}>{request.id}</span>
-        </div>
-    </div>
+                                    {/* Second Flex Row: Values */}
+                                    <div className={styles.requestValues}>
+                                        <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
+                                        <span className={styles.requestValue}>{request.city}</span>
+                                        <span className={styles.callNumber}>{request.id}</span>
+                                    </div>
+                                </div>
 
-    {/* Unread Messages (Keep as is) */}
-    <span className={styles.unreadMessages}>
-        {fetchingUnread ? "..." : request.unreadMessages || 0}
-    </span>
-</div>
+                                {/* Unread Messages (Keep as is) */}
+                                <span className={styles.unreadMessages}>
+                                    {fetchingUnread ? "..." : request.unreadMessages || 0}
+                                </span>
+                            </div>
 
                             </div>
 
@@ -196,6 +201,8 @@ const [modalText, setModalText] = useState("");
                 חזור
             </button>
         </div>
+        </NotificationProvider>
+
     );
 }
 
