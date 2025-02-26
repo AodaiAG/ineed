@@ -309,6 +309,12 @@ display: flex;
     flex-wrap: nowrap;
 }
 
+.closedRequestsButton {
+    background-color: #1A4B75 !important; /* Red shade for closed requests */
+    color: white !important;
+}
+
+
 
 .notificationDropdown {
     position: absolute;

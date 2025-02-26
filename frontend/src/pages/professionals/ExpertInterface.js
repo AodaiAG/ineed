@@ -129,27 +129,23 @@ function ExpertInterface() {
                     <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} backgroundColor="black" />
                 )}
 
-                <div className={styles.spacer}></div>
 
                 {/* Image Section */}
+
+
+                <div className={styles.spacer}></div>
+
+                {/* Request Buttons */}
+                <div className={styles.footerContainer}>
+
                 <div className={styles.expertInterface_imageContainer}>
                     <img
                         src="/images/Prof/worker2.png"
                         alt={translation.workerImageAlt}
                         className={styles.expertInterface_workerImage}
                     />
-                    <p className={styles.expertInterface_contactPrompt}>
-                        {translation.inquiryMessage}
-                        <span className={styles.clickableText} onClick={() => navigate('/pro/contact')}>
-                            {translation.clickHere}
-                        </span>
-                    </p>
+
                 </div>
-
-                <div className={styles.spacer}></div>
-
-                {/* Request Buttons */}
-                <div className={styles.footerContainer}>
                     <button className={styles.expertInterface_businessCardButton} onClick={() => handleNavigateToRequests('new')}>
                         קריאות חדשות
                     </button>
@@ -159,7 +155,9 @@ function ExpertInterface() {
                     <button className={styles.expertInterface_businessCardButton} onClick={() => handleNavigateToRequests('mine')}>
                         הקריאות שלי
                     </button>
-                    <button className={styles.expertInterface_businessCardButton} onClick={() => handleNavigateToRequests('closed')}>
+                     <button   
+                    className={`${styles.expertInterface_businessCardButton} ${styles.closedRequestsButton}`}
+                     onClick={() => handleNavigateToRequests('closed')}>
                         קריאות סגורות
                     </button>
                 </div>
