@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import ReactDOM from "react-dom";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // ✅ Import Check Icon
+
 
 import {
     Button,
@@ -69,8 +71,8 @@ const RequestDetailsPage = () => {
                     setQuotations(response.data.data.quotations);
 
                     if (request.professionalId) {
-                        setSelectedProfessionalId(request.professionalId);
-                        setConfirmedProfessionalId(request.professionalId);
+                        setConfirmedProfessionalId(request.professionalId.toString()); // ✅ Ensure it's a string
+                        setSelectedProfessionalId(request.professionalId.toString()); // ✅ Sync selection
                     }
 
                     // Fetch profession details
@@ -117,16 +119,15 @@ const RequestDetailsPage = () => {
                 requestId,
                 professionalId: selectedProfessionalId,
             });
-
+    
             if (response.data.success) {
-                setConfirmedProfessionalId(selectedProfessionalId);
-               
-
+                setConfirmedProfessionalId(selectedProfessionalId); // ✅ Move checkmark only when confirmed
             }
         } catch (error) {
             alert("Failed to select professional.");
         }
     };
+    
 
     if (authLoading || loading) {
         return (
@@ -219,35 +220,55 @@ const RequestDetailsPage = () => {
     <Box className={styles.collapseWrapper}>
         <Box className={styles.professionalList}>
         <RadioGroup 
-                    className={styles.radioGroupCustom} /* <-- Added class here */
-                    value={selectedProfessionalId} 
-                    onChange={(e) => setSelectedProfessionalId(e.target.value)}
-                >                {quotations.length > 0 ? (
-                    quotations.map((q) => (
-                        <ListItem key={q.professionalId} className={styles.professionalCard}>
-                            <FormControlLabel
-                                value={q.professionalId}
-                                control={<Radio />}
-                                label={
-                                    <Box display="flex" alignItems="center">
-                                        <ListItemAvatar>
-                                            <Avatar src={q.image} alt={q.name} />
-                                        </ListItemAvatar>
-                                        <ListItemText primary={q.name} secondary={`₪${q.price}`} className={styles.professionalText} />
-                                    </Box>
-                                }
-                            />
-                        </ListItem>
-                    ))
-                ) : (
-                    <Typography className={styles.noExpertsMessage}>אין כרגע מומחים זמינים</Typography>
-                )}
-            </RadioGroup>
-            {quotations.length > 0 && (
-                <Button className={styles.selectButton} onClick={handleSelectProfessional} disabled={!selectedProfessionalId || selectedProfessionalId === confirmedProfessionalId}>
-                    בחר מומחה
-                </Button>
-            )}
+    className={styles.radioGroupCustom}
+    value={selectedProfessionalId} 
+    onChange={(e) => setSelectedProfessionalId(e.target.value)} // ✅ Store selection only
+> 
+    {quotations.length > 0 ? (
+        quotations.map((q) => {
+            const isConfirmed = confirmedProfessionalId === q.professionalId.toString(); // ✅ Checkmark moves only after button click
+
+            return (
+                <ListItem key={q.professionalId} className={styles.professionalCard}>
+                    <FormControlLabel
+                        value={q.professionalId.toString()} // ✅ Ensure correct format
+                        control={<Radio />}
+                        label={
+                            <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                                <Box display="flex" alignItems="center">
+                                    <ListItemAvatar>
+                                        <Avatar src={q.image} alt={q.name} />
+                                    </ListItemAvatar>
+                                    <ListItemText 
+                                        primary={q.name} 
+                                        secondary={`₪${q.price}`} 
+                                        className={styles.professionalText} 
+                                    />
+                                </Box>
+                                {/* ✅ Show checkmark ONLY if the professional is confirmed */}
+                                {isConfirmed && <CheckCircleIcon className={styles.checkmarkIcon} />}
+                            </Box>
+                        }
+                    />
+                </ListItem>
+            );
+        })
+    ) : (
+        <Typography className={styles.noExpertsMessage}>אין כרגע מומחים זמינים</Typography>
+    )}
+</RadioGroup>
+
+{/* ✅ Select Button - Updates confirmedProfessionalId */}
+{quotations.length > 0 && (
+    <Button 
+        className={styles.selectButton} 
+        onClick={handleSelectProfessional} 
+        disabled={!selectedProfessionalId || selectedProfessionalId === confirmedProfessionalId}
+    >
+        בחר מומחה
+    </Button>
+)}
+
         </Box>
     </Box>
 </Collapse>

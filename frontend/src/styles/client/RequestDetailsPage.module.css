@@ -442,6 +442,32 @@ width: 100%;
     margin-top: 5px !important;
 }
 
+.fluentCheckmark {
+    font-size: 1.2rem;
+    color: #0078D4; /* Microsoft's Fluent Blue */
+    font-weight: bold;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* ✅ Checkmark Icon */
+.checkmarkIcon {
+    color: green;  /* ✅ Green checkmark */
+    font-size: 24px;  /* ✅ Adjust size */
+    margin-left: 10px;  /* ✅ Add spacing */
+}
+/* ✅ Checkmark Icon */
+.checkmarkIcon {
+    color: green;  /* ✅ Green checkmark */
+    font-size: 24px;  /* ✅ Adjust size */
+    margin-left: 10px;  /* ✅ Add spacing */
+    transition: opacity 0.2s ease-in-out; /* ✅ Smooth transition */
+}
+
+
+
 /* Address */
 .address {
     font-size: 14px !important;
