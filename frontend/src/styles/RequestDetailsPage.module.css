@@ -169,13 +169,15 @@
 
 .backButton,
 .finalizeButton {
-  background-color: #FDD500 !important;
-  color: black !important;
-  font-size: 18px !important;
-  padding: 10px 40px !important;
-  border-radius: 10px !important;
-  min-width: 150px !important; /* Ensure both buttons are the same size */
-  text-align: center !important;
+background-color: #FDD500 !important;
+    color: black !important;
+    font-size: 18px !important;
+    padding: 10px 40px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 10px !important;
+    min-width: 91px !important;
+    text-align: center !important;
 }
 .quotationSection {
   width: 100% !important;
