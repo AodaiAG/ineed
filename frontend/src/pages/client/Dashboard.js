@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   if (loading || !translation) {
     return (
-      <div className={styles["spinner-overlay"]}>
+      <div className={styles["  inner-overlay"]}>
         <div className={styles["spinner"]}></div>
       </div>
     );
@@ -118,17 +118,19 @@ const Dashboard = () => {
           <p className={styles.clientDDescription}>כל המומחים במקום אחד</p>
         </Box>
 
-        {/* Worker Image */}
+        <div className={styles.spacer}></div>
+
+
+        {/* Buttons */}
+        <Box className={styles.clientDButtonsContainer}>
+
         <Box className={styles.clientDImageContainer}>
           <img
-            src="/images/ct/worker3.png"
+            src="/images/Prof/worker2.png"
             alt="Worker"
             className={styles.clientDWorkerImage}
           />
         </Box>
-
-        {/* Buttons */}
-        <Box className={styles.clientDButtonsContainer}>
           <Button
             variant="contained"
             className={`${styles.clientDButton} ${styles.clientDNewRequestButton}`}

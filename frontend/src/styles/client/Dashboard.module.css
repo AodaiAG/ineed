@@ -1,92 +1,86 @@
 .clientDContainer {
-
-  background-color: #1783e0;
-  height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    overflow: hidden;
-	padding: 10px;
- 
-  
-
+  background-color: #1783e0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  overflow: hidden !important;
+  padding: 10px !important;
 }
 
 /* Header */
 .clientDHeader {
-    display: flex
-;
-    align-items: center;
-    flex-direction: column;
-    margin-bottom: 5px;
-    width: 100%;
-    position: relative;
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: column !important;
+  margin-bottom: 5px !important;
+  width: 100% !important;
+  position: relative !important;
 }
 
 .clientDIconButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
 }
 
 .clientDIcon {
- width: auto;
-    height: auto;
-    cursor: pointer;
+  width: auto !important;
+  height: auto !important;
+  cursor: pointer !important;
 }
 
 .clientDContent {
-  text-align: center;
-    
+  text-align: center !important;
 }
 
 .clientDTitle {
-font-size: clamp(1rem, 17vw, 4.0rem);
-    font-weight: 500;
-    color: white;
-    margin: 10px;
+  font-size: clamp(1rem, 17vw, 4.0rem) !important;
+  font-weight: 500 !important;
+  color: white !important;
+  margin: 10px !important;
 }
 
 .clientDDescription {
-font-size: clamp(1rem, 6vw, 2rem);
-    color: white;
-    margin-top: 10px;
+  font-size: clamp(1rem, 6vw, 2rem) !important;
+  color: white !important;
+  margin-top: 10px !important;
 }
 
 /* Worker Image */
 .clientDImageContainer {
-  margin: 6px 0;
-  display:flex;
+  margin-bottom:-4px;
+  display: flex !important;
 }
 
 .clientDWorkerImage {
-width: 231px;
-  height: auto;
+  width: 100% !important;
+  max-width: 169px !important;
+  
 }
 
 /* Buttons */
 .clientDButtonsContainer {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-      align-items: center;
-  gap: 1rem;
-  margin-bottom:10px;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+
 }
 
 .clientDButton {
-  width: 90%;
-  max-width: 300px;
-  margin: 0 auto;
-  font-size: 1.2rem;
-  font-weight: bold;
-  padding: 0.8rem;
-  color: black;
-  border-radius: 10px;
+  width: 90% !important;
+  max-width: 300px !important;
+  margin: 5px !important;
+  font-size: 1.2rem !important;
+  font-weight: bold !important;
+  padding: 0.8rem !important;
+ 
+  border-radius: 10px !important;
 }
 
-.clientDNewRequestButton  {
+.clientDNewRequestButton {
   background-color: #fdbe00 !important;
 }
 
@@ -99,42 +93,45 @@ width: 231px;
 }
 
 .notificationIcon {
-    position: relative;
-    cursor: pointer;
-    color: #555; /* Ensure the icon color is visible */
+  position: relative !important;
+  cursor: pointer !important;
+  color: #555 !important; /* Ensure the icon color is visible */
 }
 
 .notificationIcon svg {
-    font-size: 35px; /* Set a larger font size for visibility */
+  font-size: 35px !important; /* Set a larger font size for visibility */
 }
 
 .notificationIcon .MuiBadge-root {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 .iconContainer {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    gap: 35px;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-	margin:10px;
+  display: flex !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  gap: 35px !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  margin: 10px !important;
 }
 
-
 .notificationDropdown {
-    position: absolute;
-    top: 60px;
-    background: #fff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-    z-index: 1000;
-    padding: 10px;
+  position: absolute !important;
+  top: 60px !important;
+  background: #fff !important;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  width: 300px !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+  z-index: 1000 !important;
+  padding: 10px !important;
+}
+
+.spacer {
+  flex-grow: 1 !important;
 }
