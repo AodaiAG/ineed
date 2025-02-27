@@ -66,7 +66,7 @@ export const NotificationProvider = ({ children, userId, userType }) => {
   }, [userId, userType]);
 
   return (
-    <NotificationContext.Provider value={{ notifications, markAsRead, fetchNotifications }}>
+    <NotificationContext.Provider value={{ notifications, setNotifications, markAsRead, fetchNotifications }}>
       {children}
       <ToastContainer position="top-right" autoClose={5000} />
     </NotificationContext.Provider>

@@ -12,12 +12,15 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications } from '../contexts/NotificationContext';
 import styles from '../styles/NotificationListComponent.module.css'; // ✅ Import CSS file
+import axios from 'axios'; // ✅ Import Axios
+import { API_URL } from '../utils/constans';
+
 
 
 const getTranslation = (translation, key) => key.split('.').reduce((obj, k) => (obj || {})[k], translation);
 
 const NotificationListComponent = () => {
-  const { notifications, markAsRead, markAllAsRead, deleteNotification, deleteSelectedNotifications } = useNotifications();
+  const { notifications, setNotifications, markAsRead, deleteNotification, deleteSelectedNotifications } = useNotifications();
   const { translation } = useLanguage();
   const navigate = useNavigate();
   
@@ -46,9 +49,32 @@ const NotificationListComponent = () => {
   };
 
   const handleDeleteSelected = async () => {
-    await deleteSelectedNotifications(selectedNotifs);
-    setSelectedNotifs([]); // Clear selection after deletion
-  };
+    if (selectedNotifs.length === 0) return;
+
+    try {
+      const response = await axios.post(`${API_URL}/notifications/delete`, {
+        notificationIds: selectedNotifs
+      });
+
+      console.log('🔹 Response from server:', response.data); // ✅ Log full response
+
+      if (response.data.success == true) {
+        console.log('✅ Deletion successful, updating UI');
+
+        // ✅ Remove deleted notifications from state
+        setNotifications((prev) => prev.filter((notif) => !selectedNotifs.includes(notif.id)));
+        setSelectedNotifs([]);
+      } else {
+        console.error('❌ Unexpected response:', response.data);
+        alert(response.data.message || 'Unexpected error occurred.');
+      }
+    } catch (error) {
+        console.error('❌ Failed to delete notifications:', error);
+        alert('Failed to delete notifications. Please try again.');
+    }
+};
+
+
 
   return (
     <Paper elevation={3} sx={{ maxWidth: 400, padding: 2, position: 'relative' }}>
@@ -60,12 +86,17 @@ const NotificationListComponent = () => {
           </Typography>
           
           {/* ✅ 3-Dots Menu (MoreVertIcon) */}
-          <IconButton onClick={toggleEditMode} className={styles.moreOptionsButton}>
+          <IconButton
+           onClick={toggleEditMode} 
+           className={styles.moreOptionsButton}
+           sx={{ color: '#1A76D2' }} // ✅ Sets it to blue
+
+           >
             <MoreVertIcon />
           </IconButton>
         </Box>
 
-{/* 🔹 Action Buttons (Only in Edit Mode) */}
+
 {/* 🔹 Action Buttons (Only in Edit Mode) */}
 <Slide direction="down" in={editMode} mountOnEnter unmountOnExit>
   <Box className={styles.actionButtonsContainer}> {/* ✅ Added a class for the container */}

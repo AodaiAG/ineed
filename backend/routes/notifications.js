@@ -77,17 +77,40 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Clear all notifications for a user
-router.delete('/clear/:recipientType/:recipientId', async (req, res) => {
-  const { recipientType, recipientId } = req.params;
+router.post('/delete', async (req, res) => {
   try {
-    const deletedCount = await Notification.destroy({
-      where: { recipientId: recipientId.toString(), recipientType },
-    });
-    res.json({ success: true, message: `${deletedCount} notifications cleared successfully` });
+      console.log('🔹 Incoming DELETE request to /api/notifications/delete');
+
+      const { notificationIds } = req.body;
+      console.log('📩 Received notificationIds:', notificationIds);
+
+      if (!notificationIds || !Array.isArray(notificationIds) || notificationIds.length === 0) {
+          console.log('❌ Invalid request: Missing or incorrect notificationIds');
+          return res.status(400).json({ success: false, message: 'Invalid request. Provide an array of notification IDs.' });
+      }
+
+      const deletedCount = await Notification.destroy({
+          where: { id: notificationIds }
+      });
+
+      console.log(`🗑️ Deleted ${deletedCount} notifications`);
+
+      if (deletedCount === 0) {
+          console.log('⚠️ No matching notifications found for deletion.');
+          return res.status(404).json({ success: false, message: 'No notifications found to delete.' });
+      }
+
+      console.log('✅ Notifications deleted successfully!');
+      
+      // ✅ Explicitly return { success: true }
+      return res.json({ success: true, message: 'Notifications deleted successfully.', deletedCount });
+
   } catch (error) {
-    console.error('Error clearing notifications:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+      console.error('❌ Error deleting notifications:', error);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
+
+
 
 module.exports = router;
