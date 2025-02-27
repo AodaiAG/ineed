@@ -97,21 +97,21 @@ function ExpertInterface() {
                                 <ListItemIcon>
                                     <SettingsIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Settings" />
+                                <ListItemText primary="הגדרות" />
                             </ListItem>
 
                             <ListItem button onClick={handleLanguageIconClick}>
                                 <ListItemIcon>
                                     <LanguageIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Language" />
+                                <ListItemText primary="שפה" />
                             </ListItem>
 
                             <ListItem button onClick={handleNotificationClick}>
                                 <ListItemIcon>
                                     <NotificationsActiveIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Notifications" />
+                                <ListItemText primary="התראות" />
                             </ListItem>
                         </List>
                     </Box>

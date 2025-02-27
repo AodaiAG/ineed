@@ -27,7 +27,7 @@ const NotificationListComponent = () => {
   };
 
   return (
-    <Paper elevation={3} sx={{ maxWidth: 400, margin: '20px auto', padding: 2 }}>
+    <Paper elevation={3} sx={{ maxWidth: 400, padding: 2 }}>
       <Typography variant="h6" gutterBottom>
         {translation.notifications.title || 'Notifications'}
       </Typography>

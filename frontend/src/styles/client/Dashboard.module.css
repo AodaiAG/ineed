@@ -120,16 +120,18 @@
 }
 
 .notificationDropdown {
-  position: absolute !important;
-  top: 60px !important;
-  background: #fff !important;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important;
-  border-radius: 8px !important;
-  width: 300px !important;
-  max-height: 400px !important;
-  overflow-y: auto !important;
-  z-index: 1000 !important;
-  padding: 10px !important;
+position: absolute;
+    top: 60px;
+    background: #676767;
+    box-shadow: 3px 36px 92px #000000;
+    border-radius: 8px;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+
 }
 
 .spacer {
