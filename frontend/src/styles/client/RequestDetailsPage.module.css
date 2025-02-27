@@ -431,7 +431,7 @@ width: 100%;
     font-size: 16px !important;
     font-weight: bold !important;
     color: black !important;
-    margin-top: 10px !important;
+    
 }
 
 /* Date & Time */
@@ -504,37 +504,36 @@ width: 100% !important;
 
 /* Right Section (Details) */
 .y2 {
-    width: 84% !important;
-    display: flex !important;
+width: 84% !important;
+    display: flex !important
+;
     justify-content: space-between !important;
     align-items: center !important;
-	    border: 3px solid #FDD500 !important;
+    border: 3px solid #FDD500 !important;
     border-radius: 14px !important;
-	background: white;
+    background: white;
+    flex-direction: column;
 }
 
 /* Details without Request Number */
-.x1 {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
-    width: 75% !important;
-	
-}
+
+
 
 /* Request Number */
 .x2 {
 
-    display: flex !important;
+display: flex !important
+;
     align-items: center !important;
     justify-content: center !important;
     /* background-color: red !important; */
     color: #000000 !important;
-	    margin: 4px;
+	gap: 5px !important;
+    margin: 4px;
     font-size: 18px !important;
     font-weight: bold !important;
     border-radius: 10px !important;
-    flex-direction: column;
+    flex-direction: row-reverse;
 }
 
 /* Profession */
@@ -571,7 +570,7 @@ font-size: 20px !important;
 }
 
 .requestNumber {
-    font-size: 16px !important;
+    font-size: 21px !important;
     font-weight: bold !important;
     color: #FDBE00 !important; /* Number styling */
     text-align: center !important;
@@ -579,11 +578,12 @@ font-size: 20px !important;
 }
 /* Parent container */
 .x1 {
-    width: 75% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    align-items: flex-start !important;
+width: 92% !important;
+    display: flex !important
+;
+    flex-direction: column;
+	    text-align: center !important;
+    justify-content: center;
     margin: 0px 0px 6px 0px;
 }
 
