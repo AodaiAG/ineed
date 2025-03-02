@@ -134,6 +134,29 @@ position: absolute;
 
 }
 
+@media (min-width: 1025px) {
+  /* ✅ Force MUI Drawer inside iPhone Frame */
+  .iphoneScreen .MuiDrawer-root {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100% !important;
+    width: 100% !important; /* ✅ Full width of iPhone screen */
+    z-index: 250 !important; /* ✅ Ensure it appears above other elements */
+  }
+
+  /* ✅ Style the Drawer Paper (the actual sidebar panel) */
+  .iphoneScreen .MuiDrawer-paper {
+    width: 85% !important; /* ✅ Adjust sidebar width */
+    max-width: 250px !important; /* ✅ Limit width */
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.9) !important; /* ✅ Dark transparent */
+    border-radius: 20px 0 0 20px !important; /* ✅ Round left edges */
+  }
+}
+
+
+
 .spacer {
   flex-grow: 1 !important;
 }

@@ -28,6 +28,8 @@ import ExpertInterface from './pages/professionals/ExpertInterface';
 import BusinessCard from './pages/professionals/BusinessCard';
 import EditProfessionalSettings from './pages/professionals/EditProfessionalSettings';
 import ExpertMainPage from './pages/professionals/ExpertMainPage';
+import AppWrapper from "./pages/AppWrapper"; // ✅ Import AppWrapper
+
 import ExplainScreen from './pages/professionals/ExplainScreen';
 import ProfessionalRequestDetailsPage from './pages/professionals/ProfessionalRequestDetailsPage';
 import NewRequestsPage from './pages/professionals/NewRequestsPage';
@@ -38,6 +40,8 @@ import ClosedRequestsPage from './pages/professionals/ClosedRequestsPage';
 function App() {
   return (
     <Router>
+            <AppWrapper> {/* ✅ Wrap the whole app inside AppWrapper */}
+
       <LanguageProvider>
         <Routes>
           {/* Client Side Routes */}
@@ -75,6 +79,9 @@ function App() {
       </LanguageProvider>
       {/* Place ToastContainer here */}
       <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
+
+      </AppWrapper>
+
     </Router>
   );
 }
