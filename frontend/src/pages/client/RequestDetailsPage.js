@@ -167,152 +167,142 @@ const RequestDetailsPage = () => {
             <Box className={styles.pageContainer}>
                 {/* Header */}
                 <Box className={styles.headerContainer}>
-                    <Typography className={styles.headerTitle}>פרטי הקריאה</Typography>
+                    <Typography className={styles.headerTitle}>
+                        {requestDetails?.status === "closed" ? "הקריאה סגורה" : "פרטי הקריאה"}
+                    </Typography>
                 </Box>
+    
+                {/* Request Details */}
+                <Box className={styles.requestDetailsContainer}>
+                    {/* Left Section (Trash Icon) - Hide if closed */}
+                    {requestDetails?.status !== "closed" && (
+                        <Box className={styles.y1} onClick={handleOpenCancelPopup}>
+                            <Box className={styles.deleteIcon}>🗑️</Box>
+                        </Box>
+                    )}
+    
+                    {/* Right Section (Details) */}
+                    <Box className={styles.y2}
+                        style={{ width: requestDetails?.status === "closed" ? "100%" : "84%" }} // ✅ Adjust width dynamically
 
-   {/* Request Details */}
-  {/* Request Details */}
-<Box className={styles.requestDetailsContainer}>
-    {/* Left Section (Trash Icon) */}
-    <Box className={styles.y1} onClick={handleOpenCancelPopup}>
-    <Box className={styles.deleteIcon}>🗑️</Box>
-</Box>
-
-
-    {/* Right Section (Details) */}
-    <Box className={styles.y2}>
-        {/* Details without Request Number */}
-
-                {/* Request Number */}
-                <Box className={styles.x2}>
-    {/* Label (Top) */}
-    <Typography className={styles.requestLabel}>קריאה</Typography> 
-
-    {/* Value (Bottom) */}
-    <Typography className={styles.requestNumber}>{requestId}</Typography>
-</Box>
-
-
-        <Box className={styles.x1}>
-            <Typography className={styles.profession}>
-                {profession}
-            </Typography>
-            <Typography className={styles.dateTime}>
-                {formattedDate}
-            </Typography>
-            <Typography className={styles.address}>
-                {requestDetails?.city}
-            </Typography>
-        </Box>
-
-
-    </Box>
-</Box>
-
-
-
-                {/* Professionals Section (Expandable) */}
-                <Box className={styles.expandableHeader} onClick={() => { setShowProfessionals(!showProfessionals); setShowChat(false); }}>
-                    <Typography>בעלי מקצוע שמוכנים לתת שירות</Typography>
+                    >
+                        <Box className={styles.x2}>
+                            <Typography className={styles.requestLabel}>קריאה</Typography>
+                            <Typography className={styles.requestNumber}>{requestId}</Typography>
+                        </Box>
+                        <Box className={styles.x1}>
+                            <Typography className={styles.profession}>{profession}</Typography>
+                            <Typography className={styles.dateTime}>{formattedDate}</Typography>
+                            <Typography className={styles.address}>{requestDetails?.city}</Typography>
+                        </Box>
+                    </Box>
+                </Box>
+    
+                {/* ✅ Professionals Section (Expandable) - Can Expand, But No Actions */}
+                <Box className={styles.expandableHeader} onClick={() => setShowProfessionals(!showProfessionals)}>
+                    <Typography>
+                        {requestDetails?.status === "closed" ? "הצעות שקיבלת" : "בעלי מקצוע שמוכנים לתת שירות"}
+                    </Typography>
                     {showProfessionals ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </Box>
+    
                 <Collapse in={showProfessionals} className={styles.collapseContainer}>
-    <Box className={styles.collapseWrapper}>
-        <Box className={styles.professionalList}>
-        <RadioGroup 
-    className={styles.radioGroupCustom}
-    value={selectedProfessionalId} 
-    onChange={(e) => setSelectedProfessionalId(e.target.value)} // ✅ Store selection only
-> 
-    {quotations.length > 0 ? (
-        quotations.map((q) => {
-            const isConfirmed = confirmedProfessionalId === q.professionalId.toString(); // ✅ Checkmark moves only after button click
+                    <Box className={styles.collapseWrapper}>
+                        <Box className={styles.professionalList}>
+                            <RadioGroup 
+                                className={styles.radioGroupCustom}
+                                value={selectedProfessionalId}
+                                onChange={(e) => requestDetails?.status !== "closed" && setSelectedProfessionalId(e.target.value)} 
+                            >
+                                {quotations.length > 0 ? (
+                                    quotations.map((q) => {
+                                        const isConfirmed = confirmedProfessionalId === q.professionalId.toString();
+    
+                                        return (
+                                            <ListItem key={q.professionalId} className={styles.professionalCard}>
+                                                <FormControlLabel
+                                                    value={q.professionalId.toString()}
+                                                    control={<Radio disabled={requestDetails?.status === "closed"} />} // ✅ Disable selection if closed
+                                                    label={
+                                                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                                                            <Box display="flex" alignItems="center">
+                                                                <ListItemAvatar>
+                                                                    <Avatar src={q.image} alt={q.name} />
+                                                                </ListItemAvatar>
+                                                                <ListItemText 
+                                                                    primary={q.name} 
+                                                                    secondary={`₪${q.price}`} 
+                                                                    className={styles.professionalText} 
+                                                                />
+                                                            </Box>
+                                                            {isConfirmed && <CheckCircleIcon className={styles.checkmarkIcon} />}
+                                                        </Box>
+                                                    }
+                                                />
+                                            </ListItem>
+                                        );
+                                    })
+                                ) : (
+                                    <Typography className={styles.noExpertsMessage}>אין כרגע מומחים זמינים</Typography>
+                                )}
+                            </RadioGroup>
 
-            return (
-                <ListItem key={q.professionalId} className={styles.professionalCard}>
-                    <FormControlLabel
-                        value={q.professionalId.toString()} // ✅ Ensure correct format
-                        control={<Radio />}
-                        label={
-                            <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
-                                <Box display="flex" alignItems="center">
-                                    <ListItemAvatar>
-                                        <Avatar src={q.image} alt={q.name} />
-                                    </ListItemAvatar>
-                                    <ListItemText 
-                                        primary={q.name} 
-                                        secondary={`₪${q.price}`} 
-                                        className={styles.professionalText} 
-                                    />
-                                </Box>
-                                {/* ✅ Show checkmark ONLY if the professional is confirmed */}
-                                {isConfirmed && <CheckCircleIcon className={styles.checkmarkIcon} />}
-                            </Box>
-                        }
+                                        {/* ✅ Show Select Button ONLY if the request is OPEN */}
+            {quotations.length > 0 && requestDetails?.status === "open" && (
+                <Button 
+                    className={styles.selectButton} 
+                    onClick={handleSelectProfessional} 
+                    disabled={!selectedProfessionalId || selectedProfessionalId === confirmedProfessionalId}
+                >
+                    בחר מומחה
+                </Button>
+            )}
+                        </Box>
+                    </Box>
+                </Collapse>
+
+    
+                {/* ✅ Chat Section (Expandable) - Can Expand, But Read-Only */}
+                <Box className={styles.expandableHeader} onClick={() => setShowChat(!showChat)}>
+                    <Typography>
+                        {requestDetails?.status === "closed" ? "היסטוריית צ׳אט עם המומחים שלנו" : "צ׳אט עם המומחים שלנו"}
+                    </Typography>
+                    {showChat ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </Box>
+    
+                <Collapse in={showChat} className={styles.chatCollapseContainer}>
+                    <Box className={styles.chatCollapseWrapper}>
+                        <Box className={styles.chatContainer}>
+                            <StreamChatComponent
+                                apiKey="nr6puhgsrawn"
+                                userToken={userToken}
+                                channelId={`request_${requestId}`}
+                                userID={user.id}
+                                userRole="client"
+                                readOnly={true} // ✅ Always read-only, since it's history
+                            />
+                        </Box>
+                    </Box>
+                </Collapse>
+    
+                {/* ✅ Cancel Request Popup - Hide if closed */}
+                {showCancelPopup && requestDetails?.status !== "closed" && (
+                    <CancelRequestPage 
+                        open={showCancelPopup} 
+                        onClose={handleCloseCancelPopup} 
+                        requestId={requestId}
                     />
-                </ListItem>
-            );
-        })
-    ) : (
-        <Typography className={styles.noExpertsMessage}>אין כרגע מומחים זמינים</Typography>
-    )}
-</RadioGroup>
-
-{/* ✅ Select Button - Updates confirmedProfessionalId */}
-{quotations.length > 0 && (
-    <Button 
-        className={styles.selectButton} 
-        onClick={handleSelectProfessional} 
-        disabled={!selectedProfessionalId || selectedProfessionalId === confirmedProfessionalId}
-    >
-        בחר מומחה
-    </Button>
-)}
-
-        </Box>
-    </Box>
-</Collapse>
-
-
-                {/* Chat Section (Expandable) */}
-{/* Chat Section (Expandable) */}
-<Box className={styles.expandableHeader} onClick={() => { setShowChat(!showChat); setShowProfessionals(false); }}>
-    <Typography>צ׳אט עם המומחים שלנו</Typography>
-    {showChat ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-</Box>
-<Collapse in={showChat} className={styles.chatCollapseContainer}>
-    <Box className={styles.chatCollapseWrapper}>
-        <Box className={styles.chatContainer}>
-            <StreamChatComponent
-                apiKey="nr6puhgsrawn"
-                userToken={userToken}
-                channelId={`request_${requestId}`}
-                userID={user.id}
-                userRole="client"
-            />
-        </Box>
-    </Box>
-</Collapse>
-
-
-                {/* ✅ Cancel Request Popup Overlay */}
-                {showCancelPopup && (
-    <CancelRequestPage 
-        open={showCancelPopup} 
-        onClose={handleCloseCancelPopup} 
-        requestId={requestId} // ✅ Pass the request ID
-    />
-)}
-
-
-
-                {/* Back Button */}
+                )}
+    
+                {/* ✅ Back Button */}
                 <Button className={styles.backButton} onClick={() => navigate("/dashboard")}>
                     חזור
                 </Button>
             </Box>
         </NotificationProvider>
     );
+    
+    
 };
 
 export default RequestDetailsPage;
