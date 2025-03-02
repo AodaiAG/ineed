@@ -90,7 +90,22 @@ function ExpertInterface() {
                 </div>
 
                 {/* Sidebar */}
-                <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
+                <Drawer
+  anchor="left"
+  open={isSidebarOpen}
+  onClose={toggleSidebar}
+  container={window.innerWidth >= 1025 ? document.getElementById("drawer-container") : undefined} // ✅ Only set container on large screens
+  PaperProps={{
+    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" }, // ✅ Keep normal behavior on mobile
+  }}
+  BackdropProps={{
+    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" },
+  }}
+  ModalProps={{
+    container: window.innerWidth >= 1025 ? document.getElementById("drawer-container") : undefined,
+    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" },
+  }}
+>
                     <Box className={styles.sidebarContainer} role="presentation" onClick={toggleSidebar}>
                         <List>
                             <ListItem button onClick={handleSettingsClick}>
