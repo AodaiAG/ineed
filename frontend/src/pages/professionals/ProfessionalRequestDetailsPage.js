@@ -163,100 +163,115 @@ const ProfessionalRequestDetailsPage = () => {
 
   return (
     <Box className={styles.pageContainer}>
-{isSelectedProfessional && (
-  <>
-    <Button
-      variant="contained"
-      className={styles.cancelButton}
-      onClick={() => setShowCancelDialog(true)}
-    >
-      ביטול
-    </Button>
-
-    <CancelRequestComponent
-      open={showCancelDialog}
-      onClose={() => setShowCancelDialog(false)}
-      requestId={requestId}
-      onSuccess={() => navigate(0)} // ✅ React Router refresh
-      />
-  </>
-)}
-
-
-            {/* Header Section */}
-            <Box className={styles.header}>
+      {/* ✅ Header Title Update */}
+      <Box className={styles.header}>
         <Typography className={styles.requestNumber}>{requestDetails.id}</Typography>
-        <Typography className={styles.title}>קריאה</Typography>
+        <Typography className={styles.title}>
+          {requestDetails?.status === "closed" ? "הקריאה סגורה" : "קריאה"}
+        </Typography>
       </Box>
-
-      {/* Expandable Request Details */}
-      <Box className={styles.details}>
-          <Typography><strong>בתחום:</strong> {profession?.main || "טוען..."}</Typography>
-          <Typography><strong>בנושא:</strong> {profession?.sub || "טוען..."}</Typography>
-          <Typography><strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}</Typography>
-          <Typography><strong>מועד:</strong> {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}</Typography>
-          <Typography><strong>הערת לקוח:</strong> {requestDetails.comment || "אין הערות"}</Typography>
-        </Box>
-
-      {/* Expandable Chat Section */}
-      <Box className={styles.expandableHeader} onClick={() => toggleSection("chat")}>
-  <Typography>צ׳אט עם הלקוח</Typography>
-  {expandedSection === "chat" ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-</Box>
-<Collapse in={expandedSection === "chat"} className={styles.chatCollapseContainer} >
-  <Box className={styles.chatContainer}>
-    {userToken ? (
-      <StreamChatComponent
-        apiKey="nr6puhgsrawn"
-        userToken={userToken}
-        channelId={`request_${requestId}`}
-        userID={String(user.profId)}
-        userRole="prof"
-      />
-    ) : (
-      <Typography>Loading chat...</Typography>
-    )}
-  </Box>
-</Collapse>
-
-
-      {/* Expandable Quotation Section */}
-      <Box className={styles.expandableHeader} onClick={() => toggleSection("quotation")}>
-  <Typography>הצעת מחיר</Typography>
-  {expandedSection === "quotation" ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-</Box>
-<Collapse in={expandedSection === "quotation"} className={styles.quotationCollapseContainer}>
-  <Box className={styles.quotationSection}>
-    <Box className={styles.quotationInputContainer}>
-      <TextField
-        label="הצעת מחיר"
-        value={quotation}
-        onChange={(e) => setQuotation(e.target.value)}
-        variant="outlined"
-        type="number"
-      />
-      <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
-        עדכן
-      </Button>
-    </Box>
-  </Box>
-</Collapse>
-
-
-      <Box className={styles.buttonsRow}>
-        <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
-          חזור
-        </Button>
-        {isSelectedProfessional && (
-          <Button variant="contained" className={styles.finalizeButton} onClick={() => setShowFinishDialog(true)}>
-            סיום העבודה
+  
+      {/* ✅ Hide the Cancel Button if the request is closed */}
+      {isSelectedProfessional && requestDetails?.status !== "closed" && (
+        <>
+          <Button
+            variant="contained"
+            className={styles.cancelButton}
+            onClick={() => setShowCancelDialog(true)}
+          >
+            ביטול
           </Button>
-        )}
+  
+          <CancelRequestComponent
+            open={showCancelDialog}
+            onClose={() => setShowCancelDialog(false)}
+            requestId={requestId}
+            onSuccess={() => navigate(0)} // ✅ React Router refresh
+          />
+        </>
+      )}
+  
+      {/* Request Details */}
+      <Box className={styles.details}>
+        <Typography><strong>בתחום:</strong> {profession?.main || "טוען..."}</Typography>
+        <Typography><strong>בנושא:</strong> {profession?.sub || "טוען..."}</Typography>
+        <Typography><strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}</Typography>
+        <Typography><strong>מועד:</strong> {new Date(requestDetails.date).toLocaleString() || "לא ידוע"}</Typography>
+        <Typography><strong>הערת לקוח:</strong> {requestDetails.comment || "אין הערות"}</Typography>
       </Box>
-
+  
+      {/* ✅ Chat Section - Title Change */}
+      <Box className={styles.expandableHeader} onClick={() => toggleSection("chat")}>
+        <Typography>
+          {requestDetails?.status === "closed" ? "היסטוריית צ׳אט עם המומחים שלנו" : "צ׳אט עם המומחים שלנו"}
+        </Typography>
+        {expandedSection === "chat" ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+      </Box>
+  
+      <Collapse in={expandedSection === "chat"} className={styles.chatCollapseContainer}>
+        <Box className={styles.chatContainer}>
+          {userToken ? (
+            <StreamChatComponent
+              apiKey="nr6puhgsrawn"
+              userToken={userToken}
+              channelId={`request_${requestId}`}
+              userID={String(user.profId)}
+              userRole="prof"
+              readOnly={requestDetails?.status === "closed"} // ✅ Chat is Read-Only when closed
+            />
+          ) : (
+            <Typography>Loading chat...</Typography>
+          )}
+        </Box>
+      </Collapse>
+  
+      {/* ✅ Quotation Section - Title Change & Remove Update Button if Closed */}
+      <Box className={styles.expandableHeader} onClick={() => toggleSection("quotation")}>
+        <Typography>
+          {requestDetails?.status === "closed" ? "המחיר שהצעת" : "הצעת מחיר"}
+        </Typography>
+        {expandedSection === "quotation" ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+      </Box>
+  
+      <Collapse in={expandedSection === "quotation"} className={styles.quotationCollapseContainer}>
+        <Box className={styles.quotationSection}>
+          <Box className={styles.quotationInputContainer}>
+            <TextField
+              label="הצעת מחיר"
+              value={quotation}
+              onChange={(e) => setQuotation(e.target.value)}
+              variant="outlined"
+              type="number"
+              disabled={requestDetails?.status === "closed"} // ✅ Disable input when closed
+            />
+            {/* ✅ Remove Update Button when the request is closed */}
+            {requestDetails?.status !== "closed" && (
+              <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
+                עדכן
+              </Button>
+            )}
+          </Box>
+        </Box>
+      </Collapse>
+  
+      {/* ✅ Remove Action Buttons (buttonsRow) when the request is closed */}
+      {requestDetails?.status !== "closed" && (
+        <Box className={styles.buttonsRow}>
+          <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
+            חזור
+          </Button>
+          {isSelectedProfessional && (
+            <Button variant="contained" className={styles.finalizeButton} onClick={() => setShowFinishDialog(true)}>
+              סיום העבודה
+            </Button>
+          )}
+        </Box>
+      )}
+  
       <FinishRequestComponent open={showFinishDialog} onClose={() => setShowFinishDialog(false)} requestId={requestId} clientId={requestDetails.clientId} />
     </Box>
   );
+  
 };
 
 export default ProfessionalRequestDetailsPage;
