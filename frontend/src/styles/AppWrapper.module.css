@@ -45,34 +45,36 @@
 
     overflow: hidden;
     border-radius: 40px;
-    padding-top: 30px;
+    
     
   }
 
   /* ✅ Speaker & Camera (Notch) */
-  .iphoneFrame::before {
+    .iphoneFrame::before {
     content: "";
     position: absolute;
-    top: 8px;
+    top: -2px; /* ✅ Move it slightly up to merge */
     left: 50%;
     transform: translateX(-50%);
-    width: 140px;
-    height: 30px;
-    background: #1E1E1E;
+    width: 160px;
+    height: 28px; /* ✅ Slightly reduced for better blend */
+    background: linear-gradient(180deg, #1E1E1E 0%, #000 100%); /* ✅ Smooth fade effect */
     border-radius: 20px;
+    box-shadow: inset 0 -2px 5px rgba(0, 0, 0, 0.3); /* ✅ Adds depth */
   }
 
-  /* ✅ Front Camera */
+  /* ✅ Front Camera (Small Dot in Notch) */
   .iphoneFrame::after {
     content: "";
     position: absolute;
-    top: 20px;
+    top: 9px; /* ✅ Center it better */
     left: 50%;
     transform: translateX(-50%);
-    width: 12px;
-    height: 12px;
-    background: #555;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, #444, #222);
     border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
   }
 }
 
