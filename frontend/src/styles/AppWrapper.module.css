@@ -115,7 +115,7 @@
 
 /* ✅ Force MUI Popups to Stay Inside the Phone */
 @media (min-width: 1025px) {
-  .popupInsideScreen {
+  .MuiDrawer-root {
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;

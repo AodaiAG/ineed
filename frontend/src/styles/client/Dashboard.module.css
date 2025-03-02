@@ -154,6 +154,15 @@ position: absolute;
     border-radius: 20px 0 0 20px !important; /* ✅ Round left edges */
   }
 }
+.sidebarDrawer {
+  position: relative !important;  /* ✅ Override MUI default positioning */
+  top: 0; /* ✅ Adjust if needed */
+  left: 0;
+  height: 100vh; /* ✅ Ensure it takes full height */
+  width: 250px; /* ✅ Customize width */
+  background-color: white; /* ✅ Adjust as needed */
+  border-right: 1px solid #ddd;
+}
 
 
 
