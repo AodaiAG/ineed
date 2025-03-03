@@ -161,7 +161,7 @@ const fetchAiSuggestions = debounce(async (query) => {
     const jobDetailsResponses = await Promise.all(jobDetailsRequests);
 
     // 5️⃣ Extract profession data
-    const fullJobDetails = jobDetailsResponses.map(res => res.data);
+    const fullJobDetails = jobDetailsResponses.map(res => res.data.data); // ✅ Extract the `data` field
 
     console.log("🔹 Full Job Details:", fullJobDetails); // Debugging
 
@@ -186,13 +186,16 @@ const handleSearchChange = (event) => {
 };
 
 const handleSuggestionClick = (suggestion) => {
+  console.log("🔹 User Selected:", suggestion); // ✅ Debug Click Event
+
   setDomain({ domain: suggestion.domain });
   setMainProfession({ main: suggestion.main });
-  setSubProfession({ sub: suggestion.sub });
+  setSelectedSubProfession({ sub: suggestion.sub }); // ✅ Use `setSelectedSubProfession`
 
-  setProblem(`${suggestion.domain} - ${suggestion.main} - ${suggestion.sub}`); // Fill search box
-  setShowDropdown(false); // Hide dropdown
+  setProblem(`${suggestion.domain} - ${suggestion.main} - ${suggestion.sub}`); // ✅ Fill search box
+  setShowDropdown(false); // ✅ Hide dropdown
 };
+
 
   if (!translation) 
     {
