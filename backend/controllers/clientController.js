@@ -452,64 +452,86 @@ exports.getAutocomplete = async (req, res) => {
 };
 
 // Controller function for handling AI-based job search
+
+
+
+
+
+
+
 exports.search = async (req, res) => {
-    const { query } = req.query;
-
-    if (!query) {
-        return res.status(400).json({ success: false, message: 'Search query is required' });
-    }
-
     try {
-        // Step 1: Fetch all job types from the database
-        const jobTitles = await JobType.findAll({
-            attributes: ['main', 'sub']
+        // 1️⃣ Get the user query and language from request body
+        const { query, lang = "he" } = req.body;
+
+
+        if (!query) {
+            return res.status(400).json({ error: "Query is required in request body" });
+        }
+
+        // 2️⃣ Get the correct table name for the selected language
+        const tableName = getTableNameForLanguage(lang);
+
+        if (!tableName) {
+            return res.status(400).json({ error: "Invalid language parameter" });
+        }
+
+        // 3️⃣ Dynamically create the JobType model with the correct table
+        const JobTypeModel = JobType(tableName);
+
+        // 4️⃣ Fetch a **smaller subset** of job types (LIMIT: 300)
+        const jobTypes = await JobTypeModel.findAll({
+            attributes: ["id", "main", "sub"], // ✅ **Include ID**
+            limit: 300 // ✅ **Further reduced to avoid token limit**
         });
 
-        // Convert job titles to a format the AI can understand
-        const jobList = jobTitles.map(job => `${job.main} - ${job.sub}`).join('\n');
 
-        // Step 2: Get AI's matching job suggestion based on the query and job titles
-        const aiJobType = await getAiJobMatch(query, jobList);
-
-        // Step 3: If AI provides a valid suggestion, search the job_type table
-        if (aiJobType) {
-            const matchingJob = await JobType.findOne({
-                where: {
-                    main: aiJobType.main,
-                    sub: aiJobType.sub
-                }
-            });
-
-            if (matchingJob) {
-                return res.json({
-                    success: true,
-                    jobType: matchingJob
-                });
-            } else {
-                const firstJob = jobTitles[0];
-                return res.json({
-                    success: true,
-                    jobType: {
-                        main: firstJob.main,
-                        sub: firstJob.sub
-                    }
-                });
-            }
-        } else {
-            const firstJob = jobTitles[0];
-            return res.json({
-                success: true,
-                jobType: {
-                    main: firstJob.main,
-                    sub: firstJob.sub
-                }
-            });
+        if (!jobTypes.length) {
+            return res.status(404).json({ error: `No job types found for language: ${lang}` });
         }
+
+        // 5️⃣ Convert job list to a **minimal format** for AI **(Including ID)**
+        const jobList = jobTypes.map(job => `${job.id}: ${job.main} > ${job.sub}`).join("\n");
+
+
+        // 6️⃣ Call OpenAI API with the **correct format including IDs**
+        const response = await client.chat.completions.create({
+            model: 'gpt-3.5-turbo',
+            messages: [
+                { role: 'system', content: 'You are a helpful assistant.' },
+                { role: 'user', content: `From the following job categories, return the most relevant job category IDs (max 3) for the user query:\n\n${jobList}\n\nUser query: ${query}\n\nOnly return a JSON array of IDs like this: [9, 12, 15]. No explanations.` }
+            ],
+            max_tokens: 200 // ✅ **Further reduced max tokens**
+        });
+
+
+        // 7️⃣ Parse AI response
+        let aiMatches;
+        try {
+            aiMatches = JSON.parse(response.choices[0].message.content);
+        } catch (error) {
+            console.error("❌ Error parsing AI response:", error);
+            return res.status(500).json({ error: "Failed to process AI response" });
+        }
+
+        // 8️⃣ Validate AI response format (should be an array of numbers)
+        if (!Array.isArray(aiMatches) || !aiMatches.every(id => typeof id === "number")) {
+            return res.status(400).json({ error: "AI response format is invalid" });
+        }
+
+        // 9️⃣ Limit to top 3 results
+        return res.json(aiMatches.slice(0, 3));
+
     } catch (error) {
-        console.error('Search error:', error);
-        return res.status(500).json({ success: false, message: 'Error performing search' });
+        console.error("❌ Error in search function:", error);
+        return res.status(500).json({ error: "Internal server error" });
     }
 };
+
+
+
+
+
 exports.getDomains = async (req, res) => {
     const lang = req.params.lang || 'he'; // Get language from params, default to Hebrew if not provided
     const tableName = getTableNameForLanguage(lang); // Get the correct table name based on the language code

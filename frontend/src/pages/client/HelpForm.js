@@ -14,6 +14,8 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 import axios from "axios";
 import useClientAuthCheck from '../../hooks/useClientAuthCheck';
+import { debounce } from "lodash"; // ✅ Import debounce to prevent excessive API calls
+
 
 
 const HelpForm = () => {
@@ -45,8 +47,12 @@ const HelpForm = () => {
   const [selectedLanguage] = useState(
     localStorage.getItem("userLanguage") || "he"
   );
-  const [isTyping, setIsTyping] = useState(false);
 
+  
+  const [problem, setProblem] = useState(""); // ✅ Stores user input
+  const [aiSuggestions, setAiSuggestions] = useState([]); // ✅ AI suggestions list
+  const [showDropdown, setShowDropdown] = useState(false); // ✅ Controls AI suggestions dropdown visibility
+  const [isTyping, setIsTyping] = useState(false);
 
   const { isAuthenticated, loading ,user} = useClientAuthCheck();
 
@@ -124,7 +130,69 @@ useEffect(() => {
   }
 }, [mainProfession, selectedLanguage]);
 
-  
+const fetchAiSuggestions = debounce(async (query) => {
+  if (!query) {
+    setAiSuggestions([]);
+    setShowDropdown(false);
+    return;
+  }
+
+  try {
+    // 1️⃣ Get the selected language (if you store it in state/localStorage)
+    const language = localStorage.getItem("userLanguage") || "he";
+
+    // 2️⃣ Call AI API (Returns only IDs)
+    const aiResponse = await axios.post(`${API_URL}/ai/suggest`, { query, lang: language });
+
+    if (!aiResponse.data || aiResponse.data.length === 0) {
+      setAiSuggestions([]);
+      setShowDropdown(false);
+      return;
+    }
+
+    console.log("🔹 AI Returned IDs:", aiResponse.data); // Debugging
+
+    // 3️⃣ Fetch full details for each returned ID using your existing API
+    const jobDetailsRequests = aiResponse.data.map(id =>
+      axios.get(`${API_URL}/professionals/profession/${id}/${language}`)
+    );
+
+    // 4️⃣ Wait for all requests to complete
+    const jobDetailsResponses = await Promise.all(jobDetailsRequests);
+
+    // 5️⃣ Extract profession data
+    const fullJobDetails = jobDetailsResponses.map(res => res.data);
+
+    console.log("🔹 Full Job Details:", fullJobDetails); // Debugging
+
+    // 6️⃣ Update state with fetched details
+    setAiSuggestions(fullJobDetails);
+    setShowDropdown(fullJobDetails.length > 0); // Show dropdown if results exist
+
+  } catch (error) {
+    console.error("❌ Error fetching AI suggestions:", error);
+    setAiSuggestions([]);
+    setShowDropdown(false);
+  }
+}, 500); // ✅ 0.5s debounce
+
+
+
+const handleSearchChange = (event) => {
+  const query = event.target.value;
+  setProblem(query);
+  setIsTyping(query !== "");
+  fetchAiSuggestions(query); // Call AI API after debounce
+};
+
+const handleSuggestionClick = (suggestion) => {
+  setDomain({ domain: suggestion.domain });
+  setMainProfession({ main: suggestion.main });
+  setSubProfession({ sub: suggestion.sub });
+
+  setProblem(`${suggestion.domain} - ${suggestion.main} - ${suggestion.sub}`); // Fill search box
+  setShowDropdown(false); // Hide dropdown
+};
 
   if (!translation) 
     {
@@ -169,7 +237,7 @@ useEffect(() => {
       {/* Title */}
       <h2 className="help-form-title">{translation.helpForm.title}</h2>
 
-      {/* Search Box */}
+      {/* 🔍 Search Box (AI-Powered, Keeping Original UI) */}
       <Box className="help-form-search-container">
         <TextField
           className="help-form-search"
@@ -177,7 +245,9 @@ useEffect(() => {
           variant="outlined"
           size="small"
           fullWidth
-          onChange={(e) => setIsTyping(e.target.value !== "")}
+          value={problem}
+          onChange={handleSearchChange}
+          onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // Hide dropdown on blur (delay to allow clicks)
         />
         <Box className={`search-icon-box ${isTyping ? "is-typing" : ""}`}>
           <SearchIcon
@@ -189,6 +259,21 @@ useEffect(() => {
           />
         </Box>
       </Box>
+
+      {/* 🔹 AI Suggestions Dropdown */}
+      {showDropdown && (
+        <Box className="ai-suggestions-dropdown">
+          {aiSuggestions.map((suggestion) => (
+            <Box
+              key={suggestion.id}
+              className="ai-suggestion-item"
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion.domain} - {suggestion.main} - {suggestion.sub}
+            </Box>
+          ))}
+        </Box>
+      )}
 
       {/* Autocomplete Fields */}
       <Box className="help-form-field">

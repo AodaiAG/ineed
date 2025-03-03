@@ -29,7 +29,7 @@ router.post("/cancel-request/:requestId", tokenMiddleware, cancelRequest);
 
 
 //
-router.get('/search', search);
+router.post('/ai/suggest', search);
 router.get('/geocode', getGeocode);
 router.get('/autocomplete',getAutocomplete);
 

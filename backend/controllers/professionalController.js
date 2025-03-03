@@ -888,7 +888,7 @@ const fetchProfessionById = async (req, res) => {
         const jobTypeModel = JobType(tableName);
         const profession = await jobTypeModel.findOne({
             where: { id },
-            attributes: ['main', 'sub']
+            attributes: ['main', 'sub','domain']
         });
 
         if (!profession) {
