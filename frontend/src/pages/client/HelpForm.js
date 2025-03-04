@@ -278,111 +278,79 @@ const handleSuggestionClick = (suggestion) => {
         </Box>
       )}
 
-      {/* Autocomplete Fields */}
-      <Box className="help-form-field">
-        <label>{translation.helpForm.selectDomain}</label>
-        <Autocomplete
-          options={domains}
-          getOptionLabel={(option) => option.domain || ""}
-          isOptionEqualToValue={(option, value) =>
-            option.domain === value.domain
-          }
-          value={domain}
-          onChange={(event, newValue) => setDomain(newValue)}
-          openOnFocus
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder={translation.helpForm.selectDomain}
-              fullWidth
-              className="help-form-input"
-            />
-          )}
-        />
-      </Box>
+     {/* 🔹 Grouped Input Fields for Better Control */}
+<Box className="help-form-fields-container">
+  <Box className="help-form-field">
+    <label>{translation.helpForm.selectDomain}</label>
+    <Autocomplete
+      options={domains}
+      getOptionLabel={(option) => option.domain || ""}
+      isOptionEqualToValue={(option, value) => option.domain === value.domain}
+      value={domain}
+      onChange={(event, newValue) => setDomain(newValue)}
+      openOnFocus
+      renderInput={(params) => (
+        <TextField {...params} placeholder={translation.helpForm.selectDomain} fullWidth className="help-form-input" />
+      )}
+    />
+  </Box>
 
-      <Box className="help-form-field">
-        <label>{translation.helpForm.selectProfession}</label>
-        <Autocomplete
-          options={mainProfessions}
-          getOptionLabel={(option) => option.main || ""}
-          isOptionEqualToValue={(option, value) =>
-            option.main === value.main
-          }
-          value={mainProfession}
-          onChange={(event, newValue) => setMainProfession(newValue)}
-          openOnFocus
-          disabled={!domain}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              placeholder={
-                !domain
-                  ? translation.helpForm.selectDomain
-                  : translation.helpForm.selectProfession
-              }
-              fullWidth
-              className="help-form-input"
-            />
-          )}
-        />
-      </Box>
-      <Box className="help-form-field">
-        
-      <label>{translation.helpForm.selectSubProfession || "Select Sub-Profession"}</label>
-  <Autocomplete
-    options={subProfessions} // Ensure this is an array
-    getOptionLabel={(option) => option.sub || ""}
-    isOptionEqualToValue={(option, value) => option.id === value.id} // Match by unique ID
-    value={selectedSubProfession} // Track the selected value
-    onChange={(event, newValue) => setSelectedSubProfession(newValue)} // Update state on selection
-    openOnFocus
-    disabled={!mainProfession} // Disable until a mainProfession is selected
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        placeholder={
-          !mainProfession
-            ? translation.helpForm.selectProfession
-            : translation.helpForm.selectSubProfession
-        }
-        fullWidth
-        className="help-form-input"
-      />
-    )}
-  />
+  <Box className="help-form-field">
+    <label>{translation.helpForm.selectProfession}</label>
+    <Autocomplete
+      options={mainProfessions}
+      getOptionLabel={(option) => option.main || ""}
+      isOptionEqualToValue={(option, value) => option.main === value.main}
+      value={mainProfession}
+      onChange={(event, newValue) => setMainProfession(newValue)}
+      openOnFocus
+      disabled={!domain}
+      renderInput={(params) => (
+        <TextField {...params} placeholder={translation.helpForm.selectProfession} fullWidth className="help-form-input" />
+      )}
+    />
+  </Box>
 
+  <Box className="help-form-field">
+    <label>{translation.helpForm.selectSubProfession || "Select Sub-Profession"}</label>
+    <Autocomplete
+      options={subProfessions}
+      getOptionLabel={(option) => option.sub || ""}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
+      value={selectedSubProfession}
+      onChange={(event, newValue) => setSelectedSubProfession(newValue)}
+      openOnFocus
+      disabled={!mainProfession}
+      renderInput={(params) => (
+        <TextField {...params} placeholder={translation.helpForm.selectSubProfession} fullWidth className="help-form-input" />
+      )}
+    />
+  </Box>
+
+  <Box className="help-form-field">
+    <label>{translation.helpForm.selectCity}</label>
+    <TextField
+      value={city}
+      onClick={() => setShowLocationPopup(true)}
+      placeholder={translation.helpForm.selectCity}
+      fullWidth
+      className="help-form-input"
+      inputProps={{ readOnly: true, style: { cursor: "pointer" } }}
+    />
+  </Box>
+
+  <Box className="help-form-field">
+    <label>{translation.helpForm.selectDate}</label>
+    <TextField
+      type="datetime-local"
+      value={date}
+      onChange={(e) => setDate(e.target.value)}
+      fullWidth
+      className="help-form-input"
+      inputProps={{ style: { textAlign: "center" } }}
+    />
+  </Box>
 </Box>
-
-
-      <Box className="help-form-field">
-        <label>{translation.helpForm.selectCity}</label>
-        <TextField
-          value={city}
-          onClick={() => setShowLocationPopup(true)}
-          placeholder={translation.helpForm.selectCity}
-          fullWidth
-          className="help-form-input"
-          inputProps={{
-            readOnly: true,
-            style: { cursor: "pointer" },
-          }}
-        />
-      </Box>
-
-      <Box className="help-form-field">
-        <label>{translation.helpForm.selectDate}</label>
-        <TextField
-          type="datetime-local"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          fullWidth
-          className="help-form-input"
-          inputProps={{
-            style: { textAlign: "center" },
-          }}
-        />
-      </Box>
 
       {/* Submit Button */}
       <Button

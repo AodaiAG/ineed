@@ -42,7 +42,7 @@
 .help-form-field label {
   color: white;
   font-size: 1.3rem;
-  width:70%;
+  width:70% ;
   margin: 5px;
 }
 
@@ -217,6 +217,41 @@
   color: gray;
   font-style: italic;
 }
+/* 🔹 Wraps all input fields together for better control */
+.help-form-fields-container {
+  width: 95%; /* ✅ Change width to control all inputs */
+  max-width: 600px; /* ✅ Adjustable width */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* ✅ Adds spacing between inputs */
+}
+
+/* 🔹 Ensures inputs and labels align properly */
+.help-form-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* 🔹 Labels Styling */
+.help-form-field label {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* 🔹 Input Fields */
+.help-form-input {
+  width: 100%;
+  background: white;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 1rem;
+}
+
 
 
 /* Pulse Animation */
