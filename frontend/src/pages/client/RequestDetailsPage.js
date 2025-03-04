@@ -131,9 +131,11 @@ const RequestDetailsPage = () => {
 
     if (authLoading || loading) {
         return (
-            <Box className={styles.loadingContainer}>
-                <CircularProgress />
-            </Box>
+<Box className={styles.loadingContainer} 
+  sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+  <CircularProgress />
+</Box>
+
         );
     }
 

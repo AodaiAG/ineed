@@ -119,9 +119,11 @@ const RequestList = ({ title, requestType }) => {
   // ✅ **Show loading only if authentication OR fetching requests is in progress**
   if (authLoading || fetchingRequests) {
     return (
-      <Box className={styles.loaderContainer}>
-        <CircularProgress className={styles.loader} />
-      </Box>
+      <Box className={styles.loadingContainer} 
+  sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+  <CircularProgress />
+</Box>
+
     );
   }
 

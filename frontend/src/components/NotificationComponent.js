@@ -98,7 +98,7 @@ const NotificationListComponent = () => {
 
 
 {/* 🔹 Action Buttons (Only in Edit Mode) */}
-<Slide direction="down" in={editMode} mountOnEnter unmountOnExit>
+<Slide direction="down" in={Boolean(editMode)} mountOnEnter unmountOnExit>
   <Box className={styles.actionButtonsContainer}> {/* ✅ Added a class for the container */}
     
     {/* ✅ "Select All" Button */}
