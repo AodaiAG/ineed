@@ -123,7 +123,7 @@ const ProfessionalRequestDetailsPage = () => {
 
       if (response.data.success) {
         setIsEditing(false);
-        alert("Quotation submitted successfully.");
+    
       } else {
         setError("Failed to process quotation");
       }
@@ -242,14 +242,22 @@ const ProfessionalRequestDetailsPage = () => {
       <Collapse in={expandedSection === "quotation"} className={styles.quotationCollapseContainer}>
         <Box className={styles.quotationSection}>
           <Box className={styles.quotationInputContainer}>
-            <TextField
-              label="הצעת מחיר"
-              value={quotation}
-              onChange={(e) => setQuotation(e.target.value)}
-              variant="outlined"
-              type="number"
-              disabled={requestDetails?.status === "closed"} // ✅ Disable input when closed
-            />
+          <TextField
+  label="הצעת מחיר"
+  value={quotation}
+  onChange={(e) => {
+    const inputValue = e.target.value;
+    // Allow only numbers (no letters, +, -, or special chars)
+    if (/^\d*$/.test(inputValue)) {
+      setQuotation(inputValue);
+    }
+  }}
+  variant="outlined"
+  type="text" // Change to "text" to avoid browser auto-formatting
+  inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }} // Helps mobile users
+  disabled={requestDetails?.status === "closed"} // Disable if status is closed
+/>
+
             {/* ✅ Remove Update Button when the request is closed */}
             {requestDetails?.status !== "closed" && (
               <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
