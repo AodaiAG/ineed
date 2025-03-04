@@ -22,7 +22,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (loading) return;
     if (!isAuthenticated) {
-      navigate("/login");
+      navigate("/sign-in");
     }
   }, [loading, isAuthenticated, navigate]);
 
