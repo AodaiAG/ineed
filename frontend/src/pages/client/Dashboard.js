@@ -102,14 +102,14 @@ const Dashboard = () => {
                 <ListItemIcon>
                   <LanguageIcon />
                 </ListItemIcon>
-                <ListItemText primary="Language" />
+                <ListItemText primary="שפה" />
               </ListItem>
 
               <ListItem button onClick={handleNotificationClick}>
                 <ListItemIcon>
                   <NotificationsActiveIcon />
                 </ListItemIcon>
-                <ListItemText primary="Notifications" />
+                <ListItemText primary="התראות" />
               </ListItem>
             </List>
           </Box>
