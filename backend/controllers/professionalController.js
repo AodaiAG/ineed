@@ -680,10 +680,9 @@ const updateQuotation = async (req, res) => {
 
   
 
-const getProfessionalRequestDetails = async (req, res) => {
+  const getProfessionalRequestDetails = async (req, res) => {
     const { requestId } = req.params; // Extract request ID from params
     const professionalId = req.professional.profId; // Extract from the decoded JWT
-
 
     try {
         // Fetch the request details
@@ -695,6 +694,24 @@ const getProfessionalRequestDetails = async (req, res) => {
                 .json({ success: false, message: "Request not found" });
         }
 
+        // ✅ Fetch the client ID associated with this request (Fixed alias)
+        const clientRequest = await ClientRequest.findOne({
+            where: { requestId },
+            include: [{
+                model: Client,
+                as: 'client',  // ✅ Use the correct alias ('client' not 'Client')
+                attributes: ["fullName", "phoneNumber"],
+            }],
+        });
+
+        
+
+        if (!clientRequest || !clientRequest.client) {
+            return res.status(404).json({
+                success: false,
+                message: "Client information not found for this request",
+            });
+        }
 
         // Extract the quotation for this professional
         const professionalQuotation = request.quotations?.find(
@@ -702,10 +719,11 @@ const getProfessionalRequestDetails = async (req, res) => {
         );
 
         const professionalPrice = professionalQuotation?.price || null; // Extract the price or null if no quotation
- // ✅ Initialize Stream Chat
- 
 
-        // Respond with the request details and the professional's price
+        // ✅ Extract client details properly
+        const clientDetails = clientRequest.client.dataValues || { fullName: "Unknown", phoneNumber: "Unknown" };
+
+        // ✅ Respond with the request details and the professional's price
         res.status(200).json({
             success: true,
             data: {
@@ -717,16 +735,22 @@ const getProfessionalRequestDetails = async (req, res) => {
                 status: request.status,
                 professionalId: request.professionalId,
                 quotation: professionalPrice, // Only send the price
+                client: {
+                    fullName: clientDetails.fullName || "Unknown",
+                    phoneNumber: clientDetails.phoneNumber,
+                },
             },
         });
     } catch (error) {
-        console.error("Error fetching request details:", error);
+        console.error("❌ Error fetching request details:", error);
         res.status(500).json({
             success: false,
             message: "Internal server error",
         });
     }
 };
+
+
 
 const fetchProfRequests = async (req, res) => {
     try {

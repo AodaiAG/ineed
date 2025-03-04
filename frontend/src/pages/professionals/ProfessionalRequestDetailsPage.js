@@ -193,6 +193,12 @@ const ProfessionalRequestDetailsPage = () => {
   
       {/* Request Details */}
       <Box className={styles.details}>
+      {isSelectedProfessional && (
+          <>
+            <Typography><strong>שם הלקוח:</strong> {requestDetails.client?.fullName || "לא ידוע"}</Typography>
+            <Typography><strong>טלפון:</strong> {requestDetails.client?.phoneNumber || "לא ידוע"}</Typography>
+          </>
+        )}
         <Typography><strong>בתחום:</strong> {profession?.main || "טוען..."}</Typography>
         <Typography><strong>בנושא:</strong> {profession?.sub || "טוען..."}</Typography>
         <Typography><strong>מיקום:</strong> {requestDetails.city || "לא ידוע"}</Typography>
