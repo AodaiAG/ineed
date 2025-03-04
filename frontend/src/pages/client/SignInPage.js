@@ -88,10 +88,17 @@ const SignInPage = () => {
           onChange={handleCountryCodeChange}
           className={styles.countryCodeSelect}
         >
-          <MenuItem value="054">054</MenuItem>
-          <MenuItem value="052">052</MenuItem>
-          <MenuItem value="050">050</MenuItem>
-          <MenuItem value="053">053</MenuItem>
+<MenuItem value="050">050</MenuItem>
+<MenuItem value="051">051</MenuItem>
+<MenuItem value="052">052</MenuItem>
+<MenuItem value="053">053</MenuItem>
+<MenuItem value="054">054</MenuItem>
+<MenuItem value="055">055</MenuItem>
+<MenuItem value="056">056</MenuItem>
+<MenuItem value="057">057</MenuItem>
+<MenuItem value="058">058</MenuItem>
+<MenuItem value="059">059</MenuItem>
+
         </Select>
 
         {/* Phone Number Input */}
