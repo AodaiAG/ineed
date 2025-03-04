@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
 import styles from '../../styles/SMSVerification.module.css'; // Import the scoped CSS module
@@ -16,6 +16,8 @@ function SMSVerification() {
     const [isError, setIsError] = useState(false);
     const [shake, setShake] = useState(false);
     const { translation } = useLanguage(); // Using the translation from the context
+
+    const inputRefs = useRef([]);
 
     useEffect(() => {
         // Add a unique class to the body element for SMSVerification
@@ -39,15 +41,25 @@ function SMSVerification() {
     }, [navigate]);
 
     const handleInputChange = (index, value) => {
-        // Allow only numeric input
-        if (/^\d*$/.test(value)) {
+        // **Allow only single-digit numbers**
+        if (/^\d$/.test(value)) {
             const newCode = [...verificationCode];
             newCode[index] = value;
             setVerificationCode(newCode);
-    
-            // Automatically move to next input if a value is entered
-            if (value && index < 3) {
-                document.getElementById(`code-${index + 1}`).focus();
+
+            // ✅ Move focus to the next input if available
+            if (index < 3) {
+                inputRefs.current[index + 1]?.focus();
+            }
+        }
+        // **Handle backspace: Move to previous input when empty**
+        else if (value === '') {
+            const newCode = [...verificationCode];
+            newCode[index] = '';
+            setVerificationCode(newCode);
+
+            if (index > 0) {
+                inputRefs.current[index - 1]?.focus();
             }
         }
     };
@@ -131,14 +143,14 @@ function SMSVerification() {
                         <input
                             key={index}
                             type="tel"
-                            id={`code-${index}`}
+                            ref={(el) => (inputRefs.current[index] = el)} // ✅ Store ref
                             maxLength="1"
-                            
                             className={`${styles.smsVerification_smsBox} ${isError ? styles.smsVerification_error : ''}`}
                             value={digit}
                             onChange={(e) => handleInputChange(index, e.target.value)}
                             inputMode="numeric"
                             pattern="\d*"
+                            onFocus={(e) => e.target.select()} // ✅ Auto-select on focus
                         />
                     ))}
                 </div>
