@@ -114,6 +114,14 @@ const SignInPage = () => {
       <Typography variant="body2" className={styles.termsText}>
         בלחיצה על המשך אני מסכים <span className={styles.termsLink}>לתנאים</span>
       </Typography>
+       {/* Worker Image */}
+       <Box className={styles.workerImageContainer}>
+        <img
+          src="/images/home.png"
+          alt="Worker"
+          className={styles.workerImage}
+        />
+      </Box>
 
       {/* Sign-In Button */}
       <Button
@@ -125,14 +133,7 @@ const SignInPage = () => {
         {isSending ? "שולח..." : "כניסה"}
       </Button>
 
-      {/* Worker Image */}
-      <Box className={styles.workerImageContainer}>
-        <img
-          src="/images/home.png"
-          alt="Worker"
-          className={styles.workerImage}
-        />
-      </Box>
+     
     </Box>
   );
 };
