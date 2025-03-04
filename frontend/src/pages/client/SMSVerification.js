@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { Button, Box, TextField } from '@mui/material';
 import { useLanguage } from '../../contexts/LanguageContext'; // Import language context
 import { useNavigate } from 'react-router-dom'; // Assuming you're using react-router
@@ -14,6 +14,7 @@ const SMSVerification = () => {
   const [isError, setIsError] = useState(false);
   const [shake, setShake] = useState(false);
   const navigate = useNavigate();
+  const inputRefs = useRef([]);
 
   // Fetch phone number from sessionStorage on component mount
   useEffect(() => {
@@ -26,18 +27,30 @@ const SMSVerification = () => {
   }, []);
 
   const handleInputChange = (index, value) => {
-    // Allow only numeric input
-    if (/^\d*$/.test(value)) {
+    // **Allow only single-digit numbers**
+    if (/^\d$/.test(value)) {
       const newCode = [...verificationCode];
       newCode[index] = value;
       setVerificationCode(newCode);
 
-      // Automatically move to next input if a value is entered
-      if (value && index < 3) {
-        document.getElementById(`code-${index + 1}`).focus();
+      // ✅ Move focus to the next input if available
+      if (index < 3) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    } 
+    // **Handle backspace: Move to previous input when empty**
+    else if (value === '') {
+      const newCode = [...verificationCode];
+      newCode[index] = '';
+      setVerificationCode(newCode);
+
+      if (index > 0) {
+        inputRefs.current[index - 1]?.focus();
       }
     }
   };
+  
+  
 
   const triggerErrorAnimation = () => {
     setIsError(true);
@@ -166,7 +179,8 @@ const SMSVerification = () => {
             <input
               key={index}
               type="tel"
-              id={`code-${index}`} // Ensure this matches the focus logic
+              ref={(el) => (inputRefs.current[index] = el)} // ✅ Set ref for each input
+              id={`code-${index}`} // ✅ Unique ID
               maxLength="1"
               className={`${styles.smsClientVerification_smsBox} ${
                 isError ? styles.smsClientVerification_error : ''
@@ -175,9 +189,12 @@ const SMSVerification = () => {
               onChange={(e) => handleInputChange(index, e.target.value)}
               inputMode="numeric"
               pattern="\d*"
+              onFocus={(e) => e.target.select()} // ✅ Auto-select on focus
             />
           ))}
         </Box>
+
+
 
         {isError && (
           <p className={styles.smsClientVerification_countdown}>
