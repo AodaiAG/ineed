@@ -143,7 +143,7 @@ const RequestDetailsPage = () => {
         return (
             <Box className={styles.errorContainer}>
                 <Typography variant="h6">{error}</Typography>
-                <Button variant="contained" onClick={() => navigate("/dashboard")} className={styles.backButton}>
+                <Button variant="contained" onClick={() => navigate(-1)} className={styles.backButton}>
                     חזור
                 </Button>
             </Box>
@@ -297,7 +297,7 @@ const RequestDetailsPage = () => {
                 )}
     
                 {/* ✅ Back Button */}
-                <Button className={styles.backButton} onClick={() => navigate("/dashboard")}>
+                <Button className={styles.backButton} onClick={() => navigate(-1)}>
                     חזור
                 </Button>
             </Box>

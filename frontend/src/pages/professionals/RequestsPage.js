@@ -197,7 +197,7 @@ const [modalText, setModalText] = useState("");
                 *ביטול או תקלה צור קשר עם השירות <a href="#">כאן</a>
             </p>
 
-            <button onClick={() => navigate("/pro/expert-interface")} className={styles.backButton}>
+            <button onClick={() => navigate(-1)} className={styles.backButton}>
                 חזור
             </button>
         </div>

@@ -183,7 +183,7 @@ const RequestList = ({ title, requestType }) => {
           <Button 
             variant="contained" 
             color="primary" 
-            onClick={() => navigate('/dashboard')} 
+            onClick={() => navigate(-1)} 
             sx={{ fontSize: "18px,", padding: "10px 40px", borderRadius: "10px",backgroundColor: "#1A4B75" }}
           >
             חזור

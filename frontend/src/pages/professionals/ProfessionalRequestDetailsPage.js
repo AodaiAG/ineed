@@ -269,7 +269,7 @@ const ProfessionalRequestDetailsPage = () => {
       {/* ✅ Remove Action Buttons (buttonsRow) when the request is closed */}
       {requestDetails?.status !== "closed" && (
         <Box className={styles.buttonsRow}>
-          <Button variant="contained" className={styles.backButton} onClick={() => navigate("/pro/expert-interface")}>
+          <Button variant="contained" className={styles.backButton} onClick={() => navigate(-1)}>
             חזור
           </Button>
           {isSelectedProfessional && (
