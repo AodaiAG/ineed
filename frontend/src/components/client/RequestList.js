@@ -137,11 +137,21 @@ const RequestList = ({ title, requestType }) => {
 
         {/* No Requests Message */}
         {requests.length === 0 ? (
-          <Box className={styles.noRequestsMessage}>
-            <Typography variant="h6" color="textSecondary">
-              אין בקשות להצגה
-            </Typography>
-          </Box>
+          <Box
+  sx={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%", // Ensures full height within parent
+    margin:"20px 0",
+    textAlign: "center",
+  }}
+>
+  <Typography variant="h6" color="red">
+    אין בקשות
+  </Typography>
+</Box>
+
         ) : (
           <Box className={styles.requestsList}>
             {requests.map((request) => (

@@ -189,7 +189,19 @@ const [modalText, setModalText] = useState("");
                         </React.Fragment>
                     ))
                 ) : (
-                    <p className={styles.noRequestsMessage}>אין בקשות</p>
+<Box
+  sx={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%", // Ensures full height within parent
+    textAlign: "center",
+  }}
+>
+  <Typography variant="h6" color="red">
+    אין בקשות
+  </Typography>
+</Box>
                 )}
             </div>
 
