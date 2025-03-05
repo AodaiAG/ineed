@@ -69,11 +69,7 @@ const ProfessionalRequestDetailsPage = () => {
             setIsSelectedProfessional(true);
           }
 
-          const quotationsResponse = await api.get(`/api/professionals/request/${requestId}/quotations`);
-          if (quotationsResponse.data.success) {
-            setQuotations(quotationsResponse.data.data);
-          }
-
+        
           const professionResponse = await api.get(`/api/professionals/profession/${requestData.jobRequiredId}/${language}`);
           if (professionResponse.data.success) {
             setProfession(professionResponse.data.data);
