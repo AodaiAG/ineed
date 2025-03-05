@@ -71,7 +71,8 @@ const SummaryForm = () => {
   const handleSubmit = async () => {
     setLoading(true); // Start loading
     try {
-      if (isAuthenticated && user?.id) {
+      if (isAuthenticated && user?.id) 
+        {
         console.log("Authenticated user ID:", user.id);
 
         const requestDetails = {
@@ -102,6 +103,11 @@ const SummaryForm = () => {
           message: translation.verificationCodeMessage + " {code}",
         });
 
+
+    // ✅ Save a boolean in sessionStorage
+    sessionStorage.setItem("saveRequest", "true"); // Stored as a string
+
+      
         navigate("/sms");
       }
     } catch (error) {

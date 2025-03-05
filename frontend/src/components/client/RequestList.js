@@ -128,64 +128,68 @@ const RequestList = ({ title, requestType }) => {
   }
 
   return (
-
     <NotificationProvider userId={user?.id} userType="client">
+      <Box className={styles.requestListContainer}>
+        {/* Header */}
+        <Box className={styles.header}>
+          <Typography variant="h4" className={styles.title}>{title}</Typography>
+        </Box>
 
-    <Box className={styles.requestListContainer}>
-      {/* Header */}
-      <Box className={styles.header}>
-        <Typography variant="h4" className={styles.title}>{title}</Typography>
+        {/* No Requests Message */}
+        {requests.length === 0 ? (
+          <Box className={styles.noRequestsMessage}>
+            <Typography variant="h6" color="textSecondary">
+              אין בקשות להצגה
+            </Typography>
+          </Box>
+        ) : (
+          <Box className={styles.requestsList}>
+            {requests.map((request) => (
+              <React.Fragment key={request.id}>
+                <Box className={styles.requestCard} onClick={() => navigate(`/request?id=${request.id}`)}>
+                  <Box className={styles.leftSection}>{request.index}</Box> 
+                  <Box className={styles.middleSection}>
+                    <Box className={styles.infoBlock}>
+                      <Typography className={styles.infoLabel}>קריאה</Typography>
+                      <Typography className={styles.infoValue}>{request.id}</Typography>
+                    </Box>
+                    <Box className={styles.infoBlock}>
+                      <Typography className={styles.infoLabel}>מומחים</Typography>
+                      <Typography className={styles.infoValue}>{request.numOfProfs || "0"}</Typography>
+                    </Box>
+                    <Box className={styles.professionDateContainer}>
+                      <Typography className={styles.professionValue}>
+                        {request.mainProfession}, {request.subProfession}
+                      </Typography>
+                      <Typography className={styles.dateText}>
+                        {new Date(request.date).toLocaleString()}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box className={styles.rightSection}>
+                    <Box className={styles.unreadBadge}>
+                      {fetchingUnread ? "..." : request.unreadMessages || 0}
+                    </Box>
+                  </Box>
+                </Box>
+                <Box className={styles.separator}></Box>
+              </React.Fragment>
+            ))}
+          </Box>
+        )}
+
+        {/* Footer with Back Button */}
+        <Box className={styles.footer} sx={{ textAlign: "center", marginTop: 2 }}>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={() => navigate('/dashboard')} 
+            sx={{ fontSize: "18px,", padding: "10px 40px", borderRadius: "10px",backgroundColor: "#1A4B75" }}
+          >
+            חזור
+          </Button>
+        </Box>
       </Box>
-
-      {/* Scrollable List */}
-      <Box className={styles.requestsList}>
-        {requests.map((request) => (
-          <React.Fragment key={request.id}>
-            <Box className={styles.requestCard} onClick={() => navigate(`/request?id=${request.id}`)}>
-              {/* Left Section - Index Number */}
-              <Box className={styles.leftSection}>{request.index}</Box> 
-
-              {/* Middle Section - Details */}
-              <Box className={styles.middleSection}>
-                {/* Request ID */}
-                <Box className={styles.infoBlock}>
-                  <Typography className={styles.infoLabel}>קריאה</Typography>
-                  <Typography className={styles.infoValue}>{request.id}</Typography>
-                </Box>
-
-                {/* Experts */}
-                <Box className={styles.infoBlock}>
-                  <Typography className={styles.infoLabel}>מומחים</Typography>
-                  <Typography className={styles.infoValue}>{request.numOfProfs || "0"}</Typography>
-                </Box>
-
-                {/* Profession & Main (No Label) */}
-                <Box className={styles.professionDateContainer}>
-                  <Typography className={styles.professionValue}>
-                    {request.mainProfession}, {request.subProfession}
-                  </Typography>
-                  <Typography className={styles.dateText}>
-                    {new Date(request.date).toLocaleString()}
-                  </Typography>
-                </Box>
-              </Box>
-
-              {/* Right Section - Unread Messages */}
-              <Box className={styles.rightSection}>
-                <Box className={styles.unreadBadge}>
-                  {fetchingUnread ? "..." : request.unreadMessages || 0}
-                </Box>
-              </Box>
-            </Box>
-            {/* Separator */}
-            <Box className={styles.separator}></Box>
-          </React.Fragment>
-        ))}
-      </Box>
-
-      {/* Footer */}
- 
-    </Box>
     </NotificationProvider>
   );
 };

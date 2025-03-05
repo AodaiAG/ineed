@@ -86,7 +86,7 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
           <Avatar
             image={message.user?.image}
             name={displayName}
-            onClick={handleAvatarClick}
+            //onClick={handleAvatarClick}
             className="str-chat__avatar"
           />
           <div className="str-chat__message-content">

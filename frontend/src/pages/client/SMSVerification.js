@@ -78,6 +78,25 @@ const SMSVerification = () => {
             
           if(response.data.data.registered)
           {
+            console.log(response.data)            // ✅ Check if `saveRequest` is true
+            const shouldSaveRequest = sessionStorage.getItem("saveRequest") === "true";
+            const clientId = response.data.data.clientId;
+            if (shouldSaveRequest) 
+            {
+
+            const requestDetails = {
+              clientId,
+              jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id, // Use jobRequiredId from sessionStorage
+              city: sessionStorage.getItem("city"),
+              date: sessionStorage.getItem("date"),
+              comment: sessionStorage.getItem("comment"),
+            };
+
+            const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
+            
+
+            console.log("Saving request before navigating...");
+          }
                   navigate('/dashboard');
                   return;
 
@@ -104,7 +123,8 @@ const SMSVerification = () => {
   
                 const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
   
-                if (submitRequestResponse.data.success) {
+                if (submitRequestResponse.data.success) 
+                  {
                   console.log("Request submitted successfully!");
                   // Navigate to summary page after saving client and request
                   navigate('/dashboard');
@@ -196,11 +216,7 @@ const SMSVerification = () => {
 
 
 
-        {isError && (
-          <p className={styles.smsClientVerification_countdown}>
-            00:59 {/* Example countdown timer */}
-          </p>
-        )}
+        
 
         <Box className={styles.smsClientVerification_actionButtons}>
           <Button
