@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Box, Button, ButtonBase,Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import "../../styles/client/HomePage.css"; // Import your custom CSS file
 import LanguageSelectionPopup from "../../components/LanguageSelectionPopup"; // Import the popup component
 import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
+import useClientAuthCheck from "../../hooks/useClientAuthCheck";
+
+
 
 const HomePage = () => {
   const [showPopup, setShowPopup] = useState(false); // State to toggle the popup
   const { translation } = useLanguage(); // Access translations
   const navigate = useNavigate(); // Initialize the navigation hook
+  const { isAuthenticated, loading, user } = useClientAuthCheck();
+
+  useEffect(() => {
+    if (loading) return;
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [loading, isAuthenticated, navigate]);
 
   // Handler for the "קדימה" button click
   const handleButtonClick = () => {
