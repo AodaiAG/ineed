@@ -66,6 +66,9 @@ const StreamChatComponent = ({ apiKey, userToken, channelId, userID, userRole })
     const senderRole = message.user?.role;
   
     let displayName = message.user?.name || "Unknown User";
+    if (userRole === "prof" && senderRole === "client") {
+      displayName = "Anonymous Client";
+    }
   
     if (userRole === "prof" && senderRole === "prof" && !isOwnMessage) {
       displayName = "Anonymous Professional";
