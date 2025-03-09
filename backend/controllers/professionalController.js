@@ -823,6 +823,14 @@ const fetchProfRequests = async (req, res) => {
                         professionalId: professionalId, // Previously assigned to this professional
                     },
                 });
+
+                matchingRequests = matchingRequests.map((request) => {
+                    const quotationForProf = request.quotations?.find(q => q.professionalId === professionalId);
+                    return {
+                        ...request.toJSON(),
+                        myQuotation: quotationForProf ? quotationForProf.price : null, // Add the professional's price
+                    };
+                });
                 break;
 
             default:

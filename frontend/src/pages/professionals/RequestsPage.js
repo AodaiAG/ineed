@@ -164,15 +164,25 @@ const [modalText, setModalText] = useState("");
                                         <span className={styles.requestLabel}>
                                             {`${professions[request.jobRequiredId]?.main || "טוען..."}`}
                                         </span>
+                                        
                                         <span className={styles.requestLabel}>מיקום</span>
                                         <span className={styles.requestLabel}>קריאה</span>
+                                        {mode === "closed" && <span className={styles.requestLabel}>הצעה</span>}
+
+
                                     </div>
 
                                     {/* Second Flex Row: Values */}
                                     <div className={styles.requestValues}>
                                         <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
+                                        
                                         <span className={styles.requestValue}>{request.city}</span>
                                         <span className={styles.callNumber}>{request.id}</span>
+                                        {mode === "closed" && (
+        <span className={styles.requestValue}>
+            {request.myQuotation ? `₪${request.myQuotation}` : "—"}
+        </span>
+    )}
                                     </div>
                                 </div>
 
