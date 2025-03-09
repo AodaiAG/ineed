@@ -41,8 +41,8 @@ function LanguageSelectionPopup({ onClose, backgroundColor = "#000" }) {
                 <ul className={styles.languageList}>
                     {[
                         { id: 'he', label: 'עברית' },
-                        { id: 'en', label: 'English' },
-                        { id: 'ar', label: 'عربي' },
+                        //{ id: 'en', label: 'English' },
+                        //{ id: 'ar', label: 'عربي' },
                     ].map((lang) => (
                         <li key={lang.id}>
                             <label>
