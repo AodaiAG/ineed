@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { API_URL } from '../utils/constans';
@@ -8,14 +8,22 @@ const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children, userId, userType }) => {
   const [notifications, setNotifications] = useState([]);
-  const { translation } = useLanguage(); // Get translations
+  const { translation } = useLanguage();
+  const hasFetched = useRef(false); // ✅ Prevents multiple fetches
 
-  // Utility function to resolve the message from messageKey
+  // ✅ Use Local Storage to track shown toasts
+  const getShownToastIds = () => {
+    return new Set(JSON.parse(localStorage.getItem('shownToastIds') || '[]'));
+  };
+
+  const setShownToastIds = (ids) => {
+    localStorage.setItem('shownToastIds', JSON.stringify([...ids]));
+  };
+
   const getTranslatedMessage = (messageKey) => {
     return messageKey.split('.').reduce((obj, key) => obj?.[key], translation) || messageKey;
   };
 
-  // Mark a notification as read
   const markAsRead = async (id) => {
     try {
       await axios.put(`${API_URL}/notifications/${id}/read`);
@@ -24,56 +32,80 @@ export const NotificationProvider = ({ children, userId, userType }) => {
     }
   };
 
-  // Handle toast click to mark notification as read and close the toast
   const handleToastClick = (notif) => {
+    console.log("🔔 Toast clicked for notification:", notif);
+  
+    if (!notif) {
+      console.error("❌ handleToastClick received an undefined notification.");
+      return;
+    }
+  
     markAsRead(notif.id);
-    toast.dismiss(); // Close the toast immediately
+  
+    if (typeof toast.dismiss !== "function") {
+      console.error("❌ toast.dismiss is not a function!");
+    } else {
+      toast.dismiss();
+    }
   };
+  
 
-  // Fetch notifications from the backend
   const fetchNotifications = async () => {
+    if (hasFetched.current) return; // ✅ Prevents multiple API calls
+    hasFetched.current = true;
+
+
     try {
       const response = await axios.get(`${API_URL}/notifications/${userType}/${userId}`);
+
       if (response.data.success) {
         const newNotifications = response.data.data;
 
-        // Show toast notifications for unread items
+        let toastCount = 0;
+        let shownToastIds = getShownToastIds(); // ✅ Fetch from Local Storage
+
         newNotifications.forEach((notif) => {
-          if (!notif.isRead) {
+          if (!notif.isRead && !shownToastIds.has(notif.id)) {
             const translatedMessage = getTranslatedMessage(notif.messageKey);
-            console.log('Triggering toast for notification:', translatedMessage);
+
             toast.info(translatedMessage, {
               onClick: () => handleToastClick(notif),
             });
+
+            shownToastIds.add(notif.id); // ✅ Add toast to local storage
+            toastCount++;
           }
         });
 
+        setShownToastIds(shownToastIds); // ✅ Persist updated toast list
         setNotifications(newNotifications);
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error('❌ Error fetching notifications:', error);
+    } finally {
+      setTimeout(() => {
+        hasFetched.current = false; // ✅ Reset after delay
+      }, 1000);
     }
   };
 
   useEffect(() => {
     if (userId && userType) {
-      fetchNotifications();
-      const interval = setInterval(fetchNotifications, 30000);
+      fetchNotifications(); // ✅ Fetch on mount
+      const interval = setInterval(() => {
+        hasFetched.current = false; // ✅ Allow new fetch every 30s
+        fetchNotifications();
+      }, 30000);
+
       return () => clearInterval(interval);
     } else {
-      console.log('NotificationProvider: userId or userType missing');
+      console.log('⚠️ NotificationProvider: userId or userType missing');
     }
   }, [userId, userType]);
 
   return (
     <NotificationContext.Provider value={{ notifications, setNotifications, markAsRead, fetchNotifications }}>
       {children}
-      <ToastContainer position="top-right" autoClose={5000} 
-      style={{
-        position: "absolute",
-
-      }}
-      />
     </NotificationContext.Provider>
   );
 };

@@ -78,7 +78,7 @@ function App() {
         </Routes>
       </LanguageProvider>
       {/* Place ToastContainer here */}
-      <ToastContainer position="top-right" autoClose={5000} style={{ zIndex: 9999 }} />
+      <ToastContainer position="top-right" autoClose={5000} style={{position: "absolute"}} />
 
       </AppWrapper>
 

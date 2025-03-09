@@ -118,7 +118,7 @@ const Dashboard = () => {
         {/* Notification Dropdown */}
         {showNotifications && (
           <div className={styles.notificationDropdown}>
-            <NotificationComponent userId={user?.id} userType="client" />
+           <NotificationComponent userId={user?.id} userType="client" />
           </div>
         )}
 
