@@ -6,7 +6,6 @@ const {grantClientAuth} = require('./authController');
 const { Client, ClientRequest, Request } = require('../models/index'); // Adjust path if necessary
 const Professional = require('../models/professional'); // Adjust path if necessary
 const { ProfessionalRating } = require("../models/index");
-
 const Notification = require('../models/notifications/Notification'); // Adjust the path if necessary
 
 
@@ -124,9 +123,10 @@ exports.saveClient = async (req, res) => {
   };
   
 
+
   exports.getClientRequests = async (req, res) => {
     const clientId = req.user.id; // Extract client ID from JWT
-    const status = req.query.type || 'open'; // Default to 'open' if no status is provided
+    const status = req.query.type || "open"; // Default to 'open' if no status is provided
 
     try {
         // Fetch client requests with related request details
@@ -136,31 +136,47 @@ exports.saveClient = async (req, res) => {
             include: [
                 {
                     model: Request,
-                    as: 'request', // Use the alias defined in the association
-                    attributes: { exclude: [] }, // Include all fields
+                    as: "request", // Use the alias defined in the association
                     where: { status }, // Filter requests by status
+                    include: [
+                        {
+                            model: ProfessionalRating,
+                            as: "rating", // ✅ Include rating data
+                            attributes: ["quality", "professionalism", "price"],
+                            required: false, // ✅ Allow requests without a rating!
+                        },
+                    ],
                 },
             ],
         });
 
         if (!clientRequests.length) {
-            return res.status(404).json({ success: false, message: 'No requests found for this client' });
+            return res.status(404).json({ success: false, message: "No requests found for this client" });
         }
 
-        // Extract the request data only and include `numOfProfs`
+        // Extract the request data and process ratings if needed
         const serializedRequests = clientRequests.map((clientReq) => {
             const request = clientReq.request.toJSON();
             request.numOfProfs = Array.isArray(request.quotations) ? request.quotations.length : 0; // Count quotations
+
+            // ✅ Check if there's a rating, otherwise set values to `null`
+            if (request.rating) {
+                const { quality, professionalism, price } = request.rating;
+                request.averageRating = ((quality + professionalism + price) / 3).toFixed(2);
+            } else {
+                request.averageRating = null; // ✅ No rating available
+            }
+
             return request;
         });
 
         res.status(200).json({
             success: true,
-            data: serializedRequests, // Send only the request details
+            data: serializedRequests,
         });
     } catch (error) {
-        console.error('Error fetching client requests:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        console.error("Error fetching client requests:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
@@ -400,6 +416,8 @@ exports.getRequestDetails = async (req, res) => {
                     comment: request.comment,
                     status: request.status,
                     professionalId: request.professionalId, // Add this line
+                    imageUrls: request.imageUrls || [], // ✅ Include image URLs, defaulting to an empty array
+
 
                 },
                 quotations: quotationsWithDetails,

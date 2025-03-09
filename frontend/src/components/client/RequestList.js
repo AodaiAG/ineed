@@ -167,6 +167,21 @@ const RequestList = ({ title, requestType }) => {
                       <Typography className={styles.infoLabel}>מומחים</Typography>
                       <Typography className={styles.infoValue}>{request.numOfProfs || "0"}</Typography>
                     </Box>
+                    {requestType === "closed" && (
+                      <>
+                        <Box className={styles.infoBlock}>
+                          <Typography className={styles.infoLabel}>מחיר</Typography>
+                          <Typography className={styles.infoValue}>{request.workCost ? ` ${request.workCost} ₪ ` : "לא זמין"}</Typography>
+                        </Box>
+                        <Box className={styles.infoBlock}>
+                          <Typography className={styles.infoLabel}>דירוג</Typography>
+                          <Typography className={styles.infoValue}>
+                            {request.averageRating ? request.averageRating : "לא דורג"}
+                          </Typography>
+                        </Box>
+                      </>
+                    )}
+
                     <Box className={styles.professionDateContainer}>
                       <Typography className={styles.professionValue}>
                         {request.mainProfession}, {request.subProfession}

@@ -68,9 +68,13 @@ const SummaryForm = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async () =>
+     {
     setLoading(true); // Start loading
     try {
+
+      console.log('at handle submit')
+      console.log(isAuthenticated + 'and here is id ' + user.id)
       if (isAuthenticated && user?.id) 
         {
         console.log("Authenticated user ID:", user.id);

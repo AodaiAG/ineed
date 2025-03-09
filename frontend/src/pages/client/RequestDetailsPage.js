@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import ReactDOM from "react-dom";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'; // ✅ Import Check Icon
@@ -16,12 +16,20 @@ import {
     Radio,
     RadioGroup,
     FormControlLabel,
-    Collapse
+    Collapse,
+
+    ImageList,
+    ImageListItem
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import StreamChatComponent from "../../components/client/StreamChatComponent";
 import styles from "../../styles/client/RequestDetailsPage.module.css";
+import ImageGallery from "react-image-gallery"; // ✅ Import image gallery component
+import "react-image-gallery/styles/css/image-gallery.css"; // ✅ Import default styles
+import ModalImage from "react-modal-image"; // ✅ Import modal for fullscreen zoom
+import CloseIcon from "@mui/icons-material/Close"; // ✅ Exit button for fullscreen
+
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import api from "../../utils/clientApi";
 import { NotificationProvider } from "../../contexts/NotificationContext";
@@ -43,10 +51,15 @@ const RequestDetailsPage = () => {
     const [profession, setProfession] = useState("לא ידוע");
     const [subProfession, setSubProfession] = useState("לא ידוע");
     const language = "he"; // Default language
+    const galleryRef = useRef(null); // ✅ Create a ref for ImageGallery
+    const [isFullscreen, setIsFullscreen] = useState(false); // ✅ Fullscreen state
+
 
     // Expandable Sections
     const [showProfessionals, setShowProfessionals] = useState(false);
     const [showChat, setShowChat] = useState(false);
+    const [showGallery, setShowGallery] = useState(false); // ✅ Gallery section state
+
 
     // Authentication check
     const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
@@ -127,6 +140,13 @@ const RequestDetailsPage = () => {
             alert("Failed to select professional.");
         }
     };
+
+    const handleImageClick = () => {
+        if (galleryRef.current) {
+            galleryRef.current.toggleFullScreen();
+        }
+    };
+
     
 
     if (authLoading || loading) {
@@ -163,6 +183,18 @@ const RequestDetailsPage = () => {
     const handleCloseCancelPopup = () => {
         setShowCancelPopup(false);
     };
+    const handleExitFullscreen = () => {
+        if (galleryRef.current) {
+            galleryRef.current.toggleFullScreen();
+            setIsFullscreen(false); // ✅ Reset fullscreen state
+        }
+    };
+
+    const images = requestDetails?.imageUrls?.map((url) => ({
+        original: url,
+        thumbnail: url, // ✅ Thumbnails for navigation
+        originalClass: "gallery-image", // ✅ Custom styling (optional)
+    })) || [];
 
     return (
         <NotificationProvider userId={user?.id} userType="client">
@@ -287,13 +319,61 @@ const RequestDetailsPage = () => {
                     </Box>
                 </Collapse>
     
-                {/* ✅ Cancel Request Popup - Hide if closed */}
-                {showCancelPopup && requestDetails?.status !== "closed" && (
-                    <CancelRequestPage 
-                        open={showCancelPopup} 
-                        onClose={handleCloseCancelPopup} 
-                        requestId={requestId}
-                    />
+                 {/* ✅ Expandable Gallery Section */}
+                 {requestDetails?.status === "closed" && (
+                    <>
+                        <Box
+                            onClick={() => setShowGallery(!showGallery)}
+                            className={styles.expandableHeader}
+                        >
+                            <Typography> תמונות שצורפו</Typography>
+                            {showGallery ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        </Box>
+
+                       
+
+                        <Collapse in={showGallery} className={styles.collapseContainer}>
+                            <Box>
+                                {images.length > 0 ? (
+                                    <>
+                                        <ImageGallery
+                                            ref={galleryRef} // ✅ Attach ref to ImageGallery
+                                            items={images}
+                                            showPlayButton={false} // ❌ Hide autoplay button
+                                            showFullscreenButton={false} // ❌ Hide default fullscreen button
+                                            showThumbnails={true} // ✅ Enable thumbnails
+                                            showNav={true} // ✅ Enable left/right navigation arrows
+                                            slideDuration={500} // ✅ Smooth transitions
+                                            onClick={handleImageClick} // ✅ Click to open fullscreen
+                                        />
+
+                                        {/* ✅ Exit Fullscreen Button */}
+                                        {isFullscreen && (
+                                            <Box
+                                                sx={{
+                                                    position: "fixed",
+                                                    top: "10px",
+                                                    right: "10px",
+                                                    zIndex: 1000,
+                                                    backgroundColor: "rgba(0,0,0,0.7)",
+                                                    borderRadius: "50%",
+                                                    padding: "5px"
+                                                }}
+                                            >
+                                                <IconButton onClick={handleExitFullscreen} sx={{ color: "white" }}>
+                                                    <CloseIcon />
+                                                </IconButton>
+                                            </Box>
+                                        )}
+                                    </>
+                                ) : (
+                                    <Typography sx={{ textAlign: "center", marginTop: 2 }}>
+                                        לא נוספו תמונות לקריאה זו
+                                    </Typography>
+                                )}
+                            </Box>
+                        </Collapse>
+                    </>
                 )}
     
                 {/* ✅ Back Button */}
