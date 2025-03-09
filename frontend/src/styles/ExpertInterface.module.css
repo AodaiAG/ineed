@@ -134,7 +134,7 @@ font-size: clamp(1rem, 17vw, 4.0rem);
   cursor: pointer;
   margin: 5px;
   transition: background-color 0.3s, transform 0.3s;
-  width: 300px;
+  width: 90%;
 }
 
 /* Button Container to control spacing */
