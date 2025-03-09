@@ -151,6 +151,23 @@ const uploadImage = async (req, res) => {
   
       // Convert requestId to integer
       const parsedRequestId = parseInt(requestId, 10);
+
+      const streamClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
+const channelId = `request_${requestId}`;
+
+try {
+    const channel = streamClient.channel("messaging", channelId);
+
+    // ❄️ Make the chat read-only (freeze the conversation)
+    const update = await channel.updatePartial(
+        {set: {frozen: true}}
+    )
+
+    console.log(`✅ Chat ${channelId} is now read-only.`);
+} catch (error) {
+    console.error("❌ Error freezing chat:", error);
+}
+
   
       // Check if the request exists
       const request = await Request.findByPk(parsedRequestId);
