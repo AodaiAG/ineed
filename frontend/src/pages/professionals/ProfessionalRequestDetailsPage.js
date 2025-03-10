@@ -22,7 +22,7 @@ import api from "../../utils/api";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestDetailsPage.module.css";
 
-const ProfessionalRequestDetailsPage = () => {
+const ProfessionalRequestDetailsPage = ({user,isAuthenticated}) => {
   const navigate = useNavigate();
   const { id: requestId } = useParams();
   const [requestDetails, setRequestDetails] = useState(null);
@@ -43,19 +43,13 @@ const ProfessionalRequestDetailsPage = () => {
   const [showChat, setShowChat] = useState(false);
   const [showQuotation, setShowQuotation] = useState(false);
 
-  const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
 
   const [expandedSection, setExpandedSection] = useState(null);
 
   const language = "he";
 
   useEffect(() => {
-    if (authLoading) return;
-
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
+    
 
     const fetchRequestDetails = async () => {
       try {
@@ -107,7 +101,7 @@ const ProfessionalRequestDetailsPage = () => {
 
 
     Promise.all([fetchRequestDetails(),fetchUserToken()]).finally(() => setLoading(false));
-  }, [authLoading, isAuthenticated, navigate, requestId,userToken]);
+  }, [loading, isAuthenticated, navigate, requestId,userToken]);
 
   // ✅ Restored function
   const handleQuotationSubmit = async () => {
@@ -144,13 +138,18 @@ const ProfessionalRequestDetailsPage = () => {
     }
   };
 
-  if (loading || authLoading) {
+  if (loading)   {
     return (
-      <Box className={styles.loadingContainer} 
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-      <CircularProgress />
-    </Box>
-    
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress size={60} thickness={5} sx={{ color: '#FDBE00' }} />
+      </Box>
     );
   }
 
