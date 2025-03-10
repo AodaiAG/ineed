@@ -6,11 +6,16 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestPage.module.css";
 import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
-import { Modal, Box, Typography } from "@mui/material";
+import { Box,
+    Typography,
+    Badge,
+    IconButton,
+    Collapse, } from "@mui/material";
 import { NotificationProvider } from "../../contexts/NotificationContext";
 import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
 
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 function RequestsPage({ mode, title}) {
     const [requests, setRequests] = useState([]);
     const [professions, setProfessions] = useState({});
@@ -22,6 +27,9 @@ function RequestsPage({ mode, title}) {
 const [modalText, setModalText] = useState("");
 //before
 const { user, isAuthenticated } = useProfessionalAuth();
+const [expanded, setExpanded] = useState(false);
+const [expandedId, setExpandedId] = useState(null); // ✅ Track which item is expanded
+
 
     const language = "he"; // Default to Hebrew
 
@@ -141,82 +149,99 @@ const { user, isAuthenticated } = useProfessionalAuth();
             );
           }
 
+          const toggleExpand = (e, requestId) => {
+            e.stopPropagation(); // ✅ Prevent triggering navigation
+            setExpandedId((prevId) => (prevId === requestId ? null : requestId)); // ✅ Toggle specific request
+          };
+          
+
     return (
 
-        <div className={styles.requestPageContainer}>
+        <Box className={styles.requestPageContainer}>
             
-            <div className={styles.headerContainer}>
-                <h1 className={styles.pageTitle}>{title}</h1>
-            </div>
+            <Box className={styles.header}>
+          <Typography variant="h4" className={styles.title}>{title}</Typography>
+        </Box>
 
-            <div className={styles.requestList}>
-                {requests.length > 0 ? (
-                    requests.map((request, index) => (
-                        <React.Fragment key={request.id}>
-                            <div
-                                className={styles.requestCard}
-                                onClick={() => handleRequestClick(request.id)}
-                            >
-                            <div className={styles.requestInfo}>
-                                {/* Request ID (Keep as is) */}
-                                <span className={styles.requestId}>{index + 1}</span>
+            <Box className={styles.requestList}>
+  {requests.length > 0 ? (
+    requests.map((request, index) => (
+      <React.Fragment key={request.id}>
+        <Box
+          className={styles.requestCard}
+          onClick={() => navigate(`/pro/requests/${request.id}`)}
+        >
+          <Box className={styles.topSection}>
+            <Typography className={styles.leftSection}>
+              {index + 1}
+            </Typography>
 
-                                <div className={styles.requestContent}>
-                                    {/* First Flex Row: Labels */}
-                                    <div className={styles.requestLabels}>
-                                        <span className={styles.requestLabel}>
-                                            {`${professions[request.jobRequiredId]?.main || "טוען..."}`}
-                                        </span>
-                                        
-                                        <span className={styles.requestLabel}>מיקום</span>
-                                        <span className={styles.requestLabel}>קריאה</span>
-                                        {mode === "closed" && <span className={styles.requestLabel}>הצעה</span>}
+            <Box className={styles.professionDateContainer}>
+              <Typography className={styles.professionValue}>
+                {`${professions[request.jobRequiredId]?.main || "טוען..."}, ${request.city}`}
+              </Typography>
+              <Typography className={styles.dateText}>
+                {new Date(request.date).toLocaleString()}
+              </Typography>
+            </Box>
 
+            <Box className={styles.rightSection}>
+              <Box className={styles.badgeWrapper}>
+                <Badge
+                  badgeContent={fetchingUnread ? "..." : request.unreadMessages || 0}
+                  color="error"
+                  showZero
+                />
+              </Box>
 
-                                    </div>
-
-                                    {/* Second Flex Row: Values */}
-                                    <div className={styles.requestValues}>
-                                        <p className={styles.dateTime}>{formatDateTime(request.date)}</p>
-                                        
-                                        <span className={styles.requestValue}>{request.city}</span>
-                                        <span className={styles.callNumber}>{request.id}</span>
-                                        {mode === "closed" && (
-        <span className={styles.requestValue}>
-            {request.myQuotation ? `₪${request.myQuotation}` : "—"}
-        </span>
-    )}
-                                    </div>
-                                </div>
-
-                                {/* Unread Messages (Keep as is) */}
-                                <span className={styles.unreadMessages}>
-                                    {fetchingUnread ? "..." : request.unreadMessages || 0}
-                                </span>
-                            </div>
-
-                            </div>
-
-                            {/* Separator between requests */}
-                            {index < requests.length - 1 && <div className={styles.requestSeparator}></div>}
-                        </React.Fragment>
-                    ))
-                ) : (
-<Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%", // Ensures full height within parent
-    textAlign: "center",
-  }}
+              <IconButton
+  onClick={(e) => toggleExpand(e, request.id)}
+  className={styles.expandButton}
 >
-  <Typography variant="h6" color="red">
-    אין בקשות
-  </Typography>
+  {expandedId === request.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+</IconButton>
+
+            </Box>
+          </Box>
+
+          <Collapse in={expandedId === request.id}>
+            <Box className={styles.detailsSection}>
+              <Box className={styles.infoBlock}>
+                <Typography className={styles.infoLabel}>מיקום</Typography>
+                <Typography className={styles.infoValue}>{request.city}</Typography>
+              </Box>
+
+              <Box className={styles.infoBlock}>
+                <Typography className={styles.infoLabel}>קריאה</Typography>
+                <Typography className={styles.infoValue}>{request.id}</Typography>
+              </Box>
+
+              {mode === "closed" && (
+                <Box className={styles.infoBlock}>
+                  <Typography className={styles.infoLabel}>הצעה</Typography>
+                  <Typography className={styles.infoValue}>
+                    {request.myQuotation ? `₪${request.myQuotation}` : "—"}
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Collapse>
+        </Box>
+
+{/* Only show separator if it's NOT the last item */}
+{index < requests.length - 1 && (
+        <Box className={styles.requestSeparator}></Box>
+      )}      </React.Fragment>
+    ))
+  ) : (
+    <Box className={styles.noRequestsMessage}>
+      <Typography variant="h6" color="red">
+        אין בקשות
+      </Typography>
+    </Box>
+  )}
 </Box>
-                )}
-            </div>
+
 
             <p className={styles.supportMessage}>
                 *ביטול או תקלה צור קשר עם השירות <a href="#">כאן</a>
@@ -225,7 +250,7 @@ const { user, isAuthenticated } = useProfessionalAuth();
             <button onClick={() => navigate(-1)} className={styles.backButton}>
                 חזור
             </button>
-        </div>
+        </Box>
 
     );
 }

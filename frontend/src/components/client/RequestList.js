@@ -175,7 +175,7 @@ const RequestList = ({ title, requestType}) => {
 
         ) : (
           <Box className={styles.requestsList}>
-            {requests.map((request) => (
+            {requests.map((request,index) => (
               <React.Fragment key={request.id}>
                <Box className={styles.requestCard} onClick={() => navigate(`/request?id=${request.id}`)}>
                 <Box className={styles.topSection}>
@@ -244,7 +244,7 @@ const RequestList = ({ title, requestType}) => {
                   </Box>
                 </Collapse>
               </Box>
-                <Box className={styles.separator}></Box>
+              {index < requests.length - 1 && <Box className={styles.separator}></Box>}
               </React.Fragment>
             ))}
           </Box>

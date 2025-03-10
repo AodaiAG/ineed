@@ -3,10 +3,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: black;
-    height: 100vh;
-    padding: 20px;
-	margin-bottom:10px !important;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 20px 5px;
 }
 
 /* Header */
@@ -20,29 +19,38 @@
     font-size: 17px;
     font-weight: bold;
     margin-bottom: 20px;
-    border: 3px solid white; /* White border around the header */
+    border: 3px solid white;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-/* Request list */
+/* Request List */
 .requestList {
-    width: 90%;
-    display: flex;
+       flex-grow: 1;
+    overflow-y: auto;
+    width: 100%;
+    max-width: 400px;
+    display: flex
+;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
+    padding: 20px 10px;
 }
 
-/* Request card */
+.header{
+	text-align: center;
+    width: 100%;
+}
+
+/* Request Card */
 .requestCard {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    border: 2px solid #FFC107;
+background: #ffffff;
+    border: 3px solid #fdbe00;
+    border-radius: 14px;
+    padding: 10px;
+    gap: 13px;
+    cursor: pointer;
+    transition: transform 0.2sease-in-out;
     position: relative;
-    cursor: pointer; /* Make it clear it's clickable */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .requestCard:hover {
@@ -50,97 +58,136 @@
     box-shadow: 0 5px 10px rgba(255, 193, 7, 0.5);
 }
 
-/* Request info */
-.requestInfo {
-    display: flex;
-    align-items: center;
-    width: 100%;
+/* Top Section */
+.topSection {
+    display: flex
+;
     justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
 }
 
-/* Request ID */
-.requestId {
+/* Left Section (Index) */
+.leftSection {
     background-color: #F0F0F0;
     color: #B0B0B0;
     font-size: 18px;
     font-weight: bold;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 10px;
-}
-
-/* Request details */
-.requestDetails {
-    display: flex;
-    flex-direction: column; /* Ensures details are stacked vertically */
-    color: black !important;
-    flex-grow: 1;
-    gap: 5px; /* Adds spacing between elements */
-}
-
-.profession {
-    font-size: 16px;
-    font-weight: bold;
-    color: black !important;
-}
-
-.dateTime {
-    font-size: 14px;
-    color: black !important;
-}
-
-/* Location and call info */
-.locationInfo, .callInfo {
-    text-align: center;
-    font-size: 14px;
-    color: black !important;
-    display: flex;
-    flex-direction: column; /* Aligns text in a column */
-    align-items: center;
-}
-
-.callNumber {
-
-    color: black !important;
-}
-
-/* Unread messages */
-.unreadMessages {
-    background-color: red;
-    color: white;
-    font-weight: bold;
-    border-radius: 50%;
     width: 30px;
-    height: 20px;
+    height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* Support message */
-.supportMessage {
-    color: white;
+/* Profession and Date Section */
+.professionDateContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1;
+}
+.title{
+	
+	
+	font-size: 26px;
+    font-weight: bold;
+    color: #ffffff;
+    background: #1A4B75;
+    border: 3px solid #ffffff;
+    border-radius: 14px;
+    padding: 12px;
+    text-align: center;
+
+}
+
+.professionValue {
     font-size: 14px;
-    margin-top: 20px;
+    font-weight: bold;
+    color: black;
+    text-align: right;
 }
 
-.supportMessage a {
-    color: #FFC107;
-    text-decoration: none;
+.dateText {
+    font-size: 14px;
+    color: #A3A3A3;
 }
 
-/* Back button */
+/* Right Section */
+.rightSection {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Badge Wrapper */
+.badgeWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    border: 2px solid #fdbe00;
+    width: 30px;
+    height: 30px;
+}
+
+.badgeWrapper .MuiBadge-badge {
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+/* Details Section */
+.detailsSection {
+display: flex
+;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+    direction: rtl;
+    border-top: 2px solid #e0e0e0;
+}
+
+/* Info Block */
+.infoBlock {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+/* Labels */
+.infoLabel {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Values */
+.infoValue {
+    color: #666;
+}
+
+/* Separator */
+.requestSeparator {
+    width: 100%;
+    height: 2px;
+    background-color: #1A4B75;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+/* Back Button */
 .backButton {
     background-color: #FFC107 !important;
     color: black !important;
     font-size: 18px !important;
     padding: 10px 40px !important;
     border-radius: 10px !important;
-	
     margin-top: 20px !important;
     cursor: pointer;
     transition: transform 0.2s ease;
@@ -151,80 +198,17 @@
     box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
 }
 
-/* Separator between requests */
-.requestSeparator {
-    width: 100%; /* Full width */
-    height: 2px;
-    background-color: #1A4B75;
-    margin: 10px 0;
-    border-radius: 5px;
+.expandButton {
+    height: 100%; 
+    outline: none; /* ✅ Remove default outline */
+    border: none;  /* ✅ Remove any border if present */
+    padding: 0;
 }
 
-/* Main requestInfo container */
-.requestInfo {
-    display: flex;
-    align-items: center; /* Keep items vertically aligned */
-    justify-content: space-between;
-    width: 100%;
-    gap: 10px;
+/* Remove focus outline but keep accessibility for keyboard users */
+.expandButton:focus {
+    outline: none;
+    box-shadow: none; /* ✅ Remove any box-shadow on focus */
 }
 
-/* Container for Labels & Values */
-.requestContent {
-    display: flex;
-    flex-direction: column; /* Stack labels and values */
-    flex-grow: 1;
-}
-
-/* Labels Row */
-.requestLabels {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    font-weight: bold;
-    text-align: center;
-    color: black;
-    padding-bottom: 5px;
-}
-
-/* Values Row */
-.requestValues {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    text-align: center;
-}
-
-/* Individual Labels */
-.requestLabel {
-    flex: 1; /* Ensures equal spacing */
-    text-align: center;
-    font-weight: bold;
-    color: black;
-}
-
-/* Individual Values */
-.requestValue,
-.callNumber {
-    flex: 1;
-    text-align: center;
-
-    color: black;
-}
-
-/* Profession & Date */
-.requestDetails {
-    flex: 1;
-    text-align: center;
-    font-size: 16px;
-}
-
-/* Ensure dateTime is properly aligned */
-.dateTime {
-    flex: 1;
-    text-align: center;
-    font-size: 14px;
-}
-
+/* Optional: Slight hover effect for better UX */
