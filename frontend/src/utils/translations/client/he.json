@@ -136,7 +136,9 @@
     "requestCancelled": "הבקשה שלך #{{requestId}} בוטלה.",
     "quotationApproved": "הצעת המחיר שלך אושרה.",
     "quotationRejected": "הצעת המחיר שלך נדחתה.",
-	        "professionalDeselectedAlone": "האיש מקצוע ביטל את הקריאה שלך."
+	        "professionalDeselectedAlone": "האיש מקצוע ביטל את הקריאה שלך.",
+			    "requestCancelled": "הקריאה שלך בוטלה על ידי הלקוח"
+
 
   }
 

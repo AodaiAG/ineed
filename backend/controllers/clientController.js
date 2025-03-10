@@ -772,20 +772,42 @@ exports.cancelRequest = async (req, res) => {
         const clientId = req.user.id; // Extract client ID from JWT
         const { reason, details } = req.body;
 
-        // ✅ 1. Find the request
-        const clientRequest = await ClientRequest.findOne({ 
-            where: { requestId, clientId }
+        // ✅ 1. Find the request along with its professionalId
+        const request = await Request.findOne({
+            where: { id: requestId },
+        });
+
+        if (!request) {
+            return res.status(404).json({ success: false, message: "הקריאה לא נמצאה" });
+        }
+
+        // ✅ Check if the request belongs to the client
+        const clientRequest = await ClientRequest.findOne({
+            where: { requestId, clientId },
         });
 
         if (!clientRequest) {
-            return res.status(404).json({ success: false, message: "הקריאה לא נמצאה או אינה שייכת לך" });
+            return res.status(403).json({ success: false, message: "הקריאה אינה שייכת לך" });
         }
+
+        const professionalId = request.professionalId;
 
         // ✅ 2. Delete the request
         await Request.destroy({ where: { id: requestId } });
 
-        // ✅ 3. Log the reason (optional)
-        console.log(`Request ${requestId} canceled by client ${clientId}. Reason: ${reason}. Details: ${details}`);
+        // ✅ 3. Send notification if professionalId exists
+        if (professionalId) {
+            await Notification.create({
+                recipientId: professionalId.toString(),
+                recipientType: 'professional',
+                messageKey: 'notifications.requestCancelled', // Translation key for notification
+                requestId,
+                action: `/pro/requests/${requestId}`,
+                isRead: false,
+            });
+        }
+
+       
 
         res.status(200).json({ success: true, message: "הקריאה בוטלה בהצלחה" });
     } catch (error) {

@@ -377,6 +377,16 @@ const RequestDetailsPage = ({user,isAuthenticated}) => {
                 <Button className={styles.backButton} onClick={() => navigate(-1)}>
                     חזור
                 </Button>
+
+                {/* ✅ Cancel Request Popup */}
+                {showCancelPopup && (
+                    <CancelRequestPage
+                        open={showCancelPopup}
+                        onClose={handleCloseCancelPopup}
+                        requestId={requestId}
+                    />
+                 )}
+                 
             </Box>
         </NotificationProvider>
     );
