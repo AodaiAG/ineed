@@ -59,7 +59,6 @@ function App() {
           <Route path="/about" element={<AboutForm />} />
           <Route path="/summary" element={<SummaryForm />} />
           <Route path="/sms" element={<SMSVerificationC />} />
-         
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/request/rate/:id" element={<RatingPage />} />
