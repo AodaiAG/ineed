@@ -148,6 +148,10 @@ exports.saveClient = async (req, res) => {
                     ],
                 },
             ],
+
+            order: [
+                [{ model: Request, as: 'request' }, 'createdAt', 'DESC'], // ✅ Order by request creation date in descending order
+            ],
         });
 
         if (!clientRequests.length) {

@@ -791,6 +791,8 @@ const fetchProfRequests = async (req, res) => {
                             sequelize.literal(`NOT ${jsonContainsProfessionalId('quotations', professionalId)}`), // Current professional hasn't quoted
                         ],
                     },
+                    order: [['createdAt', 'DESC']], // ✅ Correct
+
                 });
                 break;
 
@@ -804,6 +806,9 @@ const fetchProfRequests = async (req, res) => {
                             sequelize.literal(`${jsonContainsProfessionalId('quotations', professionalId)}`), // Contains this professional's quotation
                         ],
                     },
+                    order: [['createdAt', 'DESC']], // ✅ Correct
+
+                    
                 });
                 break;
 
@@ -813,6 +818,8 @@ const fetchProfRequests = async (req, res) => {
                         status: 'open', // Open requests
                         professionalId: professionalId, // Assigned to this professional
                     },
+                    order: [['createdAt', 'DESC']], // ✅ Correct
+
                 });
                 break;
 
@@ -822,6 +829,8 @@ const fetchProfRequests = async (req, res) => {
                         status: 'closed', // Closed requests
                         professionalId: professionalId, // Previously assigned to this professional
                     },
+                    order: [['createdAt', 'DESC']], // ✅ Correct
+
                 });
 
                 matchingRequests = matchingRequests.map((request) => {
