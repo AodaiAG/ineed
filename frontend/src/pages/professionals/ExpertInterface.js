@@ -12,14 +12,16 @@ import useAuthCheck from '../../hooks/useAuthCheck';
 import NotificationComponent from '../../components/NotificationComponent';
 import { NotificationProvider } from "../../contexts/NotificationContext";
 import { useNotifications } from "../../contexts/NotificationContext";
+import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
 
-function ExpertInterface({user}) {
+function ExpertInterface() {
     const navigate = useNavigate();
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { unreadCount } = useNotifications(); // ✅ Access unread notifications directly
+    const { user, isAuthenticated } = useProfessionalAuth();
 
  
 

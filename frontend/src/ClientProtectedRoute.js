@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import useClientAuthCheck from './hooks/useClientAuthCheck';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { CircularProgress, Box } from '@mui/material';
 
+// Create context
+const ClientAuthContext = createContext();
+
+// Hook to use context
+export const useClientAuth = () => useContext(ClientAuthContext);
 
 const ClientProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading, user } = useClientAuthCheck();
-
 
   if (loading) {
     return (
@@ -16,7 +20,7 @@ const ClientProtectedRoute = ({ children }) => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh', // Full height for centering
+          height: '100vh',
         }}
       >
         <CircularProgress size={60} thickness={5} sx={{ color: '#FDBE00' }} />
@@ -28,7 +32,9 @@ const ClientProtectedRoute = ({ children }) => {
 
   return (
     <NotificationProvider userId={user.id} userType="client">
-      {React.cloneElement(children, { user, isAuthenticated })}
+      <ClientAuthContext.Provider value={{ user, isAuthenticated }}>
+        {children}
+      </ClientAuthContext.Provider>
     </NotificationProvider>
   );
 };

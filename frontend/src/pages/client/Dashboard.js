@@ -10,8 +10,10 @@ import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import { useLanguage } from "../../contexts/LanguageContext";
 import NotificationComponent from "../../components/NotificationComponent";
 import { useNotifications } from "../../contexts/NotificationContext";
+import { useClientAuth } from '../../ClientProtectedRoute';
 
-const Dashboard = ({user}) => {
+
+const Dashboard = () => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false); // State to handle popup visibility
   const [showNotifications, setShowNotifications] = useState(false); // State to toggle notifications
@@ -19,6 +21,7 @@ const Dashboard = ({user}) => {
   const { translation } = useLanguage();
   //const { isAuthenticated, loading, user } = useClientAuthCheck();
   const { unreadCount } = useNotifications(); // ✅ Access unread notifications directly
+  const { user, isAuthenticated } = useClientAuth();
 
 
   

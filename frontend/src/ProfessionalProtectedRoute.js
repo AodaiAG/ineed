@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import useAuthCheck from './hooks/useAuthCheck';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { CircularProgress, Box } from '@mui/material';
 
+// ✅ Create context for professional authentication
+const ProfessionalAuthContext = createContext();
+
+// ✅ Custom hook to use this context
+export const useProfessionalAuth = () => useContext(ProfessionalAuthContext);
+
 const ProfessionalProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading, user } = useAuthCheck();
 
-  if (loading) 
-    {
+  if (loading) {
     return (
       <Box
         sx={{
@@ -27,8 +32,9 @@ const ProfessionalProtectedRoute = ({ children }) => {
 
   return (
     <NotificationProvider userId={user.profId} userType="professional">
-      {/* ✅ Pass user and isAuthenticated to child components */}
-      {React.cloneElement(children, { user, isAuthenticated })}
+      <ProfessionalAuthContext.Provider value={{ user, isAuthenticated }}>
+        {children}
+      </ProfessionalAuthContext.Provider>
     </NotificationProvider>
   );
 };

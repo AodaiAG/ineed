@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
+  Badge,
+  IconButton,
+  Collapse,
   Typography,
   CircularProgress,
 } from "@mui/material";
@@ -9,22 +12,27 @@ import { useNavigate } from "react-router-dom";
 import api from "../../utils/clientApi";
 import styles from "../../styles/client/RequestList.module.css";
 import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import { NotificationProvider } from "../../contexts/NotificationContext";
+import { useClientAuth } from '../../ClientProtectedRoute';
 
 
-const RequestList = ({ title, requestType,user,isAuthenticated }) => {
+const RequestList = ({ title, requestType}) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchingRequests, setFetchingRequests] = useState(true);
   const [fetchingUnread, setFetchingUnread] = useState(false);
-  
+  const [expandedId, setExpandedId] = useState(null); // ✅ Track which item is expanded
+
+  const { user, isAuthenticated } = useClientAuth();
+
   const navigate = useNavigate();
   const language = "he"; // Define language preference for fetching professions
 
   useEffect(() => {
-   
-
+  
     // ✅ Only fetch requests after auth is confirmed
     const fetchRequests = async () => {
       setFetchingRequests(true);
@@ -80,23 +88,31 @@ const RequestList = ({ title, requestType,user,isAuthenticated }) => {
 
   // ✅ Fetch unread message counts **only after requests are loaded**
   const fetchUnreadCounts = async (updatedRequests) => {
-    if (!user) return;
+    if (!user) {
+      console.log("❌ No user found. Skipping unread count fetch.");
+      return;
+    }
+  
     setFetchingUnread(true);
-
-    const userId = user.id; 
+    console.log("🔄 Starting to fetch unread message counts...");
+  
+    const userId = user.id;
     const userToken = sessionStorage.getItem("clientChatToken");
-
+  
     if (!userId || !userToken) {
+      console.log("❌ Missing userId or userToken. Skipping fetch.");
       setFetchingUnread(false);
       return;
     }
-
+  
     try {
       const requestIds = updatedRequests.map((req) => req.id);
+      console.log("📩 Requesting unread counts for request IDs:", requestIds);
+  
       const unreadCounts = await fetchUnreadMessages(userId, userToken, requestIds);
-
-      console.table(unreadCounts);
-
+  
+      console.log("✅ Unread counts received:", unreadCounts);
+  
       setRequests((prevRequests) =>
         prevRequests.map((request) => ({
           ...request,
@@ -104,11 +120,13 @@ const RequestList = ({ title, requestType,user,isAuthenticated }) => {
         }))
       );
     } catch (error) {
-      console.error("Error fetching unread messages:", error);
+      console.error("❌ Error fetching unread messages:", error);
     } finally {
       setFetchingUnread(false);
+      console.log("✅ Finished fetching unread counts.");
     }
   };
+  
 
   // ✅ **Show loading only if authentication OR fetching requests is in progress**
   if ( fetchingRequests)  {
@@ -125,6 +143,11 @@ const RequestList = ({ title, requestType,user,isAuthenticated }) => {
       </Box>
     );
   }
+
+  const toggleExpand = (e, id) => {
+    e.stopPropagation(); // ✅ Prevent triggering navigation
+    setExpandedId((prevId) => (prevId === id ? null : id));
+  };
 
   return (
       <Box className={styles.requestListContainer}>
@@ -154,47 +177,73 @@ const RequestList = ({ title, requestType,user,isAuthenticated }) => {
           <Box className={styles.requestsList}>
             {requests.map((request) => (
               <React.Fragment key={request.id}>
-                <Box className={styles.requestCard} onClick={() => navigate(`/request?id=${request.id}`)}>
-                  <Box className={styles.leftSection}>{request.index}</Box> 
-                  <Box className={styles.middleSection}>
+               <Box className={styles.requestCard} onClick={() => navigate(`/request?id=${request.id}`)}>
+                <Box className={styles.topSection}>
+                  <Typography className={styles.leftSection}>{request.index}</Typography>
+
+                  <Box className={styles.professionDateContainer}>
+                    <Typography className={styles.professionValue}>
+                      {request.mainProfession}, {request.subProfession}
+                    </Typography>
+                    <Typography className={styles.dateText}>
+                      {new Date(request.date).toLocaleString()}
+                    </Typography>
+                  </Box>
+
+                  <Box className={styles.rightSection}>
+                   <Box className={styles.badgeWrapper}>
+                        <Badge 
+                          badgeContent={fetchingUnread ? '...' : request.unreadMessages || 0}
+                          color="error"
+                          showZero // ✅ Ensures badge is shown even when the count is 0
+                        />
+                      </Box>
+
+
+                  <IconButton
+                    onClick={(e) => toggleExpand(e, request.id)}
+                    size="small"
+                    sx={{ height: '100%' }} // ✅ Full height for better clickability
+                  >
+                    {expandedId === request.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  </IconButton>
+                  </Box>
+
+
+                  
+                </Box>
+
+                <Collapse in={expandedId === request.id}>
+                  <Box className={styles.detailsSection}>
                     <Box className={styles.infoBlock}>
                       <Typography className={styles.infoLabel}>קריאה</Typography>
                       <Typography className={styles.infoValue}>{request.id}</Typography>
                     </Box>
+
                     <Box className={styles.infoBlock}>
                       <Typography className={styles.infoLabel}>מומחים</Typography>
                       <Typography className={styles.infoValue}>{request.numOfProfs || "0"}</Typography>
                     </Box>
+
                     {requestType === "closed" && (
                       <>
                         <Box className={styles.infoBlock}>
                           <Typography className={styles.infoLabel}>מחיר</Typography>
-                          <Typography className={styles.infoValue}>{request.workCost ? ` ${request.workCost} ₪ ` : "לא זמין"}</Typography>
+                          <Typography className={styles.infoValue}>
+                            {request.workCost ? `${request.workCost} ₪` : "לא זמין"}
+                          </Typography>
                         </Box>
                         <Box className={styles.infoBlock}>
                           <Typography className={styles.infoLabel}>דירוג</Typography>
                           <Typography className={styles.infoValue}>
-                            {request.averageRating ? request.averageRating : "לא דורג"}
+                            {request.averageRating || "לא דורג"}
                           </Typography>
                         </Box>
                       </>
                     )}
-
-                    <Box className={styles.professionDateContainer}>
-                      <Typography className={styles.professionValue}>
-                        {request.mainProfession}, {request.subProfession}
-                      </Typography>
-                      <Typography className={styles.dateText}>
-                        {new Date(request.date).toLocaleString()}
-                      </Typography>
-                    </Box>
                   </Box>
-                  <Box className={styles.rightSection}>
-                    <Box className={styles.unreadBadge}>
-                      {fetchingUnread ? "..." : request.unreadMessages || 0}
-                    </Box>
-                  </Box>
-                </Box>
+                </Collapse>
+              </Box>
                 <Box className={styles.separator}></Box>
               </React.Fragment>
             ))}

@@ -21,8 +21,9 @@ import CancelRequestComponent from "../../components/professionals/CancelRequest
 import api from "../../utils/api";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestDetailsPage.module.css";
+import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
 
-const ProfessionalRequestDetailsPage = ({user,isAuthenticated}) => {
+const ProfessionalRequestDetailsPage = () => {
   const navigate = useNavigate();
   const { id: requestId } = useParams();
   const [requestDetails, setRequestDetails] = useState(null);
@@ -42,6 +43,7 @@ const ProfessionalRequestDetailsPage = ({user,isAuthenticated}) => {
   const [showDetails, setShowDetails] = useState(true);
   const [showChat, setShowChat] = useState(false);
   const [showQuotation, setShowQuotation] = useState(false);
+  const { user, isAuthenticated } = useProfessionalAuth();
 
 
   const [expandedSection, setExpandedSection] = useState(null);

@@ -8,9 +8,10 @@ import styles from "../../styles/RequestPage.module.css";
 import fetchUnreadMessages from "../../utils/fetchUnreadMessages"; // ✅ Import function
 import { Modal, Box, Typography } from "@mui/material";
 import { NotificationProvider } from "../../contexts/NotificationContext";
+import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
 
 
-function RequestsPage({ mode, title,user,isAuthenticated }) {
+function RequestsPage({ mode, title}) {
     const [requests, setRequests] = useState([]);
     const [professions, setProfessions] = useState({});
     const [loading, setLoading] = useState(true);
@@ -20,12 +21,12 @@ function RequestsPage({ mode, title,user,isAuthenticated }) {
     const [open, setOpen] = useState(false);
 const [modalText, setModalText] = useState("");
 //before
+const { user, isAuthenticated } = useProfessionalAuth();
 
     const language = "he"; // Default to Hebrew
 
     useEffect(() => {
-        
-
+     
         // ✅ Fetch Requests
         const fetchRequests = async () => {
             try {

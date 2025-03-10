@@ -35,9 +35,10 @@ import api from "../../utils/clientApi";
 import { NotificationProvider } from "../../contexts/NotificationContext";
 import dayjs from "dayjs";
 import CancelRequestPage from "../../components/client/CancelRequestPage"; // ✅ Import CancelRequestPage
+import { useClientAuth } from '../../ClientProtectedRoute';
 
 
-const RequestDetailsPage = ({user,isAuthenticated}) => {
+const RequestDetailsPage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const requestId = searchParams.get("id");
@@ -59,6 +60,7 @@ const RequestDetailsPage = ({user,isAuthenticated}) => {
     const [showProfessionals, setShowProfessionals] = useState(false);
     const [showChat, setShowChat] = useState(false);
     const [showGallery, setShowGallery] = useState(false); // ✅ Gallery section state
+    const { user, isAuthenticated } = useClientAuth();
 
 
 
@@ -386,7 +388,7 @@ const RequestDetailsPage = ({user,isAuthenticated}) => {
                         requestId={requestId}
                     />
                  )}
-                 
+
             </Box>
         </NotificationProvider>
     );

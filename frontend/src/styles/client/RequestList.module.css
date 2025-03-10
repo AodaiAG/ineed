@@ -1,7 +1,7 @@
 /* Main Container */
 .requestListContainer {
   position: relative;
-  background: #1783E0; /* ✅ Updated background */
+  background: #1783E0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,113 +41,117 @@
 
 /* Request Card */
 .requestCard {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   background: #ffffff;
   border: 3px solid #fdbe00;
   border-radius: 14px;
-  padding: 12px;
+  padding: 10px;
   gap: 13px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
+  position: relative;
 }
 
 .requestCard:hover {
   transform: scale(1.03);
 }
 
-/* Separator */
-.separator {
-  width: 90%;
-  height: 3px;
-  background: #1A4B75; /* ✅ Updated separator color */
-  margin: 10px auto;
+/* Top Section */
+.topSection {
+display: flex
+;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
 }
 
-/* Left Section - Request Index */
+/* Index Circle */
 .leftSection {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
-  height: 30px;
+  width: 23px;
+  height: 20px;
   background: #ddd;
   border-radius: 50%;
   font-size: 16px;
   font-weight: bold;
 }
 
-/* Middle Section - Details */
-.middleSection {
-  flex-grow: 1;
-  text-align: right;
-  color: black;
+/* Profession and Date Section */
+.professionDateContainer {
   display: flex;
-  flex-direction: row-reverse;
-  gap: 9px;
+  flex-direction: column;
+  gap: 5px;
+  width: 70%;
+  text-align: left;
+}
+
+.professionValue {
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  text-align: right;
+}
+
+.dateText {
+  font-size: 12px;
+  color: #A3A3A3;
+}
+
+/* Right Section - Unread Badge */
+.rightSection {
+display: flex
+;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 5px;
+
+}
+
+
+
+/* Expandable Details Section */
+.detailsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+  direction: rtl;
+  border-top: 2px solid #e0e0e0;
 }
 
 /* Info Block */
 .infoBlock {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Labels (Black) */
 .infoLabel {
   font-size: 14px;
   font-weight: bold;
-  color: #000000; /* ✅ Black */
+  color: #000000;
 }
 
-/* Values (Grey) */
 .infoValue {
   font-size: 14px;
-  color: #A3A3A3; /* ✅ Grey */
+  color: #A3A3A3;
 }
 
-/* Profession & Date in One Box */
-.professionDateContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
+/* Expandable Icon */
+.expandIcon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
 }
 
-/* Profession Value (Grey) */
-.professionValue {
-  font-size: 14px;
-  font-weight: bold;
-  color: black; /* ✅ Grey */
-}
-
-/* Date Value (Grey) */
-.dateText {
-  font-size: 12px;
-  color: #A3A3A3; /* ✅ Grey */
-}
-
-/* Right Section - Unread Messages */
-.rightSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Unread Messages Badge */
-.unreadBadge {
-  width: 25px;
-  height: 25px;
-  background: red; /* ✅ Ensure it's visible */
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Separator */
+.separator {
+  width: 90%;
+  height: 3px;
+  background: #1A4B75;
+  margin: 10px auto;
 }
 
 /* Footer */
@@ -175,3 +179,33 @@
   transform: scale(1.05);
   background: #444444;
 }
+
+.unreadBadge {
+  background-color: red;
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+  min-width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid #fff; /* Optional white border */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.badgeWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fdbe00; /* Optional border for better visibility */
+  width: 30px;
+  height: 30px;
+}
+
+
