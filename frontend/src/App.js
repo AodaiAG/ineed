@@ -4,6 +4,14 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Ensure the CSS is imported
 
+
+//wrapers
+
+import ClientProtectedRoute from './ClientProtectedRoute';
+import ProfessionalProtectedRoute from './ProfessionalProtectedRoute';
+
+
+
 // Import pages
 import HomePage from './pages/client/HomePage';
 import AppStart from './pages/client/AppStart';
@@ -52,7 +60,16 @@ function App() {
           <Route path="/summary" element={<SummaryForm />} />
           <Route path="/sms" element={<SMSVerificationC />} />
           <Route path="/request" element={<RequestDetailsPage />} />
-          <Route path="/dashboard" element={<ClientDashboard />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ClientProtectedRoute>
+                <ClientDashboard />
+              </ClientProtectedRoute>
+            }
+          />
+
           <Route path="/dashboard/my-requests" element={<MyRequests />} />
           <Route path="/dashboard/closed-requests" element={<ClosedRequests />} />
           <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
@@ -65,7 +82,16 @@ function App() {
           <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />
           <Route path="/pro/sms-verification" element={<SMSVerification />} />
           <Route path="/pro/register" element={<ProfessionalRegistration />} />
-          <Route path="/pro/expert-interface" element={<ExpertInterface />} />
+
+          <Route
+  path="/pro/expert-interface"
+  element={
+    <ProfessionalProtectedRoute>
+      <ExpertInterface />
+    </ProfessionalProtectedRoute>
+  }
+/>
+
           <Route path="/pro/bs-card" element={<BusinessCard />} />
           <Route path="/pro/edit-settings" element={<EditProfessionalSettings />} />
           <Route path="/pro/expert-main" element={<ExpertMainPage />} />

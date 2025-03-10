@@ -11,20 +11,17 @@ import LanguageIcon from '@mui/icons-material/Language';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import NotificationComponent from '../../components/NotificationComponent';
 import { NotificationProvider } from "../../contexts/NotificationContext";
+import { useNotifications } from "../../contexts/NotificationContext";
 
-function ExpertInterface() {
+function ExpertInterface({user}) {
     const navigate = useNavigate();
     const { translation } = useLanguage();
     const [isLanguagePopupOpen, setIsLanguagePopupOpen] = useState(false);
-    const { isAuthenticated, loading, user } = useAuthCheck();
     const [showNotifications, setShowNotifications] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { unreadCount } = useNotifications(); // ✅ Access unread notifications directly
 
-    useEffect(() => {
-        if (!loading && !isAuthenticated) {
-            navigate('/pro/enter'); // Redirect to login if not authenticated
-        }
-    }, [loading, isAuthenticated, navigate]);
+ 
 
     // Initialize styles
     useEffect(() => {
@@ -56,7 +53,7 @@ function ExpertInterface() {
         setIsSidebarOpen((prev) => !prev);
     };
 
-    if (loading || !translation) {
+    if (!translation) {
         return (
             <div className={styles['spinner-overlay']}>
                 <div className={styles['spinner']}></div>
@@ -65,7 +62,6 @@ function ExpertInterface() {
     }
 
     return (
-        <NotificationProvider userId={user?.profId} userType="professional">
             <div className={styles.expertInterface_container}>
                 {/* Header Container */}
                 <div className={styles.headerContainer}>
@@ -77,8 +73,8 @@ function ExpertInterface() {
 
                         {/* Notification Icon */}
                         <IconButton className={styles.notificationIcon} onClick={handleNotificationClick}>
-                            <Badge color="error" variant="dot">
-                                <NotificationsActiveIcon />
+                        <Badge badgeContent={unreadCount} color="error">
+                        <NotificationsActiveIcon />
                             </Badge>
                         </IconButton>
                     </Box>
@@ -177,7 +173,6 @@ function ExpertInterface() {
                     </button>
                 </div>
             </div>
-        </NotificationProvider>
     );
 }
 

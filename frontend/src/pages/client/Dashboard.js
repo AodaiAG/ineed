@@ -9,22 +9,19 @@ import styles from "../../styles/client/Dashboard.module.css";
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import { useLanguage } from "../../contexts/LanguageContext";
 import NotificationComponent from "../../components/NotificationComponent";
-import { NotificationProvider } from "../../contexts/NotificationContext";
+import { useNotifications } from "../../contexts/NotificationContext";
 
-const Dashboard = () => {
+const Dashboard = ({user}) => {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false); // State to handle popup visibility
   const [showNotifications, setShowNotifications] = useState(false); // State to toggle notifications
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State to toggle sidebar
   const { translation } = useLanguage();
-  const { isAuthenticated, loading, user } = useClientAuthCheck();
+  //const { isAuthenticated, loading, user } = useClientAuthCheck();
+  const { unreadCount } = useNotifications(); // ✅ Access unread notifications directly
 
-  useEffect(() => {
-    if (loading) return;
-    if (!isAuthenticated) {
-      navigate("/sign-in");
-    }
-  }, [loading, isAuthenticated, navigate]);
+
+  
 
   const handleNotificationClick = () => {
     setShowNotifications((prev) => !prev);
@@ -49,7 +46,7 @@ const Dashboard = () => {
     setIsSidebarOpen((prev) => !prev);
   };
 
-  if (loading || !translation) {
+  if (!translation) {
     return (
       <div className={styles["  inner-overlay"]}>
         <div className={styles["spinner"]}></div>
@@ -58,7 +55,6 @@ const Dashboard = () => {
   }
 
   return (
-    <NotificationProvider userId={user?.id} userType="client">
       <Box className={styles.clientDContainer}>
         {/* Header */}
         <Box className={styles.clientDHeader}>
@@ -70,7 +66,7 @@ const Dashboard = () => {
 
             {/* Notification Icon */}
             <IconButton className={styles.notificationIcon} onClick={handleNotificationClick}>
-              <Badge color="error" variant="dot">
+            <Badge badgeContent={unreadCount} color="error">
                 <NotificationsActiveIcon />
               </Badge>
             </IconButton>
@@ -167,7 +163,6 @@ const Dashboard = () => {
           </Button>
         </Box>
       </Box>
-    </NotificationProvider>
   );
 };
 

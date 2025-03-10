@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef,useMemo } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { API_URL } from '../utils/constans';
@@ -103,8 +103,12 @@ export const NotificationProvider = ({ children, userId, userType }) => {
     }
   }, [userId, userType]);
 
+  const unreadCount = useMemo(() => {
+    return notifications.filter((notif) => !notif.isRead).length;
+  }, [notifications]);
+
   return (
-    <NotificationContext.Provider value={{ notifications, setNotifications, markAsRead, fetchNotifications }}>
+    <NotificationContext.Provider value={{ notifications, unreadCount,setNotifications, markAsRead, fetchNotifications }}>
       {children}
     </NotificationContext.Provider>
   );
