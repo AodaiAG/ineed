@@ -110,6 +110,7 @@ export const NotificationProvider = ({ children, userId, userType }) => {
     }
   };
 
+  //only dashobard notifcation
   useEffect(() => {
     if (userId && userType) {
       fetchNotifications(); // ✅ Fetch on mount
