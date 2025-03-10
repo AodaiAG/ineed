@@ -53,7 +53,9 @@ export const NotificationProvider = ({ children, userId, userType }) => {
     }
   
     // ✅ Redirect immediately
-    navigate(notif.action);
+    if (notif.action) {
+      navigate(notif.action);
+  }
   
     // ✅ Optimistically mark as read
     setNotifications((prev) =>

@@ -45,7 +45,9 @@ const NotificationListComponent = () => {
 
   const handleNotificationClick = async (notif) => {
      markAsRead(notif.id); // ✅ Mark as read on click
-    navigate(notif.action);
+     if (notif.action) {
+      navigate(notif.action);
+  }
   };
 
   const handleMarkSelectedAsRead = async () => {

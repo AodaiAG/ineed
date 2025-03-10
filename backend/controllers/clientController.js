@@ -802,7 +802,7 @@ exports.cancelRequest = async (req, res) => {
                 recipientType: 'professional',
                 messageKey: 'notifications.requestCancelled', // Translation key for notification
                 requestId,
-                action: `/pro/requests/${requestId}`,
+                action: null,
                 isRead: false,
             });
         }
