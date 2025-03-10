@@ -7,7 +7,8 @@ import { CircularProgress, Box } from '@mui/material';
 const ProfessionalProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading, user } = useAuthCheck();
 
-  if (loading) {
+  if (loading) 
+    {
     return (
       <Box
         sx={{

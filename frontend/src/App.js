@@ -96,11 +96,51 @@ function App() {
           <Route path="/pro/edit-settings" element={<EditProfessionalSettings />} />
           <Route path="/pro/expert-main" element={<ExpertMainPage />} />
           <Route path="/pro/explain" element={<ExplainScreen />} />
-          <Route path="/pro/requests/:id" element={<ProfessionalRequestDetailsPage />} />
-          <Route path="/pro/requests/new" element={<NewRequestsPage />} />
-          <Route path="/pro/requests/in-process" element={<InProcessRequestsPage />} />
-          <Route path="/pro/requests/mine" element={<MineRequestsPage />} />
-          <Route path="/pro/requests/closed" element={<ClosedRequestsPage />} />
+            <Route
+              path="/pro/requests/new"
+              element={
+                <ProfessionalProtectedRoute>
+                  <NewRequestsPage />
+                </ProfessionalProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pro/requests/in-process"
+              element={
+                <ProfessionalProtectedRoute>
+                  <InProcessRequestsPage />
+                </ProfessionalProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pro/requests/mine"
+              element={
+                <ProfessionalProtectedRoute>
+                  <MineRequestsPage />
+                </ProfessionalProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pro/requests/closed"
+              element={
+                <ProfessionalProtectedRoute>
+                  <ClosedRequestsPage />
+                </ProfessionalProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/pro/requests/:id"
+              element={
+                <ProfessionalProtectedRoute>
+                  <ProfessionalRequestDetailsPage />
+                </ProfessionalProtectedRoute>
+              }
+            />
+
         </Routes>
       </LanguageProvider>
       {/* Place ToastContainer here */}

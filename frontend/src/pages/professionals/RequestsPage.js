@@ -10,13 +10,12 @@ import { Modal, Box, Typography } from "@mui/material";
 import { NotificationProvider } from "../../contexts/NotificationContext";
 
 
-function RequestsPage({ mode, title }) {
+function RequestsPage({ mode, title,user,isAuthenticated }) {
     const [requests, setRequests] = useState([]);
     const [professions, setProfessions] = useState({});
     const [loading, setLoading] = useState(true);
     const [fetchingUnread, setFetchingUnread] = useState(false);
     const { translation } = useLanguage();
-    const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
 const [modalText, setModalText] = useState("");
@@ -25,12 +24,7 @@ const [modalText, setModalText] = useState("");
     const language = "he"; // Default to Hebrew
 
     useEffect(() => {
-        if (authLoading) return; // ✅ Wait for authentication
-
-        if (!isAuthenticated) {
-            navigate("/login");
-            return;
-        }
+        
 
         // ✅ Fetch Requests
         const fetchRequests = async () => {
@@ -50,7 +44,7 @@ const [modalText, setModalText] = useState("");
         };
 
         fetchRequests();
-    }, [authLoading, isAuthenticated, mode, navigate]);
+    }, [ loading,isAuthenticated, mode, navigate]);
 
     // ✅ Fetch profession details for each request
     useEffect(() => {
@@ -130,17 +124,24 @@ const [modalText, setModalText] = useState("");
         return `${hours}:${minutes} - ${day}/${month}/${year}`;
     };
 
-    if (loading || !translation) {
-        return (
-            <div className={styles.spinnerOverlay}>
-                <CircularProgress />
-            </div>
-        );
-    }
+    if ( loading ||!translation) 
+        {
+            return (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100vh',
+                }}
+              >
+                <CircularProgress size={60} thickness={5} sx={{ color: '#FDBE00' }} />
+              </Box>
+            );
+          }
 
     return (
 
-        <NotificationProvider userId={user?.profId} userType="professional">
         <div className={styles.requestPageContainer}>
             
             <div className={styles.headerContainer}>
@@ -224,7 +225,6 @@ const [modalText, setModalText] = useState("");
                 חזור
             </button>
         </div>
-        </NotificationProvider>
 
     );
 }
