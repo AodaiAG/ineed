@@ -43,6 +43,11 @@ const NotificationListComponent = () => {
     }
   };
 
+  const handleNotificationClick = async (notif) => {
+     markAsRead(notif.id); // ✅ Mark as read on click
+    navigate(notif.action);
+  };
+
   const handleMarkSelectedAsRead = async () => {
     await Promise.all(selectedNotifs.map((id) => markAsRead(id)));
     setSelectedNotifs([]); // Clear selection after marking as read
@@ -144,7 +149,7 @@ const NotificationListComponent = () => {
             <ListItem
               key={notif.id}
               divider
-              onClick={() => !editMode && navigate(notif.action)}
+              onClick={() => handleNotificationClick(notif)} // ✅ Handle click to mark as read and navigate
               style={{ cursor: editMode ? 'default' : 'pointer' }}
             >
               {editMode && (

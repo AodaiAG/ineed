@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { API_URL } from '../utils/constans';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 
 const NotificationContext = createContext();
 
@@ -10,6 +11,8 @@ export const NotificationProvider = ({ children, userId, userType }) => {
   const [notifications, setNotifications] = useState([]);
   const { translation } = useLanguage();
   const hasFetched = useRef(false); // ✅ Prevents multiple fetches
+  const navigate = useNavigate();
+
 
   // ✅ Use Local Storage to track shown toasts
   const getShownToastIds = () => {
@@ -24,30 +27,48 @@ export const NotificationProvider = ({ children, userId, userType }) => {
     return messageKey.split('.').reduce((obj, key) => obj?.[key], translation) || messageKey;
   };
 
-  const markAsRead = async (id) => {
-    try {
-      await axios.put(`${API_URL}/notifications/${id}/read`);
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  };
-
-  const handleToastClick = (notif) => {
-    console.log("🔔 Toast clicked for notification:", notif);
+  const markAsRead = (id) => {
+    // ✅ Optimistically update local state
+    setNotifications((prev) =>
+      prev.map((notif) => 
+        notif.id === id ? { ...notif, isRead: true } : notif
+      )
+    );
   
+    // ✅ Perform API call in the background
+    axios.put(`${API_URL}/notifications/${id}/read`).catch((error) => {
+      console.error('Error marking notification as read:', error);
+      // Optionally revert the state if the API fails
+    });
+  };
+  
+
+
+  const handleToastClick = (notif, navigate) => {
+    console.log("🔔 Toast clicked for notification:", notif);
+
     if (!notif) {
       console.error("❌ handleToastClick received an undefined notification.");
       return;
     }
   
-    markAsRead(notif.id);
+    // ✅ Redirect immediately
+    navigate(notif.action);
   
-    if (typeof toast.dismiss !== "function") {
-      console.error("❌ toast.dismiss is not a function!");
-    } else {
-      toast.dismiss();
-    }
+    // ✅ Optimistically mark as read
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notif.id ? { ...n, isRead: true } : n))
+    );
+  
+    // ✅ Mark as read in the background
+    axios.put(`${API_URL}/notifications/${notif.id}/read`).catch((error) => {
+      console.error('Error marking notification as read:', error);
+    });
+  
+    // ✅ Dismiss the toast immediately
+    toast.dismiss();
   };
+  
   
 
   const fetchNotifications = async () => {
@@ -69,7 +90,7 @@ export const NotificationProvider = ({ children, userId, userType }) => {
             const translatedMessage = getTranslatedMessage(notif.messageKey);
 
             toast.info(translatedMessage, {
-              onClick: () => handleToastClick(notif),
+              onClick: () => handleToastClick(notif, navigate),
             });
 
             shownToastIds.add(notif.id); // ✅ Add toast to local storage
