@@ -37,7 +37,7 @@ import dayjs from "dayjs";
 import CancelRequestPage from "../../components/client/CancelRequestPage"; // ✅ Import CancelRequestPage
 
 
-const RequestDetailsPage = () => {
+const RequestDetailsPage = ({user,isAuthenticated}) => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const requestId = searchParams.get("id");
@@ -61,20 +61,12 @@ const RequestDetailsPage = () => {
     const [showGallery, setShowGallery] = useState(false); // ✅ Gallery section state
 
 
-    // Authentication check
-    const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
-    //
 
     const [showCancelPopup, setShowCancelPopup] = useState(false);
 
 
     useEffect(() => {
-        if (authLoading) return;
-
-        if (!isAuthenticated) {
-            navigate("/login");
-            return;
-        }
+        
         const fetchRequestDetails = async () => {
             try {
                 const response = await api.get(`/api/request/${requestId}`);
@@ -124,7 +116,7 @@ const RequestDetailsPage = () => {
         };
 
         Promise.all([fetchRequestDetails(), fetchUserToken()]).finally(() => setLoading(false));
-    }, [authLoading, isAuthenticated, navigate, requestId, user, userToken]);
+    }, [ isAuthenticated, navigate, requestId, user, userToken]);
 
     const handleSelectProfessional = async () => {
         try {
@@ -149,15 +141,20 @@ const RequestDetailsPage = () => {
 
     
 
-    if (authLoading || loading) {
+    if (loading) {
         return (
-<Box className={styles.loadingContainer} 
-  sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-  <CircularProgress />
-</Box>
-
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100vh', // Full height for centering
+            }}
+          >
+            <CircularProgress size={60} thickness={5} sx={{ color: '#FDBE00' }} />
+          </Box>
         );
-    }
+      }
 
     if (error) {
         return (

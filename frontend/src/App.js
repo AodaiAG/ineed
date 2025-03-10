@@ -59,7 +59,40 @@ function App() {
           <Route path="/about" element={<AboutForm />} />
           <Route path="/summary" element={<SummaryForm />} />
           <Route path="/sms" element={<SMSVerificationC />} />
-          <Route path="/request" element={<RequestDetailsPage />} />
+         
+          <Route path="/profile/:id" element={<ProfilePage />} />
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/request/rate/:id" element={<RatingPage />} />
+
+          /////////////////////// protected///////////////////
+
+
+          <Route
+            path="/dashboard/my-requests"
+            element={
+              <ClientProtectedRoute>
+                <MyRequests />
+              </ClientProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/closed-requests"
+            element={
+              <ClientProtectedRoute>
+                <ClosedRequests />
+              </ClientProtectedRoute>
+            }
+          />
+
+           <Route
+            path="/request"
+            element={
+              <ClientProtectedRoute>
+                <RequestDetailsPage />
+              </ClientProtectedRoute>
+            }
+          />
 
           <Route
             path="/dashboard"
@@ -70,32 +103,26 @@ function App() {
             }
           />
 
-          <Route path="/dashboard/my-requests" element={<MyRequests />} />
-          <Route path="/dashboard/closed-requests" element={<ClosedRequests />} />
-          <Route path="/request/:id/professionals" element={<ProfessionalsList />} />
-          <Route path="/profile/:id" element={<ProfilePage />} />
-          <Route path="/sign-in" element={<SignInPage />} />
-          <Route path="/request/rate/:id" element={<RatingPage />} />
-
 
           {/* Professional Side Routes */}
           <Route path="/pro/enter" element={<ProfessionalPhoneScreen />} />
           <Route path="/pro/sms-verification" element={<SMSVerification />} />
           <Route path="/pro/register" element={<ProfessionalRegistration />} />
-
-          <Route
-  path="/pro/expert-interface"
-  element={
-    <ProfessionalProtectedRoute>
-      <ExpertInterface />
-    </ProfessionalProtectedRoute>
-  }
-/>
-
           <Route path="/pro/bs-card" element={<BusinessCard />} />
           <Route path="/pro/edit-settings" element={<EditProfessionalSettings />} />
           <Route path="/pro/expert-main" element={<ExpertMainPage />} />
           <Route path="/pro/explain" element={<ExplainScreen />} />
+
+///////////////////protected///////////////
+             <Route
+              path="/pro/expert-interface"
+              element={
+                <ProfessionalProtectedRoute>
+                  <ExpertInterface />
+                </ProfessionalProtectedRoute>
+              }
+            />
+
             <Route
               path="/pro/requests/new"
               element={

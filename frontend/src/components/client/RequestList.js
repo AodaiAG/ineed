@@ -13,7 +13,7 @@ import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import { NotificationProvider } from "../../contexts/NotificationContext";
 
 
-const RequestList = ({ title, requestType }) => {
+const RequestList = ({ title, requestType,user,isAuthenticated }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchingRequests, setFetchingRequests] = useState(true);
@@ -21,15 +21,9 @@ const RequestList = ({ title, requestType }) => {
   
   const navigate = useNavigate();
   const language = "he"; // Define language preference for fetching professions
-  const { isAuthenticated, loading: authLoading, user } = useClientAuthCheck();
 
   useEffect(() => {
-    if (authLoading) return; // ✅ Wait for auth to finish
-
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
+   
 
     // ✅ Only fetch requests after auth is confirmed
     const fetchRequests = async () => {
@@ -82,7 +76,7 @@ const RequestList = ({ title, requestType }) => {
     };
 
     fetchRequests();
-  }, [authLoading, isAuthenticated, requestType, navigate]);
+  }, [isAuthenticated, requestType, navigate]);
 
   // ✅ Fetch unread message counts **only after requests are loaded**
   const fetchUnreadCounts = async (updatedRequests) => {
@@ -117,18 +111,22 @@ const RequestList = ({ title, requestType }) => {
   };
 
   // ✅ **Show loading only if authentication OR fetching requests is in progress**
-  if (authLoading || fetchingRequests) {
+  if ( fetchingRequests)  {
     return (
-      <Box className={styles.loadingContainer} 
-  sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-  <CircularProgress />
-</Box>
-
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
+        <CircularProgress size={60} thickness={5} sx={{ color: '#FDBE00' }} />
+      </Box>
     );
   }
 
   return (
-    <NotificationProvider userId={user?.id} userType="client">
       <Box className={styles.requestListContainer}>
         {/* Header */}
         <Box className={styles.header}>
@@ -215,7 +213,6 @@ const RequestList = ({ title, requestType }) => {
           </Button>
         </Box>
       </Box>
-    </NotificationProvider>
   );
 };
 
