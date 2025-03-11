@@ -4,7 +4,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 20px;
+   
     background-color: #1783E0; /* ✅ Background color from image */
     min-height: 100vh;
     box-sizing: border-box;
@@ -20,7 +20,7 @@
     border-radius: 14px;
     font-size: 20px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-top: 10px;
     border: 3px solid white;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
@@ -363,7 +363,7 @@ background: transparent; /* Make background fully transparent */
 
 /* Chat Section */
 .chatContainer {
-width: 100%;
+width: 90%;
     max-width: 700px;
     background-color: white;
     border-radius: 14px;
@@ -379,11 +379,7 @@ width: 100%;
 }
 
 /* Request Details Container */
-.requestDetailsContainer {
-    width: 90% !important;
-    display: flex !important;
-    justify-content: center !important;
-}
+
 
 /* Request Card */
 .requestDetailsCard {
@@ -476,7 +472,7 @@ width: 100%;
 }
 /* Request Details Main Container */
 .requestDetailsContainer {
-width: 100% !important;
+width: 90% !important;
     display: flex !important
 ;
     align-items: center !important;
@@ -626,41 +622,6 @@ width: 92% !important;
 
 
 /* Responsive Fix */
-@media (max-width: 768px) {
-    .chatContainer {
-        max-width: 95%;
-    }
-}
 
 
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .pageContainer {
-        padding: 10px;
-    }
-
-    .headerContainer {
-        font-size: 25px !important;
-    }
-
-    .requestDetailsCard {
-        max-width: 90%;
-    }
-
-    .professionalListContainer {
-        max-width: 90%;
-    }
-
-    .chatContainer {
-        max-width: 90%;
-    }
-
-    .selectButton {
-        width: 90%;
-    }
-
-    .backButton {
-        width: 90%;
-    }
-}

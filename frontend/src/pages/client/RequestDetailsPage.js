@@ -37,6 +37,7 @@ import dayjs from "dayjs";
 import CancelRequestPage from "../../components/client/CancelRequestPage"; // ✅ Import CancelRequestPage
 import { useClientAuth } from '../../ClientProtectedRoute';
 import { useMessage } from "../../contexts/MessageContext";
+import ClientHeader from "../../components/client/ClientHeader"; // ✅ Import the custom header
 
 
 const RequestDetailsPage = () => {
@@ -200,9 +201,10 @@ const RequestDetailsPage = () => {
     })) || [];
 
     return (
-        <NotificationProvider userId={user?.id} userType="client">
             <Box className={styles.pageContainer}>
                 {/* Header */}
+                <ClientHeader />
+
                 <Box className={styles.headerContainer}>
                     <Typography className={styles.headerTitle}>
                         {requestDetails?.status === "closed" ? "הקריאה סגורה" : "פרטי הקריאה"}
@@ -394,7 +396,6 @@ const RequestDetailsPage = () => {
                  )}
 
             </Box>
-        </NotificationProvider>
     );
     
     

@@ -203,7 +203,6 @@ display: flex
   padding: 5px;
   background-color: #fff;
   border-radius: 50%;
-  border: 2px solid #fdbe00; /* Optional border for better visibility */
   width: 30px;
   height: 30px;
 }
