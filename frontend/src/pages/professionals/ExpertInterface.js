@@ -13,6 +13,7 @@ import NotificationComponent from '../../components/NotificationComponent';
 import { NotificationProvider } from "../../contexts/NotificationContext";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
+import ProfessionalHeader from '../../components/professionals/ProfessionalHeader';
 
 function ExpertInterface() {
     const navigate = useNavigate();
@@ -25,35 +26,15 @@ function ExpertInterface() {
 
  
 
-    // Initialize styles
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        document.body.classList.add(styles.expertInterface_body);
+    
 
-        return () => {
-            document.body.classList.remove(styles.expertInterface_body);
-        };
-    }, []);
-
-    const handleLanguageIconClick = () => {
-        setIsLanguagePopupOpen((prev) => !prev);
-    };
+   
 
     const handleNavigateToRequests = (path) => {
         navigate(`/pro/requests/${path}`);
     };
 
-    const handleSettingsClick = () => {
-        navigate('/pro/edit-settings');
-    };
 
-    const handleNotificationClick = () => {
-        setShowNotifications((prev) => !prev);
-    };
-
-    const toggleSidebar = () => {
-        setIsSidebarOpen((prev) => !prev);
-    };
 
     if (!translation) {
         return (
@@ -64,83 +45,19 @@ function ExpertInterface() {
     }
 
     return (
-            <div className={styles.expertInterface_container}>
+            <Box className={styles.expertInterface_container}>
+                            <ProfessionalHeader />
+
                 {/* Header Container */}
                 <div className={styles.headerContainer}>
-                    <Box className={styles.iconContainer}>
-                        {/* Hamburger Menu Icon */}
-                        <IconButton onClick={toggleSidebar} className={styles.menuIcon}>
-                            <MenuIcon />
-                        </IconButton>
-
-                        {/* Notification Icon */}
-                        <IconButton className={styles.notificationIcon} onClick={handleNotificationClick}>
-                        <Badge badgeContent={unreadCount} color="error">
-                        <NotificationsActiveIcon />
-                            </Badge>
-                        </IconButton>
-                    </Box>
-
+                 
                     <div className={styles.titleContainer}>
                         <h1 className={styles.expertInterface_mainTitle}>I Need</h1>
                         <h2 className={styles.expertInterface_subTitle}>{translation.expertInterfaceTitle}</h2>
                     </div>
                 </div>
 
-                {/* Sidebar */}
-                <Drawer
-  anchor="left"
-  open={isSidebarOpen}
-  onClose={toggleSidebar}
-  container={window.innerWidth >= 1025 ? document.getElementById("drawer-container") : undefined} // ✅ Only set container on large screens
-  PaperProps={{
-    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" }, // ✅ Keep normal behavior on mobile
-  }}
-  BackdropProps={{
-    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" },
-  }}
-  ModalProps={{
-    container: window.innerWidth >= 1025 ? document.getElementById("drawer-container") : undefined,
-    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" },
-  }}
->
-                    <Box className={styles.sidebarContainer} role="presentation" onClick={toggleSidebar}>
-                        <List>
-                            <ListItem button onClick={handleSettingsClick}>
-                                <ListItemIcon>
-                                    <SettingsIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="הגדרות" />
-                            </ListItem>
-
-                            <ListItem button onClick={handleLanguageIconClick}>
-                                <ListItemIcon>
-                                    <LanguageIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="שפה" />
-                            </ListItem>
-
-                            <ListItem button onClick={handleNotificationClick}>
-                                <ListItemIcon>
-                                    <NotificationsActiveIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="התראות" />
-                            </ListItem>
-                        </List>
-                    </Box>
-                </Drawer>
-
-                {/* Notification Dropdown */}
-                {showNotifications && (
-                    <div className={styles.notificationDropdown}>
-                        <NotificationComponent userId={user?.id} userType="professional" />
-                    </div>
-                )}
-
-                {/* Language Selection Popup */}
-                {isLanguagePopupOpen && (
-                    <LanguageSelectionPopup onClose={() => setIsLanguagePopupOpen(false)} backgroundColor="black" />
-                )}
+            
 
 
                 {/* Image Section */}
@@ -174,7 +91,7 @@ function ExpertInterface() {
                         קריאות סגורות
                     </button>
                 </div>
-            </div>
+            </Box>
     );
 }
 

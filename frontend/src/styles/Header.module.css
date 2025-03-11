@@ -1,0 +1,67 @@
+.stickyHeader {
+    width: 100% !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    background-color: #2B2D42 !important;
+    padding: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.iconContainer {
+    display: flex;
+    gap: 12px;
+}
+
+.menuIcon, .notificationIcon, .profileIcon {
+    color: #E5E5E5 !important;
+}
+
+.notificationDropdown, .languagePopup {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    left: 10px;
+    background: #3A3F58;
+    box-shadow: 3px 36px 92px #000000;
+    border-radius: 12px;
+    width: 300px;
+    text-align: center;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.profilePopover {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 280px;
+}
+
+.profileAvatarLarge {
+    width: 100px;
+    height: 100px;
+    border: 3px solid #3A3F58;
+    border-radius: 50%;
+}
+
+.profileName {
+    font-size: 18px;
+    font-weight: bold;
+    color: #3A3F58;
+}
+
+.editButton, .saveButton {
+    width: 100%;
+    margin-top: 10px !important;
+}
+
+.editInput {
+    width: 100%;
+}
