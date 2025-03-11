@@ -17,6 +17,8 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import useClientAuthCheck from "../../hooks/useClientAuthCheck";
 import { NotificationProvider } from "../../contexts/NotificationContext";
 import { useClientAuth } from '../../ClientProtectedRoute';
+import ClientHeader from "./ClientHeader"; // Adjust the path as necessary
+
 
 
 const RequestList = ({ title, requestType}) => {
@@ -150,118 +152,103 @@ const RequestList = ({ title, requestType}) => {
   };
 
   return (
+    <Box>
+      <ClientHeader /> {/* ✅ Header Integration */}
+
       <Box className={styles.requestListContainer}>
-        {/* Header */}
         <Box className={styles.header}>
           <Typography variant="h4" className={styles.title}>{title}</Typography>
         </Box>
 
-        {/* No Requests Message */}
         {requests.length === 0 ? (
           <Box
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%", // Ensures full height within parent
-    margin:"20px 0",
-    textAlign: "center",
-  }}
->
-  <Typography variant="h6" color="red">
-    אין בקשות
-  </Typography>
-</Box>
-
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              margin: "20px 0",
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h6" color="red">
+              אין בקשות
+            </Typography>
+          </Box>
         ) : (
           <Box className={styles.requestsList}>
-            {requests.map((request,index) => (
+            {requests.map((request, index) => (
               <React.Fragment key={request.id}>
-               <Box className={styles.requestCard} onClick={() => navigate(`/request?id=${request.id}`)}>
-                <Box className={styles.topSection}>
-                  <Typography className={styles.leftSection}>{request.index}</Typography>
+                <Box className={styles.requestCard} onClick={() => navigate(`/request?id=${request.id}`)}>
+                  <Box className={styles.topSection}>
+                    <Typography className={styles.leftSection}>{request.index}</Typography>
 
-                  <Box className={styles.professionDateContainer}>
-                    <Typography className={styles.professionValue}>
-                      {request.mainProfession}, {request.subProfession}
-                    </Typography>
-                    <Typography className={styles.dateText}>
-                      {new Date(request.date).toLocaleString()}
-                    </Typography>
-                  </Box>
+                    <Box className={styles.professionDateContainer}>
+                      <Typography className={styles.professionValue}>
+                        {request.mainProfession}, {request.subProfession}
+                      </Typography>
+                      <Typography className={styles.dateText}>
+                        {new Date(request.date).toLocaleString()}
+                      </Typography>
+                    </Box>
 
-                  <Box className={styles.rightSection}>
-                   <Box className={styles.badgeWrapper}>
-                        <Badge 
+                    <Box className={styles.rightSection}>
+                      <Box className={styles.badgeWrapper}>
+                        <Badge
                           badgeContent={fetchingUnread ? '...' : request.unreadMessages || 0}
                           color="error"
-                          showZero // ✅ Ensures badge is shown even when the count is 0
+                          showZero
                         />
                       </Box>
 
-
-                  <IconButton
-                    onClick={(e) => toggleExpand(e, request.id)}
-                    size="small"
-                    sx={{ height: '100%' }} // ✅ Full height for better clickability
-                  >
-                    {expandedId === request.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                  </IconButton>
+                      <IconButton
+                        onClick={(e) => toggleExpand(e, request.id)}
+                        size="small"
+                        sx={{ height: '100%' }}
+                      >
+                        {expandedId === request.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                      </IconButton>
+                    </Box>
                   </Box>
 
+                  <Collapse in={expandedId === request.id}>
+                    <Box className={styles.detailsSection}>
+                      <Box className={styles.infoBlock}>
+                        <Typography className={styles.infoLabel}>קריאה</Typography>
+                        <Typography className={styles.infoValue}>{request.id}</Typography>
+                      </Box>
 
-                  
+                      <Box className={styles.infoBlock}>
+                        <Typography className={styles.infoLabel}>מומחים</Typography>
+                        <Typography className={styles.infoValue}>{request.numOfProfs || "0"}</Typography>
+                      </Box>
+                    </Box>
+                  </Collapse>
                 </Box>
 
-                <Collapse in={expandedId === request.id}>
-                  <Box className={styles.detailsSection}>
-                    <Box className={styles.infoBlock}>
-                      <Typography className={styles.infoLabel}>קריאה</Typography>
-                      <Typography className={styles.infoValue}>{request.id}</Typography>
-                    </Box>
-
-                    <Box className={styles.infoBlock}>
-                      <Typography className={styles.infoLabel}>מומחים</Typography>
-                      <Typography className={styles.infoValue}>{request.numOfProfs || "0"}</Typography>
-                    </Box>
-
-                    {requestType === "closed" && (
-                      <>
-                        <Box className={styles.infoBlock}>
-                          <Typography className={styles.infoLabel}>מחיר</Typography>
-                          <Typography className={styles.infoValue}>
-                            {request.workCost ? `${request.workCost} ₪` : "לא זמין"}
-                          </Typography>
-                        </Box>
-                        <Box className={styles.infoBlock}>
-                          <Typography className={styles.infoLabel}>דירוג</Typography>
-                          <Typography className={styles.infoValue}>
-                            {request.averageRating || "לא דורג"}
-                          </Typography>
-                        </Box>
-                      </>
-                    )}
-                  </Box>
-                </Collapse>
-              </Box>
-              {index < requests.length - 1 && <Box className={styles.separator}></Box>}
+                {index < requests.length - 1 && <Box className={styles.separator}></Box>}
               </React.Fragment>
             ))}
           </Box>
         )}
 
-        {/* Footer with Back Button */}
         <Box className={styles.footer} sx={{ textAlign: "center", marginTop: 2 }}>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={() => navigate(-1)} 
-            sx={{ fontSize: "18px,", padding: "10px 40px", borderRadius: "10px",backgroundColor: "#1A4B75" }}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate(-1)}
+            sx={{
+              fontSize: "18px",
+              padding: "10px 40px",
+              borderRadius: "10px",
+              backgroundColor: "#1A4B75",
+            }}
           >
             חזור
           </Button>
         </Box>
       </Box>
+    </Box>
   );
 };
 

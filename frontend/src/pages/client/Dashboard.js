@@ -11,6 +11,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import NotificationComponent from "../../components/NotificationComponent";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useClientAuth } from '../../ClientProtectedRoute';
+import ClientHeader from "../../components/client/ClientHeader"; // ✅ Import the custom header
 
 
 const Dashboard = () => {
@@ -58,68 +59,11 @@ const Dashboard = () => {
   }
 
   return (
+    
       <Box className={styles.clientDContainer}>
         {/* Header */}
-        <Box className={styles.clientDHeader}>
-          <Box className={styles.iconContainer}>
-            {/* Hamburger Menu Icon */}
-            <IconButton onClick={toggleSidebar} className={styles.menuIcon}>
-              <MenuIcon />
-            </IconButton>
-
-            {/* Notification Icon */}
-            <IconButton className={styles.notificationIcon} onClick={handleNotificationClick}>
-            <Badge badgeContent={unreadCount} color="error">
-                <NotificationsActiveIcon />
-              </Badge>
-            </IconButton>
-          </Box>
-        </Box>
-
-        {/* Sidebar */}
-        <Drawer
-  anchor="left"
-  open={isSidebarOpen}
-  onClose={toggleSidebar}
-  container={window.innerWidth >= 1025 ? document.getElementById("drawer-container") : undefined} // ✅ Only set container on large screens
-  PaperProps={{
-    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" }, // ✅ Keep normal behavior on mobile
-  }}
-  BackdropProps={{
-    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" },
-  }}
-  ModalProps={{
-    container: window.innerWidth >= 1025 ? document.getElementById("drawer-container") : undefined,
-    style: { position: window.innerWidth >= 1025 ? "absolute" : "fixed" },
-  }}
->
-          <Box className={styles.sidebarContainer} role="presentation" onClick={toggleSidebar}>
-            <List>
-             
-
-              <ListItem button onClick={() => setShowPopup(true)}>
-                <ListItemIcon>
-                  <LanguageIcon />
-                </ListItemIcon>
-                <ListItemText primary="שפה" />
-              </ListItem>
-
-              <ListItem button onClick={handleNotificationClick}>
-                <ListItemIcon>
-                  <NotificationsActiveIcon />
-                </ListItemIcon>
-                <ListItemText primary="התראות" />
-              </ListItem>
-            </List>
-          </Box>
-        </Drawer>
-
-        {/* Notification Dropdown */}
-        {showNotifications && (
-          <div className={styles.notificationDropdown}>
-           <NotificationComponent userId={user?.id} userType="client" />
-          </div>
-        )}
+        
+        <ClientHeader />
 
         {/* Title and Description */}
         <Box className={styles.clientDContent}>

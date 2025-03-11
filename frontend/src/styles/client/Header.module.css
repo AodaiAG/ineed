@@ -1,0 +1,138 @@
+/* Full-width sticky header */
+.stickyHeader {
+    width: 100% !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    background-color: #1A4B75 !important;
+    padding: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Icon Container for Hamburger and Notifications */
+.iconContainer {
+    display: flex !important;
+    gap: 12px !important;
+}
+
+/* Sidebar Styling */
+.sidebarContainer {
+    width: 250px !important;
+}
+
+/* List Items */
+.sidebarContainer .MuiListItem-root {
+    padding: 10px 15px !important;
+}
+
+/* List Item Text */
+.sidebarContainer .MuiListItemText-primary {
+    font-size: 16px !important;
+}
+
+/* Menu Icon */
+.menuIcon {
+    color: white !important;
+}
+
+/* Notification Icon */
+.notificationIcon {
+    color: white !important;
+}
+
+/* Notification Dropdown */
+.notificationDropdown {
+    position: absolute !important;
+    top: 60px !important;
+    right: 10px !important;
+    left: 10px !important;
+    background: #676767 !important;
+    box-shadow: 3px 36px 92px #000000 !important;
+    border-radius: 12px !important;
+    width: 300px !important;
+    text-align: center !important;
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
+}
+
+/* Language Popup */
+.languagePopup {
+    position: absolute !important;
+    top: 60px !important;
+    right: 10px !important;
+    left: 10px !important;
+    background: #676767 !important;
+    border-radius: 12px !important;
+    width: 300px !important;
+    text-align: center !important;
+    z-index: 1000 !important;
+}
+
+/* Profile Icon */
+.profileIcon {
+    color: white !important;
+}
+
+/* Profile Popover */
+.profilePopover {
+    padding: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 12px !important;
+    width: 280px !important;
+}
+
+/* Large Avatar */
+.profileAvatarLarge {
+    width: 100px !important;
+    height: 100px !important;
+    border: 3px solid #1A4B75 !important;
+    border-radius: 50% !important;
+}
+
+/* Profile Name */
+.profileName {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #1A4B75 !important;
+}
+
+/* Edit Button */
+.editButton {
+    margin-top: 8px !important;
+    width: 100% !important;
+}
+
+/* Save Button */
+.saveButton {
+    width: 100% !important;
+    margin-top: 10px !important;
+    background-color: #1A4B75 !important;
+    color: white !important;
+}
+
+/* Text Input for Editing Name */
+.editInput {
+    width: 100% !important;
+}
+
+/* Notification Dropdown */
+.notificationDropdown {
+    position: absolute !important;
+    top: 60px !important;
+    right: 10px !important;
+    left: 10px !important;
+    background: #676767 !important;
+    box-shadow: 3px 36px 92px #000000 !important;
+    border-radius: 12px !important;
+    width: 300px !important;
+    text-align: center !important;
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
+}
