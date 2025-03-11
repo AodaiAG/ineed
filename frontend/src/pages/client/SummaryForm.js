@@ -74,7 +74,7 @@ const SummaryForm = () => {
     try {
 
       console.log('at handle submit')
-      console.log(isAuthenticated + 'and here is id ' + user.id)
+      
       if (isAuthenticated && user?.id) 
         {
         console.log("Authenticated user ID:", user.id);
@@ -94,6 +94,7 @@ const SummaryForm = () => {
           navigate("/dashboard"); // Navigate to dashboard after saving client and request
         } else {
           console.error("Failed to submit client request");
+          console.log(submitRequestResponse.data)
           alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
         }
       } else {
