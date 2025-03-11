@@ -15,6 +15,7 @@ import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 import axios from "axios";
 import useClientAuthCheck from '../../hooks/useClientAuthCheck';
 import { debounce } from "lodash"; // ✅ Import debounce to prevent excessive API calls
+import { useMessage } from "../../contexts/MessageContext";
 
 
 
@@ -55,6 +56,8 @@ const HelpForm = () => {
   const [isTyping, setIsTyping] = useState(false);
 
   const { isAuthenticated, loading ,user} = useClientAuthCheck();
+  const { showMessage } = useMessage();
+
 
   useEffect(() => {
     if (loading) return;
@@ -208,7 +211,7 @@ const handleSuggestionClick = (suggestion) => {
 
   const handleSubmit = () => {
     if (!domain || !mainProfession || !city || !date) {
-      alert("All fields are required!");
+    showMessage("יש למלא את כל השדות הנדרשים.", "error");
       return;
     }
 

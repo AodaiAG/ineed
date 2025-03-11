@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../../styles/client/SignInPage.module.css";
 import { useLanguage } from "../../contexts/LanguageContext"; // Import useLanguage for translations
+import { useMessage } from "../../contexts/MessageContext";
 
 
 import { API_URL } from '../../utils/constans';
@@ -15,6 +16,7 @@ const SignInPage = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isSending, setIsSending] = useState(false); // State to handle loading state
   const navigate = useNavigate();
+  const { showMessage } = useMessage();
 
   const handleCountryCodeChange = (event) => {
     setCountryCode(event.target.value);
@@ -26,7 +28,7 @@ const SignInPage = () => {
 
   const handleSignIn = async () => {
     if (phoneNumber.length !== 7) {
-      alert("מספר הטלפון חייב להכיל בדיוק 7 ספרות");
+      showMessage("מספר הטלפון חייב להכיל בדיוק 7 ספרות", "error"); // ❌ Error message
       return;
     }
   
@@ -52,7 +54,7 @@ const SignInPage = () => {
       navigate("/sms");
     } catch (error) {
       console.error("Error sending SMS:", error);
-      alert("Failed to send SMS. Please try again.");
+      showMessage("שליחת ה-SMS נכשלה. נסה שוב.", "error"); // ❌ Error message
     } finally {
       setIsSending(false);
     }

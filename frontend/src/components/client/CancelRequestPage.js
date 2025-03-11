@@ -14,12 +14,14 @@ import {
 } from "@mui/material";
 import api from "../../utils/clientApi";
 import styles from "../../styles/client/CancelRequestPage.module.css";
+import { useMessage } from "../../contexts/MessageContext";
 
 const CancelRequestPage = ({ open, onClose,requestId }) => {
   const navigate = useNavigate();
   
   const [selectedReason, setSelectedReason] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
+  const { showMessage } = useMessage();
 
   const reasons = [
     "הבעיה נפתרה",
@@ -29,26 +31,28 @@ const CancelRequestPage = ({ open, onClose,requestId }) => {
 
   const handleCancelRequest = async () => {
     if (!selectedReason) {
-      alert("אנא בחר סיבה לביטול");
+      showMessage("אנא בחר סיבה לביטול", "error"); // ✅ Error message if reason is not selected
       return;
     }
-
+  
     try {
       const response = await api.post(`/api/cancel-request/${requestId}`, {
         reason: selectedReason,
         details: additionalDetails,
       });
-
+  
       if (response.data.success) {
-        alert("הקריאה בוטלה בהצלחה");
+        showMessage("הקריאה בוטלה בהצלחה", "success"); // ✅ Success message
         navigate("/dashboard");
       } else {
-        alert(response.data.message);
+        showMessage(response.data.message || "שגיאה בעת ביטול הקריאה", "error"); // ✅ Error message from server
       }
     } catch (error) {
-      alert(error.response?.data?.message || "שגיאה בעת ביטול הקריאה");
+      showMessage(error.response?.data?.message || "שגיאה בעת ביטול הקריאה", "error"); // ✅ Catch unexpected errors
     }
   };
+  
+  
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">

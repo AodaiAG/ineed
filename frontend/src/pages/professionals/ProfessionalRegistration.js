@@ -14,6 +14,8 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import Cookies from 'js-cookie'; // Import js-cookie
 import api from '../../utils/api'
 import { getDirection } from "../../utils/generalUtils"; // Import getDirection
+import { useMessage } from "../../contexts/MessageContext";
+
 import CryptoJS from 'crypto-js';
 function ProfessionalRegistration() {
 
@@ -28,7 +30,7 @@ function ProfessionalRegistration() {
       });
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const { showMessage } = useMessage();
     const [domains, setDomains] = useState([]); // Add this line to define the domains state
     const [selectedProfessionIds, setSelectedProfessionIds] = useState([]);
     const [selectedLanguage, setSelectedLanguage] = useState(() => {
@@ -248,6 +250,7 @@ function ProfessionalRegistration() {
             console.log('Calling the register api')
             await api.post('/api/professionals/register', professionalData);
             console.log('got back from calling the register api')
+            showMessage("ההרשמה בוצעה בהצלחה!", "success"); // ✅ Success Message
 
             navigate('/pro/expert-interface');
         } catch (error) {

@@ -36,6 +36,7 @@ import { NotificationProvider } from "../../contexts/NotificationContext";
 import dayjs from "dayjs";
 import CancelRequestPage from "../../components/client/CancelRequestPage"; // ✅ Import CancelRequestPage
 import { useClientAuth } from '../../ClientProtectedRoute';
+import { useMessage } from "../../contexts/MessageContext";
 
 
 const RequestDetailsPage = () => {
@@ -62,6 +63,7 @@ const RequestDetailsPage = () => {
     const [showGallery, setShowGallery] = useState(false); // ✅ Gallery section state
     const { user, isAuthenticated } = useClientAuth();
 
+    const { showMessage } = useMessage();
 
 
     const [showCancelPopup, setShowCancelPopup] = useState(false);
@@ -129,11 +131,13 @@ const RequestDetailsPage = () => {
     
             if (response.data.success) {
                 setConfirmedProfessionalId(selectedProfessionalId); // ✅ Move checkmark only when confirmed
+                showMessage("המומחה נבחר בהצלחה!", "success"); // ✅ Success message
             }
         } catch (error) {
-            alert("Failed to select professional.");
+            showMessage("נכשל לבחור במומחה.", "error"); // ❌ Error message
         }
     };
+    
 
     const handleImageClick = () => {
         if (galleryRef.current) {

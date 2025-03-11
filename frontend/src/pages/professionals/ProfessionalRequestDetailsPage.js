@@ -22,6 +22,7 @@ import api from "../../utils/api";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/RequestDetailsPage.module.css";
 import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
+import { useMessage } from "../../contexts/MessageContext";
 
 const ProfessionalRequestDetailsPage = () => {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ const ProfessionalRequestDetailsPage = () => {
   const [expandedSection, setExpandedSection] = useState(null);
 
   const language = "he";
+  const { showMessage } = useMessage();
 
   useEffect(() => {
     
@@ -108,37 +110,28 @@ const ProfessionalRequestDetailsPage = () => {
   // ✅ Restored function
   const handleQuotationSubmit = async () => {
     try {
+      console.log("🔄 Full API Response:"); // ✅ Log full response to check its structure
+
       const response = await api.post(`/api/professionals/quotation`, {
         requestId,
         quotation: parseFloat(quotation),
       });
-
-      if (response.data.success) {
+  
+  
+      if (response?.data?.success) {
         setIsEditing(false);
-    
+        showMessage("הצעת המחיר הוגשה בהצלחה!", "success");
       } else {
         setError("Failed to process quotation");
+        showMessage(response.data?.message || "התרחשה שגיאה בעת שליחת הצעת המחיר.", "error");
       }
     } catch (error) {
-      console.error("Error submitting quotation:", error);
-      alert("An error occurred while submitting the quotation.");
+      showMessage(error.response?.data?.message || "שגיאה בלתי צפויה בעת שליחת הצעת המחיר.", "error");
     }
   };
-  const handleCancelRequest = async () => {
-    try {
-      await api.post("/api/professionals/cancel-request", {
-        requestId,
-        reason: cancelReason,
-      });
+  
 
-      alert("The request has been canceled successfully.");
-      setShowCancelDialog(false);
-      navigate("/pro/expert-interface");
-    } catch (error) {
-      console.error("Error canceling request:", error);
-      alert("Failed to cancel the request.");
-    }
-  };
+  
 
   if (loading)   {
     return (

@@ -4,6 +4,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Ensure the CSS is imported
 
+import { MessageProvider } from "./contexts/MessageContext";
 
 //wrapers
 
@@ -47,6 +48,8 @@ import ClosedRequestsPage from './pages/professionals/ClosedRequestsPage';
 
 function App() {
   return (
+    <MessageProvider>
+
     <Router>
             <AppWrapper> {/* ✅ Wrap the whole app inside AppWrapper */}
 
@@ -175,6 +178,8 @@ function App() {
       </AppWrapper>
 
     </Router>
+    </MessageProvider>
+
   );
 }
 

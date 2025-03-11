@@ -10,6 +10,7 @@ import Rating from "@mui/material/Rating";
 import api from "../../utils/clientApi";
 import useAuthCheck from "../../hooks/useAuthCheck";
 import styles from "../../styles/client/RatingPage.module.css";
+import { useMessage } from "../../contexts/MessageContext";
 
 const RatingPage = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const RatingPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const { user, isAuthenticated, loading: authLoading } = useAuthCheck();
+  const { showMessage } = useMessage();
 
   const [ratingData, setRatingData] = useState({
     qualityRating: 1,
@@ -58,11 +60,11 @@ const RatingPage = () => {
       });
 
       if (response.data.success) {
-        alert("Your rating has been submitted successfully.");
+        showMessage("הדירוג שלך נשלח בהצלחה!", "success"); // ✅ Success message for rating submission
         navigate("/dashboard");
       }
     } catch (error) {
-      alert(error.response?.data?.message || "Failed to submit rating.");
+      showMessage(error.response?.data?.message || "נכשל לשלוח את הדירוג.", "error"); // ❌ Error message for rating submission
     }
   };
 

@@ -66,7 +66,6 @@ const NotificationListComponent = () => {
       console.log('🔹 Response from server:', response.data); // ✅ Log full response
 
       if (response.data.success == true) {
-        console.log('✅ Deletion successful, updating UI');
 
         // ✅ Remove deleted notifications from state
         setNotifications((prev) => prev.filter((notif) => !selectedNotifs.includes(notif.id)));

@@ -13,11 +13,14 @@ import { getDirection } from "../../utils/generalUtils"; // Import getDirection
 import axios from "axios";
 import { API_URL } from '../../utils/constans';
 
+import { useMessage } from "../../contexts/MessageContext";
 
 
 const AboutForm = () => {
   const { translation } = useLanguage(); // Access translations
   const navigate = useNavigate(); // Initialize navigation hook
+  const { showMessage } = useMessage();
+
   const [selectedLanguage] = useState(
     localStorage.getItem("userLanguage") || "he"
   );
@@ -50,10 +53,15 @@ const AboutForm = () => {
   const handleSubmit = () => {
     // Validation: Ensure all fields are filled
     if (!fullName.trim() || !phoneNumber.trim() || !comment.trim()) {
-      alert(translation.aboutForm.requiredFieldsError); // Display error message
+      showMessage(translation.aboutForm.requiredFieldsError, "error"); // Display error message
       return;
     }
     const fullPhoneNumber = `${phonePrefix}${phoneNumber}`;
+    // Validate Phone Number: Ensure exactly 7 digits
+  if (phoneNumber.length !== 7) {
+    showMessage("מספר הטלפון חייב להכיל בדיוק 7 ספרות.", "error"); // ✅ Error Message
+    return;
+  }
     // Save data to sessionStorage
     sessionStorage.setItem("fullName", fullName);
     sessionStorage.setItem("phonePrefix", phonePrefix);

@@ -17,6 +17,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import styles from "../../styles/FinishRequestComponent.module.css";
 import api from "../../utils/api";
+import { useMessage } from "../../contexts/MessageContext";
 
 const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
   const [images, setImages] = useState([]);
@@ -24,6 +25,7 @@ const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
   const [workCost, setWorkCost] = useState("");
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
+  const { showMessage } = useMessage();
 
   const handleImageUpload = (event) => {
     const uploadedFiles = Array.from(event.target.files);
@@ -39,9 +41,15 @@ const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
           const formData = new FormData();
           formData.append("image", image);
 
-          // Call your image upload API and get the URL
-          const response = await api.post("/api/professionals/upload-image", formData);
-          return response.data.imageUrl;
+          try {
+            // Call your image upload API and get the URL
+            const response = await api.post("/api/professionals/upload-image", formData);
+            return response.data.imageUrl;
+          } catch (uploadError) {
+            console.error("❌ Error uploading image:", uploadError);
+            showMessage("שגיאה בהעלאת תמונות, נסה שנית.", "error"); // Show image upload error
+            throw uploadError; // Stop execution if upload fails
+          }
         })
       );
 
@@ -54,18 +62,25 @@ const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
       };
 
       // Send the payload as JSON
-      await api.post("/api/professionals/finish-request", payload, {
+      const response = await api.post("/api/professionals/finish-request", payload, {
         headers: { "Content-Type": "application/json" },
       });
 
-       onClose();
+      if (response.data.success) {
+        showMessage("הבקשה הושלמה בהצלחה!", "success"); // ✅ Success message
+        onClose();
+      } else {
+        showMessage(response.data.message || "התרחשה שגיאה בעת סיום הבקשה.", "error"); // ❌ Handle API response errors
+      }
     } catch (error) {
-      console.error("Error finishing request:", error);
-      alert("Failed to finish the request.");
+      console.error("❌ Error finishing request:", error);
+      showMessage(error.response?.data?.message || "שגיאה בלתי צפויה בעת סיום הבקשה.", "error"); // ❌ Catch unexpected errors
     } finally {
       setLoading(false); // End loading
     }
   };
+
+  
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">

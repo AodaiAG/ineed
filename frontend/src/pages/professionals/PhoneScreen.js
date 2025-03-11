@@ -6,6 +6,7 @@ import "remixicon/fonts/remixicon.css";
 import { sendSms } from "../../utils/generalUtils";
 import {API_URL} from  "../../utils/constans";
 import axios from "axios";
+import { useMessage } from "../../contexts/MessageContext";
 
 function PhoneScreen() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function PhoneScreen() {
   const [countryCode, setCountryCode] = useState("052");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { translation } = useLanguage();
+  const { showMessage } = useMessage();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -45,17 +47,19 @@ function PhoneScreen() {
           message: translation.verificationCodeMessage + " {code}",
         });
   
+        showMessage(translation.smsSentSuccessfully || "הודעת SMS נשלחה בהצלחה!", "success"); // ✅ Success message
         navigate("/pro/sms-verification");
       } catch (error) {
         console.error("Failed to send SMS:", error);
-        alert(translation.failedToSendSmsMessage);
+        showMessage(translation.failedToSendSmsMessage || "שליחת ה-SMS נכשלה. נסה שוב.", "error"); // ❌ Error message
       }
-    } else if (phoneNumber.length !== 7 &&phoneNumber.length!==0 ) {
-      alert(translation.phoneNumberLengthMessage || "Phone number must be 7 digits.");
+    } else if (phoneNumber.length !== 7 && phoneNumber.length !== 0) {
+      showMessage(translation.phoneNumberLengthMessage || "מספר הטלפון חייב להכיל בדיוק 7 ספרות.", "error"); // ❌ Invalid length
     } else {
-      alert(translation.enterPhoneNumberMessage);
+      showMessage(translation.enterPhoneNumberMessage || "אנא הזן את מספר הטלפון שלך.", "error"); // ❌ Empty input
     }
   };
+  
   
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
