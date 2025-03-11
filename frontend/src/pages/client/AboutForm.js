@@ -91,7 +91,12 @@ const AboutForm = () => {
         <label>{translation.aboutForm.fullNameLabel}</label>
         <TextField
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            // Allow only letters and spaces (any language) while typing
+            const filteredValue = value.replace(/[\d!@#$%^&*()_+={}\[\]:;"'<>?,./\\|`~]/g, "");
+            setFullName(filteredValue);
+          }}
           placeholder={translation.aboutForm.fullNamePlaceholder}
           fullWidth
           className="about-form-input"
