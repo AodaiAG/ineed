@@ -16,6 +16,8 @@ import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ProfessionalHeader from '../../components/professionals/ProfessionalHeader';
+
 function RequestsPage({ mode, title}) {
     const [requests, setRequests] = useState([]);
     const [professions, setProfessions] = useState({});
@@ -158,7 +160,8 @@ const [expandedId, setExpandedId] = useState(null); // ✅ Track which item is e
     return (
 
         <Box className={styles.requestPageContainer}>
-            
+                                        <ProfessionalHeader />
+
             <Box className={styles.header}>
           <Typography variant="h4" className={styles.title}>{title}</Typography>
         </Box>

@@ -17,6 +17,7 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import StreamChatComponent from "../../components/client/StreamChatComponent";
 import FinishRequestComponent from "../../components/professionals/FinishRequestComponent";
 import CancelRequestComponent from "../../components/professionals/CancelRequestComponent";
+import ProfessionalHeader from '../../components/professionals/ProfessionalHeader';
 
 import api from "../../utils/api";
 import useAuthCheck from "../../hooks/useAuthCheck";
@@ -155,6 +156,9 @@ const ProfessionalRequestDetailsPage = () => {
 
   return (
     <Box className={styles.pageContainer}>
+
+<ProfessionalHeader />
+
       {/* ✅ Header Title Update */}
       <Box className={styles.header}>
         <Typography className={styles.requestNumber}>{requestDetails.id}</Typography>

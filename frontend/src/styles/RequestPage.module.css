@@ -5,7 +5,8 @@
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
-    padding: 20px 5px;
+    padding: 0 5px 20px 5px;
+
 }
 
 /* Header */
@@ -39,6 +40,8 @@
 .header{
 	text-align: center;
     width: 100%;
+	margin: 20px 10px 0 10px;
+
 }
 
 /* Request Card */
@@ -130,7 +133,6 @@ background: #ffffff;
     padding: 5px;
     background-color: #fff;
     border-radius: 50%;
-    border: 2px solid #fdbe00;
     width: 30px;
     height: 30px;
 }
