@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Drawer,
   List,
@@ -22,18 +22,20 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
+import axios from "axios";
 import styles from "../../styles/Header.module.css";
 import { useNavigate } from "react-router-dom";
 import LanguageSelectionPopup from "../../components/LanguageSelectionPopup";
 import NotificationComponent from "../../components/NotificationComponent";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
+import { API_URL } from '../../utils/constans';
 
 const ProfessionalHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
   const [showLanguagePopup, setShowLanguagePopup] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [profileImage, setProfileImage] = useState("/images/dummy-profile.jpg");
   const [isEditing, setIsEditing] = useState(false);
   const [userName, setUserName] = useState("מומחה בדוי");
@@ -43,34 +45,50 @@ const ProfessionalHeader = () => {
   const { unreadCount } = useNotifications();
   const { user } = useProfessionalAuth();
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  const handleNotificationClick = (event) => {
+    setNotificationAnchorEl(event.currentTarget);
   };
 
-  const handleNotificationClick = () => {
-    setShowNotifications((prev) => !prev);
-    setIsSidebarOpen(false);
+  const handleNotificationClose = () => {
+    setNotificationAnchorEl(null);
   };
 
-  const toggleLanguagePopup = () => {
-    setShowLanguagePopup((prev) => !prev);
-    setIsSidebarOpen(false);
-  };
+  const toggleLanguagePopup = () => setShowLanguagePopup(prev => !prev);
 
-  const handleProfileClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
 
   const handleProfileClose = () => {
-    setAnchorEl(null);
+    setProfileAnchorEl(null);
     setIsEditing(false);
   };
 
-  const handleImageChange = (e) => {
+  const fetchProfessional = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/professionals/prof-info/${user.profId}`);
+      const data = response.data;
+      setUserName(`${data.fname} ${data.lname}`);
+      setProfileImage(data.image || "/images/dummy-profile.jpg");
+    } catch (error) {
+      console.error("Error fetching professional data:", error);
+    }
+  };
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+      const formData = new FormData();
+      formData.append("image", file);
+      try {
+        const response = await axios.post(`${API_URL}/professionals/upload-image`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        const serverImageUrl = response.data.imageUrl;
+        setProfileImage(serverImageUrl);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
     }
   };
 
@@ -90,58 +108,50 @@ const ProfessionalHeader = () => {
     setIsSidebarOpen(false);
   };
 
-  const isPopoverOpen = Boolean(anchorEl);
+  useEffect(() => {
+    if (user?.profId) {
+      fetchProfessional();
+    }
+  }, [user?.profId]);
 
   return (
     <Box className={styles.stickyHeader}>
       <Box className={styles.iconContainer}>
-        <IconButton onClick={toggleSidebar} className={styles.menuIcon} sx={{ fontSize: '2.5rem' }}>
-          <MenuIcon sx={{ fontSize: '2.0rem' }}/>
+        <IconButton onClick={toggleSidebar} className={styles.menuIcon}>
+          <MenuIcon sx={{ fontSize: '2rem' }} />
         </IconButton>
 
-        <IconButton className={styles.notificationIcon} onClick={handleNotificationClick} sx={{ fontSize: '2.5rem' }}>
+        <IconButton className={styles.notificationIcon} onClick={handleNotificationClick}>
           <Badge badgeContent={unreadCount} color="error">
-            <NotificationsActiveIcon sx={{ fontSize: '1.7rem' }}  />
+            <NotificationsActiveIcon sx={{ fontSize: '1.7rem' }} />
           </Badge>
         </IconButton>
       </Box>
 
-      <IconButton  className={styles.profileIcon} onClick={handleProfileClick}>
-        <AccountCircleIcon sx={{ fontSize: '2.2rem' }}/>
+      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
+        <Avatar src={profileImage} sx={{ width: 40, height: 40 ,border: '4px solid #1A4B75 !important',
+}} />
       </IconButton>
 
       <Drawer
         anchor="left"
         open={isSidebarOpen}
-        onClose={toggleSidebar}
-        PaperProps={{
-          style: { position: "fixed" },
-        }}
+        onClose={() => setIsSidebarOpen(false)}
       >
-        <Box
-          className={styles.sidebarContainer}
-          role="presentation"
-          onClick={toggleSidebar}
-        >
+        <Box className={styles.sidebarContainer} role="presentation">
           <List>
             <ListItem button onClick={() => handleNavigate("/pro/dashboard")}>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
+              <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="דף הבית" />
             </ListItem>
 
             <ListItem button onClick={() => handleNavigate("/pro/edit-settings")}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
+              <ListItemIcon><SettingsIcon /></ListItemIcon>
               <ListItemText primary="הגדרות" />
             </ListItem>
 
             <ListItem button onClick={toggleLanguagePopup}>
-              <ListItemIcon>
-                <LanguageIcon />
-              </ListItemIcon>
+              <ListItemIcon><LanguageIcon /></ListItemIcon>
               <ListItemText primary="שפה" />
             </ListItem>
           </List>
@@ -149,8 +159,26 @@ const ProfessionalHeader = () => {
       </Drawer>
 
       <Popover
-        open={isPopoverOpen}
-        anchorEl={anchorEl}
+        open={Boolean(notificationAnchorEl)}
+        anchorEl={notificationAnchorEl}
+        onClose={handleNotificationClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Box className={styles.notificationDropdown}>
+          <NotificationComponent userId={user?.profId} userType="professional" />
+        </Box>
+      </Popover>
+
+      <Popover
+        open={Boolean(profileAnchorEl)}
+        anchorEl={profileAnchorEl}
         onClose={handleProfileClose}
         anchorOrigin={{
           vertical: "bottom",
@@ -161,61 +189,42 @@ const ProfessionalHeader = () => {
           horizontal: "right",
         }}
       >
-        <Box className={styles.profilePopover}>
-          <Avatar src={profileImage} className={styles.profileAvatarLarge} />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            style={{ display: "none" }}
-            id="upload-profile"
-          />
-          <label htmlFor="upload-profile">
-            <Button component="span" startIcon={<EditIcon />} variant="outlined" className={styles.editButton}>
-              ערוך תמונה
-            </Button>
-          </label>
+<Box className={styles.profilePopover}>
+  {/* Profile Image */}
+  <Avatar src={profileImage} className={styles.profileAvatarLarge} />
 
-          {!isEditing ? (
-            <>
-              <Typography className={styles.profileName}>{userName}</Typography>
-              <Button onClick={() => setIsEditing(true)} variant="outlined" className={styles.editButton}>
-                ערוך שם
-              </Button>
-            </>
-          ) : (
-            <>
-              <TextField
-                size="small"
-                variant="outlined"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="הכנס שם חדש"
-                className={styles.editInput}
-              />
-              <Button onClick={handleNameEdit} variant="contained" className={styles.saveButton}>
-                שמור
-              </Button>
-            </>
-          )}
+  {/* Professional Name */}
+  <Typography className={styles.profileName} sx={{ color: '#FDBE00', fontSize: '1.5rem', fontWeight: 'bold' }}>
+    {userName}
+  </Typography>
 
-          <Button onClick={handleLogout} startIcon={<LogoutIcon />} variant="contained" color="error">
-            התנתק
-          </Button>
-        </Box>
+  {/* Edit Picture */}
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageChange}
+    style={{ display: "none" }}
+    id="upload-profile"
+  />
+  <label htmlFor="upload-profile">
+    <Button component="span" startIcon={<EditIcon />} variant="outlined" className={styles.editButton}>
+      ערוך תמונה
+    </Button>
+  </label>
+
+  {/* Navigate to Edit Settings with Icon */}
+  <Button
+    variant="outlined"
+    startIcon={<SettingsIcon />}
+    className={styles.editButton}
+    onClick={() => navigate("/pro/edit-settings")}
+  >
+    ערוך הגדרות
+  </Button>
+</Box>
+
+
       </Popover>
-
-      {showNotifications && (
-        <div className={styles.notificationDropdown}>
-          <NotificationComponent userId={user?.id} userType="professional" />
-        </div>
-      )}
-
-      {showLanguagePopup && (
-        <div className={styles.languagePopup}>
-          <LanguageSelectionPopup onClose={() => setShowLanguagePopup(false)} />
-        </div>
-      )}
     </Box>
   );
 };
