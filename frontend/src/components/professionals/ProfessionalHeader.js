@@ -142,7 +142,7 @@ const ProfessionalHeader = () => {
           <List>
             <ListItem button onClick={() => handleNavigate("/pro/dashboard")}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="דף הבית" />
+              <ListItemText primary=" בית" />
             </ListItem>
 
             <ListItem button onClick={() => handleNavigate("/pro/edit-settings")}>

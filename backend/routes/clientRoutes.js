@@ -10,6 +10,7 @@ const {
     getMainProfessions,
     getSubProfessions,
     getDomains,
+    getClientInfo,
     updateSelectedProfessional,
     verifyCodeHandler,
     generateUserToken,saveClient,submitClientRequest,getClientRequests,getRequestDetails,deleteClientRequest,
@@ -27,6 +28,7 @@ router.get("/validate-rating/:requestId", tokenMiddleware, validateRatingRequest
 router.post("/rate-professional", tokenMiddleware, rateProfessional);
 router.post("/cancel-request/:requestId", tokenMiddleware, cancelRequest);
 
+router.get("/client-info/:clientId",  getClientInfo);
 
 //
 router.post('/ai/suggest', search);

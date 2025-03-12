@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Drawer,
   List,
@@ -12,22 +12,22 @@ import {
   Popover,
   Typography,
   Button,
-  TextField,
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import LanguageIcon from '@mui/icons-material/Language';
 import HomeIcon from '@mui/icons-material/Home';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import SettingsIcon from '@mui/icons-material/Settings';
 import EditIcon from '@mui/icons-material/Edit';
-import LogoutIcon from '@mui/icons-material/Logout';
+import axios from "axios";
 import styles from "../../styles/client/Header.module.css";
 import { useNavigate } from "react-router-dom";
 import LanguageSelector from "../../components/LanguageSelectionPopup";
 import NotificationComponent from "../../components/NotificationComponent";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useClientAuth } from '../../ClientProtectedRoute';
+import { API_URL } from '../../utils/constans';
 
 const ClientHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -35,60 +35,38 @@ const ClientHeader = () => {
   const [showLanguagePopup, setShowLanguagePopup] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [profileImage, setProfileImage] = useState("/images/dummy-profile.jpg");
-  const [isEditing, setIsEditing] = useState(false);
   const [userName, setUserName] = useState("לקוח בדוי");
-  const [newName, setNewName] = useState("");
 
   const navigate = useNavigate();
   const { unreadCount } = useNotifications();
   const { user } = useClientAuth();
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const handleNotificationClick = () => setShowNotifications((prev) => !prev);
+  const toggleLanguagePopup = () => setShowLanguagePopup((prev) => !prev);
+  const handleProfileClick = (event) => setAnchorEl(event.currentTarget);
+  const handleProfileClose = () => setAnchorEl(null);
 
   const handleNavigate = (path) => {
     navigate(path);
     setIsSidebarOpen(false);
   };
 
-  const handleNotificationClick = () => {
-    setShowNotifications((prev) => !prev);
-    setIsSidebarOpen(false);
-  };
-
-  const toggleLanguagePopup = () => {
-    setShowLanguagePopup((prev) => !prev);
-    setIsSidebarOpen(false);
-  };
-
-  const handleProfileClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileClose = () => {
-    setAnchorEl(null);
-    setIsEditing(false);
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+  const fetchClientInfo = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/client-info/${user.id}`);
+      const data = response.data;
+      setUserName(data.fullName || "לקוח ");
+    } catch (error) {
+      console.error("Error fetching client data:", error);
     }
   };
 
-  const handleNameEdit = () => {
-    if (newName.trim()) {
-      setUserName(newName);
-      setIsEditing(false);
+  useEffect(() => {
+    if (user?.id) {
+      fetchClientInfo();
     }
-  };
-
-  const handleLogout = () => {
-    console.log("User logged out!");
-  };
+  }, [user?.id]);
 
   const isPopoverOpen = Boolean(anchorEl);
 
@@ -96,7 +74,7 @@ const ClientHeader = () => {
     <Box className={styles.stickyHeader}>
       <Box className={styles.iconContainer}>
         <IconButton onClick={toggleSidebar} className={styles.menuIcon} sx={{ fontSize: '2.5rem' }}>
-          <MenuIcon sx={{ fontSize: '2.0rem' }}/>
+          <MenuIcon sx={{ fontSize: '2.0rem' }} />
         </IconButton>
 
         <IconButton className={styles.notificationIcon} onClick={handleNotificationClick} sx={{ fontSize: '2.5rem' }}>
@@ -107,34 +85,31 @@ const ClientHeader = () => {
       </Box>
 
       <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
-        <AccountCircleIcon sx={{ fontSize: '2.2rem' }} />
+        <Avatar 
+          src={profileImage} 
+          sx={{ 
+            width: 40, 
+            height: 40, 
+            border: '4px solid #1A4B75 !important' 
+          }} 
+        />
       </IconButton>
 
-      <Drawer
-        anchor="left"
-        open={isSidebarOpen}
-        onClose={toggleSidebar}
-      >
+      <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
         <Box className={styles.sidebarContainer} role="presentation">
           <List>
-            <ListItem button onClick={() => handleNavigate("/dashboard")}>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
+            <ListItem button onClick={() => handleNavigate("/dashboard")}> 
+              <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="בית" />
             </ListItem>
 
-            <ListItem button onClick={() => handleNavigate("/main")}>
-              <ListItemIcon>
-                <AddCircleOutlineIcon />
-              </ListItemIcon>
+            <ListItem button onClick={() => handleNavigate("/main")}> 
+              <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
               <ListItemText primary="פתח קריאה חדשה" />
             </ListItem>
 
-            <ListItem button onClick={toggleLanguagePopup}>
-              <ListItemIcon>
-                <LanguageIcon />
-              </ListItemIcon>
+            <ListItem button onClick={toggleLanguagePopup}> 
+              <ListItemIcon><LanguageIcon /></ListItemIcon>
               <ListItemText primary="שפה" />
             </ListItem>
           </List>
@@ -155,48 +130,24 @@ const ClientHeader = () => {
         }}
       >
         <Box className={styles.profilePopover}>
-          <Avatar
-            src={profileImage}
-            className={styles.profileAvatarLarge}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            style={{ display: "none" }}
-            id="upload-profile"
-          />
-          <label htmlFor="upload-profile">
-            <Button component="span" startIcon={<EditIcon />} variant="outlined" className={styles.editButton}>
-              ערוך תמונה
-            </Button>
-          </label>
+          <Avatar src={profileImage} className={styles.profileAvatarLarge} />
+          <Typography className={styles.profileName}>{userName}</Typography>
 
-          {!isEditing ? (
-            <>
-              <Typography className={styles.profileName}>{userName}</Typography>
-              <Button onClick={() => setIsEditing(true)} variant="outlined" className={styles.editButton}>
-                ערוך שם
-              </Button>
-            </>
-          ) : (
-            <>
-              <TextField
-                size="small"
-                variant="outlined"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="הכנס שם חדש"
-                className={styles.editInput}
-              />
-              <Button onClick={handleNameEdit} variant="contained" className={styles.saveButton}>
-                שמור
-              </Button>
-            </>
-          )}
+          <Button
+            variant="outlined"
+            startIcon={<EditIcon />}
+            className={styles.editButton}
+          >
+            ערוך תמונה
+          </Button>
 
-          <Button onClick={handleLogout} startIcon={<LogoutIcon />} variant="contained" color="error">
-            התנתק
+          <Button
+            variant="outlined"
+            startIcon={<SettingsIcon />}
+            onClick={() => navigate("/edit-settings")}
+            className={styles.editButton}
+          >
+            ערוך הגדרות
           </Button>
         </Box>
       </Popover>

@@ -552,7 +552,27 @@ exports.search = async (req, res) => {
 
 
 
-
+exports.getClientInfo = async (req, res) => {
+    try {
+      const { clientId } = req.params;
+  
+      const client = await Client.findByPk(clientId);
+  
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+  
+      res.json({
+        id: client.id,
+        fullName: client.fullName || "לקוח בדוי",
+        phoneNumber: client.phoneNumber,
+        isVerified: client.isVerified,
+      });
+    } catch (error) {
+      console.error("Error fetching client info:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
 
 exports.getDomains = async (req, res) => {
     const lang = req.params.lang || 'he'; // Get language from params, default to Hebrew if not provided
