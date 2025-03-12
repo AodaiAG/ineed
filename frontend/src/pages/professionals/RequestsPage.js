@@ -238,7 +238,7 @@ const [expandedId, setExpandedId] = useState(null); // ✅ Track which item is e
     ))
   ) : (
     <Box className={styles.noRequestsMessage}>
-      <Typography variant="h6" color="red">
+      <Typography variant="h6" color="white">
         אין בקשות
       </Typography>
     </Box>

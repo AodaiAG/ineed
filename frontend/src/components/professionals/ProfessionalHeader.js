@@ -95,19 +95,19 @@ const ProfessionalHeader = () => {
   return (
     <Box className={styles.stickyHeader}>
       <Box className={styles.iconContainer}>
-        <IconButton onClick={toggleSidebar} className={styles.menuIcon}>
-          <MenuIcon />
+        <IconButton onClick={toggleSidebar} className={styles.menuIcon} sx={{ fontSize: '2.5rem' }}>
+          <MenuIcon sx={{ fontSize: '2.0rem' }}/>
         </IconButton>
 
-        <IconButton className={styles.notificationIcon} onClick={handleNotificationClick}>
+        <IconButton className={styles.notificationIcon} onClick={handleNotificationClick} sx={{ fontSize: '2.5rem' }}>
           <Badge badgeContent={unreadCount} color="error">
-            <NotificationsActiveIcon />
+            <NotificationsActiveIcon sx={{ fontSize: '1.7rem' }}  />
           </Badge>
         </IconButton>
       </Box>
 
-      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
-        <AccountCircleIcon />
+      <IconButton  className={styles.profileIcon} onClick={handleProfileClick}>
+        <AccountCircleIcon sx={{ fontSize: '2.2rem' }}/>
       </IconButton>
 
       <Drawer

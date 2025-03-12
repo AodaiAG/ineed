@@ -171,7 +171,7 @@ const RequestList = ({ title, requestType}) => {
               textAlign: "center",
             }}
           >
-            <Typography variant="h6" color="red">
+            <Typography variant="h6" color="white">
               אין בקשות
             </Typography>
           </Box>

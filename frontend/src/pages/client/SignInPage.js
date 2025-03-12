@@ -60,91 +60,97 @@ const SignInPage = () => {
     }
   };
   
-
   return (
     <Box className={styles.container}>
-      {/* Title */}
-      <Typography variant="h3" className={styles.mainTitle}>
-        I Need
-      </Typography>
-
-      {/* Subtitle */}
-      <Typography variant="h6" className={styles.subtitle}>
-        כל המומחים במקום אחד
-      </Typography>
-
-      {/* Sign-In Prompt */}
-      <Typography variant="h5" className={styles.signInText}>
-        כניסה למערכת
-      </Typography>
-
-      {/* Phone Number Input Section */}
-      <Typography variant="subtitle1" className={styles.phonePrompt}>
-        הכנס את מספר הטלפון שלך:
-      </Typography>
-
-      <Box className={styles.inputContainer}>
-        {/* Country Code Select */}
-        <Select
-          value={countryCode}
-          onChange={handleCountryCodeChange}
-          className={styles.countryCodeSelect}
+      <section className={styles.mainSection}>
+        {/* Main Title */}
+        <Typography variant="h3" className={styles.mainTitle}>
+          I Need
+        </Typography>
+  
+        {/* Subtitle */}
+        <Typography variant="h6" className={styles.subtitle}>
+          כל המומחים במקום אחד
+        </Typography>
+  
+        {/* Enter Title */}
+        <Typography variant="h5" className={styles.enterTitle}>
+          כניסה למערכת
+        </Typography>
+  
+        {/* Phone Input Section */}
+        <Box className={styles.phoneInputSection}>
+          {/* Country Code Select */}
+          <Select
+            value={countryCode}
+            onChange={handleCountryCodeChange}
+            className={styles.countryCodeSelect}
+          >
+            <MenuItem value="050">050</MenuItem>
+            <MenuItem value="051">051</MenuItem>
+            <MenuItem value="052">052</MenuItem>
+            <MenuItem value="053">053</MenuItem>
+            <MenuItem value="054">054</MenuItem>
+            <MenuItem value="055">055</MenuItem>
+            <MenuItem value="056">056</MenuItem>
+            <MenuItem value="057">057</MenuItem>
+            <MenuItem value="058">058</MenuItem>
+            <MenuItem value="059">059</MenuItem>
+          </Select>
+  
+          {/* Phone Number Input */}
+          <TextField
+            type="text"
+            value={phoneNumber}
+            onChange={handlePhoneNumberChange}
+            placeholder="123 4567"
+            className={styles.phoneNumberInput}
+            inputProps={{
+              maxLength: 7,
+              minLength: 7,
+              pattern: "[0-9]{7}",
+            }}
+          />
+        </Box>
+  
+        {/* Terms Agreement */}
+        <Typography variant="body2" className={styles.termsText}>
+          בלחיצה על המשך אני מסכים{" "}
+          <a
+            href="https://i-need.co.il/lic/eula.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.termsLink}
+          >
+            לתנאים
+          </a>
+        </Typography>
+      </section>
+  
+      <div className={styles.spacer}></div>
+  
+      <section className={styles.illustrationSection}>
+        {/* Worker Image */}
+        <Box className={styles.workerImageContainer}>
+          <img
+            src="/images/home.png"
+            alt="Worker"
+            className={styles.workerImage}
+          />
+        </Box>
+  
+        {/* Sign-In Button */}
+        <Button
+          variant="contained"
+          className={styles.enterButton}
+          onClick={handleSignIn}
+          disabled={isSending}
         >
-<MenuItem value="050">050</MenuItem>
-<MenuItem value="051">051</MenuItem>
-<MenuItem value="052">052</MenuItem>
-<MenuItem value="053">053</MenuItem>
-<MenuItem value="054">054</MenuItem>
-<MenuItem value="055">055</MenuItem>
-<MenuItem value="056">056</MenuItem>
-<MenuItem value="057">057</MenuItem>
-<MenuItem value="058">058</MenuItem>
-<MenuItem value="059">059</MenuItem>
-
-        </Select>
-
-        {/* Phone Number Input */}
-        <TextField
-  type="text"
-  value={phoneNumber}
-  onChange={handlePhoneNumberChange}
-  placeholder="123 4567"
-  className={styles.phoneNumberInput}
-  inputProps={{
-    maxLength: 7,
-    minLength: 7,
-    pattern: "[0-9]{7}",
-  }}
-/>
-
-      </Box>
-
-      {/* Terms Agreement */}
-      <Typography variant="body2" className={styles.termsText}>
-        בלחיצה על המשך אני מסכים <span className={styles.termsLink}>לתנאים</span>
-      </Typography>
-       {/* Worker Image */}
-       <Box className={styles.workerImageContainer}>
-        <img
-          src="/images/home.png"
-          alt="Worker"
-          className={styles.workerImage}
-        />
-      </Box>
-
-      {/* Sign-In Button */}
-      <Button
-        variant="contained"
-        className={styles.signInButton}
-        onClick={handleSignIn}
-        disabled={isSending}
-      >
-        {isSending ? "שולח..." : "כניסה"}
-      </Button>
-
-     
+          {isSending ? "שולח..." : "כניסה"}
+        </Button>
+      </section>
     </Box>
   );
-};
+}  
 
 export default SignInPage;

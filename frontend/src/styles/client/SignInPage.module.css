@@ -1,82 +1,133 @@
+/* Main Container */
 .container {
   background-color: #2196f3 !important;
   color: white !important;
-  min-height: 100vh !important;
-  padding: 40px !important;
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-width: 325px !important;
+  height: 100% !important;
+  position: relative !important;
+  width: 100% !important;
+
+  margin: 0 auto !important;
+  overflow: hidden !important;
+}
+
+/* Main Section */
+.mainSection {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  text-align: center !important;
 }
 
+/* Main Title */
 .mainTitle {
-  font-size: 2.5rem !important;
-  font-weight: bold !important;
-  margin-bottom: 10px !important;
+  font-size: clamp(1rem, 17vw, 4.0rem) !important;
+  font-weight: 500 !important;
+  margin: 10px 0 !important;
 }
 
+/* Subtitle */
 .subtitle {
   font-size: 1.5rem !important;
   margin-bottom: 30px !important;
 }
 
-.signInText {
+/* Enter Title */
+.enterTitle {
   font-size: 2rem !important;
   margin-bottom: 20px !important;
 }
 
-.phonePrompt {
-  font-size: 1rem !important;
-  margin-bottom: 10px !important;
-}
-
-.inputContainer {
+/* Phone Input Section */
+.phoneInputSection {
   display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
   gap: 10px !important;
+  align-items: center !important;
+  justify-content: center !important;
   margin-bottom: 20px !important;
 }
 
+/* Country Code Select */
 .countryCodeSelect {
   background-color: white !important;
   color: black !important;
   width: 80px !important;
   height: 50px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  outline: none !important;
 }
 
+/* Phone Number Input */
 .phoneNumberInput {
   background-color: white !important;
   color: black !important;
-  width: 150px !important;
+  display: flex !important;
+  gap: 10px !important;
+  outline: none !important;
+    border-radius: 8px !important;
+  border: none !important;
   height: 50px !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
+/* Terms Agreement Text */
 .termsText {
-  font-size: 0.8rem !important;
+    font-size: 0.9rem;
+    margin: 5px 0;
+    color: #fff;
+}
+
+/* Terms Link */
+.termsLink {
+color: #fdbe00;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Illustration Section */
+.illustrationSection {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+      margin-bottom: 10px;
+}
+
+/* Worker Image Container */
+.workerImageContainer {
+  margin-top: 30px !important;
   margin-bottom: 20px !important;
 }
 
-.termsLink {
-  color: #ffcc00 !important;
-  cursor: pointer !important;
-  text-decoration: underline !important;
-}
-
-.signInButton {
-  background-color: #ffcc00 !important;
-  color: black !important;
-  font-size: 1.2rem !important;
-  width: 200px !important;
-  height: 50px !important;
-}
-
-.workerImageContainer {
-  margin-top: 30px !important;
-  margin-bottom: 30px;
-}
-
+/* Worker Image */
 .workerImage {
-  width: 100px !important;
-  height: auto !important;
+  width: 165px !important;
+}
+
+/* Sign-In (Enter) Button */
+.enterButton {
+  background-color: #fdbe00 !important;
+  color: white !important;
+  font-size: 1.6rem !important;
+  border: none !important;
+  padding: 5px !important;
+  cursor: pointer !important;
+  border-radius: 14px !important;
+  margin: 5px auto !important;
+  width: 100% !important;
+
+  transition: background-color 0.3s !important;
+  max-width: 300px !important;
+}
+
+.enterButton:hover {
+  background-color: #fbbf00 !important;
+}
+
+/* Spacer */
+.spacer {
+  flex-grow: 1 !important;
 }
