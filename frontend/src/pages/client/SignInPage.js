@@ -100,17 +100,21 @@ const SignInPage = () => {
   
           {/* Phone Number Input */}
           <TextField
-            type="text"
-            value={phoneNumber}
-            onChange={handlePhoneNumberChange}
-            placeholder="123 4567"
-            className={styles.phoneNumberInput}
-            inputProps={{
-              maxLength: 7,
-              minLength: 7,
-              pattern: "[0-9]{7}",
-            }}
-          />
+  type="text"
+  value={phoneNumber}
+  onChange={handlePhoneNumberChange}
+  onInput={(e) => {
+    e.target.value = e.target.value.replace(/[^0-9]/g, "");
+  }}
+  placeholder="123 4567"
+  className={styles.phoneNumberInput}
+  inputProps={{
+    maxLength: 7,
+    minLength: 7,
+    pattern: "[0-9]{7}",
+  }}
+/>
+
         </Box>
   
         {/* Terms Agreement */}
