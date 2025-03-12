@@ -145,6 +145,10 @@ const SignInPage = () => {
           className={styles.enterButton}
           onClick={handleSignIn}
           disabled={isSending}
+          sx={{
+            borderRadius: "14px", // Apply border-radius
+            fontSize: "1.6rem", // Medium font size
+          }}
         >
           {isSending ? "שולח..." : "כניסה"}
         </Button>

@@ -109,18 +109,9 @@ color: #fdbe00;
 
 /* Sign-In (Enter) Button */
 .enterButton {
-  background-color: #fdbe00 !important;
-  color: white !important;
-  font-size: 1.6rem !important;
-  border: none !important;
-  padding: 5px !important;
-  cursor: pointer !important;
-  border-radius: 14px !important;
-  margin: 5px auto !important;
-  width: 100% !important;
-
-  transition: background-color 0.3s !important;
-  max-width: 300px !important;
+font-weight: bold;
+    background-color: #fdbe00 !important;
+    width: 300px !important;
 }
 
 .enterButton:hover {
