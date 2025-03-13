@@ -46,6 +46,7 @@ display: flex;
     width: 100%;
     margin: 10px auto;
     background-color: transparent;
+	background: linear-gradient(194deg, #000000, #796e6e) !important;
     position: relative;
     overflow: hidden;
     padding: 10px;

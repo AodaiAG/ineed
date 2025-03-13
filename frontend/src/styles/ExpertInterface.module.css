@@ -13,6 +13,7 @@
   width: 100%;
   
   background-color: transparent;
+  background: linear-gradient(194deg, #000000, #796e6e) !important;
   position: relative;
   	    overflow: hidden; /* Prevent scroll if extra space appears */
 		justify-content: space-between;

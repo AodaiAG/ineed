@@ -27,6 +27,7 @@
     align-items: center;
     width: 100%;
     margin: 10px auto;
+	background: linear-gradient(194deg, #000000, #796e6e) !important;
     background-color: transparent;
     position: relative;
     overflow: hidden;

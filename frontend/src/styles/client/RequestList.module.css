@@ -12,8 +12,12 @@
 
 /* Header */
 .header {
-  text-align: center;
-  width: 100%;
+    text-align: center;
+    display: flex
+;
+    width: 100%;
+    /* align-items: stretch; */
+    justify-content: center;
 }
 
 .title {
@@ -23,7 +27,8 @@
   background: #1A4B75;
   border: 3px solid #ffffff;
   border-radius: 14px;
-  padding: 12px;
+  padding: 6px;
+    width: 85%;
   text-align: center;
 }
 

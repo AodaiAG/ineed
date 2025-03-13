@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: flex-start;
     min-height: 100vh;
-    padding: 0 5px 20px 5px;
+background: linear-gradient(194deg, #000000, #796e6e) !important;
 
 }
 
@@ -35,6 +35,7 @@
     overflow-y: auto;
     width: 100%;
     max-width: 400px;
+	    padding: 0 5px 0px 5px;
     display: flex
 ;
     flex-direction: column;
@@ -43,9 +44,12 @@
 }
 
 .header{
-	text-align: center;
+    text-align: center;
     width: 100%;
-	margin: 20px 10px 0 10px;
+    display: flex
+;
+    margin: 20px 10px 0 10px;
+    justify-content: center;
 
 }
 
@@ -106,7 +110,8 @@ background: #ffffff;
     background: #1A4B75;
     border: 3px solid #ffffff;
     border-radius: 14px;
-    padding: 12px;
+	width: 84%;
+    padding: 6px;
     text-align: center;
 
 }
@@ -190,13 +195,14 @@ display: flex
 
 /* Back Button */
 .backButton {
-    background-color: #FFC107 !important;
-    color: black !important;
+    background-color: #000000 !important;
+    color: white !important;
     font-size: 18px !important;
     padding: 10px 40px !important;
     border-radius: 10px !important;
     margin-top: 20px !important;
     cursor: pointer;
+	    margin-bottom: 10px !important;
     transition: transform 0.2s ease;
 }
 

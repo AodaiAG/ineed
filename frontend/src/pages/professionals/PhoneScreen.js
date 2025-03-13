@@ -47,7 +47,6 @@ function PhoneScreen() {
           message: translation.verificationCodeMessage + " {code}",
         });
   
-        showMessage(translation.smsSentSuccessfully || "הודעת SMS נשלחה בהצלחה!", "success"); // ✅ Success message
         navigate("/pro/sms-verification");
       } catch (error) {
         console.error("Failed to send SMS:", error);

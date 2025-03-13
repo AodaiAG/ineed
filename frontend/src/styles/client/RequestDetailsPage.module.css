@@ -12,15 +12,17 @@
 
 /* Header */
 .headerContainer {
-    width: 90%;
-    background-color: #1A4B75; /* ✅ Dark blue header */
+width: 90%;
+    background-color: #1A4B75;
     color: white;
     text-align: center;
-    padding: 15px;
+    padding: 8px;
     border-radius: 14px;
     font-size: 20px;
+	width: 84%;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 22px;
+
     border: 3px solid white;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
@@ -404,6 +406,7 @@ width: 90%;
     justify-content: space-between !important;
     align-items: center !important;
     width: 100% !important;
+	
     background: red !important;
     border-radius: 10px !important;
     padding: 10px 15px !important;
@@ -617,7 +620,7 @@ width: 92% !important;
 
 
 .headerTitle{
-	font-size: 1.5rem !important;
+	font-size: 26px !important;
 }
 
 

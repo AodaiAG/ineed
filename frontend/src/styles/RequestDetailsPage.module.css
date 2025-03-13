@@ -5,6 +5,7 @@
   align-items: center !important;
   justify-content: flex-start !important;
   background-color: black !important;
+    background: linear-gradient(194deg, #000000, #796e6e) !important;
   min-height: 100vh !important;
   box-sizing: border-box !important;
   position: relative !important; /* Needed for absolute positioning of the cancel button */
@@ -13,7 +14,7 @@
 /* ביטול Button (Top Left Corner) */
 .cancelButton {
   position: absolute !important;
-  top: 20px !important;
+  top: 70px !important;
   left: 20px !important;
   background-color: red !important;
   color: white !important;
@@ -174,15 +175,15 @@
 
 .backButton,
 .finalizeButton {
-background-color: #FDD500 !important;
-    color: black !important;
+background-color: #000000 !important;
+    color: white !important;
     font-size: 18px !important;
     padding: 10px 40px !important;
-    white-space: nowrap;
-    overflow: hidden;
     border-radius: 10px !important;
-    min-width: 91px !important;
-    text-align: center !important;
+    margin-top: 20px !important;
+    cursor: pointer;
+    margin-bottom: 10px !important;
+    transition: transform 0.2sease;
 }
 .quotationSection {
   width: 100% !important;
