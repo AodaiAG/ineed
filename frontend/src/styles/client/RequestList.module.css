@@ -162,7 +162,8 @@ display: flex
 /* Footer */
 .footer {
   width: 100%;
-  padding: 12px 16px;
+ padding: 12px 16px 0 16px;
+
   display: flex;
   justify-content: center;
   border-top: 3px solid #fdbe00;
