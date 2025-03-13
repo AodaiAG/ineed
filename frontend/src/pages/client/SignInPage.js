@@ -100,7 +100,8 @@ const SignInPage = () => {
   
           {/* Phone Number Input */}
           <TextField
-  type="text"
+            type="tel" 
+ 
   value={phoneNumber}
   onChange={handlePhoneNumberChange}
   onInput={(e) => {

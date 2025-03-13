@@ -140,7 +140,7 @@ const ProfessionalHeader = () => {
       >
         <Box className={styles.sidebarContainer} role="presentation">
           <List>
-            <ListItem button onClick={() => handleNavigate("/pro/dashboard")}>
+            <ListItem button onClick={() => handleNavigate("/pro/expert-interface")}>
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary=" בית" />
             </ListItem>

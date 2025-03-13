@@ -78,12 +78,13 @@ position: absolute;
 
 /* Profile Popover */
 .profilePopover {
-    padding: 24px !important;
-    display: flex !important;
+padding: 24px !important;
+    display: flex !important
+;
     flex-direction: column !important;
     align-items: center !important;
     gap: 18px !important;
-    width: 30px !important;
+    width: 300px !important;
     background-color: #FFFFFF !important;
     border-radius: 18px !important;
     box-shadow: 0px 6px 24px rgba(0, 0, 0, 0.15) !important;

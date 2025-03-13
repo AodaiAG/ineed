@@ -5,6 +5,8 @@
 src/utils/constans.js
 
 /frontend/build/
+/frontend/lic/
+
 .env
 /backend/.env
 frontend/src/utils/constans.js
