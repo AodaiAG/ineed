@@ -34,6 +34,10 @@ width: 100% !important;
     transform: scale(0.8);
 }
 
+.customNotificationPopover {
+  position: absolute !important;
+  top: -71px !important;
+}
 
 
 .notificationDropdown, .languagePopup {

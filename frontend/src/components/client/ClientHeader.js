@@ -31,9 +31,9 @@ import { API_URL } from '../../utils/constans';
 
 const ClientHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
   const [showLanguagePopup, setShowLanguagePopup] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [profileImage, setProfileImage] = useState("/images/dummy-profile.jpg");
   const [userName, setUserName] = useState("לקוח בדוי");
 
@@ -42,10 +42,19 @@ const ClientHeader = () => {
   const { user } = useClientAuth();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  const handleNotificationClick = () => setShowNotifications((prev) => !prev);
+  
+  const handleNotificationClick = (event) => {
+    setNotificationAnchorEl(event.currentTarget);
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationAnchorEl(null);
+  };
+
   const toggleLanguagePopup = () => setShowLanguagePopup((prev) => !prev);
-  const handleProfileClick = (event) => setAnchorEl(event.currentTarget);
-  const handleProfileClose = () => setAnchorEl(null);
+
+  const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
+  const handleProfileClose = () => setProfileAnchorEl(null);
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -68,8 +77,6 @@ const ClientHeader = () => {
     }
   }, [user?.id]);
 
-  const isPopoverOpen = Boolean(anchorEl);
-
   return (
     <Box className={styles.stickyHeader}>
       <Box className={styles.iconContainer}>
@@ -84,6 +91,29 @@ const ClientHeader = () => {
         </IconButton>
       </Box>
 
+      <Popover
+        open={Boolean(notificationAnchorEl)}
+        anchorEl={notificationAnchorEl}
+        onClose={handleNotificationClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        PaperProps={{
+          className: styles.customNotificationPopover,
+        }}
+        
+
+      >
+        <Box className={styles.notificationDropdown}>
+          <NotificationComponent userId={user?.id} userType="client" />
+        </Box>
+      </Popover>
+
       <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
         <Avatar 
           src={profileImage} 
@@ -95,30 +125,9 @@ const ClientHeader = () => {
         />
       </IconButton>
 
-      <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
-        <Box className={styles.sidebarContainer} role="presentation">
-          <List>
-            <ListItem button onClick={() => handleNavigate("/dashboard")}> 
-              <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary="בית" />
-            </ListItem>
-
-            <ListItem button onClick={() => handleNavigate("/main")}> 
-              <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
-              <ListItemText primary="פתח קריאה חדשה" />
-            </ListItem>
-
-            <ListItem button onClick={toggleLanguagePopup}> 
-              <ListItemIcon><LanguageIcon /></ListItemIcon>
-              <ListItemText primary="שפה" />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
-
       <Popover
-        open={isPopoverOpen}
-        anchorEl={anchorEl}
+        open={Boolean(profileAnchorEl)}
+        anchorEl={profileAnchorEl}
         onClose={handleProfileClose}
         anchorOrigin={{
           vertical: "bottom",
@@ -152,11 +161,26 @@ const ClientHeader = () => {
         </Box>
       </Popover>
 
-      {showNotifications && (
-        <div className={styles.notificationDropdown}>
-          <NotificationComponent userId={user?.id} userType="client" />
-        </div>
-      )}
+      <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
+        <Box className={styles.sidebarContainer} role="presentation">
+          <List>
+            <ListItem button onClick={() => handleNavigate("/dashboard")}>
+              <ListItemIcon><HomeIcon /></ListItemIcon>
+              <ListItemText primary="בית" />
+            </ListItem>
+
+            <ListItem button onClick={() => handleNavigate("/main")}>
+              <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
+              <ListItemText primary="פתח קריאה חדשה" />
+            </ListItem>
+
+            <ListItem button onClick={toggleLanguagePopup}>
+              <ListItemIcon><LanguageIcon /></ListItemIcon>
+              <ListItemText primary="שפה" />
+            </ListItem>
+          </List>
+        </Box>
+      </Drawer>
 
       {showLanguagePopup && (
         <div className={styles.languagePopup}>

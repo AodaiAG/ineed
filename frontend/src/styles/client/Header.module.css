@@ -18,6 +18,11 @@ padding: 0px 0px 0px 10px !important;
     gap: 16px !important;
 	margin-top: 5px;
 }
+.customNotificationPopover {
+  position: absolute !important;
+  top: -71px !important;
+}
+
 
 /* Sidebar Styling */
 .sidebarContainer {
@@ -62,10 +67,12 @@ width: 212px !important;
 .notificationDropdown, .languagePopup {
 position: absolute;
     top: 60px;
-    left: 50%; /* Position from the center */
-    transform: translateX(-50%); /* Center the element */
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
     background: #676767;
-    box-shadow: 3px 36px 92px #000000;
+    box-shadow: 3px 36px 92px #978989;
     border-radius: 8px;
     border-radius: 12px;
     width: 300px;

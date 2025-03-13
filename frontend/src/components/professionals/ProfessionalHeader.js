@@ -170,6 +170,9 @@ const ProfessionalHeader = () => {
           vertical: "top",
           horizontal: "right",
         }}
+        PaperProps={{
+          className: styles.customNotificationPopover,
+        }}
       >
         <Box className={styles.notificationDropdown}>
           <NotificationComponent userId={user?.profId} userType="professional" />
