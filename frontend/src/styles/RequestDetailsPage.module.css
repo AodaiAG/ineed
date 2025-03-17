@@ -82,7 +82,7 @@
 .chatContainer {
   width: 100% !important;
   max-width: 800px !important;
-  height: 400px !important;
+  height: 486px !important;
   overflow-y: auto !important;
   border: 1px solid #ddd !important;
   border-radius: 8px !important;
@@ -131,7 +131,8 @@
   color: black !important;
   font-size: 18px !important;
   font-weight: bold !important;
-  padding: 10px !important;
+  border-radius: 8px !important;
+    border: 3px solid #1A4B75 !important;
   border-radius: 14px !important;
   cursor: pointer !important;
   display: flex !important;
