@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Drawer,
   List,
@@ -18,43 +18,44 @@ import LanguageIcon from '@mui/icons-material/Language';
 import HomeIcon from '@mui/icons-material/Home';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import ChatIcon from '@mui/icons-material/Chat';
 import SettingsIcon from '@mui/icons-material/Settings';
 import EditIcon from '@mui/icons-material/Edit';
-import axios from "axios";
+import api from "../../utils/clientApi";
 import styles from "../../styles/client/Header.module.css";
 import { useNavigate } from "react-router-dom";
 import LanguageSelector from "../../components/LanguageSelectionPopup";
 import NotificationComponent from "../../components/NotificationComponent";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useClientAuth } from '../../ClientProtectedRoute';
-import { API_URL } from '../../utils/constans';
+import fetchUnreadMessages from '../../utils/fetchUnreadMessages';
 
 const ClientHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [chatAnchorEl, setChatAnchorEl] = useState(null);
   const [profileAnchorEl, setProfileAnchorEl] = useState(null);
   const [showLanguagePopup, setShowLanguagePopup] = useState(false);
   const [profileImage, setProfileImage] = useState("/images/dummy-profile.jpg");
   const [userName, setUserName] = useState("לקוח בדוי");
+  const [unreadChats, setUnreadChats] = useState([]);
 
   const navigate = useNavigate();
   const { unreadCount } = useNotifications();
   const { user } = useClientAuth();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
-  
-  const handleNotificationClick = (event) => {
-    setNotificationAnchorEl(event.currentTarget);
-  };
 
-  const handleNotificationClose = () => {
-    setNotificationAnchorEl(null);
-  };
+  const handleNotificationClick = (event) => setNotificationAnchorEl(event.currentTarget);
+  const handleNotificationClose = () => setNotificationAnchorEl(null);
 
-  const toggleLanguagePopup = () => setShowLanguagePopup((prev) => !prev);
+  const handleChatClick = (event) => setChatAnchorEl(event.currentTarget);
+  const handleChatClose = () => setChatAnchorEl(null);
 
   const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
   const handleProfileClose = () => setProfileAnchorEl(null);
+
+  const toggleLanguagePopup = () => setShowLanguagePopup((prev) => !prev);
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -63,7 +64,7 @@ const ClientHeader = () => {
 
   const fetchClientInfo = async () => {
     try {
-      const response = await axios.get(`${API_URL}/client-info/${user.id}`);
+      const response = await api.get(`/api/client-info/${user.id}`);
       const data = response.data;
       setUserName(data.fullName || "לקוח ");
     } catch (error) {
@@ -71,11 +72,47 @@ const ClientHeader = () => {
     }
   };
 
+  const fetchUnreadChats = async () => {
+    if (!user?.id) return;
+
+    try {
+      const response = await api.get(`/api/my_requests?type=open`);
+      const fetchedRequests = response.data?.data || [];
+
+      if (!fetchedRequests.length) {
+        setUnreadChats([]);
+        return;
+      }
+
+      const requestIds = fetchedRequests.map(req => req.id);
+
+      const unreadCounts = await fetchUnreadMessages(
+        user.id,
+        sessionStorage.getItem("clientChatToken"),
+        requestIds
+      );
+
+      const unread = Object.entries(unreadCounts)
+        .filter(([_, count]) => count > 0)
+        .map(([id, count]) => ({ id, count }));
+
+      setUnreadChats(unread);
+    } catch (error) {
+      console.error("Error fetching unread chats:", error);
+    }
+  };
+
   useEffect(() => {
     if (user?.id) {
       fetchClientInfo();
+      fetchUnreadChats();
+
+      const interval = setInterval(fetchUnreadChats, 30000);
+      return () => clearInterval(interval);
     }
   }, [user?.id]);
+
+  const memoizedUnreadChats = useMemo(() => unreadChats, [unreadChats]);
 
   return (
     <Box className={styles.stickyHeader}>
@@ -89,41 +126,53 @@ const ClientHeader = () => {
             <NotificationsActiveIcon sx={{ fontSize: '1.7rem' }} />
           </Badge>
         </IconButton>
+
+        <IconButton className={styles.chatIcon} onClick={handleChatClick} sx={{ fontSize: '2.5rem' }}>
+          <Badge badgeContent={memoizedUnreadChats.length} color="error">
+            <ChatIcon sx={{ fontSize: '1.7rem' }} />
+          </Badge>
+        </IconButton>
       </Box>
+
+      <Popover
+        open={Boolean(chatAnchorEl)}
+        anchorEl={chatAnchorEl}
+        onClose={handleChatClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Box className={styles.chatDropdown}>
+          <Typography className={styles.chatDropdownHeader}>
+            הודעות שלא נקראו
+          </Typography>
+
+          {memoizedUnreadChats.length === 0 ? (
+            <Typography className={styles.emptyChatMessage}>אין הודעות חדשות</Typography>
+          ) : (
+            memoizedUnreadChats.map(chat => (
+              <Box key={chat.id} onClick={() => navigate(`/request/${chat.id}`)} className={styles.chatItem}>
+                <Typography className={styles.chatText}>בקשה #{chat.id}</Typography>
+                <span className={styles.chatCountBadge}>{chat.count}</span>
+              </Box>
+            ))
+          )}
+        </Box>
+      </Popover>
 
       <Popover
         open={Boolean(notificationAnchorEl)}
         anchorEl={notificationAnchorEl}
         onClose={handleNotificationClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
           className: styles.customNotificationPopover,
         }}
-        
-
       >
         <Box className={styles.notificationDropdown}>
           <NotificationComponent userId={user?.id} userType="client" />
         </Box>
       </Popover>
-
-      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
-        <Avatar 
-          src={profileImage} 
-          sx={{ 
-            width: 40, 
-            height: 40, 
-            border: '4px solid #1A4B75 !important' 
-          }} 
-        />
-      </IconButton>
 
       <Popover
         open={Boolean(profileAnchorEl)}
@@ -161,6 +210,10 @@ const ClientHeader = () => {
         </Box>
       </Popover>
 
+      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
+        <Avatar src={profileImage} sx={{ width: 40, height: 40, border: '4px solid #1A4B75 !important' }} />
+      </IconButton>
+
       <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
         <Box className={styles.sidebarContainer} role="presentation">
           <List>
@@ -181,12 +234,6 @@ const ClientHeader = () => {
           </List>
         </Box>
       </Drawer>
-
-      {showLanguagePopup && (
-        <div className={styles.languagePopup}>
-          <LanguageSelector onClose={() => setShowLanguagePopup(false)} />
-        </div>
-      )}
     </Box>
   );
 };

@@ -148,3 +148,80 @@ padding: 24px !important;
 .editInput::placeholder {
     color: #A0A0A0 !important;
 }
+
+/* Chat Icon with Badge */
+.chatIcon {
+  color: white !important;
+  position: relative;
+}
+
+/* Chat Dropdown Popover */
+.chatDropdown {
+  min-width: 300px;
+  max-height: 400px;
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+}
+
+/* Dropdown Header */
+.chatDropdownHeader {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1A4B75;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #1A4B75;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* Each Chat Item */
+.chatItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Last Item - Remove Bottom Margin */
+.chatItem:last-child {
+  margin-bottom: 0;
+}
+
+/* Hover Effect for Chat Item */
+.chatItem:hover {
+  background-color: #e0eaff;
+  transform: translateY(-2px);
+}
+
+/* Chat Text */
+.chatText {
+  font-size: 14px;
+  color: #1A4B75;
+  font-weight: 500;
+}
+
+/* Chat Count Badge */
+.chatCountBadge {
+  background-color: #f44336;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* Empty Chat Message */
+.emptyChatMessage {
+  font-size: 14px;
+  color: #999;
+  padding: 20px;
+  text-align: center;
+}
