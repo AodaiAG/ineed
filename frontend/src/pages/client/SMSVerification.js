@@ -72,77 +72,81 @@ const SMSVerification = () => {
           code,
         });
   
-        if (response.data.success) 
-          {
-
-            
-          if(response.data.data.registered)
-          {
-            console.log(response.data)            // ✅ Check if `saveRequest` is true
-            const shouldSaveRequest = sessionStorage.getItem("saveRequest") === "true";
-            const clientId = response.data.data.clientId;
-            if (shouldSaveRequest) 
-            {
-
-            const requestDetails = {
-              clientId,
-              jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id, // Use jobRequiredId from sessionStorage
-              city: sessionStorage.getItem("city"),
-              date: sessionStorage.getItem("date"),
-              comment: sessionStorage.getItem("comment"),
-            };
-
-            const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
-            
-
-            console.log("Saving request before navigating...");
-          }
-                  navigate('/dashboard');
-                  return;
-
-          }
-            // If client is not registered, save client and create request
-            try {
-              // Step 1: Save the client
-              const saveClientResponse = await api.post(`${API_URL}/save_client`, {
-                phoneNumber,
-                fullName: sessionStorage.getItem("fullName") || "Unknown", // Retrieve from sessionStorage or use a default
-              });
+        if (response.data.success) {
+          const shouldSaveRequest = sessionStorage.getItem("saveRequest") === "true";
+          const clientId = response.data.data.clientId;
+          const fullName = sessionStorage.getItem("fullName") || "Unknown";
   
-              if (saveClientResponse.data.success) {
-                const clientId = saveClientResponse.data.clientId;
+          const requestDetails = {
+            jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id,
+            city: sessionStorage.getItem("city"),
+            date: sessionStorage.getItem("date"),
+            comment: sessionStorage.getItem("comment") || "",
+          };
   
-                // Step 2: Create the request
-                const requestDetails = {
-                  clientId,
-                  jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id, // Use jobRequiredId from sessionStorage
-                  city: sessionStorage.getItem("city"),
-                  date: sessionStorage.getItem("date"),
-                  comment: sessionStorage.getItem("comment"),
-                };
+          // Check if the client is already registered
+          if (response.data.data.registered) {
+            if (shouldSaveRequest && clientId) {
+              requestDetails.clientId = clientId;
   
+              try {
                 const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
   
-                if (submitRequestResponse.data.success) 
-                  {
-                  console.log("Request submitted successfully!");
-                  // Navigate to summary page after saving client and request
+                if (submitRequestResponse.data.success) {
+                  console.log("Request submitted successfully for registered user!");
                   navigate('/dashboard');
                 } else {
-                  console.error("Failed to submit client request");
+                  console.error("Failed to submit client request:", submitRequestResponse.data);
                   alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
                 }
-              } else {
-                console.error("Failed to save client");
-                alert(translation.failedToSaveClientMessage || "Failed to save client.");
+              } catch (error) {
+                console.error("Error submitting request for registered user:", error);
+                alert(translation.generalErrorMessage || "An error occurred. Please try again.");
               }
-            } catch (error) {
-              console.error("Error saving client or submitting request:", error);
-              alert(translation.generalErrorMessage || "An error occurred. Please try again.");
+            } else {
+              console.error("Missing clientId or saveRequest flag is false.");
+              alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
             }
-          
+  
+            return;
+          }
+  
+          // If client is not registered, save the client first
+          try {
+            const saveClientResponse = await api.post(`${API_URL}/save_client`, {
+              phoneNumber,
+              fullName,
+            });
+  
+            if (saveClientResponse.data.success) {
+              const newClientId = saveClientResponse.data.clientId;
+  
+              if (!newClientId) {
+                console.error("No clientId returned after client registration.");
+                alert(translation.failedToSaveClientMessage || "Failed to save client.");
+                return;
+              }
+  
+              requestDetails.clientId = newClientId;
+  
+              const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
+  
+              if (submitRequestResponse.data.success) {
+                console.log("Request submitted successfully after client registration!");
+                navigate('/dashboard');
+              } else {
+                console.error("Failed to submit client request after registration:", submitRequestResponse.data);
+                alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+              }
+            } else {
+              console.error("Failed to save client:", saveClientResponse.data);
+              alert(translation.failedToSaveClientMessage || "Failed to save client.");
+            }
+          } catch (error) {
+            console.error("Error saving client or submitting request:", error);
+            alert(translation.generalErrorMessage || "An error occurred. Please try again.");
+          }
         } else {
-          // Trigger error animation if the verification fails
           triggerErrorAnimation();
         }
       } catch (error) {
@@ -153,6 +157,7 @@ const SMSVerification = () => {
       triggerErrorAnimation();
     }
   };
+  
   
   
 

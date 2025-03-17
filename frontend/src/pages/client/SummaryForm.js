@@ -68,60 +68,95 @@ const SummaryForm = () => {
     }
   };
 
-  const handleSubmit = async () =>
-     {
+  const handleSubmit = async () => {
     setLoading(true); // Start loading
     try {
-
-      console.log('at handle submit')
-      
-      if (isAuthenticated && user?.id) 
-        {
+      console.log('at handle submit');
+  
+      const subProfession = sessionStorage.getItem("subProfession");
+      const city = sessionStorage.getItem("city");
+      const date = sessionStorage.getItem("date");
+      const comment = summaryData.comment || "";
+  
+      // Validate session storage data
+      if (!subProfession || !city || !date) {
+        console.error("Missing required fields from sessionStorage:", { subProfession, city, date });
+        alert(translation.missingFieldsMessage || "Some required fields are missing. Please try again.");
+        return;
+      }
+  
+      const jobRequiredId = JSON.parse(subProfession)?.id;
+      if (!jobRequiredId) {
+        console.error("Invalid or missing jobRequiredId.");
+        alert(translation.invalidJobTypeMessage || "Invalid job type selected. Please try again.");
+        return;
+      }
+  
+      if (isAuthenticated && user?.id) {
         console.log("Authenticated user ID:", user.id);
-
+  
         const requestDetails = {
-          clientId: user.id, // Use user ID for the authenticated client
-          jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id, // Use jobRequiredId from sessionStorage
-          city: sessionStorage.getItem("city"),
-          date: sessionStorage.getItem("date"),
-          comment: summaryData.comment, // Use the updated comment
+          clientId: user.id,
+          jobRequiredId,
+          city,
+          date,
+          comment,
         };
-
-        const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
-
-        if (submitRequestResponse.data.success) {
-          console.log("Request submitted successfully!");
-          navigate("/dashboard"); // Navigate to dashboard after saving client and request
-        } else {
-          console.error("Failed to submit client request");
-          console.log(submitRequestResponse.data)
-          alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+  
+        try {
+          const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
+  
+          if (submitRequestResponse.data.success) {
+            console.log("Request submitted successfully!");
+            navigate("/dashboard");
+          } else {
+            console.error("Failed to submit client request:", submitRequestResponse.data);
+            alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+          }
+        } catch (apiError) {
+          console.error("API Error during request submission:", apiError);
+          alert(translation.failedToSubmitRequestMessage || "An error occurred while submitting your request. Please try again.");
         }
+  
       } else {
-        console.log("User is not authenticated, sending SMS instead.");
-
+        console.warn("User is not authenticated, sending SMS instead.");
+  
+        if (!phonePrefix || !phoneNumber) {
+          console.error("Phone number or prefix is missing.");
+          alert(translation.missingPhoneNumberMessage || "Phone number is missing. Please enter it and try again.");
+          return;
+        }
+  
         const fullPhoneNumber = `${phonePrefix}${phoneNumber}`;
         console.log("Full Phone Number:", fullPhoneNumber);
-
-        await axios.post(`${API_URL}/professionals/send-sms`, {
-          phoneNumber: fullPhoneNumber,
-          message: translation.verificationCodeMessage + " {code}",
-        });
-
-
-    // ✅ Save a boolean in sessionStorage
-    sessionStorage.setItem("saveRequest", "true"); // Stored as a string
-
-      
-        navigate("/sms");
+  
+        try {
+          const smsResponse = await axios.post(`${API_URL}/professionals/send-sms`, {
+            phoneNumber: fullPhoneNumber,
+            message: translation.verificationCodeMessage + " {code}",
+          });
+  
+          if (smsResponse.data.success) {
+            console.log("SMS sent successfully!");
+            sessionStorage.setItem("saveRequest", "true");
+            navigate("/sms");
+          } else {
+            console.error("Failed to send SMS:", smsResponse.data);
+            alert(translation.failedToSendSMSMessage || "Failed to send SMS. Please try again.");
+          }
+        } catch (smsError) {
+          console.error("Error during SMS sending:", smsError);
+          alert(translation.failedToSendSMSMessage || "An error occurred while sending the SMS. Please try again.");
+        }
       }
     } catch (error) {
-      console.error("Error during submission:", error);
-      alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+      console.error("General error during submission:", error);
+      alert(translation.failedToSubmitRequestMessage || "An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false); // End loading
     }
   };
+  
 
   const handleCommentChange = (event) => {
     setSummaryData((prevState) => ({

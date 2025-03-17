@@ -3,7 +3,7 @@ width: 100% !important;
     position: sticky !important;
     top: 0 !important;
     z-index: 1000 !important;
-    background-color: #0e0d0d !important;
+background: linear-gradient(194deg, #000000, #544e4e) !important;
     padding: 0px 0px 0px 10px !important;
     display: flex !important
 ;
