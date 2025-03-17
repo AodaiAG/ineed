@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Drawer,
   List,
@@ -19,9 +19,8 @@ import LanguageIcon from '@mui/icons-material/Language';
 import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ChatIcon from '@mui/icons-material/Chat';
 import EditIcon from '@mui/icons-material/Edit';
-import LogoutIcon from '@mui/icons-material/Logout';
 import axios from "axios";
 import styles from "../../styles/Header.module.css";
 import { useNavigate } from "react-router-dom";
@@ -30,16 +29,21 @@ import NotificationComponent from "../../components/NotificationComponent";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
 import { API_URL } from '../../utils/constans';
+import fetchUnreadMessages from '../../utils/fetchUnreadMessages';
+import api from "../../utils/api";
+
 
 const ProfessionalHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [chatAnchorEl, setChatAnchorEl] = useState(null);
   const [profileAnchorEl, setProfileAnchorEl] = useState(null);
   const [showLanguagePopup, setShowLanguagePopup] = useState(false);
   const [profileImage, setProfileImage] = useState("/images/dummy-profile.jpg");
   const [isEditing, setIsEditing] = useState(false);
   const [userName, setUserName] = useState("מומחה בדוי");
   const [newName, setNewName] = useState("");
+  const [unreadChats, setUnreadChats] = useState([]);
 
   const navigate = useNavigate();
   const { unreadCount } = useNotifications();
@@ -49,20 +53,19 @@ const ProfessionalHeader = () => {
 
   const handleNotificationClick = (event) => {
     setNotificationAnchorEl(event.currentTarget);
-  };
 
-  const handleNotificationClose = () => {
-    setNotificationAnchorEl(null);
-  };
+  };  const handleNotificationClose = () => setNotificationAnchorEl(null);
 
-  const toggleLanguagePopup = () => setShowLanguagePopup(prev => !prev);
+  const handleChatClick = (event) => setChatAnchorEl(event.currentTarget);
+  const handleChatClose = () => setChatAnchorEl(null);
 
   const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
-
   const handleProfileClose = () => {
     setProfileAnchorEl(null);
     setIsEditing(false);
   };
+
+  const toggleLanguagePopup = () => setShowLanguagePopup(prev => !prev);
 
   const fetchProfessional = async () => {
     try {
@@ -74,7 +77,7 @@ const ProfessionalHeader = () => {
       console.error("Error fetching professional data:", error);
     }
   };
-
+  
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -108,11 +111,48 @@ const ProfessionalHeader = () => {
     setIsSidebarOpen(false);
   };
 
+  const fetchUnreadChats = async () => {
+    if (!user?.profId) return;
+
+    try {
+      const response = await api.get(`/api/professionals/get-prof-requests?mode=new`);
+      const fetchedRequests = response.data?.data || [];
+
+      if (!fetchedRequests.length) {
+        setUnreadChats([]);
+        return;
+      }
+
+      const requestIds = fetchedRequests.map(req => req.id);
+      const userId = String(user.profId);
+
+      const unreadCounts = await fetchUnreadMessages(
+        userId,
+        sessionStorage.getItem("profChatToken"),
+        requestIds
+      );
+
+      const unread = Object.entries(unreadCounts)
+        .filter(([_, count]) => count > 0)
+        .map(([id, count]) => ({ id, count }));
+
+      setUnreadChats(unread);
+    } catch (error) {
+      console.error("Error fetching unread chats:", error);
+    }
+  };
+
   useEffect(() => {
     if (user?.profId) {
       fetchProfessional();
+      fetchUnreadChats();
+
+      const interval = setInterval(fetchUnreadChats, 30000);
+      return () => clearInterval(interval);
     }
   }, [user?.profId]);
+
+  const memoizedUnreadChats = useMemo(() => unreadChats, [unreadChats]);
 
   return (
     <Box className={styles.stickyHeader}>
@@ -126,13 +166,13 @@ const ProfessionalHeader = () => {
             <NotificationsActiveIcon sx={{ fontSize: '1.7rem' }} />
           </Badge>
         </IconButton>
+
+        <IconButton className={styles.chatIcon} onClick={handleChatClick} sx={{ fontSize: '2.5rem' }}>
+          <Badge badgeContent={memoizedUnreadChats.length} color="error">
+            <ChatIcon sx={{ fontSize: '1.7rem' }} />
+          </Badge>
+        </IconButton>
       </Box>
-
-      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
-        <Avatar src={profileImage} sx={{ width: 40, height: 40 ,border: '4px solid #1A4B75 !important',
-}} />
-      </IconButton>
-
       <Drawer
         anchor="left"
         open={isSidebarOpen}
@@ -162,14 +202,8 @@ const ProfessionalHeader = () => {
         open={Boolean(notificationAnchorEl)}
         anchorEl={notificationAnchorEl}
         onClose={handleNotificationClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         PaperProps={{
           className: styles.customNotificationPopover,
         }}
@@ -179,54 +213,64 @@ const ProfessionalHeader = () => {
         </Box>
       </Popover>
 
+
+      <Popover
+        open={Boolean(chatAnchorEl)}
+        anchorEl={chatAnchorEl}
+        onClose={handleChatClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Box className={styles.chatDropdown}>
+          <Typography className={styles.chatDropdownHeader}>
+            הודעות שלא נקראו
+          </Typography>
+
+          {memoizedUnreadChats.length === 0 ? (
+            <Typography className={styles.emptyChatMessage}>אין הודעות חדשות</Typography>
+          ) : (
+            memoizedUnreadChats.map(chat => (
+              <Box key={chat.id} onClick={() => navigate(`/pro/request/${chat.id}`)} className={styles.chatItem}>
+                <Typography className={styles.chatText}>בקשה #{chat.id}</Typography>
+                <span className={styles.chatCountBadge}>{chat.count}</span>
+              </Box>
+            ))
+          )}
+        </Box>
+      </Popover>
+
+      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
+        <Avatar src={profileImage} sx={{ width: 40, height: 40, border: '4px solid #1A4B75 !important' }} />
+      </IconButton>
+
       <Popover
         open={Boolean(profileAnchorEl)}
         anchorEl={profileAnchorEl}
         onClose={handleProfileClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-<Box className={styles.profilePopover}>
-  {/* Profile Image */}
-  <Avatar src={profileImage} className={styles.profileAvatarLarge} />
+        <Box className={styles.profilePopover}>
+          <Avatar src={profileImage} className={styles.profileAvatarLarge} />
+          <Typography className={styles.profileName}>{userName}</Typography>
 
-  {/* Professional Name */}
-  <Typography className={styles.profileName} sx={{ color: '#FDBE00', fontSize: '1.5rem', fontWeight: 'bold' }}>
-    {userName}
-  </Typography>
+          <Button
+            variant="outlined"
+            startIcon={<EditIcon />}
+            className={styles.editButton}
+          >
+            ערוך תמונה
+          </Button>
 
-  {/* Edit Picture */}
-  <input
-    type="file"
-    accept="image/*"
-    onChange={handleImageChange}
-    style={{ display: "none" }}
-    id="upload-profile"
-  />
-  <label htmlFor="upload-profile">
-    <Button component="span" startIcon={<EditIcon />} variant="outlined" className={styles.editButton}>
-      ערוך תמונה
-    </Button>
-  </label>
-
-  {/* Navigate to Edit Settings with Icon */}
-  <Button
-    variant="outlined"
-    startIcon={<SettingsIcon />}
-    className={styles.editButton}
-    onClick={() => navigate("/pro/edit-settings")}
-  >
-    ערוך הגדרות
-  </Button>
-</Box>
-
-
+          <Button
+            variant="outlined"
+            startIcon={<SettingsIcon />}
+            onClick={() => navigate("/pro/edit-settings")}
+            className={styles.editButton}
+          >
+            ערוך הגדרות
+          </Button>
+        </Box>
       </Popover>
     </Box>
   );

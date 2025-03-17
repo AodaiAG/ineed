@@ -150,7 +150,7 @@ const ClientHeader = () => {
             <Typography className={styles.emptyChatMessage}>אין הודעות חדשות</Typography>
           ) : (
             memoizedUnreadChats.map(chat => (
-              <Box key={chat.id} onClick={() => navigate(`/request/${chat.id}`)} className={styles.chatItem}>
+              <Box key={chat.id} onClick={() => navigate(`/request?id=${chat.id}`)} className={styles.chatItem}>
                 <Typography className={styles.chatText}>בקשה #{chat.id}</Typography>
                 <span className={styles.chatCountBadge}>{chat.count}</span>
               </Box>
