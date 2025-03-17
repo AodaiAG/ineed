@@ -167,15 +167,23 @@ padding: 24px !important;
 }
 
 /* Dropdown Header */
+/* Professional Chat Dropdown Header */
 .chatDropdownHeader {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: #1A4B75;
   padding-bottom: 12px;
-  border-bottom: 2px solid #1A4B75;
+  border-bottom: 2px solid #FDBE00;
   margin-bottom: 12px;
   text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background-color: #F5F8FA;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 
 /* Each Chat Item */
 .chatItem {
@@ -185,6 +193,7 @@ padding: 24px !important;
   padding: 12px 16px;
   background-color: #f9f9f9;
   border-radius: 8px;
+  direction:rtl;
   margin-bottom: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;

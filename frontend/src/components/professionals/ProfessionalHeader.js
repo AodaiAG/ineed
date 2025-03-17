@@ -222,8 +222,8 @@ const ProfessionalHeader = () => {
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
         <Box className={styles.chatDropdown}>
-          <Typography className={styles.chatDropdownHeader}>
-            הודעות שלא נקראו
+        <Typography className={styles.chatDropdownHeader}>
+            הודעות בצ'אט שלא נקראו 
           </Typography>
 
           {memoizedUnreadChats.length === 0 ? (
