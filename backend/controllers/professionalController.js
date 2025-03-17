@@ -823,6 +823,30 @@ const fetchProfRequests = async (req, res) => {
                 });
                 break;
 
+                case 'chat':
+                const chatRequests = await Request.findAll({
+                    where: {
+                        status: 'open',
+                        professionalId: professionalId,
+                    },
+                    order: [['createdAt', 'DESC']],
+                });
+
+                const inProcessRequests = await Request.findAll({
+                    where: {
+                        status: 'open',
+                        [Op.and]: [
+                            sequelize.literal(`${jsonContainsProfessionalId('quotations', professionalId)}`),
+                        ],
+                    },
+                    order: [['createdAt', 'DESC']],
+                });
+
+                const allRequests = [...chatRequests, ...inProcessRequests];
+                const uniqueRequests = Array.from(new Map(allRequests.map(item => [item.id, item])).values());
+                matchingRequests = uniqueRequests;
+                break;
+
             case 'closed': // Closed requests previously assigned to the professional
                 matchingRequests = await Request.findAll({
                     where: {
@@ -847,24 +871,25 @@ const fetchProfRequests = async (req, res) => {
                 return res.status(400).json({ success: false, message: 'Invalid mode' });
         }
 
-        const streamClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
- // ✅ Join the professional to all missing chat channels
-        for (const request of matchingRequests) {
-            const channelId = `request_${request.id}`;
-            const channel = streamClient.channel("messaging", channelId);
+        if (mode !== 'chat') {
+            const streamClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
 
-            try {
-                // Check if the professional is already a member
-                const channelState = await channel.queryMembers({ id: String(professionalId) });
+            for (const request of matchingRequests) {
+                const channelId = `request_${request.id}`;
+                const channel = streamClient.channel("messaging", channelId);
 
-                if (!channelState.members.some(member => member.user_id === String(professionalId))) {
-                    await channel.addMembers([String(professionalId)]);
-                    console.log(`✅ Professional ${professionalId} added to chat: ${channelId}`);
-                } else {
-                    console.log(`⚡ Professional ${professionalId} is already a member of chat: ${channelId}`);
+                try {
+                    const channelState = await channel.queryMembers({ id: String(professionalId) });
+
+                    if (!channelState.members.some(member => member.user_id === String(professionalId))) {
+                        await channel.addMembers([String(professionalId)]);
+                        console.log(`✅ Professional ${professionalId} added to chat: ${channelId}`);
+                    } else {
+                        console.log(`⚡ Professional ${professionalId} is already a member of chat: ${channelId}`);
+                    }
+                } catch (error) {
+                    console.error(`❌ Error adding professional to chat ${channelId}:`, error);
                 }
-            } catch (error) {
-                console.error(`❌ Error adding professional to chat ${channelId}:`, error);
             }
         }
 

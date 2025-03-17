@@ -115,7 +115,7 @@ const ProfessionalHeader = () => {
     if (!user?.profId) return;
 
     try {
-      const response = await api.get(`/api/professionals/get-prof-requests?mode=new`);
+      const response = await api.get(`/api/professionals/get-prof-requests?mode=chat`);
       const fetchedRequests = response.data?.data || [];
 
       if (!fetchedRequests.length) {
