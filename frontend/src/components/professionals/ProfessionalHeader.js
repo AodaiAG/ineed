@@ -112,7 +112,10 @@ const ProfessionalHeader = () => {
   };
 
   const fetchUnreadChats = async () => {
-    if (!user?.profId) return;
+    if (!user?.profId) {
+      console.log('No professional ID available');
+      return;
+    }
 
     try {
       const response = await api.get(`/api/professionals/get-prof-requests?mode=chat`);
@@ -125,11 +128,13 @@ const ProfessionalHeader = () => {
 
       const requestIds = fetchedRequests.map(req => req.id);
       const userId = String(user.profId);
+      const token = sessionStorage.getItem("profChatToken");
 
       const unreadCounts = await fetchUnreadMessages(
         userId,
-        sessionStorage.getItem("profChatToken"),
-        requestIds
+        token,
+        requestIds,
+        'prof'  // Pass the type explicitly
       );
 
       const unread = Object.entries(unreadCounts)
@@ -230,7 +235,7 @@ const ProfessionalHeader = () => {
             <Typography className={styles.emptyChatMessage}>אין הודעות חדשות</Typography>
           ) : (
             memoizedUnreadChats.map(chat => (
-              <Box key={chat.id} onClick={() => navigate(`/pro/request/${chat.id}`)} className={styles.chatItem}>
+              <Box key={chat.id} onClick={() => navigate(`/pro/requests/${chat.id}`)} className={styles.chatItem}>
                 <Typography className={styles.chatText}>בקשה #{chat.id}</Typography>
                 <span className={styles.chatCountBadge}>{chat.count}</span>
               </Box>

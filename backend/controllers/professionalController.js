@@ -771,10 +771,9 @@ const updateQuotation = async (req, res) => {
 
 const fetchProfRequests = async (req, res) => {
     try {
-        const { mode } = req.query; // Extract the mode from query parameters
-        const professionalId = req.professional.profId; // Extract professional ID from JWT
+        const { mode } = req.query;
+        const professionalId = req.professional.profId;
 
-        // Get the professional's professions
         const professional = await Professional.findByPk(professionalId);
         if (!professional) {
             return res.status(404).json({ success: false, message: 'Professional not found' });
@@ -787,8 +786,7 @@ const fetchProfRequests = async (req, res) => {
         const jsonContainsProfessionalId = (field, id) =>
             `JSON_CONTAINS(${field}, '{"professionalId": ${id}}', '$')`;
 
-        switch (mode) 
-        {
+        switch (mode) {
             case 'new': // Requests the professional hasn't quoted yet
                 matchingRequests = await Request.findAll({
                     where: {
@@ -832,26 +830,34 @@ const fetchProfRequests = async (req, res) => {
                 const chatRequests = await Request.findAll({
                     where: {
                         status: 'open',
-                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
+                        jobRequiredId: { [Op.in]: professionalProfessions },
                         professionalId: professionalId,
                     },
                     order: [['createdAt', 'DESC']],
+                    attributes: ['id', 'status', 'createdAt'], // Only fetch necessary fields
                 });
 
                 const inProcessRequests = await Request.findAll({
                     where: {
                         status: 'open',
-                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
+                        jobRequiredId: { [Op.in]: professionalProfessions },
                         [Op.and]: [
                             sequelize.literal(`${jsonContainsProfessionalId('quotations', professionalId)}`),
                         ],
                     },
                     order: [['createdAt', 'DESC']],
+                    attributes: ['id', 'status', 'createdAt'], // Only fetch necessary fields
                 });
 
                 const allRequests = [...chatRequests, ...inProcessRequests];
                 const uniqueRequests = Array.from(new Map(allRequests.map(item => [item.id, item])).values());
-                matchingRequests = uniqueRequests;
+                
+                // Format the response to only include necessary data
+                matchingRequests = uniqueRequests.map(request => ({
+                    id: request.id,
+                    status: request.status,
+                    createdAt: request.createdAt
+                }));
                 break;
 
             case 'closed': // Closed requests previously assigned to the professional

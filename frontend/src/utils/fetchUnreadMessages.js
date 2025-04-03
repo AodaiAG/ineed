@@ -4,20 +4,20 @@ import api from './api';
 const apiKey = "nr6puhgsrawn";
 const client = StreamChat.getInstance(apiKey);
 
-const fetchUnreadMessages = async (userId, userToken, requestIds) => {
+const fetchUnreadMessages = async (userId, userToken, requestIds, type = 'client') => {
   try {
     // If no token is provided, try to generate a new one
     if (!userToken) {
       try {
         const response = await api.post('/api/generate-user-token', {
           id: userId,
-          type: userId.startsWith('prof') ? 'prof' : 'client'
+          type: type
         });
         
         if (response.data.success) {
           userToken = response.data.token;
-          // Store the new token in sessionStorage
-          sessionStorage.setItem(userId.startsWith('prof') ? 'profChatToken' : 'clientChatToken', userToken);
+          // Store the new token in sessionStorage based on type
+          sessionStorage.setItem(`${type}ChatToken`, userToken);
         } else {
           throw new Error('Failed to generate token');
         }

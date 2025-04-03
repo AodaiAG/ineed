@@ -73,7 +73,10 @@ const ClientHeader = () => {
   };
 
   const fetchUnreadChats = async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      console.log('No user ID available');
+      return;
+    }
 
     try {
       const response = await api.get(`/api/my_requests?type=open`);
@@ -85,11 +88,13 @@ const ClientHeader = () => {
       }
 
       const requestIds = fetchedRequests.map(req => req.id);
+      const token = sessionStorage.getItem("clientChatToken");
 
       const unreadCounts = await fetchUnreadMessages(
         user.id,
-        sessionStorage.getItem("clientChatToken"),
-        requestIds
+        token,
+        requestIds,
+        'client'
       );
 
       const unread = Object.entries(unreadCounts)
