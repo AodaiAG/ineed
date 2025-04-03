@@ -9,10 +9,12 @@ import { useLanguage } from "../../contexts/LanguageContext"; // Import useLangu
 import useClientAuthCheck from '../../hooks/useClientAuthCheck';
 import { format } from "date-fns";
 import { he } from "date-fns/locale"; // Import Hebrew locale if needed
+import { useMessage } from "../../contexts/MessageContext"; // Add this import
 
 const SummaryForm = () => {
   const navigate = useNavigate(); // For navigation
   const { translation } = useLanguage(); // Access translations
+  const { showMessage } = useMessage(); // Add this line
 
   // State for form data
   const [summaryData, setSummaryData] = useState({
@@ -39,8 +41,19 @@ const SummaryForm = () => {
 
   // Fetch data from sessionStorage when the component mounts
   useEffect(() => {
-    const storedProfession = sessionStorage.getItem("domain") || "";
-    const storedSubject = sessionStorage.getItem("mainProfession") || "";
+    const parseSessionStorageItem = (key) => {
+      try {
+        const item = sessionStorage.getItem(key);
+        if (!item) return null;
+        return JSON.parse(item);
+      } catch (error) {
+        console.error(`Error parsing ${key}:`, error);
+        return null;
+      }
+    };
+
+    const storedProfession = parseSessionStorageItem("domain");
+    const storedSubject = parseSessionStorageItem("mainProfession");
     const storedLocation = sessionStorage.getItem("city") || "";
     const storedDate = sessionStorage.getItem("date") || "";
     const storedComment = sessionStorage.getItem("comment") || "";
@@ -81,14 +94,14 @@ const SummaryForm = () => {
       // Validate session storage data
       if (!subProfession || !city || !date) {
         console.error("Missing required fields from sessionStorage:", { subProfession, city, date });
-        alert(translation.missingFieldsMessage || "Some required fields are missing. Please try again.");
+        showMessage(translation.missingFieldsMessage || "חסרים שדות חובה. אנא נסה שוב.", "error");
         return;
       }
   
       const jobRequiredId = JSON.parse(subProfession)?.id;
       if (!jobRequiredId) {
         console.error("Invalid or missing jobRequiredId.");
-        alert(translation.invalidJobTypeMessage || "Invalid job type selected. Please try again.");
+        showMessage(translation.invalidJobTypeMessage || "סוג העבודה שנבחר אינו תקין. אנא נסה שוב.", "error");
         return;
       }
   
@@ -107,15 +120,16 @@ const SummaryForm = () => {
           const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
   
           if (submitRequestResponse.data.success) {
+            showMessage(translation.requestSubmittedSuccessfully || "הבקשה שלך נשלחה בהצלחה!", "success");
             console.log("Request submitted successfully!");
             navigate("/dashboard");
           } else {
             console.error("Failed to submit client request:", submitRequestResponse.data);
-            alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+            showMessage(translation.failedToSubmitRequestMessage || "השליחה נכשלה. אנא נסה שוב.", "error");
           }
         } catch (apiError) {
           console.error("API Error during request submission:", apiError);
-          alert(translation.failedToSubmitRequestMessage || "An error occurred while submitting your request. Please try again.");
+          showMessage(translation.failedToSubmitRequestMessage || "אירעה שגיאה בשליחת הבקשה. אנא נסה שוב.", "error");
         }
   
       } else {
@@ -123,7 +137,7 @@ const SummaryForm = () => {
   
         if (!phonePrefix || !phoneNumber) {
           console.error("Phone number or prefix is missing.");
-          alert(translation.missingPhoneNumberMessage || "Phone number is missing. Please enter it and try again.");
+          showMessage(translation.missingPhoneNumberMessage || "מספר הטלפון חסר. אנא הזן אותו ונסה שוב.", "error");
           return;
         }
   
@@ -137,23 +151,24 @@ const SummaryForm = () => {
           });
   
           if (smsResponse.data.success) {
+            showMessage(translation.smsSentSuccessfully || "קוד האימות נשלח בהצלחה!", "success");
             console.log("SMS sent successfully!");
             sessionStorage.setItem("saveRequest", "true");
             navigate("/sms");
           } else {
             console.error("Failed to send SMS:", smsResponse.data);
-            alert(translation.failedToSendSMSMessage || "Failed to send SMS. Please try again.");
+            showMessage(translation.failedToSendSMSMessage || "שליחת ה-SMS נכשלה. אנא נסה שוב.", "error");
           }
         } catch (smsError) {
           console.error("Error during SMS sending:", smsError);
-          alert(translation.failedToSendSMSMessage || "An error occurred while sending the SMS. Please try again.");
+          showMessage(translation.failedToSendSMSMessage || "אירעה שגיאה בשליחת ה-SMS. אנא נסה שוב.", "error");
         }
       }
     } catch (error) {
       console.error("General error during submission:", error);
-      alert(translation.failedToSubmitRequestMessage || "An unexpected error occurred. Please try again.");
+      showMessage(translation.failedToSubmitRequestMessage || "אירעה שגיאה בלתי צפויה. אנא נסה שוב.", "error");
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
   
@@ -198,21 +213,8 @@ const SummaryForm = () => {
           בתחום
         </Typography>
         <Typography variant="body1" className="summary-form-value">
-  {(() => {
-    try {
-      const parsedProfession =
-        typeof summaryData.profession === "string"
-          ? JSON.parse(summaryData.profession)
-          : summaryData.profession;
-
-      return parsedProfession?.domain?.trim() || "לא הוזן";
-    } catch (error) {
-      console.error("Failed to parse profession:", error);
-      return "לא הוזן";
-    }
-  })()}
-</Typography>
-
+          {summaryData.profession?.domain || "לא הוזן"}
+        </Typography>
       </Box>
 
       <Box className="summary-form-field">
@@ -220,21 +222,8 @@ const SummaryForm = () => {
           בנושא
         </Typography>
         <Typography variant="body1" className="summary-form-value">
-  {(() => {
-    try {
-      const parsedSubject =
-        typeof summaryData.subject === "string"
-          ? JSON.parse(summaryData.subject)
-          : summaryData.subject;
-
-      return parsedSubject?.main?.trim() || "לא הוזן";
-    } catch (error) {
-      console.error("Failed to parse subject:", error);
-      return "לא הוזן";
-    }
-  })()}
-</Typography>
-
+          {summaryData.subject?.main || "לא הוזן"}
+        </Typography>
       </Box>
 
       <Box className="summary-form-field">
