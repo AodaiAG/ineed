@@ -179,7 +179,7 @@
 /* 🔹 AI Suggestions Dropdown */
 .ai-suggestions-dropdown {
   position: absolute;
-  top: 16%;
+  top: 18%;
   left: 0;
   width: 100%;
   max-height: 220px;
@@ -187,6 +187,7 @@
   background: white; /* ✅ Visible on blue background */
   color: black;
   border: 1px solid #ccc;
+  
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   z-index: 9999;

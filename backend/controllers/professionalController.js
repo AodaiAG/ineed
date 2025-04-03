@@ -774,25 +774,32 @@ const fetchProfRequests = async (req, res) => {
         const { mode } = req.query; // Extract the mode from query parameters
         const professionalId = req.professional.profId; // Extract professional ID from JWT
 
+        // Get the professional's professions
+        const professional = await Professional.findByPk(professionalId);
+        if (!professional) {
+            return res.status(404).json({ success: false, message: 'Professional not found' });
+        }
 
+        const professionalProfessions = professional.professions || [];
 
         let matchingRequests = [];
 
         const jsonContainsProfessionalId = (field, id) =>
             `JSON_CONTAINS(${field}, '{"professionalId": ${id}}', '$')`;
 
-        switch (mode) {
+        switch (mode) 
+        {
             case 'new': // Requests the professional hasn't quoted yet
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'open', // Open requests
+                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
                         [Op.or]: [
                             { quotations: { [Op.is]: null } }, // No quotations exist
                             sequelize.literal(`NOT ${jsonContainsProfessionalId('quotations', professionalId)}`), // Current professional hasn't quoted
                         ],
                     },
-                    order: [['createdAt', 'DESC']], // ✅ Correct
-
+                    order: [['createdAt', 'DESC']],
                 });
                 break;
 
@@ -800,15 +807,13 @@ const fetchProfRequests = async (req, res) => {
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'open', // Open requests
+                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
                         professionalId: { [Op.is]: null }, // Not assigned to any professional
-
                         [Op.and]: [
                             sequelize.literal(`${jsonContainsProfessionalId('quotations', professionalId)}`), // Contains this professional's quotation
                         ],
                     },
-                    order: [['createdAt', 'DESC']], // ✅ Correct
-
-                    
+                    order: [['createdAt', 'DESC']],
                 });
                 break;
 
@@ -816,17 +821,18 @@ const fetchProfRequests = async (req, res) => {
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'open', // Open requests
+                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
                         professionalId: professionalId, // Assigned to this professional
                     },
-                    order: [['createdAt', 'DESC']], // ✅ Correct
-
+                    order: [['createdAt', 'DESC']],
                 });
                 break;
 
-                case 'chat':
+            case 'chat':
                 const chatRequests = await Request.findAll({
                     where: {
                         status: 'open',
+                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
                         professionalId: professionalId,
                     },
                     order: [['createdAt', 'DESC']],
@@ -835,6 +841,7 @@ const fetchProfRequests = async (req, res) => {
                 const inProcessRequests = await Request.findAll({
                     where: {
                         status: 'open',
+                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
                         [Op.and]: [
                             sequelize.literal(`${jsonContainsProfessionalId('quotations', professionalId)}`),
                         ],
@@ -851,10 +858,10 @@ const fetchProfRequests = async (req, res) => {
                 matchingRequests = await Request.findAll({
                     where: {
                         status: 'closed', // Closed requests
+                        jobRequiredId: { [Op.in]: professionalProfessions }, // Only requests for professions the professional can do
                         professionalId: professionalId, // Previously assigned to this professional
                     },
-                    order: [['createdAt', 'DESC']], // ✅ Correct
-
+                    order: [['createdAt', 'DESC']],
                 });
 
                 matchingRequests = matchingRequests.map((request) => {
