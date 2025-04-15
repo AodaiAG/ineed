@@ -182,24 +182,164 @@ const ProfessionalHeader = () => {
         anchor="left"
         open={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        PaperProps={{
+          sx: {
+            width: 240,
+            backgroundColor: '#ffffff',
+            borderRight: '1px solid #e9ecef',
+            boxShadow: '0 0 10px rgba(0,0,0,0.05)',
+          }
+        }}
       >
-        <Box className={styles.sidebarContainer} role="presentation">
-          <List>
-            <ListItem button onClick={() => handleNavigate("/pro/expert-interface")}>
+        <Box 
+          className={styles.sidebarContainer} 
+          role="presentation"
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          {/* Profile Section */}
+          <Box
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              borderBottom: '1px solid #e9ecef',
+              backgroundColor: '#f8f9fa',
+            }}
+          >
+            <Avatar
+              src={profileImage}
+              sx={{
+                width: 70,
+                height: 70,
+                mb: 1.5,
+                border: '2px solid #ffffff',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              }}
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                color: '#1a237e',
+                textAlign: 'center',
+                fontSize: '1.2rem',
+                mt: 1,
+              }}
+            >
+              {userName}
+            </Typography>
+          </Box>
+
+          {/* Navigation Menu */}
+          <List
+            sx={{
+              flex: 1,
+              p: 1.5,
+              '& .MuiListItem-root': {
+                borderRadius: '8px',
+                mb: 0.5,
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+              },
+              '& .MuiListItemIcon-root': {
+                minWidth: '40px',
+                color: '#1a237e',
+              },
+              '& .MuiListItemText-primary': {
+                fontWeight: 500,
+                color: '#1a237e',
+                fontSize: '0.9rem',
+              },
+            }}
+          >
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/pro/expert-interface")}
+              sx={{
+                backgroundColor: location.pathname === "/pro/expert-interface" ? '#f5f5f5' : 'transparent',
+              }}
+            >
               <ListItemIcon><HomeIcon /></ListItemIcon>
-              <ListItemText primary=" בית" />
+              <ListItemText primary="בית" />
             </ListItem>
+          </List>
 
-            <ListItem button onClick={() => handleNavigate("/pro/edit-settings")}>
-              <ListItemIcon><SettingsIcon /></ListItemIcon>
-              <ListItemText primary="הגדרות" />
-            </ListItem>
-
-            <ListItem button onClick={toggleLanguagePopup}>
+          {/* Settings and Language at the bottom */}
+          <List
+            sx={{
+              p: 1.5,
+              borderTop: '1px solid #e9ecef',
+              '& .MuiListItem-root': {
+                borderRadius: '8px',
+                mb: 0.5,
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+              },
+              '& .MuiListItemIcon-root': {
+                minWidth: '40px',
+                color: '#1a237e',
+              },
+              '& .MuiListItemText-primary': {
+                fontWeight: 500,
+                color: '#1a237e',
+                fontSize: '0.9rem',
+              },
+            }}
+          >
+            <ListItem 
+              button 
+              onClick={toggleLanguagePopup}
+              sx={{
+                backgroundColor: showLanguagePopup ? '#f5f5f5' : 'transparent',
+              }}
+            >
               <ListItemIcon><LanguageIcon /></ListItemIcon>
               <ListItemText primary="שפה" />
             </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/pro/edit-settings")}
+              sx={{
+                backgroundColor: location.pathname === "/pro/edit-settings" ? '#f5f5f5' : 'transparent',
+              }}
+            >
+              <ListItemIcon><SettingsIcon /></ListItemIcon>
+              <ListItemText primary="הגדרות" />
+            </ListItem>
           </List>
+
+          {/* Footer Section */}
+          <Box
+            sx={{
+              p: 2,
+              borderTop: '1px solid #e9ecef',
+              backgroundColor: '#f8f9fa',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: '#546e7a',
+                fontSize: '0.75rem',
+                textAlign: 'center',
+              }}
+            >
+              © 2024 I-Need. All rights reserved.
+            </Typography>
+          </Box>
         </Box>
       </Drawer>
 

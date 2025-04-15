@@ -123,10 +123,7 @@ top: 60px;
     color: #A0A0A0 !important;
 }
 
-/* Sidebar Styling */
-.sidebarContainer {
-    width: 212px !important;
-}
+
 
 /* Sidebar List Items */
 .sidebarContainer .MuiListItem-root {

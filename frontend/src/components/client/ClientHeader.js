@@ -17,6 +17,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LanguageIcon from '@mui/icons-material/Language';
 import HomeIcon from '@mui/icons-material/Home';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ListIcon from '@mui/icons-material/List';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChatIcon from '@mui/icons-material/Chat';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -119,6 +120,15 @@ const ClientHeader = () => {
 
   const memoizedUnreadChats = useMemo(() => unreadChats, [unreadChats]);
 
+  const handleLogout = () => {
+    // Clear session storage
+    sessionStorage.removeItem("clientChatToken");
+    sessionStorage.removeItem("clientToken");
+    
+    // Navigate to login page
+    navigate("/login");
+  };
+
   return (
     <Box className={styles.stickyHeader}>
       <Box className={styles.iconContainer}>
@@ -219,24 +229,205 @@ const ClientHeader = () => {
         <Avatar src={profileImage} sx={{ width: 40, height: 40, border: '4px solid #1A4B75 !important' }} />
       </IconButton>
 
-      <Drawer anchor="left" open={isSidebarOpen} onClose={toggleSidebar}>
-        <Box className={styles.sidebarContainer} role="presentation">
-          <List>
-            <ListItem button onClick={() => handleNavigate("/dashboard")}>
+      <Drawer
+        anchor="left"
+        open={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        PaperProps={{
+          sx: {
+            width: 240,
+            backgroundColor: '#ffffff',
+            borderRight: '1px solid #e9ecef',
+            boxShadow: '0 0 10px rgba(0,0,0,0.05)',
+          }
+        }}
+      >
+        <Box 
+          className={styles.sidebarContainer} 
+          role="presentation"
+          sx={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#ffffff',
+          }}
+        >
+          {/* Profile Section */}
+          <Box
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              borderBottom: '1px solid #e9ecef',
+              backgroundColor: '#f8f9fa',
+            }}
+          >
+            <Avatar
+              src={profileImage}
+              sx={{
+                width: 70,
+                height: 70,
+                mb: 1.5,
+                border: '2px solid #ffffff',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              }}
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                color: '#1a237e',
+                textAlign: 'center',
+                fontSize: '1.2rem',
+                mt: 1,
+              }}
+            >
+              {userName}
+            </Typography>
+          </Box>
+
+          {/* Navigation Menu */}
+          <List
+            sx={{
+              flex: 1,
+              p: 1.5,
+              '& .MuiListItem-root': {
+                borderRadius: '8px',
+                mb: 0.5,
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+              },
+              '& .MuiListItemIcon-root': {
+                minWidth: '40px',
+                color: '#1a237e',
+              },
+              '& .MuiListItemText-primary': {
+                fontWeight: 500,
+                color: '#1a237e',
+                fontSize: '0.9rem',
+              },
+            }}
+          >
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/dashboard")}
+              sx={{
+                backgroundColor: location.pathname === "/dashboard" ? '#f5f5f5' : 'transparent',
+              }}
+            >
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="בית" />
             </ListItem>
 
-            <ListItem button onClick={() => handleNavigate("/main")}>
+            {/* Nested Requests Menu */}
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/main")}
+              sx={{
+                backgroundColor: location.pathname === "/main" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
               <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
               <ListItemText primary="פתח קריאה חדשה" />
             </ListItem>
 
-            <ListItem button onClick={toggleLanguagePopup}>
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/my-requests")}
+              sx={{
+                backgroundColor: location.pathname === "/my-requests" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
+              <ListItemIcon><ListIcon /></ListItemIcon>
+              <ListItemText primary="הקריאות שלי" />
+            </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/new-requests")}
+              sx={{
+                backgroundColor: location.pathname === "/new-requests" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
+              <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
+              <ListItemText primary="קריאות חדשות" />
+            </ListItem>
+          </List>
+
+          {/* Settings and Language at the bottom */}
+          <List
+            sx={{
+              p: 1.5,
+              borderTop: '1px solid #e9ecef',
+              '& .MuiListItem-root': {
+                borderRadius: '8px',
+                mb: 0.5,
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                },
+              },
+              '& .MuiListItemIcon-root': {
+                minWidth: '40px',
+                color: '#1a237e',
+              },
+              '& .MuiListItemText-primary': {
+                fontWeight: 500,
+                color: '#1a237e',
+                fontSize: '0.9rem',
+              },
+            }}
+          >
+            <ListItem 
+              button 
+              onClick={toggleLanguagePopup}
+              sx={{
+                backgroundColor: showLanguagePopup ? '#f5f5f5' : 'transparent',
+              }}
+            >
               <ListItemIcon><LanguageIcon /></ListItemIcon>
               <ListItemText primary="שפה" />
             </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/edit-settings")}
+              sx={{
+                backgroundColor: location.pathname === "/edit-settings" ? '#f5f5f5' : 'transparent',
+              }}
+            >
+              <ListItemIcon><SettingsIcon /></ListItemIcon>
+              <ListItemText primary="הגדרות" />
+            </ListItem>
           </List>
+
+          {/* Footer Section */}
+          <Box
+            sx={{
+              p: 2,
+              borderTop: '1px solid #e9ecef',
+              backgroundColor: '#f8f9fa',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: '#546e7a',
+                fontSize: '0.75rem',
+                textAlign: 'center',
+              }}
+            >
+              © 2024 I-Need. All rights reserved.
+            </Typography>
+          </Box>
         </Box>
       </Drawer>
     </Box>
