@@ -203,7 +203,12 @@ const ClientHeader = () => {
         }}
       >
         <Box className={styles.profilePopover}>
-          <Avatar src={profileImage} className={styles.profileAvatarLarge} />
+          <Avatar
+            src={profileImage}
+            alt={userName}
+            // onClick={handleProfileClick}
+            className={styles.avatar}
+          />
           <Typography className={styles.profileName}>{userName}</Typography>
 
           <Button
@@ -226,7 +231,12 @@ const ClientHeader = () => {
       </Popover>
 
       <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
-        <Avatar src={profileImage} sx={{ width: 40, height: 40, border: '4px solid #1A4B75 !important' }} />
+        <Avatar
+          src={profileImage}
+          alt={userName}
+          // onClick={handleProfileClick}
+          className={styles.avatar}
+        />
       </IconButton>
 
       <Drawer
@@ -265,13 +275,9 @@ const ClientHeader = () => {
           >
             <Avatar
               src={profileImage}
-              sx={{
-                width: 70,
-                height: 70,
-                mb: 1.5,
-                border: '2px solid #ffffff',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              }}
+              alt={userName}
+              // onClick={handleProfileClick}
+              className={styles.avatar}
             />
             <Typography
               variant="h6"

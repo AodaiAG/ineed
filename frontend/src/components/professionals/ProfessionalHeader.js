@@ -214,13 +214,9 @@ const ProfessionalHeader = () => {
           >
             <Avatar
               src={profileImage}
-              sx={{
-                width: 70,
-                height: 70,
-                mb: 1.5,
-                border: '2px solid #ffffff',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              }}
+              alt={userName}
+              // onClick={handleProfileClick}
+              className={styles.avatar}
             />
             <Typography
               variant="h6"

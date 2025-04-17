@@ -82,14 +82,36 @@ width: clamp(200px, 78vw, 313px);
 
 /* Styles for the "כניסה חוזרת" clickable text */
 .relogin-text {
-  cursor: pointer !important;
-  color: #fdbe00 !important; /* Yellow color to match button */
-  text-align: center !important;
-  margin-top: 10px !important;
-  font-size: clamp(1.5rem, 3vw, 1.4rem) !important; /* Responsive font size */
+    cursor: pointer !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff99 !important;
+    text-align: center !important;
+    margin-top: 40px !important;
+    font-size: 1.2rem !important;
+    padding: 10px 25px !important;
+    border-radius: 25px !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px !important;
+    display: inline-block !important;
 }
+
 .relogin-text:hover {
-  color: #ffffff !important; /* White color on hover */
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+  border-color: #FDBE00 !important;
+}
+
+.relogin-text:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
 }
 
 
