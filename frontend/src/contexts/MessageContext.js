@@ -28,7 +28,7 @@ export const MessageProvider = ({ children }) => {
 
       <Snackbar
         open={open}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         sx={{ bottom: "30px" }} // ✅ Slightly move it up

@@ -131,7 +131,6 @@ const SummaryForm = () => {
           console.error("API Error during request submission:", apiError);
           showMessage(translation.failedToSubmitRequestMessage || "אירעה שגיאה בשליחת הבקשה. אנא נסה שוב.", "error");
         }
-  
       } else {
         console.warn("User is not authenticated, sending SMS instead.");
   
@@ -151,17 +150,18 @@ const SummaryForm = () => {
           });
   
           if (smsResponse.data.success) {
-            showMessage(translation.smsSentSuccessfully || "קוד האימות נשלח בהצלחה!", "success");
-            console.log("SMS sent successfully!");
+            // Show the Hebrew message based on delivery type
+            showMessage(smsResponse.data.hebrewMessage, "success");
+            console.log("Message sent successfully!");
             sessionStorage.setItem("saveRequest", "true");
             navigate("/sms");
           } else {
-            console.error("Failed to send SMS:", smsResponse.data);
-            showMessage(translation.failedToSendSMSMessage || "שליחת ה-SMS נכשלה. אנא נסה שוב.", "error");
+            console.error("Failed to send message:", smsResponse.data);
+            showMessage("שליחת ההודעה נכשלה. נסה שוב.", "error");
           }
         } catch (smsError) {
-          console.error("Error during SMS sending:", smsError);
-          showMessage(translation.failedToSendSMSMessage || "אירעה שגיאה בשליחת ה-SMS. אנא נסה שוב.", "error");
+          console.error("Error during message sending:", smsError);
+          showMessage("שליחת ההודעה נכשלה. נסה שוב.", "error");
         }
       }
     } catch (error) {

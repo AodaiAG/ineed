@@ -433,18 +433,81 @@ const updateProfessional = async (req, res) => {
     }
 };
 
-const sendSms = async (phoneNumber, message) => {
+const checkWhatsApp = async (phoneNumber) => {
     try {
-        const url = `https://sms.innovio.co.il/sms.php?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-        const response = await axios.get(url);
-        if (response.status === 200) {
-            console.log('SMS sent successfully');
-        } else {
-            console.error('Failed to send SMS:', response);
-        }
+        console.log('🔍 Checking WhatsApp availability for number:', phoneNumber);
+        const cleanNumber = phoneNumber.replace(/\D/g, '');
+        const whatsappNumber = cleanNumber.startsWith('0') 
+            ? '972' + cleanNumber.substring(1) 
+            : '972' + cleanNumber;
+        
+        console.log('📱 Formatted WhatsApp number:', whatsappNumber);
+
+        // Try to send a test message via WhatsApp
+        const response = await axios.post('http://wa.innovio.co.il:3000/send', {
+            number: whatsappNumber,
+            message: 'Test message'
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // If we get a successful response, the number has WhatsApp
+        return response.status === 200;
     } catch (error) {
-        console.error('Error sending SMS:', error);
-        throw error;
+        console.error('❌ Error checking WhatsApp:', error.message);
+        return false;
+    }
+};
+
+const sendMessage = async (phoneNumber, message) => {
+    try {
+        console.log('📨 Starting message sending process for:', phoneNumber);
+        console.log('📝 Message content:', message);
+
+        // First try to send via WhatsApp
+        console.log('🚀 Attempting to send via WhatsApp...');
+        const cleanNumber = phoneNumber.replace(/\D/g, '');
+        const whatsappNumber = cleanNumber.startsWith('0') 
+            ? '972' + cleanNumber.substring(1) 
+            : '972' + cleanNumber;
+
+        try {
+            const response = await axios.post('http://wa.innovio.co.il:3000/send', {
+                number: whatsappNumber,
+                message: message
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 200) {
+                console.log('✅ WhatsApp message sent successfully');
+                return 'whatsapp';
+            }
+        } catch (whatsappError) {
+            console.log('📱 WhatsApp send failed, falling back to SMS...');
+        }
+
+        // If WhatsApp failed, send SMS
+        const url = `https://sms.innovio.co.il/sms.php?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+        console.log('📤 SMS URL:', url);
+        
+        const smsResponse = await axios.get(url);
+        console.log('📤 SMS response:', smsResponse.data);
+        
+        if (smsResponse.status === 200) {
+            console.log('✅ SMS sent successfully');
+            return 'sms';
+        }
+
+        console.log('❌ Both WhatsApp and SMS failed');
+        return 'none';
+    } catch (error) {
+        console.error('❌ Error in sendMessage:', error.message);
+        return 'none';
     }
 };
 
@@ -456,24 +519,44 @@ function generateVerificationCode() {
 // API Endpoint to Generate Verification Code
 const generateVerificationCodeHandler = async (req, res) => {
     const { phoneNumber, message } = req.body;
+    console.log('🔑 Generating verification code for:', phoneNumber);
+    
     const code = generateVerificationCode();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // Set expiry time to 5 minutes
+    console.log('🔢 Generated code:', code);
+    
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+    console.log('⏰ Code expires at:', expiresAt);
 
     try {
-        // Upsert to avoid duplicates for the same phone number
+        console.log('💾 Storing verification code in database...');
         await PhoneVerification.upsert({
             phoneNumber,
             code,
             expiresAt,
         });
+        console.log('✅ Verification code stored successfully');
 
-        // Insert the generated code into the translated message and send via SMS
         const translatedMessage = message.replace("{code}", code);
-        sendSms(phoneNumber, translatedMessage);
+        console.log('📝 Translated message:', translatedMessage);
+        
+        const deliveryType = await sendMessage(phoneNumber, translatedMessage);
+        console.log('📤 Message sent via:', deliveryType);
 
-        res.status(200).json({ success: true, message: 'Verification code sent successfully' });
+        // Hebrew messages based on delivery type
+        const hebrewMessages = {
+            whatsapp: 'קוד האימות נשלח בוואטסאפ',
+            sms: 'קוד האימות נשלח בסמס',
+            none: 'לא הצלחנו לשלוח הודעה'
+        };
+
+        res.status(200).json({ 
+            success: true,
+            message: 'Verification code sent successfully',
+            deliveryType: deliveryType,
+            hebrewMessage: hebrewMessages[deliveryType] || hebrewMessages.none
+        });
     } catch (error) {
-        console.error('Error storing verification code:', error);
+        console.error('❌ Error in generateVerificationCodeHandler:', error.message);
         res.status(500).json({ error: 'Internal server error' });
     }
 };

@@ -192,7 +192,7 @@ const SMSVerification = () => {
         <p className={styles.smsClientVerification_smsCodeLabel}>
           {isError
             ? translation?.wrongCodeMessage || 'הקוד שהכנסת שגוי, נסה שוב'
-            : translation?.enterCodeMessage || 'הכנס את הקוד שקיבלת ב-SMS'}
+            :  'הכנס את הקוד שקיבלת '}
         </p>
 
         <Box

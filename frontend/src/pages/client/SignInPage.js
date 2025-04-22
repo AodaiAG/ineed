@@ -16,7 +16,7 @@ const SignInPage = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isSending, setIsSending] = useState(false); // State to handle loading state
   const navigate = useNavigate();
-  const { showMessage } = useMessage();
+  const {  showMessage } = useMessage();
 
   const handleCountryCodeChange = (event) => {
     setCountryCode(event.target.value);
@@ -28,7 +28,7 @@ const SignInPage = () => {
 
   const handleSignIn = async () => {
     if (phoneNumber.length !== 7) {
-      showMessage("מספר הטלפון חייב להכיל בדיוק 7 ספרות", "error"); // ❌ Error message
+      showMessage("מספר הטלפון חייב להכיל בדיוק 7 ספרות", "error");
       return;
     }
   
@@ -43,18 +43,22 @@ const SignInPage = () => {
       console.log("Full Phone Number:", fullPhoneNumber);
   
       // Send SMS via API
-      await axios.post(`${API_URL}/professionals/send-sms`, {
+      const response = await axios.post(`${API_URL}/professionals/send-sms`, {
         phoneNumber: fullPhoneNumber,
         message: translation.verificationCodeMessage + " {code}",
       });
   
-      console.log("SMS sent successfully.");
-  
-      // Navigate to the SMS verification page
-      navigate("/sms");
+      if (response.data.success) {
+        // Show the Hebrew message based on delivery type
+        showMessage(response.data.hebrewMessage, "success");
+        // Navigate to the SMS verification page
+        navigate("/sms");
+      } else {
+        showMessage("שליחת ההודעה נכשלה. נסה שוב.", "error");
+      }
     } catch (error) {
-      console.error("Error sending SMS:", error);
-      showMessage("שליחת ה-SMS נכשלה. נסה שוב.", "error"); // ❌ Error message
+      console.error("Error sending message:", error);
+      showMessage("שליחת ההודעה נכשלה. נסה שוב.", "error");
     } finally {
       setIsSending(false);
     }

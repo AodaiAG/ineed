@@ -42,20 +42,26 @@ function PhoneScreen() {
       sessionStorage.setItem("professionalPhoneNumber", fullPhoneNumber);
   
       try {
-        axios.post(`${API_URL}/professionals/send-sms`, {
+        const response = await axios.post(`${API_URL}/professionals/send-sms`, {
           phoneNumber: fullPhoneNumber,
           message: translation.verificationCodeMessage + " {code}",
         });
-  
-        navigate("/pro/sms-verification");
+
+        if (response.data.success) {
+          // Show the Hebrew message based on delivery type
+          showMessage(response.data.hebrewMessage, "success");
+          navigate("/pro/sms-verification");
+        } else {
+          showMessage("שליחת ההודעה נכשלה. נסה שוב.", "error");
+        }
       } catch (error) {
-        console.error("Failed to send SMS:", error);
-        showMessage(translation.failedToSendSmsMessage || "שליחת ה-SMS נכשלה. נסה שוב.", "error"); // ❌ Error message
+        console.error("Failed to send message:", error);
+        showMessage("שליחת ההודעה נכשלה. נסה שוב.", "error");
       }
     } else if (phoneNumber.length !== 7 && phoneNumber.length !== 0) {
-      showMessage(translation.phoneNumberLengthMessage || "מספר הטלפון חייב להכיל בדיוק 7 ספרות.", "error"); // ❌ Invalid length
+      showMessage(translation.phoneNumberLengthMessage || "מספר הטלפון חייב להכיל בדיוק 7 ספרות.", "error");
     } else {
-      showMessage(translation.enterPhoneNumberMessage || "אנא הזן את מספר הטלפון שלך.", "error"); // ❌ Empty input
+      showMessage(translation.enterPhoneNumberMessage || "אנא הזן את מספר הטלפון שלך.", "error");
     }
   };
   
