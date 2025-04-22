@@ -21,6 +21,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChatIcon from '@mui/icons-material/Chat';
 import EditIcon from '@mui/icons-material/Edit';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import axios from "axios";
 import styles from "../../styles/Header.module.css";
 import { useNavigate } from "react-router-dom";
@@ -264,6 +268,54 @@ const ProfessionalHeader = () => {
             >
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="בית" />
+            </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/pro/requests/new")}
+              sx={{
+                backgroundColor: location.pathname === "/pro/requests/new" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
+              <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
+              <ListItemText primary="קריאות חדשות" />
+            </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/pro/requests/in-process")}
+              sx={{
+                backgroundColor: location.pathname === "/pro/requests/in-process" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
+              <ListItemIcon><AutorenewIcon /></ListItemIcon>
+              <ListItemText primary="קריאות בתהליך" />
+            </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/pro/requests/mine")}
+              sx={{
+                backgroundColor: location.pathname === "/pro/requests/mine" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
+              <ListItemIcon><ListAltIcon /></ListItemIcon>
+              <ListItemText primary="הקריאות שלי" />
+            </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/pro/requests/closed")}
+              sx={{
+                backgroundColor: location.pathname === "/pro/requests/closed" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
+              <ListItemIcon><CheckCircleOutlineIcon /></ListItemIcon>
+              <ListItemText primary="קריאות סגורות" />
             </ListItem>
           </List>
 

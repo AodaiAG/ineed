@@ -12,39 +12,41 @@ import {
   Popover,
   Typography,
   Button,
+  TextField,
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import LanguageIcon from '@mui/icons-material/Language';
 import HomeIcon from '@mui/icons-material/Home';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import ListAltIcon from '@mui/icons-material/ListAlt';
+import ListIcon from '@mui/icons-material/List';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChatIcon from '@mui/icons-material/Chat';
 import SettingsIcon from '@mui/icons-material/Settings';
 import EditIcon from '@mui/icons-material/Edit';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import api from "../../utils/clientApi";
-import styles from "../../styles/client/Header.module.css";
+import api from "../../utils/professionalApi";
+import styles from "../../styles/professional/Header.module.css";
 import { useNavigate } from "react-router-dom";
 import LanguageSelector from "../../components/LanguageSelectionPopup";
 import NotificationComponent from "../../components/NotificationComponent";
 import { useNotifications } from "../../contexts/NotificationContext";
-import { useClientAuth } from '../../ClientProtectedRoute';
+import { useProfessionalAuth } from '../../ProfessionalProtectedRoute';
 import fetchUnreadMessages from '../../utils/fetchUnreadMessages';
 
-const ClientHeader = () => {
+const ProfessionalHeader = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
   const [chatAnchorEl, setChatAnchorEl] = useState(null);
-  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
   const [showLanguagePopup, setShowLanguagePopup] = useState(false);
   const [profileImage, setProfileImage] = useState("/images/dummy-profile.jpg");
-  const [userName, setUserName] = useState("לקוח בדוי");
+  const [userName, setUserName] = useState("מקצוען בדוי");
   const [unreadChats, setUnreadChats] = useState([]);
 
   const navigate = useNavigate();
   const { unreadCount } = useNotifications();
-  const { user } = useClientAuth();
+  const { user } = useProfessionalAuth();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -54,9 +56,6 @@ const ClientHeader = () => {
   const handleChatClick = (event) => setChatAnchorEl(event.currentTarget);
   const handleChatClose = () => setChatAnchorEl(null);
 
-  const handleProfileClick = (event) => setProfileAnchorEl(event.currentTarget);
-  const handleProfileClose = () => setProfileAnchorEl(null);
-
   const toggleLanguagePopup = () => setShowLanguagePopup((prev) => !prev);
 
   const handleNavigate = (path) => {
@@ -64,13 +63,13 @@ const ClientHeader = () => {
     setIsSidebarOpen(false);
   };
 
-  const fetchClientInfo = async () => {
+  const fetchProfessionalInfo = async () => {
     try {
-      const response = await api.get(`/api/client-info/${user.id}`);
+      const response = await api.get(`/api/professional-info/${user.id}`);
       const data = response.data;
-      setUserName(data.fullName || "לקוח ");
+      setUserName(data.fullName || "מקצוען ");
     } catch (error) {
-      console.error("Error fetching client data:", error);
+      console.error("Error fetching professional data:", error);
     }
   };
 
@@ -90,13 +89,13 @@ const ClientHeader = () => {
       }
 
       const requestIds = fetchedRequests.map(req => req.id);
-      const token = sessionStorage.getItem("clientChatToken");
+      const token = sessionStorage.getItem("professionalChatToken");
 
       const unreadCounts = await fetchUnreadMessages(
         user.id,
         token,
         requestIds,
-        'client'
+        'professional'
       );
 
       const unread = Object.entries(unreadCounts)
@@ -111,7 +110,7 @@ const ClientHeader = () => {
 
   useEffect(() => {
     if (user?.id) {
-      fetchClientInfo();
+      fetchProfessionalInfo();
       fetchUnreadChats();
 
       const interval = setInterval(fetchUnreadChats, 30000);
@@ -123,11 +122,11 @@ const ClientHeader = () => {
 
   const handleLogout = () => {
     // Clear session storage
-    sessionStorage.removeItem("clientChatToken");
-    sessionStorage.removeItem("clientToken");
+    sessionStorage.removeItem("professionalChatToken");
+    sessionStorage.removeItem("professionalToken");
     
     // Navigate to login page
-    navigate("/login");
+    navigate("/professional/login");
   };
 
   return (
@@ -166,7 +165,7 @@ const ClientHeader = () => {
             <Typography className={styles.emptyChatMessage}>אין הודעות חדשות</Typography>
           ) : (
             memoizedUnreadChats.map(chat => (
-              <Box key={chat.id} onClick={() => navigate(`/request?id=${chat.id}`)} className={styles.chatItem}>
+              <Box key={chat.id} onClick={() => navigate(`/professional/request?id=${chat.id}`)} className={styles.chatItem}>
                 <Typography className={styles.chatText}>בקשה #{chat.id}</Typography>
                 <span className={styles.chatCountBadge}>{chat.count}</span>
               </Box>
@@ -186,59 +185,17 @@ const ClientHeader = () => {
         }}
       >
         <Box className={styles.notificationDropdown}>
-          <NotificationComponent userId={user?.id} userType="client" />
+          <NotificationComponent userId={user?.id} userType="professional" />
         </Box>
       </Popover>
 
-      <Popover
-        open={Boolean(profileAnchorEl)}
-        anchorEl={profileAnchorEl}
-        onClose={handleProfileClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <Box className={styles.profilePopover}>
-          <Avatar
-            src={profileImage}
-            alt={userName}
-            // onClick={handleProfileClick}
-            className={styles.avatar}
-          />
-          <Typography className={styles.profileName}>{userName}</Typography>
-
-          <Button
-            variant="outlined"
-            startIcon={<EditIcon />}
-            className={styles.editButton}
-          >
-            ערוך תמונה
-          </Button>
-
-          <Button
-            variant="outlined"
-            startIcon={<SettingsIcon />}
-            onClick={() => navigate("/edit-settings")}
-            className={styles.editButton}
-          >
-            ערוך הגדרות
-          </Button>
-        </Box>
-      </Popover>
-
-      <IconButton className={styles.profileIcon}>
-        <Avatar
-          src={profileImage}
-          alt={userName}
-          // onClick={handleProfileClick}
-          className={styles.avatar}
-        />
-      </IconButton>
+      {/* Replace IconButton with just the Avatar */}
+      <Avatar
+        src={profileImage}
+        alt={userName}
+        className={styles.avatar}
+        sx={{ width: 40, height: 40 }}
+      />
 
       <Drawer
         anchor="left"
@@ -277,7 +234,6 @@ const ClientHeader = () => {
             <Avatar
               src={profileImage}
               alt={userName}
-              // onClick={handleProfileClick}
               className={styles.avatar}
             />
             <Typography
@@ -319,45 +275,56 @@ const ClientHeader = () => {
           >
             <ListItem 
               button 
-              onClick={() => handleNavigate("/dashboard")}
+              onClick={() => handleNavigate("/pro/expert-interface")}
               sx={{
-                backgroundColor: location.pathname === "/dashboard" ? '#f5f5f5' : 'transparent',
+                backgroundColor: location.pathname === "/pro/expert-interface" ? '#f5f5f5' : 'transparent',
               }}
             >
               <ListItemIcon><HomeIcon /></ListItemIcon>
               <ListItemText primary="בית" />
             </ListItem>
 
-            {/* Nested Requests Menu */}
             <ListItem 
               button 
-              onClick={() => handleNavigate("/main")}
+              onClick={() => handleNavigate("/pro/requests/new")}
               sx={{
-                backgroundColor: location.pathname === "/main" ? '#f5f5f5' : 'transparent',
+                backgroundColor: location.pathname === "/pro/requests/new" ? '#f5f5f5' : 'transparent',
                 pl: 4,
               }}
             >
               <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
-              <ListItemText primary="פתח קריאה חדשה" />
+              <ListItemText primary="קריאות חדשות" />
             </ListItem>
 
             <ListItem 
               button 
-              onClick={() => handleNavigate("/dashboard/my-requests")}
+              onClick={() => handleNavigate("/pro/requests/in-process")}
               sx={{
-                backgroundColor: location.pathname === "/my-requests" ? '#f5f5f5' : 'transparent',
+                backgroundColor: location.pathname === "/pro/requests/in-process" ? '#f5f5f5' : 'transparent',
                 pl: 4,
               }}
             >
-              <ListItemIcon><ListAltIcon sx={{ color: '#1a237e' }} /></ListItemIcon>
+              <ListItemIcon><AutorenewIcon /></ListItemIcon>
+              <ListItemText primary="קריאות בתהליך" />
+            </ListItem>
+
+            <ListItem 
+              button 
+              onClick={() => handleNavigate("/pro/requests/mine")}
+              sx={{
+                backgroundColor: location.pathname === "/pro/requests/mine" ? '#f5f5f5' : 'transparent',
+                pl: 4,
+              }}
+            >
+              <ListItemIcon><ListAltIcon /></ListItemIcon>
               <ListItemText primary="הקריאות שלי" />
             </ListItem>
 
             <ListItem 
               button 
-              onClick={() => handleNavigate("/dashboard/closed-requests")}
+              onClick={() => handleNavigate("/pro/requests/closed")}
               sx={{
-                backgroundColor: location.pathname === "/dashboard/closed-requests" ? '#f5f5f5' : 'transparent',
+                backgroundColor: location.pathname === "/pro/requests/closed" ? '#f5f5f5' : 'transparent',
                 pl: 4,
               }}
             >
@@ -402,9 +369,9 @@ const ClientHeader = () => {
 
             <ListItem 
               button 
-              onClick={() => handleNavigate("/edit-settings")}
+              onClick={() => handleNavigate("/professional/edit-settings")}
               sx={{
-                backgroundColor: location.pathname === "/edit-settings" ? '#f5f5f5' : 'transparent',
+                backgroundColor: location.pathname === "/professional/edit-settings" ? '#f5f5f5' : 'transparent',
               }}
             >
               <ListItemIcon><SettingsIcon /></ListItemIcon>
@@ -441,4 +408,4 @@ const ClientHeader = () => {
   );
 };
 
-export default ClientHeader;
+export default ProfessionalHeader; 
