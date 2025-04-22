@@ -230,7 +230,7 @@ const ClientHeader = () => {
         </Box>
       </Popover>
 
-      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
+      <IconButton className={styles.profileIcon}>
         <Avatar
           src={profileImage}
           alt={userName}

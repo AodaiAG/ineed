@@ -380,7 +380,7 @@ const ProfessionalHeader = () => {
         </Box>
       </Popover>
 
-      <IconButton className={styles.profileIcon} onClick={handleProfileClick}>
+      <IconButton className={styles.profileIcon} >
         <Avatar src={profileImage} sx={{ width: 40, height: 40, border: '4px solid #1A4B75 !important' }} />
       </IconButton>
 
