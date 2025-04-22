@@ -77,16 +77,16 @@ const SMSVerification = () => {
           const clientId = response.data.data.clientId;
           const fullName = sessionStorage.getItem("fullName") || "Unknown";
   
-          const requestDetails = {
-            jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id,
-            city: sessionStorage.getItem("city"),
-            date: sessionStorage.getItem("date"),
-            comment: sessionStorage.getItem("comment") || "",
-          };
-  
-          // Check if the client is already registered
+          // If client is already registered, just navigate to dashboard
           if (response.data.data.registered) {
             if (shouldSaveRequest && clientId) {
+              const requestDetails = {
+                jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id,
+                city: sessionStorage.getItem("city"),
+                date: sessionStorage.getItem("date"),
+                comment: sessionStorage.getItem("comment") || "",
+              };
+              
               requestDetails.clientId = clientId;
   
               try {
@@ -104,10 +104,9 @@ const SMSVerification = () => {
                 alert(translation.generalErrorMessage || "An error occurred. Please try again.");
               }
             } else {
-              console.error("Missing clientId or saveRequest flag is false.");
-              alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+              // If no request to save, just navigate to dashboard
+              navigate('/dashboard');
             }
-  
             return;
           }
   
@@ -127,16 +126,27 @@ const SMSVerification = () => {
                 return;
               }
   
-              requestDetails.clientId = newClientId;
+              if (shouldSaveRequest) {
+                const requestDetails = {
+                  clientId: newClientId,
+                  jobRequiredId: JSON.parse(sessionStorage.getItem("subProfession"))?.id,
+                  city: sessionStorage.getItem("city"),
+                  date: sessionStorage.getItem("date"),
+                  comment: sessionStorage.getItem("comment") || "",
+                };
   
-              const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
+                const submitRequestResponse = await api.post(`${API_URL}/submit_client_request`, requestDetails);
   
-              if (submitRequestResponse.data.success) {
-                console.log("Request submitted successfully after client registration!");
-                navigate('/dashboard');
+                if (submitRequestResponse.data.success) {
+                  console.log("Request submitted successfully after client registration!");
+                  navigate('/dashboard');
+                } else {
+                  console.error("Failed to submit client request after registration:", submitRequestResponse.data);
+                  alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+                }
               } else {
-                console.error("Failed to submit client request after registration:", submitRequestResponse.data);
-                alert(translation.failedToSubmitRequestMessage || "Failed to submit request.");
+                // If no request to save, just navigate to dashboard
+                navigate('/dashboard');
               }
             } else {
               console.error("Failed to save client:", saveClientResponse.data);
