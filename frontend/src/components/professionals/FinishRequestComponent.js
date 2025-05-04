@@ -92,7 +92,7 @@ const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
       <DialogContent>
         {/* Completion Date Field */}
         <Box className={styles.fieldContainer}>
-          <Typography className={styles.label}>מועד העבודה:</Typography>
+          <Typography className={styles.label}>מועד העבודה</Typography>
           <TextField
             type="datetime-local"
             value={completionDate}
@@ -140,7 +140,7 @@ const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
 
         {/* Work Cost Field */}
         <Box className={styles.fieldContainer}>
-          <Typography className={styles.label}>עלות העבודה:</Typography>
+          <Typography className={styles.label}>עלות העבודה</Typography>
           <TextField
             type="number"
             value={workCost}
@@ -154,7 +154,7 @@ const FinishRequestComponent = ({ open, onClose, requestId, clientId }) => {
 
         {/* General Comment Field */}
         <Box className={styles.fieldContainer}>
-          <Typography className={styles.label}>הערה כללית:</Typography>
+          <Typography className={styles.label}>הערה כללית</Typography>
           <TextField
             multiline
             rows={4}

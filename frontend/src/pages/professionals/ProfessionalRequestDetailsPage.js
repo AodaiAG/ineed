@@ -230,7 +230,7 @@ const ProfessionalRequestDetailsPage = () => {
       {/* ✅ Quotation Section - Title Change & Remove Update Button if Closed */}
       <Box className={styles.expandableHeader} onClick={() => toggleSection("quotation")}>
         <Typography>
-          {requestDetails?.status === "closed" ? "המחיר שהצעת" : "הצעת מחיר"}
+          {requestDetails?.status === "closed"  ? "המחיר שהצעת" : "הצעת מחיר"}
         </Typography>
         {expandedSection === "quotation" ? <ExpandLessIcon /> : <ExpandMoreIcon />}
       </Box>
@@ -251,15 +251,17 @@ const ProfessionalRequestDetailsPage = () => {
   variant="outlined"
   type="text" // Change to "text" to avoid browser auto-formatting
   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }} // Helps mobile users
-  disabled={requestDetails?.status === "closed"} // Disable if status is closed
+  disabled={requestDetails?.status === "closed" || !!requestDetails?.quotation}
+ // Disable if status is closed
 />
 
             {/* ✅ Remove Update Button when the request is closed */}
-            {requestDetails?.status !== "closed" && (
-              <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
-                עדכן
-              </Button>
-            )}
+            {requestDetails?.status !== "closed" && !requestDetails?.quotation && (
+  <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
+    עדכן
+  </Button>
+)}
+
           </Box>
         </Box>
       </Collapse>
