@@ -3,16 +3,33 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from '../../styles/AvailabilityForm.module.css';
 import { useLanguage } from '../../contexts/LanguageContext';
+import enGB from 'date-fns/locale/en-GB';
+import { registerLocale } from 'react-datepicker';
+
+
 
 const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, error, availability24_7, setAvailability24_7 }, ref) => {
     const { translation } = useLanguage();
     const [localAvailability247, setLocalAvailability247] = useState(availability24_7);
     const [firstSelection, setFirstSelection] = useState(true);
-    const [lastSelectedTime, setLastSelectedTime] = useState({ start: new Date().setHours(8, 0), end: new Date().setHours(17, 0) });
     const [openTimePicker, setOpenTimePicker] = useState({}); // Tracks open states for both pickers
-
+    registerLocale('en-GB', enGB);
     const startInputRefs = useRef({});
     const toInputRefs = useRef({});
+
+    const [lastSelectedTime, setLastSelectedTime] = useState({ 
+        start: (() => {
+          const d = new Date();
+          d.setHours(0, 0, 0, 0);
+          return new Date(d);
+        })(),
+        end: (() => {
+          const d = new Date();
+          d.setHours(23, 0, 0, 0);
+          return new Date(d);
+        })()
+      });
+      
 
     useEffect(() => {
         setLocalAvailability247(availability24_7);
@@ -128,10 +145,13 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     showTimeSelectOnly
                                     onKeyDown={(e) => e.preventDefault()} // Prevent typing
                                     autoComplete="off"
+                                    locale="en-GB"
+
+
                                     readOnly 
                                     timeIntervals={15}
-                                    timeCaption=""
-                                    dateFormat="h:mm aa"
+                                    timeCaption="Time"
+                                    dateFormat="HH:mm"
                                     placeholderText={translation.fromPlaceholder}
                                     className={styles['day-input']}
                                     disabled={!isWorking}
@@ -149,10 +169,13 @@ const AvailabilityForm = forwardRef(({ dayAvailability, setDayAvailability, erro
                                     readOnly 
                                     showTimeSelectOnly
                                     timeIntervals={15}
-                                    timeCaption=""
+                                     timeCaption="Time"
+                                    dateFormat="HH:mm"
+                                    locale="en-GB"
+
                                     onKeyDown={(e) => e.preventDefault()} // Prevent typing
                                     autoComplete="off"
-                                    dateFormat="h:mm aa"
+                                    
                                     placeholderText={translation.toPlaceholder}
                                     className={styles['day-input']}
                                     minTime={dayAvailability[dayInt].start || lastSelectedTime.start}
