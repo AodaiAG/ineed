@@ -7,6 +7,7 @@ const { Client, ClientRequest, Request } = require('../models/index'); // Adjust
 const Professional = require('../models/professional'); // Adjust path if necessary
 const { ProfessionalRating } = require("../models/index");
 const Notification = require('../models/notifications/Notification'); // Adjust the path if necessary
+const Cancellation = require('../models/Cancellation');
 
 
 const ADMIN_USER_ID = "Admin_v2"; // New Admin ID
@@ -792,16 +793,14 @@ exports.cancelRequest = async (req, res) => {
         const clientId = req.user.id; // Extract client ID from JWT
         const { reason, details } = req.body;
 
-        // ✅ 1. Find the request along with its professionalId
-        const request = await Request.findOne({
-            where: { id: requestId },
-        });
+        // ✅ 1. Find the request
+        const request = await Request.findOne({ where: { id: requestId } });
 
         if (!request) {
             return res.status(404).json({ success: false, message: "הקריאה לא נמצאה" });
         }
 
-        // ✅ Check if the request belongs to the client
+        // ✅ 2. Check if the request belongs to the client
         const clientRequest = await ClientRequest.findOne({
             where: { requestId, clientId },
         });
@@ -812,22 +811,26 @@ exports.cancelRequest = async (req, res) => {
 
         const professionalId = request.professionalId;
 
-        // ✅ 2. Delete the request
+        await Cancellation.create({
+            requestId,
+            cancelledId: clientId.toString(), // ID of the client who canceled
+            reason,
+            cancelledBy: 'client',
+        });
+        // ✅ 4. Delete the request
         await Request.destroy({ where: { id: requestId } });
 
-        // ✅ 3. Send notification if professionalId exists
+        // ✅ 5. Send notification to the professional if assigned
         if (professionalId) {
             await Notification.create({
                 recipientId: professionalId.toString(),
                 recipientType: 'professional',
-                messageKey: 'notifications.requestCancelled', // Translation key for notification
+                messageKey: 'notifications.requestCancelled',
                 requestId,
                 action: null,
                 isRead: false,
             });
         }
-// 
-       
 
         res.status(200).json({ success: true, message: "הקריאה בוטלה בהצלחה" });
     } catch (error) {
@@ -835,3 +838,4 @@ exports.cancelRequest = async (req, res) => {
         res.status(500).json({ success: false, message: "שגיאה פנימית בשרת" });
     }
 };
+

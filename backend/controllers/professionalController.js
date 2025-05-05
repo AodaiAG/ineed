@@ -77,16 +77,19 @@ const cancelRequest = async (req, res) => {
         // Create a cancellation record
         await Cancellation.create({
             requestId,
-            profId: professionalId,
+            cancelledId: professionalId.toString(),
             reason,
+            cancelledBy: 'professional',
         });
 
-        console.log("Cancellation recorded with reason:", reason);
+
+        // Remove the professional's quotation from the quotations array
+        const updatedQuotations = (request.quotations || []).filter(q => q.professionalId !== professionalId);
+        request.quotations = updatedQuotations;
 
         // Deselect the professional from the request
         // Deselect the professional from the request
             request.professionalId = null;
-            request.status = "closed";  // Mark as closed since no professional is assigned
             await request.save();
 
 

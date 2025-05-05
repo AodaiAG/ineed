@@ -5,28 +5,25 @@ const Cancellation = sequelize.define(
     "Cancellation",
     {
         id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
         requestId: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            references: {
-                model: "Requests",
-                key: "id",
-            },
+            
         },
-        profId: {
-            type: DataTypes.INTEGER,
+        cancelledId: {
+            type: DataTypes.STRING, // ID of the person who canceled (string)
             allowNull: false,
-            references: {
-                model: "Professionals",
-                key: "id",
-            },
         },
         reason: {
             type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        cancelledBy: {
+            type: DataTypes.ENUM("client", "professional", "admin"),
             allowNull: false,
         },
     },

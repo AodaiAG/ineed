@@ -122,6 +122,7 @@ const ProfessionalRequestDetailsPage = () => {
       if (response?.data?.success) {
         setIsEditing(false);
         showMessage("הצעת המחיר הוגשה בהצלחה!", "success");
+        navigate(0);
       } else {
         setError("Failed to process quotation");
         showMessage(response.data?.message || "התרחשה שגיאה בעת שליחת הצעת המחיר.", "error");
@@ -257,7 +258,11 @@ const ProfessionalRequestDetailsPage = () => {
 
             {/* ✅ Remove Update Button when the request is closed */}
             {requestDetails?.status !== "closed" && !requestDetails?.quotation && (
-  <Button variant="contained" onClick={handleQuotationSubmit} className={styles.quotationButton}>
+  <Button variant="contained" 
+  onClick={handleQuotationSubmit} 
+  className={styles.quotationButton}
+  onSuccess={() => navigate(0)} // ✅ React Router refresh
+  >
     עדכן
   </Button>
 )}
