@@ -135,6 +135,7 @@ useEffect(() => {
 
 const fetchAiSuggestions = debounce(async (query) => {
   if (!query) {
+    
     setAiSuggestions([]);
     setShowDropdown(false);
     return;
@@ -146,7 +147,7 @@ const fetchAiSuggestions = debounce(async (query) => {
 
     // 2️⃣ Call AI API (Returns only IDs)
     const aiResponse = await axios.post(`${API_URL}/ai/suggest`, { query, lang: language });
-
+  
     if (!aiResponse.data || aiResponse.data.length === 0) {
       setAiSuggestions([]);
       setShowDropdown(false);
@@ -163,8 +164,11 @@ const fetchAiSuggestions = debounce(async (query) => {
     // 4️⃣ Wait for all requests to complete
     const jobDetailsResponses = await Promise.all(jobDetailsRequests);
 
-    // 5️⃣ Extract profession data
-    const fullJobDetails = jobDetailsResponses.map(res => res.data.data); // ✅ Extract the `data` field
+    // 5️⃣ Extract profession data and preserve the original ID
+    const fullJobDetails = jobDetailsResponses.map((res, index) => ({
+      ...res.data.data,
+      id: aiResponse.data[index] // Preserve the original ID from AI response
+    }));
 
     console.log("🔹 Full Job Details:", fullJobDetails); // Debugging
 
@@ -193,7 +197,7 @@ const handleSuggestionClick = (suggestion) => {
 
   setDomain({ domain: suggestion.domain });
   setMainProfession({ main: suggestion.main });
-  setSelectedSubProfession({ sub: suggestion.sub }); // ✅ Use `setSelectedSubProfession`
+  setSelectedSubProfession({ id: suggestion.id, sub: suggestion.sub }); // Match manual selection structure
 
   setProblem(`${suggestion.domain} - ${suggestion.main} - ${suggestion.sub}`); // ✅ Fill search box
   setShowDropdown(false); // ✅ Hide dropdown
