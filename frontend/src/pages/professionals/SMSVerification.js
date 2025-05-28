@@ -66,24 +66,27 @@ function SMSVerification() {
 
     const handleVerification = async () => {
         const code = verificationCode.join('');
-        if (code.length === 4) 
-            {
+        if (code.length === 4) {
             try {
                 const response = await api.post(`${API_URL}/professionals/verify-code`, {
                     phoneNumber,
                     code
                 });
-                if (response.data.success) 
-                    {
-                    if (response.data.data.registered) 
-                        {
-                            const accessToken = localStorage.getItem('accessToken');
-                            const refreshToken = localStorage.getItem('refreshToken');
-                            
-                            console.log(' Access Token:', accessToken);
-                            console.log(' Refresh Token:', refreshToken);
-                            
-                        navigate('/pro/expert-interface');
+                if (response.data.success) {
+                    if (response.data.data.registered) {
+                        const accessToken = localStorage.getItem('accessToken');
+                        const refreshToken = localStorage.getItem('refreshToken');
+                        
+                        console.log(' Access Token:', accessToken);
+                        console.log(' Refresh Token:', refreshToken);
+                        
+                        // Get the return URL from sessionStorage
+                        const returnUrl = sessionStorage.getItem('returnUrl');
+                        // Clear the return URL from sessionStorage
+                        sessionStorage.removeItem('returnUrl');
+                        
+                        // Navigate to the return URL if it exists, otherwise go to expert interface
+                        navigate(returnUrl || '/pro/expert-interface');
                     } else {
                         navigate('/pro/register');
                     }

@@ -4,6 +4,7 @@ const PhoneVerification = require('../models/PhoneVerification');
 const Location = require('../models/Location'); // Import the Location model
 const ReportMissingProfession = require('../models/ReportMissingProfession');
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = require('../utils/constants');
+const { API_URL } = require('../../frontend/src/utils/constans'); // Import API_URL from constans.js
 const {grantProfAuth} = require('./authController');
 const { Op } = require('sequelize');
 const sequelize = require('../config/db'); // Sequelize instance
@@ -394,6 +395,7 @@ const updateProfessional = async (req, res) => {
         workAreas,
         languages,
         location,
+        hasCompletedOnboarding
     } = req.body;
 
     try {
@@ -427,6 +429,7 @@ const updateProfessional = async (req, res) => {
             workAreas,
             languages,
             location,
+            hasCompletedOnboarding
         });
 
         res.status(200).json({ message: 'Professional updated successfully', data: professional });
@@ -1084,21 +1087,90 @@ const fetchProfessionById = async (req, res) => {
     }
 };
 
+const notifyMatchingProfessionals = async (req, res) => {
+    try {
+        const { requestId } = req.params;
 
+        // First get the request to find its jobRequiredId
+        const request = await Request.findByPk(requestId);
+        if (!request) {
+            return res.status(404).json({ success: false, message: 'Request not found' });
+        }
+
+        // Find all professionals who have this job in their professions array
+        const professionals = await Professional.findAll({
+            where: {
+                professions: {
+                    [Op.contains]: [request.jobRequiredId]
+                }
+            },
+            attributes: ['id', 'phoneNumber', 'hasCompletedOnboarding'] // Include phoneNumber and hasCompletedOnboarding
+        });
+
+        // Extract just the IDs from the results
+        const professionalIds = professionals.map(prof => prof.id);
+
+        // Send response immediately
+        res.status(200).json({ 
+            success: true, 
+            data: professionalIds 
+        });
+
+        // Handle WhatsApp messages asynchronously
+        professionals.forEach(professional => {
+            let message;
+            const baseUrl = API_URL.split(':')[0] + ':' + API_URL.split(':')[1]; // Get everything before the port
+            
+            if (professional.hasCompletedOnboarding) {
+                message = `פנייה חדשה מחכה לך ב־ I-NEED!
+לקוח מאזור הפעילות שלך מחפש עכשיו שירות שאתה מציע.
+להצגת הפנייה ולהגשת הצעה בלחיצה אחת:
+🔗 ${baseUrl}/pro/requests/${requestId}`;
+            } else {
+                const onboardingData = Buffer.from(JSON.stringify({
+                    requestId: requestId,
+                    professionalId: professional.id
+                })).toString('base64');
+                
+                message = `יש לקוח שמתעניין בשירות שלך!
+הפנייה מתאימה לתחום העיסוק שלך ואזור הפעילות שלך.
+להצעת מחיר ולהצטרפות חינמית:
+🔗 ${baseUrl}/pro/edit-settings?onboarding=${onboardingData} I-NEED`;
+            }
+
+            // Send message without awaiting
+            sendMessage(professional.phoneNumber, message)
+                .then(() => console.log(`✅ WhatsApp message sent to professional ${professional.id}`))
+                .catch(error => console.error(`❌ Error sending WhatsApp message to professional ${professional.id}:`, error));
+        });
+
+    } catch (error) {
+        console.error("Error notifying matching professionals:", error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+};
 
 module.exports = {
     fetchProfRequests,
     checkIfRegistered,
     finishRequest,
     assignRequestToProfessional,
-    getAllLocations,cancelRequest,
+    getAllLocations,
+    cancelRequest,
     downloadVCardHandler,
     fetchProfessionById,
     fetchProfessionalRequests,
     updateQuotation,
     assignRequestToProfessional,
     addProfessionalToChannel,
-    registerProfessional,getProfessionalById,updateProfessional,uploadImage
-    ,generateVerificationCodeHandler
-    ,verifyCodeHandler,createReportMissingProfession,getProfessionalRequestDetails
+    registerProfessional,
+    getProfessionalById,
+    updateProfessional,
+    uploadImage,
+    generateVerificationCodeHandler,
+    verifyCodeHandler,
+    createReportMissingProfession,
+    getProfessionalRequestDetails,
+    finishRequest,
+    notifyMatchingProfessionals
 };

@@ -3,7 +3,7 @@ import React, { useEffect, useState ,useRef} from 'react';
 import axios from 'axios';
 import { API_URL } from '../../utils/constans';
 import api from '../../utils/api'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from '../../styles/ProfessionalRegistration.module.css';
 import PersonalInfoForm from '../../components/professionals/PersonalInfoForm';
 import JobFieldsSelection from '../../components/professionals/JobFieldsSelection';
@@ -18,6 +18,7 @@ import useAuthCheck from '../../hooks/useAuthCheck';
 function EditProfessionalSettings() 
 {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { translation } = useLanguage();
     const [location, setLocation] = useState({ address: '', lat: null, lon: null });
     const [domains, setDomains] = useState([]);
@@ -60,6 +61,9 @@ function EditProfessionalSettings()
     const locationRef = useRef(null);
 
     const { isAuthenticated, loading ,user} = useAuthCheck();
+
+    const [isOnboarding, setIsOnboarding] = useState(false);
+    const [onboardingData, setOnboardingData] = useState(null);
 
   
 
@@ -113,21 +117,40 @@ function EditProfessionalSettings()
    
 
     useEffect(() => {
-        if (loading) return;
-        if (isAuthenticated) 
-            {
-                    const fetchData = async () => {
-                    await fetchProfessionalData(user.profId); // Pass profId if required
-                    await fetchDomains();
-                    await fetchLocations();
-                };
-                fetchData(); // Trigger the async function to fetch data
-          } 
-
-        else {
-            navigate('/pro/enter');  
+        // Check for onboarding parameters
+        const onboardingParam = searchParams.get('onboarding');
+        if (onboardingParam) {
+            try {
+                const decodedData = JSON.parse(atob(onboardingParam));
+                setOnboardingData(decodedData);
+                setIsOnboarding(true);
+              
+            } catch (error) {
+                console.error('Error decoding onboarding data:', error);
+                navigate('/pro/enter');
+            }
         }
-    }, [loading, isAuthenticated, navigate]);
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (loading) return;
+        
+        // Modified authentication check
+        if (isAuthenticated || isOnboarding) {
+            const fetchData = async () => {
+                if (isOnboarding) {
+                    await fetchProfessionalData(onboardingData.profId);
+                } else {
+                    await fetchProfessionalData(user.profId);
+                }
+                await fetchDomains();
+                await fetchLocations();
+            };
+            fetchData();
+        } else {
+            navigate('/pro/enter');
+        }
+    }, [loading, isAuthenticated, isOnboarding, onboardingData]);
     
    
     if (loading || !translation) 
@@ -226,13 +249,13 @@ function EditProfessionalSettings()
 
     const handleSubmit = async () => {
         if (!validateForm()) return;
-        const professionalId = user.profId;
-    
+
+        const professionalId = isOnboarding ? onboardingData.profId : user.profId;
         if (!professionalId) {
-            console.error("No user ID found in session storage");
+            console.error("No professional ID found");
             return;
         }
-    
+
         const professionalData = {
             professionalId,
             phoneNumber,
@@ -247,18 +270,25 @@ function EditProfessionalSettings()
             workAreas: workAreaSelections,
             languages,
             location,
+            hasCompletedOnboarding: true // Set to true when form is submitted
         };
-    
-        // Show the spinner
+
         setIsSubmitting(true);
-    
+
         try {
-            await api.put(`${API_URL}/professionals/update`, professionalData);     
-                   navigate('/pro/expert-interface');
+            await api.put(`${API_URL}/professionals/update`, professionalData);
+            
+            if (isOnboarding) {
+                // Handle onboarding completion
+                // You might want to automatically sign in the user here
+                // and then redirect to the request
+                navigate(`/pro/request/${onboardingData.requestId}`);
+            } else {
+                navigate('/pro/expert-interface');
+            }
         } catch (error) {
             console.error('Error updating professional settings:', error);
         } finally {
-            // Hide the spinner
             setIsSubmitting(false);
         }
     };
