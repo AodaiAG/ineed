@@ -94,6 +94,7 @@ const SMSVerification = () => {
   
                 if (submitRequestResponse.data.success) {
                   console.log("Request submitted successfully for registered user!");
+                  console.log("Notified professionals:", submitRequestResponse.data.data.notifiedProfessionals);
                   navigate('/dashboard');
                 } else {
                   console.error("Failed to submit client request:", submitRequestResponse.data);
@@ -139,6 +140,7 @@ const SMSVerification = () => {
   
                 if (submitRequestResponse.data.success) {
                   console.log("Request submitted successfully after client registration!");
+                  console.log("Notified professionals:", submitRequestResponse.data.data.notifiedProfessionals);
                   navigate('/dashboard');
                 } else {
                   console.error("Failed to submit client request after registration:", submitRequestResponse.data);

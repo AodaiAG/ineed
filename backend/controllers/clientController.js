@@ -8,6 +8,7 @@ const Professional = require('../models/professional'); // Adjust path if necess
 const { ProfessionalRating } = require("../models/index");
 const Notification = require('../models/notifications/Notification'); // Adjust the path if necessary
 const Cancellation = require('../models/Cancellation');
+const { notifyMatchingProfessionals } = require('./professionalController');
 
 
 const ADMIN_USER_ID = "Admin_v2"; // New Admin ID
@@ -297,11 +298,28 @@ exports.submitClientRequest = async (req, res) => {
         await channel.create();
         console.log("Chat channel created:", channelId);
 
+        // Notify matching professionals about the new request
+        console.log("Notifying matching professionals...");
+        let notifyResponse = { success: false, data: [] };
+        try {
+            const notifyResult = await notifyMatchingProfessionals({ params: { requestId: request.id } }, { 
+                status: () => ({ 
+                    json: (data) => {
+                        notifyResponse = data;
+                    }
+                }) 
+            });
+            console.log("Notification result:", notifyResult);
+        } catch (notifyError) {
+            console.error("Error notifying professionals:", notifyError);
+        }
+
         res.status(201).json({
             success: true,
             data: {
                 requestId: request.id,
                 channelId: channelId,
+                notifiedProfessionals: notifyResponse
             },
             message: "Client request and chat channel created successfully",
         });

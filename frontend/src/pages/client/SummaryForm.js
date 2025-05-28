@@ -122,6 +122,7 @@ const SummaryForm = () => {
           if (submitRequestResponse.data.success) {
             showMessage(translation.requestSubmittedSuccessfully || "הבקשה שלך נשלחה בהצלחה!", "success");
             console.log("Request submitted successfully!");
+            console.log("Notified professionals:", submitRequestResponse.data.data.notifiedProfessionals);
             navigate("/dashboard");
           } else {
             console.error("Failed to submit client request:", submitRequestResponse.data);

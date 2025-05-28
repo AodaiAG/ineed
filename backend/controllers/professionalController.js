@@ -1099,22 +1099,24 @@ const notifyMatchingProfessionals = async (req, res) => {
 
         // Find all professionals who have this job in their professions array
         const professionals = await Professional.findAll({
-            where: {
-                professions: {
-                    [Op.contains]: [request.jobRequiredId]
-                }
-            },
-            attributes: ['id', 'phoneNumber', 'hasCompletedOnboarding'] // Include phoneNumber and hasCompletedOnboarding
+            where: sequelize.literal(`JSON_CONTAINS(professions, '${JSON.stringify([request.jobRequiredId])}')`),
+            attributes: ['id', 'phoneNumber', 'hasCompletedOnboarding', 'fname', 'lname'] // Added fname and lname
         });
 
-        // Extract just the IDs from the results
-        const professionalIds = professionals.map(prof => prof.id);
-
-        // Send response immediately
-        res.status(200).json({ 
+        // Send response immediately with the list of professionals
+        const response = { 
             success: true, 
-            data: professionalIds 
-        });
+            data: professionals.map(prof => ({
+                id: prof.id,
+                phoneNumber: prof.phoneNumber,
+                hasCompletedOnboarding: prof.hasCompletedOnboarding,
+                name: `${prof.fname || ''} ${prof.lname || ''}`.trim() || 'Unknown' // Added name
+            }))
+        };
+
+        if (res && typeof res.status === 'function') {
+            res.status(200).json(response);
+        }
 
         // Handle WhatsApp messages asynchronously
         professionals.forEach(professional => {
@@ -1144,9 +1146,14 @@ const notifyMatchingProfessionals = async (req, res) => {
                 .catch(error => console.error(`❌ Error sending WhatsApp message to professional ${professional.id}:`, error));
         });
 
+        return response;
     } catch (error) {
         console.error("Error notifying matching professionals:", error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        const errorResponse = { success: false, message: 'Internal server error' };
+        if (res && typeof res.status === 'function') {
+            res.status(500).json(errorResponse);
+        }
+        return errorResponse;
     }
 };
 
