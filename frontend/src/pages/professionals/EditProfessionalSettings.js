@@ -139,7 +139,7 @@ function EditProfessionalSettings()
         if (isAuthenticated || isOnboarding) {
             const fetchData = async () => {
                 if (isOnboarding) {
-                    await fetchProfessionalData(onboardingData.profId);
+                    await fetchProfessionalData(onboardingData.professionalId);
                 } else {
                     await fetchProfessionalData(user.profId);
                 }
@@ -250,7 +250,7 @@ function EditProfessionalSettings()
     const handleSubmit = async () => {
         if (!validateForm()) return;
 
-        const professionalId = isOnboarding ? onboardingData.profId : user.profId;
+        const professionalId = isOnboarding ? onboardingData.professionalId : user.profId;
         if (!professionalId) {
             console.error("No professional ID found");
             return;
@@ -282,7 +282,7 @@ function EditProfessionalSettings()
                 // Handle onboarding completion
                 // You might want to automatically sign in the user here
                 // and then redirect to the request
-                navigate(`/pro/request/${onboardingData.requestId}`);
+                navigate(`/pro/requests/${onboardingData.requestId}`);
             } else {
                 navigate('/pro/expert-interface');
             }
