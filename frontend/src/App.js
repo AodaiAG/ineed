@@ -45,6 +45,7 @@ import NewRequestsPage from './pages/professionals/NewRequestsPage';
 import InProcessRequestsPage from './pages/professionals/InProcessRequestsPage';
 import MineRequestsPage from './pages/professionals/MineRequestsPage';
 import ClosedRequestsPage from './pages/professionals/ClosedRequestsPage';
+import OnboardingLandingPage from './pages/OnboardingLandingPage'; // Import the new page
 
 function App() {
   return (
@@ -65,6 +66,9 @@ function App() {
           <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/request/rate/:id" element={<RatingPage />} />
+
+          {/* New Onboarding Landing Page Route */}
+          <Route path="/onboarding/:id" element={<OnboardingLandingPage />} />
 
           /////////////////////// protected///////////////////
 

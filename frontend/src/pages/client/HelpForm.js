@@ -147,7 +147,7 @@ const fetchAiSuggestions = debounce(async (query) => {
 
     // 2️⃣ Call AI API (Returns only IDs)
     const aiResponse = await axios.post(`${API_URL}/ai/suggest`, { query, lang: language });
-  
+
     if (!aiResponse.data || aiResponse.data.length === 0) {
       setAiSuggestions([]);
       setShowDropdown(false);

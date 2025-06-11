@@ -1137,7 +1137,7 @@ const notifyMatchingProfessionals = async (req, res) => {
                 message = `יש לקוח שמתעניין בשירות שלך!
 הפנייה מתאימה לתחום העיסוק שלך ואזור הפעילות שלך.
 להצעת מחיר ולהצטרפות חינמית ל־ I-NEED:
-🔗 ${baseUrl}/pro/edit-settings?onboarding=${onboardingData}`;
+🔗 ${baseUrl}/onboarding/${onboardingData}`;
             }
 
             // Send message without awaiting

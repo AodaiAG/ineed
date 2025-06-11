@@ -28,7 +28,7 @@ const {
     getProfessionalRequestDetails,
     finishRequest,
     notifyMatchingProfessionals
-} = require('../controllers/professionalController');
+ } = require('../controllers/professionalController');
 
 router.post('/check-if-registered', checkIfRegistered); // check if the user registerd or not
 router.post('/register', registerProfessional);
